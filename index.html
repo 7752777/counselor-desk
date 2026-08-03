@@ -390,6 +390,9 @@ tbody tr:last-child td{border-bottom:none}
   <symbol id="i-plane" viewBox="0 0 24 24"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5 6 5.5-2 2-3.5-1-1 1 3 2.5 1 4.5 1-1 3.5-3.5 2-2 .5-1.1.1-1.3"/><path d="M7 17l-1.5 1.5"/></symbol>
   <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 01-10 0V4z"/><path d="M5 4H3v3a3 3 0 003 3M19 4h2v3a3 3 0 01-3 3"/></symbol>
   <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.2 7.6-8 8.5C7.2 20.6 4 17.5 4 12V6l8-3z"/><path d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/><path d="M12 15v2"/></symbol>
+  <symbol id="i-mind" viewBox="0 0 24 24"><path d="M12 3a7 7 0 00-7 7c0 2 .5 3.2 1.2 4.3L5 17h3.5l1 2h4l1-2H18l-.2-2.7C18.5 13.2 19 12 19 10a7 7 0 00-7-7z"/><circle cx="12" cy="11" r="2.1"/></symbol>
+  <symbol id="i-grad" viewBox="0 0 24 24"><path d="M12 4L2 9l10 5 10-5-10-5z"/><path d="M6 11v4.5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V11"/><path d="M22 9v4.5"/></symbol>
 </svg>
 
 <!-- ========== 顶栏 ========== -->
@@ -430,6 +433,10 @@ tbody tr:last-child td{border-bottom:none}
     <button class="nav-item" data-view="warn"><svg class="ic"><use href="#i-alert"/></svg>学业预警</button>
     <button class="nav-item" data-view="help"><svg class="ic"><use href="#i-heart"/></svg>学业帮扶</button>
     <button class="nav-item" data-view="grant"><svg class="ic"><use href="#i-shield"/></svg>奖助勤补</button>
+    <div class="nav-group">重点关怀与就业</div>
+    <button class="nav-item" data-view="focus"><svg class="ic"><use href="#i-lock"/></svg>重点学生档案</button>
+    <button class="nav-item" data-view="psych"><svg class="ic"><use href="#i-mind"/></svg>心理摸排</button>
+    <button class="nav-item" data-view="graduate"><svg class="ic"><use href="#i-grad"/></svg>毕业生就业</button>
     <div class="nav-group">数据</div>
     <button class="nav-item" data-view="bridge"><svg class="ic"><use href="#i-link"/></svg>平台联动</button>
     <div class="nav-foot">
@@ -642,7 +649,8 @@ const DB = {
   settings: {}, students: [], tasks: [], talks: [],
   stay: [], leave: [], honor: [], custom: {},
   pleave: [], attend: [], node: [],
-  warn: [], help: [], grant: []
+  warn: [], help: [], grant: [],
+  focus: [], psych: [], graduate: []
 };
 function save(part) {
   if (!part || part === 'settings') store.write('settings', DB.settings);
@@ -658,6 +666,9 @@ function save(part) {
   if (!part || part === 'warn')     store.write('warn', DB.warn);
   if (!part || part === 'help')     store.write('help', DB.help);
   if (!part || part === 'grant')    store.write('grant', DB.grant);
+  if (!part || part === 'focus')    store.write('focus', DB.focus);
+  if (!part || part === 'psych')    store.write('psych', DB.psych);
+  if (!part || part === 'graduate') store.write('graduate', DB.graduate);
   if (!part || part === 'custom')   store.write('custom', DB.custom);
 }
 
@@ -808,7 +819,7 @@ const hooks = {
 
 /* ===================== 7. 平台联动桥 bridge ===================== */
 const bridge = {
-  PACKAGE_VERSION: 3,
+  PACKAGE_VERSION: 4,
   buildPackage(scope) {
     scope = scope || {};
     const inRange = d => (!scope.from || d >= scope.from) && (!scope.to || d <= scope.to);
@@ -835,6 +846,9 @@ const bridge = {
       warn: scope.warn === false ? [] : DB.warn,
       help: scope.help === false ? [] : DB.help,
       grant: scope.grant === false ? [] : DB.grant,
+      focus: scope.focus === false ? [] : DB.focus,
+      psych: scope.psych === false ? [] : DB.psych,
+      graduate: scope.graduate === false ? [] : DB.graduate,
       custom: DB.custom,
       stats: this.stats(scope),
     };
@@ -873,6 +887,12 @@ const bridge = {
       help_tracking: DB.help.filter(h => h.status !== '已结束').length,
       grant_total: DB.grant.length,
       grant_pending: DB.grant.filter(g => g.status !== '已发放').length,
+      focus_total: DB.focus.length,
+      focus_lvl1: DB.focus.filter(f => f.level === '一级' && f.status === '跟踪中').length,
+      psych_total: DB.psych.length,
+      psych_severe: DB.psych.filter(p => p.level === '重度' && p.status !== '已结案').length,
+      graduate_total: DB.graduate.length,
+      graduate_employed: DB.graduate.filter(g => g.employment_status !== '待就业' && g.employment_status !== '暂不就业').length,
       by_duty: Object.values(byDuty),
     };
   },
@@ -892,14 +912,18 @@ const bridge = {
     const WA = Array.isArray(src.warn) ? src.warn : [];
     const HP = Array.isArray(src.help) ? src.help : [];
     const GR = Array.isArray(src.grant) ? src.grant : [];
+    const FO = Array.isArray(src.focus) ? src.focus : [];
+    const PS = Array.isArray(src.psych) ? src.psych : [];
+    const GD = Array.isArray(src.graduate) ? src.graduate : [];
     if (!S.length && !T.length && !K.length && !ST.length && !LV.length && !HO.length && !PL.length && !AT.length && !NO.length
-      && !WA.length && !HP.length && !GR.length) throw new Error('文件中没有可导入的数据');
+      && !WA.length && !HP.length && !GR.length && !FO.length && !PS.length && !GD.length) throw new Error('文件中没有可导入的数据');
 
     if (mode === 'replace') {
       DB.students = S.map(normStudent); DB.tasks = T.map(normTask); DB.talks = K.map(normTalk);
       DB.stay = ST.map(normStay); DB.leave = LV.map(normLeave); DB.honor = HO.map(normHonor);
       DB.pleave = PL.map(normPleave); DB.attend = AT.map(normAttend); DB.node = NO.map(normNode);
       DB.warn = WA.map(normWarn); DB.help = HP.map(normHelp); DB.grant = GR.map(normGrant);
+      DB.focus = FO.map(normFocus); DB.psych = PS.map(normPsych); DB.graduate = GD.map(normGraduate);
       if (src.custom) DB.custom = src.custom;
     } else {
       const sKey = x => x.student_number || x.id;
@@ -922,6 +946,9 @@ const bridge = {
       DB.warn = merge(DB.warn, WA, normWarn);
       DB.help = merge(DB.help, HP, normHelp);
       DB.grant = merge(DB.grant, GR, normGrant);
+      DB.focus = merge(DB.focus, FO, normFocus);
+      DB.psych = merge(DB.psych, PS, normPsych);
+      DB.graduate = merge(DB.graduate, GD, normGraduate);
     }
     if (isPkg && src.counselor && !DB.settings.counselor_name) {
       DB.settings.counselor_name = src.counselor.name || '';
@@ -930,7 +957,8 @@ const bridge = {
     }
     save();
     return { students:S.length, tasks:T.length, talks:K.length, stay:ST.length, leave:LV.length, honor:HO.length,
-      pleave:PL.length, attend:AT.length, node:NO.length, warn:WA.length, help:HP.length, grant:GR.length };
+      pleave:PL.length, attend:AT.length, node:NO.length, warn:WA.length, help:HP.length, grant:GR.length,
+      focus:FO.length, psych:PS.length, graduate:GD.length };
   },
   get baseUrl() { return (DB.settings.platform_url || '').replace(/\/$/, ''); },
   get enabled() { return !!this.baseUrl && !!DB.settings.platform_api_on; },
@@ -1195,6 +1223,65 @@ function normGrant(x) {
   };
 }
 
+function normFocus(x) {
+  x = x || {};
+  return {
+    id: x.id || uid(),
+    student_number: x.student_number || '',
+    name: String(x.name || '').trim(),
+    class_name: x.class_name || '',
+    category: x.category || '心理',
+    level: x.level || '二级',
+    reason: x.reason || '',
+    measures: x.measures || '',
+    follow_up: x.follow_up || '',
+    owner: x.owner || '',
+    status: x.status || '跟踪中',
+    updated_at: x.updated_at || today(),
+    created_at: x.created_at || new Date().toISOString(),
+    _demo: !!x._demo,
+  };
+}
+function normPsych(x) {
+  x = x || {};
+  return {
+    id: x.id || uid(),
+    student_number: x.student_number || '',
+    name: String(x.name || '').trim(),
+    class_name: x.class_name || '',
+    screen_date: x.screen_date || today(),
+    scale: x.scale || 'PHQ-9（抑郁）',
+    score: x.score === '' || x.score == null ? '' : Number(x.score),
+    level: x.level || '正常',
+    concern: x.concern || '',
+    suggestion: x.suggestion || '',
+    handler: x.handler || '',
+    status: x.status || '跟踪中',
+    created_at: x.created_at || new Date().toISOString(),
+    _demo: !!x._demo,
+  };
+}
+function normGraduate(x) {
+  x = x || {};
+  return {
+    id: x.id || uid(),
+    student_number: x.student_number || '',
+    name: String(x.name || '').trim(),
+    class_name: x.class_name || '',
+    major_name: x.major_name || '',
+    graduation_year: x.graduation_year || new Date().getFullYear(),
+    employment_status: x.employment_status || '待就业',
+    employer: x.employer || '',
+    job_type: x.job_type || '',
+    location: x.location || '',
+    salary_range: x.salary_range || '',
+    signed: x.signed || '否',
+    updated_at: x.updated_at || today(),
+    created_at: x.created_at || new Date().toISOString(),
+    _demo: !!x._demo,
+  };
+}
+
 const APP_VERSION = '3.0.0';
 
 /* ===================== 9. 示例数据（首次打开可见效果） ===================== */
@@ -1360,6 +1447,63 @@ function seedDemo() {
       note:'家庭突发变故临时补助。' },
   ].map(x => normGrant(Object.assign({ _demo:true }, x)));
 
+  DB.focus = [
+    { name:'李思颖', student_number:'2024010103', class_name:'24机器人1班',
+      category:'心理', level:'一级', reason:'父母离异，情绪波动明显，有自伤风险表述史，已报心理中心备案。',
+      measures:'每周一次谈心谈话；校心理中心持续咨询；室友陪伴关注；家长每月沟通一次。',
+      follow_up:'第 6 周谈话情绪平稳，睡眠改善，仍列为一级关注。', owner:'示例老师', status:'跟踪中',
+      note:'示例：一级重点学生，需隐私保护锁后方可查看。' },
+    { name:'张明', student_number:'2024010101', class_name:'24机器人1班',
+      category:'学业', level:'一级', reason:'三门核心课程连续预警，学习动力不足，作息紊乱。',
+      measures:'学业导师一对一辅导；班级学习委员结对；家长每周反馈。',
+      follow_up:'出勤稳定，阶段测评及格。', owner:'示例老师', status:'跟踪中',
+      note:'与学业预警红色记录对应。' },
+    { name:'刘子豪', student_number:'2024010205', class_name:'24机器人2班',
+      category:'行为', level:'二级', reason:'两次夜不归宿，纪律意识淡薄，存在安全隐患。',
+      measures:'校规校纪教育；通知家长；纳入二级关注，本月每周查寝反馈。',
+      follow_up:'近期无夜不归宿记录，表现趋稳。', owner:'示例老师', status:'跟踪中',
+      note:'与考勤台账数据联动查看。' },
+  ].map(x => normFocus(Object.assign({ _demo:true }, x)));
+
+  DB.psych = [
+    { name:'李思颖', student_number:'2024010103', class_name:'24机器人1班',
+      screen_date: shiftDay(T, -12), scale:'PHQ-9（抑郁）', score:14, level:'中度',
+      concern:'近两周情绪低落、兴趣减退，睡眠质量差。',
+      suggestion:'转介校心理中心面询，辅导员双周谈话，建立同伴支持。', handler:'校心理中心 张老师', status:'跟踪中',
+      note:'示例：中度，已纳入一级重点学生。' },
+    { name:'张明', student_number:'2024010101', class_name:'24机器人1班',
+      screen_date: shiftDay(T, -20), scale:'PHQ-9（抑郁）', score:5, level:'正常',
+      concern:'无显著负性情绪，主要困扰为学业压力。', suggestion:'常规关注，结合学业帮扶同步进行。', handler:'示例老师', status:'跟踪中',
+      note:'示例：正常范围。' },
+    { name:'王浩然', student_number:'2024010301', class_name:'24飞行器设计1班',
+      screen_date: shiftDay(T, -30), scale:'GAD-7（焦虑）', score:4, level:'正常',
+      concern:'家庭经济压力为主，情绪总体平稳。', suggestion:'重点关注资助落实，心理疏导适度。', handler:'示例老师', status:'已结案',
+      note:'示例：已结案。' },
+    { name:'刘子豪', student_number:'2024010205', class_name:'24机器人2班',
+      screen_date: shiftDay(T, -4), scale:'SCL-90（综合）', score:212, level:'重度',
+      concern:'近期情绪失控、易激惹，自述入睡困难，存在冲动行为倾向。',
+      suggestion:'立即转介校心理中心紧急评估，通知家长陪读，纳入一级重点学生联动管理。', handler:'校心理中心 张老师', status:'跟踪中',
+      note:'示例：重度，已转介并联动重点学生档案。' },
+  ].map(x => normPsych(Object.assign({ _demo:true }, x)));
+
+  DB.graduate = [
+    { name:'赵宇航', student_number:'2022010207', class_name:'22飞行器设计1班', major_name:'飞行器设计与工程',
+      graduation_year:2026, employment_status:'已就业', employer:'中国商飞', job_type:'研发工程师', location:'上海', salary_range:'15k-20k', signed:'是',
+      note:'示例：已签约重点单位。' },
+    { name:'孙佳怡', student_number:'2022010306', class_name:'22电子01班', major_name:'电子信息工程',
+      graduation_year:2026, employment_status:'升学（国内）', employer:'哈尔滨工业大学（读研）', job_type:'硕士研究生', location:'哈尔滨', salary_range:'—', signed:'是',
+      note:'示例：升学。' },
+    { name:'周晓彤', student_number:'2022010408', class_name:'22计算机澳01班', major_name:'计算机科学与技术',
+      graduation_year:2026, employment_status:'公务员（录用）', employer:'威海市税务局', job_type:'科员', location:'威海', salary_range:'10k-15k', signed:'是',
+      note:'示例：公务员录用。' },
+    { name:'吴俊熙', student_number:'2022010409', class_name:'22人工智能班', major_name:'人工智能',
+      graduation_year:2026, employment_status:'创业', employer:'（自主创业）', job_type:'科技类初创', location:'青岛', salary_range:'—', signed:'否',
+      note:'示例：自主创业。' },
+    { name:'钱思远', student_number:'2022010510', class_name:'22机器人1班', major_name:'机器人工程',
+      graduation_year:2026, employment_status:'待就业', employer:'', job_type:'', location:'', salary_range:'', signed:'否',
+      note:'示例：仍在求职中，需重点帮扶。' },
+  ].map(x => normGraduate(Object.assign({ _demo:true }, x)));
+
   DB.custom = {};
   save();
 }
@@ -1489,6 +1633,34 @@ function buildTodo() {
              <button class="btn btn-sm" data-act="warn-edit" data-id="${w.id}">详情</button>`
     });
   });
+  DB.focus.forEach(s => {
+    if (s.status !== '跟踪中' || s.level !== '一级') return;
+    out.push({
+      kind:'focus', ref:s.id, level:'d', sort:-4.3,
+      title: `重点学生（一级）：${s.name} · ${s.category}`,
+      meta: [
+        `<span class="tag tag-red">一级关注</span>`,
+        `<span class="tag tag-duty">重点学生</span>`,
+        s.class_name ? `<span>${esc(s.class_name)}</span>` : '',
+        s.owner ? `<span class="tiny">负责：${esc(s.owner)}</span>` : '',
+      ].filter(Boolean).join(''),
+      acts: `<button class="btn btn-sm btn-primary" data-act="focus-edit" data-id="${s.id}"><svg class="ic ic-sm"><use href="#i-lock"/></svg>查看档案</button>`
+    });
+  });
+  DB.psych.forEach(s => {
+    if (s.level !== '重度' || s.status === '已结案' || s.status === '无需跟进') return;
+    out.push({
+      kind:'psych', ref:s.id, level:'d', sort:-4.5,
+      title: `心理摸排（重度）：${s.name} · ${s.scale}`,
+      meta: [
+        `<span class="tag tag-red">重度未结案</span>`,
+        `<span class="tag tag-duty">心理摸排</span>`,
+        s.class_name ? `<span>${esc(s.class_name)}</span>` : '',
+        s.handler ? `<span class="tiny">处理：${esc(s.handler)}</span>` : '',
+      ].filter(Boolean).join(''),
+      acts: `<button class="btn btn-sm btn-primary" data-act="psych-edit" data-id="${s.id}"><svg class="ic ic-sm"><use href="#i-mind"/></svg>查看记录</button>`
+    });
+  });
   return out.sort((a, b) => a.sort - b.sort);
 }
 
@@ -1508,6 +1680,9 @@ const app = {
     warn:{ q:'', level:'' },
     help:{ q:'', type:'' },
     grant:{ q:'', kind:'' },
+    focus:{ q:'', category:'' },
+    psych:{ q:'', level:'' },
+    graduate:{ q:'', status:'' },
   },
 };
 
@@ -2306,6 +2481,16 @@ const WARN_TYPES = ['挂科过多','学分不足','旷课过多','学业困难',
 const WARN_LEVELS = ['红','橙','黄'];
 const HELP_TYPES = ['学业帮扶','经济帮扶','心理帮扶','就业帮扶'];
 const GRANT_KINDS = ['奖学金','助学金','勤工助学','困难补助'];
+
+/* ---------- 11.9.7 重点学生档案 / 心理摸排 / 毕业生就业 常量 ---------- */
+const FOCUS_CATEGORIES = ['心理','经济','学业','家庭','行为','其他'];
+const FOCUS_LEVELS = ['一级','二级','三级'];
+const FOCUS_STATUS = ['跟踪中','已结案','已转介','已脱敏'];
+const PSYCH_SCALES = ['PHQ-9（抑郁）','GAD-7（焦虑）','SCL-90（综合）','SAS（焦虑自评）','自编问卷','其他'];
+const PSYCH_LEVELS = ['正常','轻度','中度','重度'];
+const GRAD_YEARS = [2026, 2027, 2028, 2029];
+const EMPLOY_STATUS = ['已就业','升学（国内）','出国出境','公务员（录用）','应征入伍','创业','待就业','暂不就业'];
+const SALARY_RANGES = ['<6k','6k-10k','10k-15k','15k-20k','>20k','—'];
 function filterWarn() {
   const f = app.filters.warn;
   return DB.warn.filter(s => {
@@ -2477,6 +2662,224 @@ function viewGrant() {
         <div class="mcard-acts"><button class="btn btn-sm" data-act="grant-edit" data-id="${s.id}">编辑</button><button class="btn btn-sm btn-danger" data-act="grant-del" data-id="${s.id}">删除</button></div>
       </div>`).join('')}</div>`
     : emptyBox('还没有奖助勤补记录', `<button class="btn btn-primary btn-sm" data-act="grant-new">新增记录</button>`)}
+  </div>`;
+}
+
+/* ---------- 11.9.7 重点学生档案（隐私保护锁） ---------- */
+function focusLevelTag(l) {
+  return l === '一级' ? '<span class="tag tag-red">一级</span>'
+    : l === '二级' ? '<span class="tag tag-amber">二级</span>'
+    : '<span class="tag tag-blue">三级</span>';
+}
+function focusLockScreen(unlock) {
+  return `
+  <div class="card">
+    <div class="card-hd"><h2><svg class="ic" style="color:var(--brand)"><use href="#i-lock"/></svg>重点学生档案</h2></div>
+    <div class="card-bd" style="max-width:440px;margin:0 auto;text-align:center;padding:26px 18px">
+      <div style="width:62px;height:62px;border-radius:18px;background:linear-gradient(135deg,#0c4a6e,#0ea5e9);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+        <svg class="ic" style="width:30px;height:30px;color:#fff"><use href="#i-lock"/></svg></div>
+      <h3 style="margin:0 0 6px">${unlock ? '请输入隐私保护锁' : '设置隐私保护锁'}</h3>
+      <p class="muted" style="font-size:13px;margin:0 0 18px;line-height:1.7">${unlock ? '档案内容含学生敏感信息，验证通过后方可查看。' : '重点学生档案包含敏感信息，建议设置 4 位数字密码，查看时需验证。'}</p>
+      ${unlock ? `
+        <div class="field" style="text-align:left"><label class="lab">密码</label>
+          <input class="inp" id="focus-pass" type="password" inputmode="numeric" maxlength="4" placeholder="4 位数字" style="text-align:center;font-size:20px;letter-spacing:8px"></div>
+        <button class="btn btn-primary btn-block" data-act="focus-unlock" style="margin-top:14px">解锁查看</button>
+        <button class="btn btn-block" data-act="focus-forget" style="margin-top:8px">忘记密码（保留数据并解除锁定）</button>
+      ` : `
+        <div class="field" style="text-align:left"><label class="lab">设置密码</label>
+          <input class="inp" id="focus-pass" type="password" inputmode="numeric" maxlength="4" placeholder="4 位数字" style="text-align:center;font-size:20px;letter-spacing:8px"></div>
+        <div class="field" style="text-align:left"><label class="lab">确认密码</label>
+          <input class="inp" id="focus-pass2" type="password" inputmode="numeric" maxlength="4" placeholder="再次输入" style="text-align:center;font-size:20px;letter-spacing:8px"></div>
+        <button class="btn btn-primary btn-block" data-act="focus-set-pass" style="margin-top:14px">启用保护锁</button>
+      `}
+      <p class="tiny" style="margin-top:14px;color:var(--ink-4);line-height:1.6">提示：本保护锁用于防止误触与旁人查看，数据仍存于本机，属轻量防护而非高强度加密。</p>
+    </div>
+  </div>`;
+}
+function filterFocus() {
+  const f = app.filters.focus;
+  return DB.focus.filter(s => {
+    if (f.category && s.category !== f.category) return false;
+    if (f.q) { const t = (s.name + s.student_number + s.class_name + s.category + s.level + s.reason + s.owner).toLowerCase(); if (!t.includes(f.q.toLowerCase())) return false; }
+    return true;
+  }).sort((a, b) => ((a.level === '一级' ? 0 : a.level === '二级' ? 1 : 2) - (b.level === '一级' ? 0 : b.level === '二级' ? 1 : 2)));
+}
+function viewFocus() {
+  if (!DB.settings.focus_pass) return focusLockScreen(false);
+  if (!app.focusUnlocked) return focusLockScreen(true);
+  const f = app.filters.focus, list = filterFocus();
+  const lvl1 = list.filter(s => s.level === '一级' && s.status === '跟踪中').length;
+  const tracking = list.filter(s => s.status === '跟踪中').length;
+  return `
+  <div class="card">
+    <div class="card-hd"><h2><svg class="ic" style="color:var(--brand)"><use href="#i-lock"/></svg>重点学生档案</h2>
+      <span class="sp"></span>
+      <span class="tag tag-green"><svg class="ic ic-sm"><use href="#i-lock"/></svg>已解锁</span>
+      <button class="btn btn-sm" data-act="focus-lock">上锁</button>
+      <button class="btn btn-sm" data-act="focus-export">导出 CSV</button>
+      <button class="btn btn-primary btn-sm" data-act="focus-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增档案</button>
+    </div>
+    <div class="kpis">
+      <div class="kpi danger"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-alert"/></svg>一级·跟踪中</div><div class="kpi-v" data-num="${lvl1}">0</div></div>
+      <div class="kpi brand"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-heart"/></svg>跟踪中</div><div class="kpi-v" data-num="${tracking}">0</div></div>
+      <div class="kpi"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-users"/></svg>档案总数</div><div class="kpi-v" data-num="${list.length}">0</div></div>
+    </div>
+    <div class="toolbar">
+      <div class="search"><svg class="ic ic-sm"><use href="#i-search"/></svg>
+        <input class="inp" placeholder="搜索姓名、学号、班级、原因" data-filter="focus.q" value="${esc(f.q)}"></div>
+      <select class="inp" style="width:auto;min-width:120px" data-filter="focus.category">
+        <option value="">全部类别</option>${FOCUS_CATEGORIES.map(c => `<option value="${c}"${f.category === c ? ' selected' : ''}>${c}</option>`).join('')}</select>
+    </div>
+    ${list.length ? `
+    <div class="tw"><table>
+      <thead><tr><th>姓名</th><th>班级</th><th>类别</th><th>级别</th><th>关注原因</th><th>状态</th><th class="td-acts">操作</th></tr></thead>
+      <tbody>${list.map(s => `
+        <tr class="${s.level === '一级' && s.status === '跟踪中' ? 'row-danger' : ''}">
+          <td><div style="font-weight:600">${esc(s.name)}</div><div class="tiny">${esc(s.student_number || '')}</div></td>
+          <td class="muted">${esc(s.class_name || '—')}</td>
+          <td>${esc(s.category || '—')}</td>
+          <td>${focusLevelTag(s.level)}</td>
+          <td class="muted" style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(s.reason || '—')}</td>
+          <td>${s.status === '跟踪中' ? '<span class="tag tag-blue">跟踪中</span>' : `<span class="tag tag-green">${esc(s.status)}</span>`}</td>
+          <td class="td-acts"><button class="link-btn" data-act="focus-edit" data-id="${s.id}">编辑</button><button class="link-btn danger" data-act="focus-del" data-id="${s.id}" style="margin-left:8px">删除</button></td>
+        </tr>`).join('')}</tbody></table></div>
+    <div class="mcards">${list.map(s => `
+      <div class="mcard">
+        <div class="mcard-hd"><div class="mcard-t">${esc(s.name)}</div>${s.status === '跟踪中' ? '<span class="tag tag-blue">跟踪中</span>' : `<span class="tag tag-green">${esc(s.status)}</span>`}</div>
+        <div class="mcard-meta"><span>${esc(s.class_name || '')}</span><span>${esc(s.category || '')}</span>${focusLevelTag(s.level)}</div>
+        <div class="mcard-acts"><button class="btn btn-sm" data-act="focus-edit" data-id="${s.id}">编辑</button><button class="btn btn-sm btn-danger" data-act="focus-del" data-id="${s.id}">删除</button></div>
+      </div>`).join('')}</div>
+    ` : emptyBox('还没有重点学生档案', `<button class="btn btn-primary btn-sm" data-act="focus-new">新增档案</button>`)}
+  </div>`;
+}
+
+/* ---------- 11.9.8 心理摸排台账 ---------- */
+function psychLevelTag(l) {
+  return l === '正常' ? '<span class="tag tag-green">正常</span>'
+    : l === '轻度' ? '<span class="tag tag-blue">轻度</span>'
+    : l === '中度' ? '<span class="tag tag-amber">中度</span>'
+    : '<span class="tag tag-red">重度</span>';
+}
+function filterPsych() {
+  const f = app.filters.psych;
+  return DB.psych.filter(s => {
+    if (f.level && s.level !== f.level) return false;
+    if (f.q) { const t = (s.name + s.student_number + s.class_name + s.scale + s.concern + s.handler).toLowerCase(); if (!t.includes(f.q.toLowerCase())) return false; }
+    return true;
+  });
+}
+function viewPsych() {
+  const f = app.filters.psych, list = filterPsych();
+  const severe = list.filter(s => s.level === '重度' && s.status !== '已结案').length;
+  const tracking = list.filter(s => s.status === '跟踪中').length;
+  const levelItems = PSYCH_LEVELS.map((l, i) => ({ label: l, value: list.filter(s => s.level === l).length, color: ['#16a34a', '#0ea5e9', '#f59e0b', '#ef4444'][i] }));
+  return `
+  <div class="card">
+    <div class="card-hd"><h2><svg class="ic" style="color:var(--brand)"><use href="#i-mind"/></svg>心理摸排台账</h2>
+      <span class="sp"></span>
+      <button class="btn btn-sm" data-act="psych-export">导出 CSV</button>
+      <button class="btn btn-primary btn-sm" data-act="psych-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增摸排</button>
+    </div>
+    <div class="kpis">
+      <div class="kpi danger"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-alert"/></svg>重度·未结案</div><div class="kpi-v" data-num="${severe}">0</div></div>
+      <div class="kpi brand"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-mind"/></svg>跟踪中</div><div class="kpi-v" data-num="${tracking}">0</div></div>
+      <div class="kpi"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-users"/></svg>摸排总数</div><div class="kpi-v" data-num="${list.length}">0</div></div>
+    </div>
+    ${levelItems.some(i => i.value) ? `<div class="card-bd" style="padding:6px 18px 0"><div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap">
+      <div style="flex:0 0 140px">${donutChart(levelItems, list.length, '人次')}</div>
+      <div style="flex:1;min-width:220px">${hBarChart(levelItems)}</div></div></div>` : ''}
+    <div class="toolbar">
+      <div class="search"><svg class="ic ic-sm"><use href="#i-search"/></svg>
+        <input class="inp" placeholder="搜索姓名、学号、班级、量表" data-filter="psych.q" value="${esc(f.q)}"></div>
+      <select class="inp" style="width:auto;min-width:110px" data-filter="psych.level">
+        <option value="">全部等级</option>${PSYCH_LEVELS.map(l => `<option value="${l}"${f.level === l ? ' selected' : ''}>${l}</option>`).join('')}</select>
+    </div>
+    ${list.length ? `
+    <div class="tw"><table>
+      <thead><tr><th>姓名</th><th>班级</th><th>量表</th><th>得分</th><th>等级</th><th>处理人</th><th>状态</th><th class="td-acts">操作</th></tr></thead>
+      <tbody>${list.map(s => `
+        <tr class="${s.level === '重度' && s.status !== '已结案' ? 'row-danger' : ''}">
+          <td><div style="font-weight:600">${esc(s.name)}</div><div class="tiny">${esc(s.student_number || '')}</div></td>
+          <td class="muted">${esc(s.class_name || '—')}</td>
+          <td>${esc(s.scale || '—')}</td>
+          <td class="muted">${s.score === '' || s.score == null ? '—' : esc(s.score)}</td>
+          <td>${psychLevelTag(s.level)}</td>
+          <td class="muted">${esc(s.handler || '—')}</td>
+          <td>${s.status === '跟踪中' ? '<span class="tag tag-blue">跟踪中</span>' : `<span class="tag tag-green">${esc(s.status)}</span>`}</td>
+          <td class="td-acts"><button class="link-btn" data-act="psych-edit" data-id="${s.id}">编辑</button><button class="link-btn danger" data-act="psych-del" data-id="${s.id}" style="margin-left:8px">删除</button></td>
+        </tr>`).join('')}</tbody></table></div>
+    <div class="mcards">${list.map(s => `
+      <div class="mcard">
+        <div class="mcard-hd"><div class="mcard-t">${esc(s.name)}</div>${psychLevelTag(s.level)}</div>
+        <div class="mcard-meta"><span>${esc(s.class_name || '')}</span><span>${esc(s.scale || '')}</span><span>得分 ${s.score === '' || s.score == null ? '—' : esc(s.score)}</span><span>${esc(s.status)}</span></div>
+        <div class="mcard-acts"><button class="btn btn-sm" data-act="psych-edit" data-id="${s.id}">编辑</button><button class="btn btn-sm btn-danger" data-act="psych-del" data-id="${s.id}">删除</button></div>
+      </div>`).join('')}</div>
+    ` : emptyBox('还没有心理摸排记录', `<button class="btn btn-primary btn-sm" data-act="psych-new">新增摸排</button>`)}
+  </div>`;
+}
+
+/* ---------- 11.9.9 毕业生档案与就业统计 ---------- */
+function employStatusTag(s) {
+  return (s === '待就业' || s === '暂不就业') ? `<span class="tag tag-amber">${esc(s)}</span>`
+    : `<span class="tag tag-green">${esc(s)}</span>`;
+}
+function filterGraduate() {
+  const f = app.filters.graduate;
+  return DB.graduate.filter(s => {
+    if (f.status && s.employment_status !== f.status) return false;
+    if (f.q) { const t = (s.name + s.student_number + s.class_name + s.major_name + s.employer + s.job_type + s.location).toLowerCase(); if (!t.includes(f.q.toLowerCase())) return false; }
+    return true;
+  });
+}
+function viewGraduate() {
+  const f = app.filters.graduate, list = filterGraduate();
+  const total = list.length;
+  const employed = list.filter(s => s.employment_status !== '待就业' && s.employment_status !== '暂不就业').length;
+  const rate = total ? Math.round(employed / total * 100) : 0;
+  const upCount = list.filter(s => s.employment_status === '升学（国内）' || s.employment_status === '出国出境').length;
+  const civilCount = list.filter(s => s.employment_status === '公务员（录用）').length;
+  const statusItems = EMPLOY_STATUS.map((s, i) => ({ label: s, value: list.filter(x => x.employment_status === s).length, color: ['#16a34a', '#0ea5e9', '#0891b2', '#1e3a5f', '#7c3aed', '#f59e0b', '#ef4444', '#94a3b8'][i] }));
+  return `
+  <div class="card">
+    <div class="card-hd"><h2><svg class="ic" style="color:var(--brand)"><use href="#i-grad"/></svg>毕业生档案与就业统计</h2>
+      <span class="sp"></span>
+      <button class="btn btn-sm" data-act="graduate-export">导出 CSV</button>
+      <button class="btn btn-primary btn-sm" data-act="graduate-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增毕业生</button>
+    </div>
+    <div class="kpis">
+      <div class="kpi ok"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-check"/></svg>就业率</div><div class="kpi-v" data-num="${rate}">0</div><div class="kpi-s">%</div></div>
+      <div class="kpi brand"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-grad"/></svg>升学/出国</div><div class="kpi-v" data-num="${upCount}">0</div></div>
+      <div class="kpi"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-shield"/></svg>公务员录用</div><div class="kpi-v" data-num="${civilCount}">0</div></div>
+    </div>
+    ${statusItems.some(i => i.value) ? `<div class="card-bd" style="padding:6px 18px 0">${hBarChart(statusItems)}</div>` : ''}
+    <div class="toolbar">
+      <div class="search"><svg class="ic ic-sm"><use href="#i-search"/></svg>
+        <input class="inp" placeholder="搜索姓名、学号、班级、单位、岗位" data-filter="graduate.q" value="${esc(f.q)}"></div>
+      <select class="inp" style="width:auto;min-width:130px" data-filter="graduate.status">
+        <option value="">全部状态</option>${EMPLOY_STATUS.map(s => `<option value="${s}"${f.status === s ? ' selected' : ''}>${s}</option>`).join('')}</select>
+    </div>
+    ${list.length ? `
+    <div class="tw"><table>
+      <thead><tr><th>姓名</th><th>班级</th><th>专业</th><th>毕业年</th><th>就业状态</th><th>单位/岗位</th><th>薪酬</th><th>签约</th><th class="td-acts">操作</th></tr></thead>
+      <tbody>${list.map(s => `
+        <tr>
+          <td><div style="font-weight:600">${esc(s.name)}</div><div class="tiny">${esc(s.student_number || '')}</div></td>
+          <td class="muted">${esc(s.class_name || '—')}</td>
+          <td class="muted">${esc(s.major_name || '—')}</td>
+          <td class="muted">${esc(s.graduation_year || '—')}</td>
+          <td>${employStatusTag(s.employment_status)}</td>
+          <td class="muted">${esc(s.employer || '—')}${s.job_type ? ' / ' + esc(s.job_type) : ''}</td>
+          <td class="muted">${esc(s.salary_range || '—')}</td>
+          <td>${s.signed === '是' ? '<span class="tag tag-green">已签约</span>' : '<span class="tag tag-amber">未签</span>'}</td>
+          <td class="td-acts"><button class="link-btn" data-act="graduate-edit" data-id="${s.id}">编辑</button><button class="link-btn danger" data-act="graduate-del" data-id="${s.id}" style="margin-left:8px">删除</button></td>
+        </tr>`).join('')}</tbody></table></div>
+    <div class="mcards">${list.map(s => `
+      <div class="mcard">
+        <div class="mcard-hd"><div class="mcard-t">${esc(s.name)}</div>${employStatusTag(s.employment_status)}</div>
+        <div class="mcard-meta"><span>${esc(s.class_name || '')}</span><span>${esc(s.major_name || '')}</span><span>${esc(s.employer || '')}</span><span>签约 ${esc(s.signed)}</span></div>
+        <div class="mcard-acts"><button class="btn btn-sm" data-act="graduate-edit" data-id="${s.id}">编辑</button><button class="btn btn-sm btn-danger" data-act="graduate-del" data-id="${s.id}">删除</button></div>
+      </div>`).join('')}</div>
+    ` : emptyBox('还没有毕业生档案', `<button class="btn btn-primary btn-sm" data-act="graduate-new">新增毕业生</button>`)}
   </div>`;
 }
 
@@ -2923,6 +3326,89 @@ function grantForm(s) {
     }
   });
 }
+function focusForm(s) {
+  const isNew = !s;
+  ui.form({
+    title: isNew ? '新增重点学生档案' : '编辑重点学生档案',
+    data: s || { category:'心理', level:'二级', status:'跟踪中' },
+    fields: [
+      { key:'name', label:'学生姓名', required:true, list:'dl-f-stu' },
+      { key:'student_number', label:'学号' },
+      { key:'class_name', label:'班级', list:'dl-f-cls' },
+      { key:'category', label:'关注类别', type:'select', options: FOCUS_CATEGORIES },
+      { key:'level', label:'关注级别', type:'select', options: FOCUS_LEVELS },
+      { key:'status', label:'管理状态', type:'select', options: FOCUS_STATUS },
+      { key:'owner', label:'负责老师', ph:'辅导员 / 班主任' },
+      { key:'reason', label:'关注原因 / 风险描述', type:'textarea', rows:2, span:2 },
+      { key:'measures', label:'干预措施 / 帮扶计划', type:'textarea', rows:2, span:2 },
+      { key:'follow_up', label:'跟进记录', type:'textarea', rows:2, span:2 },
+      { key:'note', label:'备注', type:'textarea', rows:2, span:2 },
+    ],
+    extra: stuPickerExtra('dl-f-stu', 'dl-f-cls'),
+    onOpen(mask) { bindStuPicker(mask, 'name', 'student_number', 'class_name'); },
+    onSave(v) {
+      if (isNew) { DB.focus.push(normFocus(v)); ui.toast('档案已登记', 'ok'); }
+      else { Object.assign(s, normFocus(Object.assign({}, s, v))); ui.toast('已保存', 'ok'); }
+      save('focus'); render();
+    }
+  });
+}
+function psychForm(s) {
+  const isNew = !s;
+  ui.form({
+    title: isNew ? '新增心理摸排记录' : '编辑心理摸排记录',
+    data: s || { scale:'PHQ-9（抑郁）', level:'正常', status:'跟踪中' },
+    fields: [
+      { key:'name', label:'学生姓名', required:true, list:'dl-p-stu' },
+      { key:'student_number', label:'学号' },
+      { key:'class_name', label:'班级', list:'dl-p-cls' },
+      { key:'screen_date', label:'摸排日期', type:'date' },
+      { key:'scale', label:'使用量表', type:'select', options: PSYCH_SCALES },
+      { key:'score', label:'得分', type:'number', ph:'如 14' },
+      { key:'level', label:'评估结果', type:'select', options: PSYCH_LEVELS },
+      { key:'status', label:'状态', type:'select', options:['跟踪中','已转介','已结案','无需跟进'] },
+      { key:'concern', label:'关注事项', type:'textarea', rows:2, span:2 },
+      { key:'suggestion', label:'干预建议 / 转介', type:'textarea', rows:2, span:2 },
+      { key:'handler', label:'处理人 / 转介去向', ph:'校心理中心 / 辅导员' },
+      { key:'note', label:'备注', type:'textarea', rows:2, span:2 },
+    ],
+    extra: stuPickerExtra('dl-p-stu', 'dl-p-cls'),
+    onOpen(mask) { bindStuPicker(mask, 'name', 'student_number', 'class_name'); },
+    onSave(v) {
+      if (isNew) { DB.psych.push(normPsych(v)); ui.toast('摸排已登记', 'ok'); }
+      else { Object.assign(s, normPsych(Object.assign({}, s, v))); ui.toast('已保存', 'ok'); }
+      save('psych'); render();
+    }
+  });
+}
+function graduateForm(s) {
+  const isNew = !s;
+  ui.form({
+    title: isNew ? '新增毕业生档案' : '编辑毕业生档案',
+    data: s || { graduation_year:new Date().getFullYear(), employment_status:'待就业', signed:'否' },
+    fields: [
+      { key:'name', label:'学生姓名', required:true, list:'dl-gr-stu' },
+      { key:'student_number', label:'学号' },
+      { key:'class_name', label:'班级', list:'dl-gr-cls' },
+      { key:'major_name', label:'专业' },
+      { key:'graduation_year', label:'毕业年份', type:'select', options: GRAD_YEARS.map(String) },
+      { key:'employment_status', label:'就业状态', type:'select', options: EMPLOY_STATUS },
+      { key:'employer', label:'就业单位', ph:'单位名称 / 升学学校' },
+      { key:'job_type', label:'岗位 / 方向', ph:'如：研发工程师 / 硕士' },
+      { key:'location', label:'就业地点', ph:'如：上海' },
+      { key:'salary_range', label:'薪酬区间', type:'select', options: SALARY_RANGES },
+      { key:'signed', label:'是否签约', type:'select', options:['是','否'] },
+      { key:'note', label:'备注', type:'textarea', rows:2, span:2 },
+    ],
+    extra: stuPickerExtra('dl-gr-stu', 'dl-gr-cls'),
+    onOpen(mask) { bindStuPicker(mask, 'name', 'student_number', 'class_name'); },
+    onSave(v) {
+      if (isNew) { DB.graduate.push(normGraduate(v)); ui.toast('档案已添加', 'ok'); }
+      else { Object.assign(s, normGraduate(Object.assign({}, s, v))); ui.toast('已保存', 'ok'); }
+      save('graduate'); render();
+    }
+  });
+}
 function stayForm(t) {
   const isNew = !t;
   ui.form({
@@ -3172,7 +3658,7 @@ function clearAll() {
     () => {
       ui.confirm('再次确认', '真的要清空吗？这是最后一次确认。', () => {
         DB.students = []; DB.tasks = []; DB.talks = []; DB.stay = []; DB.leave = []; DB.honor = []; DB.pleave = []; DB.attend = []; DB.node = [];
-        DB.warn = []; DB.help = []; DB.grant = []; DB.custom = {};
+        DB.warn = []; DB.help = []; DB.grant = []; DB.focus = []; DB.psych = []; DB.graduate = []; DB.custom = {};
         DB.settings.seeded = true; save();
         render(); ui.toast('已清空全部数据', 'ok');
       }, true);
@@ -3185,6 +3671,7 @@ const VIEWS = {
   stay:viewStay, leave:viewLeave, honor:viewHonor, report:viewReport, bridge:viewBridge,
   pleave:viewPleave, attend:viewAttend, node:viewNode,
   warn:viewWarn, help:viewHelp, grant:viewGrant,
+  focus:viewFocus, psych:viewPsych, graduate:viewGraduate,
 };
 function render() {
   const fn = VIEWS[app.view] || (customModules[app.view] && customModules[app.view].render) || viewHome;
@@ -3419,6 +3906,52 @@ const ACTS = {
     download(`奖助勤补_${today()}.csv`, toCSV(rows), 'text/csv'); ui.toast('已导出','ok');
   },
 
+  /* ---------- 重点学生档案（隐私保护锁） ---------- */
+  'focus-new': () => focusForm(null),
+  'focus-edit': id => focusForm(DB.focus.find(s => s.id === id)),
+  'focus-del': id => ui.confirm('删除档案', '确定删除这条重点学生档案吗？', () => { DB.focus = DB.focus.filter(s => s.id !== id); save('focus'); render(); ui.toast('已删除','ok'); }, true),
+  'focus-export': () => {
+    const rows = [['姓名','学号','班级','关注类别','关注级别','关注原因','干预措施','跟进记录','负责老师','管理状态','更新日期','备注']]
+      .concat(DB.focus.map(s => [s.name, s.student_number, s.class_name, s.category, s.level, s.reason, s.measures, s.follow_up, s.owner, s.status, s.updated_at, s.note]));
+    download(`重点学生档案_${today()}.csv`, toCSV(rows), 'text/csv'); ui.toast('已导出','ok');
+  },
+  'focus-set-pass': () => {
+    const a = ($('#focus-pass') || {}).value || '';
+    const b = ($('#focus-pass2') || {}).value || '';
+    if (!/^\d{4}$/.test(a)) { ui.toast('请输入 4 位数字密码', 'err'); return; }
+    if (a !== b) { ui.toast('两次输入不一致', 'err'); return; }
+    DB.settings.focus_pass = btoa(a); app.focusUnlocked = true; save('settings'); render(); ui.toast('隐私保护锁已启用', 'ok');
+  },
+  'focus-unlock': () => {
+    const a = ($('#focus-pass') || {}).value || '';
+    if (btoa(a) === DB.settings.focus_pass) { app.focusUnlocked = true; render(); ui.toast('已解锁', 'ok'); }
+    else ui.toast('密码错误', 'err');
+  },
+  'focus-lock': () => { app.focusUnlocked = false; render(); },
+  'focus-forget': () => ui.confirm('解除隐私锁', '将清除密码并解除锁定，<b>重点学生档案数据保留</b>。确定吗？', () => {
+    DB.settings.focus_pass = ''; app.focusUnlocked = true; save('settings'); render(); ui.toast('已解除锁定', 'ok');
+  }, true),
+
+  /* ---------- 心理摸排台账 ---------- */
+  'psych-new': () => psychForm(null),
+  'psych-edit': id => psychForm(DB.psych.find(s => s.id === id)),
+  'psych-del': id => ui.confirm('删除记录', '确定删除这条心理摸排记录吗？', () => { DB.psych = DB.psych.filter(s => s.id !== id); save('psych'); render(); ui.toast('已删除','ok'); }, true),
+  'psych-export': () => {
+    const rows = [['姓名','学号','班级','摸排日期','使用量表','得分','评估结果','关注事项','干预建议','处理人','状态','备注']]
+      .concat(DB.psych.map(s => [s.name, s.student_number, s.class_name, s.screen_date, s.scale, s.score, s.level, s.concern, s.suggestion, s.handler, s.status, s.note]));
+    download(`心理摸排_${today()}.csv`, toCSV(rows), 'text/csv'); ui.toast('已导出','ok');
+  },
+
+  /* ---------- 毕业生档案与就业统计 ---------- */
+  'graduate-new': () => graduateForm(null),
+  'graduate-edit': id => graduateForm(DB.graduate.find(s => s.id === id)),
+  'graduate-del': id => ui.confirm('删除档案', '确定删除这条毕业生档案吗？', () => { DB.graduate = DB.graduate.filter(s => s.id !== id); save('graduate'); render(); ui.toast('已删除','ok'); }, true),
+  'graduate-export': () => {
+    const rows = [['姓名','学号','班级','专业','毕业年份','就业状态','就业单位','岗位/方向','就业地点','薪酬区间','是否签约','更新日期','备注']]
+      .concat(DB.graduate.map(s => [s.name, s.student_number, s.class_name, s.major_name, s.graduation_year, s.employment_status, s.employer, s.job_type, s.location, s.salary_range, s.signed, s.updated_at, s.note]));
+    download(`毕业生档案_${today()}.csv`, toCSV(rows), 'text/csv'); ui.toast('已导出','ok');
+  },
+
   'export-json': exportJSON,
   'import-json': () => $('#file-json').click(),
   'pkg-export': exportPackage,
@@ -3432,7 +3965,8 @@ const ACTS = {
     const n = DB.students.filter(x => x._demo).length + DB.tasks.filter(x => x._demo).length + DB.talks.filter(x => x._demo).length
       + DB.stay.filter(x => x._demo).length + DB.leave.filter(x => x._demo).length + DB.honor.filter(x => x._demo).length
       + DB.pleave.filter(x => x._demo).length + DB.attend.filter(x => x._demo).length + DB.node.filter(x => x._demo).length
-      + DB.warn.filter(x => x._demo).length + DB.help.filter(x => x._demo).length + DB.grant.filter(x => x._demo).length;
+      + DB.warn.filter(x => x._demo).length + DB.help.filter(x => x._demo).length + DB.grant.filter(x => x._demo).length
+      + DB.focus.filter(x => x._demo).length + DB.psych.filter(x => x._demo).length + DB.graduate.filter(x => x._demo).length;
     if (!n) { ui.toast('示例数据已经清理干净了', 'ok'); return; }
     ui.confirm('清空示例数据',
       `将删除 <b>${n}</b> 条系统预置的示例记录（示例老师、张明、李思颖等），<b>你自己录入的数据不受影响</b>。确定清理吗？`,
@@ -3449,6 +3983,9 @@ const ACTS = {
         DB.warn = DB.warn.filter(x => !x._demo);
         DB.help = DB.help.filter(x => !x._demo);
         DB.grant = DB.grant.filter(x => !x._demo);
+        DB.focus = DB.focus.filter(x => !x._demo);
+        DB.psych = DB.psych.filter(x => !x._demo);
+        DB.graduate = DB.graduate.filter(x => !x._demo);
         if (DB.settings.counselor_name === '示例老师') { DB.settings.counselor_name = ''; DB.settings.college_name = ''; }
         save(); render(); paintWho(); ui.toast(`已清理 ${n} 条示例数据`, 'ok');
       }, true);
@@ -3559,6 +4096,15 @@ function boot() {
     DB.stay = (store.read('stay', []) || []).map(normStay);
     DB.leave = (store.read('leave', []) || []).map(normLeave);
     DB.honor = (store.read('honor', []) || []).map(normHonor);
+    DB.pleave = (store.read('pleave', []) || []).map(normPleave);
+    DB.attend = (store.read('attend', []) || []).map(normAttend);
+    DB.node = (store.read('node', []) || []).map(normNode);
+    DB.warn = (store.read('warn', []) || []).map(normWarn);
+    DB.help = (store.read('help', []) || []).map(normHelp);
+    DB.grant = (store.read('grant', []) || []).map(normGrant);
+    DB.focus = (store.read('focus', []) || []).map(normFocus);
+    DB.psych = (store.read('psych', []) || []).map(normPsych);
+    DB.graduate = (store.read('graduate', []) || []).map(normGraduate);
     DB.custom = store.read('custom', {}) || {};
   }
   paintWho();
@@ -3573,14 +4119,17 @@ window.CWB = {
   version: APP_VERSION,
   db: DB, store, schema, ui, hooks, bridge, modules,
   consts: { DUTIES, FOCUS, LEVELS, PRIOS, SOURCES, TALK_WAYS, CRISIS_LEVELS, CRISIS_WAYS, STU_TYPES, HONOR_TYPES, MORAL_LEVELS, POLITICS,
-    PLEAVE_TYPES, ATTEND_TYPES, NODE_REPEAT, WARN_TYPES, WARN_LEVELS, HELP_TYPES, GRANT_KINDS },
+    PLEAVE_TYPES, ATTEND_TYPES, NODE_REPEAT, WARN_TYPES, WARN_LEVELS, HELP_TYPES, GRANT_KINDS,
+    FOCUS_CATEGORIES, FOCUS_LEVELS, FOCUS_STATUS, PSYCH_SCALES, PSYCH_LEVELS, GRAD_YEARS, EMPLOY_STATUS, SALARY_RANGES },
   utils: { esc, uid, today, shiftDay, daysFromToday, cnDate, toCSV, parseCSV, download },
   save, render, go,
   norm: {
     student:normStudent, task:normTask, talk:normTalk, stay:normStay, leave:normLeave, honor:normHonor,
     pleave:normPleave, attend:normAttend, node:normNode, warn:normWarn, help:normHelp, grant:normGrant,
+    focus:normFocus, psych:normPsych, graduate:normGraduate,
     normStudent, normTask, normTalk, normStay, normLeave, normHonor,
     normPleave, normAttend, normNode, normWarn, normHelp, normGrant,
+    normFocus, normPsych, normGraduate,
   },
 };
 
