@@ -426,6 +426,10 @@ tbody tr:last-child td{border-bottom:none}
     <button class="nav-item" data-view="pleave"><svg class="ic"><use href="#i-clock"/></svg>请销假</button>
     <button class="nav-item" data-view="attend"><svg class="ic"><use href="#i-check"/></svg>考勤台账</button>
     <button class="nav-item" data-view="node"><svg class="ic"><use href="#i-flag"/></svg>工作节点</button>
+    <div class="nav-group">学业与资助</div>
+    <button class="nav-item" data-view="warn"><svg class="ic"><use href="#i-alert"/></svg>学业预警</button>
+    <button class="nav-item" data-view="help"><svg class="ic"><use href="#i-heart"/></svg>学业帮扶</button>
+    <button class="nav-item" data-view="grant"><svg class="ic"><use href="#i-shield"/></svg>奖助勤补</button>
     <div class="nav-group">数据</div>
     <button class="nav-item" data-view="bridge"><svg class="ic"><use href="#i-link"/></svg>平台联动</button>
     <div class="nav-foot">
@@ -637,7 +641,8 @@ const store = {
 const DB = {
   settings: {}, students: [], tasks: [], talks: [],
   stay: [], leave: [], honor: [], custom: {},
-  pleave: [], attend: [], node: []
+  pleave: [], attend: [], node: [],
+  warn: [], help: [], grant: []
 };
 function save(part) {
   if (!part || part === 'settings') store.write('settings', DB.settings);
@@ -650,6 +655,9 @@ function save(part) {
   if (!part || part === 'pleave')   store.write('pleave', DB.pleave);
   if (!part || part === 'attend')   store.write('attend', DB.attend);
   if (!part || part === 'node')     store.write('node', DB.node);
+  if (!part || part === 'warn')     store.write('warn', DB.warn);
+  if (!part || part === 'help')     store.write('help', DB.help);
+  if (!part || part === 'grant')    store.write('grant', DB.grant);
   if (!part || part === 'custom')   store.write('custom', DB.custom);
 }
 
@@ -800,7 +808,7 @@ const hooks = {
 
 /* ===================== 7. 平台联动桥 bridge ===================== */
 const bridge = {
-  PACKAGE_VERSION: 2,
+  PACKAGE_VERSION: 3,
   buildPackage(scope) {
     scope = scope || {};
     const inRange = d => (!scope.from || d >= scope.from) && (!scope.to || d <= scope.to);
@@ -824,6 +832,9 @@ const bridge = {
       pleave: scope.pleave === false ? [] : DB.pleave,
       attend: scope.attend === false ? [] : DB.attend,
       node: scope.node === false ? [] : DB.node,
+      warn: scope.warn === false ? [] : DB.warn,
+      help: scope.help === false ? [] : DB.help,
+      grant: scope.grant === false ? [] : DB.grant,
       custom: DB.custom,
       stats: this.stats(scope),
     };
@@ -855,6 +866,13 @@ const bridge = {
       attend_total: DB.attend.length,
       node_total: DB.node.length,
       node_overdue: DB.node.filter(n => n.status !== 'done' && n.due && daysFromToday(n.due) < 0).length,
+      warn_total: DB.warn.length,
+      warn_active: DB.warn.filter(w => !w.resolved).length,
+      warn_red: DB.warn.filter(w => !w.resolved && w.level === '红').length,
+      help_total: DB.help.length,
+      help_tracking: DB.help.filter(h => h.status !== '已结束').length,
+      grant_total: DB.grant.length,
+      grant_pending: DB.grant.filter(g => g.status !== '已发放').length,
       by_duty: Object.values(byDuty),
     };
   },
@@ -871,12 +889,17 @@ const bridge = {
     const PL = Array.isArray(src.pleave) ? src.pleave : [];
     const AT = Array.isArray(src.attend) ? src.attend : [];
     const NO = Array.isArray(src.node) ? src.node : [];
-    if (!S.length && !T.length && !K.length && !ST.length && !LV.length && !HO.length && !PL.length && !AT.length && !NO.length) throw new Error('文件中没有可导入的数据');
+    const WA = Array.isArray(src.warn) ? src.warn : [];
+    const HP = Array.isArray(src.help) ? src.help : [];
+    const GR = Array.isArray(src.grant) ? src.grant : [];
+    if (!S.length && !T.length && !K.length && !ST.length && !LV.length && !HO.length && !PL.length && !AT.length && !NO.length
+      && !WA.length && !HP.length && !GR.length) throw new Error('文件中没有可导入的数据');
 
     if (mode === 'replace') {
       DB.students = S.map(normStudent); DB.tasks = T.map(normTask); DB.talks = K.map(normTalk);
       DB.stay = ST.map(normStay); DB.leave = LV.map(normLeave); DB.honor = HO.map(normHonor);
       DB.pleave = PL.map(normPleave); DB.attend = AT.map(normAttend); DB.node = NO.map(normNode);
+      DB.warn = WA.map(normWarn); DB.help = HP.map(normHelp); DB.grant = GR.map(normGrant);
       if (src.custom) DB.custom = src.custom;
     } else {
       const sKey = x => x.student_number || x.id;
@@ -896,6 +919,9 @@ const bridge = {
       DB.pleave = merge(DB.pleave, PL, normPleave);
       DB.attend = merge(DB.attend, AT, normAttend);
       DB.node = merge(DB.node, NO, normNode);
+      DB.warn = merge(DB.warn, WA, normWarn);
+      DB.help = merge(DB.help, HP, normHelp);
+      DB.grant = merge(DB.grant, GR, normGrant);
     }
     if (isPkg && src.counselor && !DB.settings.counselor_name) {
       DB.settings.counselor_name = src.counselor.name || '';
@@ -903,7 +929,8 @@ const bridge = {
       DB.settings.org_code = src.counselor.org_code || '';
     }
     save();
-    return { students:S.length, tasks:T.length, talks:K.length, stay:ST.length, leave:LV.length, honor:HO.length, pleave:PL.length, attend:AT.length, node:NO.length };
+    return { students:S.length, tasks:T.length, talks:K.length, stay:ST.length, leave:LV.length, honor:HO.length,
+      pleave:PL.length, attend:AT.length, node:NO.length, warn:WA.length, help:HP.length, grant:GR.length };
   },
   get baseUrl() { return (DB.settings.platform_url || '').replace(/\/$/, ''); },
   get enabled() { return !!this.baseUrl && !!DB.settings.platform_api_on; },
@@ -1114,6 +1141,59 @@ function normNode(x) {
     _demo: !!x._demo,
   };
 }
+function normWarn(x) {
+  x = x || {};
+  return {
+    id: x.id || uid(),
+    student_number: x.student_number || '',
+    name: String(x.name || '').trim(),
+    class_name: x.class_name || '',
+    type: x.type || '挂科过多',
+    level: x.level || '黄',
+    course: x.course || '',
+    measure: x.measure || '',
+    follow: x.follow || '',
+    resolved: x.resolved || false,
+    resolved_at: x.resolved_at || '',
+    note: x.note || '',
+    created_at: x.created_at || new Date().toISOString(),
+    _demo: !!x._demo,
+  };
+}
+function normHelp(x) {
+  x = x || {};
+  return {
+    id: x.id || uid(),
+    student_number: x.student_number || '',
+    name: String(x.name || '').trim(),
+    class_name: x.class_name || '',
+    type: x.type || '学业帮扶',
+    helper: x.helper || '',
+    cycle: x.cycle || '',
+    measure: x.measure || '',
+    effect: x.effect || '',
+    status: x.status || '跟踪中',
+    note: x.note || '',
+    created_at: x.created_at || new Date().toISOString(),
+    _demo: !!x._demo,
+  };
+}
+function normGrant(x) {
+  x = x || {};
+  return {
+    id: x.id || uid(),
+    student_number: x.student_number || '',
+    name: String(x.name || '').trim(),
+    class_name: x.class_name || '',
+    kind: x.kind || '助学金',
+    amount: x.amount || '',
+    batch: x.batch || '',
+    status: x.status || '待发放',
+    note: x.note || '',
+    created_at: x.created_at || new Date().toISOString(),
+    _demo: !!x._demo,
+  };
+}
 
 const APP_VERSION = '3.0.0';
 
@@ -1229,6 +1309,57 @@ function seedDemo() {
       summary:'联系毕业班班委，逐人核对生源地与就业意向。', attachment:'' },
   ].map(x => normNode(Object.assign({ _demo:true }, x)));
 
+  DB.warn = [
+    { name:'张明', student_number:'2024010101', class_name:'24机器人1班',
+      type:'挂科过多', level:'红', course:'高等数学A、大学物理、C语言程序设计',
+      measure:'启动一对一学业帮扶，安排学业导师每周辅导两次；已约谈并告知家长。',
+      follow:'已完成首次约谈，家长表示支持；下周复查作业完成情况。',
+      resolved:false, resolved_at:'', note:'示例：红色预警，需重点跟踪。' },
+    { name:'刘子豪', student_number:'2024010205', class_name:'24机器人2班',
+      type:'旷课过多', level:'橙', course:'高等数学A',
+      measure:'纳入考勤重点关注名单，班委每日反馈到课情况。',
+      follow:'本周旷课 2 次，已谈话并要求书面说明。',
+      resolved:false, resolved_at:'', note:'与考勤台账数据联动查看。' },
+    { name:'李思颖', student_number:'2024010103', class_name:'24机器人1班',
+      type:'学业困难', level:'黄', course:'工程制图',
+      measure:'安排同班优秀学生结对辅导，参加学院答疑坊。',
+      follow:'期中测验成绩由 52 分提升至 71 分，预警已解除。',
+      resolved:true, resolved_at: shiftDay(T, -6), note:'示例：已解除预警的记录。' },
+  ].map(x => normWarn(Object.assign({ _demo:true }, x)));
+
+  DB.help = [
+    { name:'张明', student_number:'2024010101', class_name:'24机器人1班',
+      type:'学业帮扶', helper:'学业导师 王老师 + 结对同学 陈雨欣', cycle:'本学期（每周二、周四晚）',
+      measure:'高等数学、大学物理专项补习，每两周做一次阶段测评。',
+      effect:'第一次阶段测评及格，出勤稳定。', status:'跟踪中',
+      note:'与学业预警红色记录对应。' },
+    { name:'王浩然', student_number:'2024010301', class_name:'24飞行器设计1班',
+      type:'经济帮扶', helper:'辅导员 + 学院资助工作组', cycle:'2025-2026 学年',
+      measure:'协助申请国家助学金，推荐参与勤工助学岗位（实验室助理）。',
+      effect:'助学金已进入公示环节，勤工助学岗位已上岗。', status:'跟踪中',
+      note:'注意保护学生隐私，材料不外传。' },
+    { name:'陈雨欣', student_number:'2024010204', class_name:'24机器人2班',
+      type:'心理帮扶', helper:'心理中心 张老师 + 辅导员', cycle:'2025-11 至 2026-01',
+      measure:'每月一次心理咨询，辅导员每两周一次谈心谈话。',
+      effect:'情绪状态明显好转，已按计划结束帮扶。', status:'已结束',
+      note:'示例：已结束的帮扶记录。' },
+  ].map(x => normHelp(Object.assign({ _demo:true }, x)));
+
+  DB.grant = [
+    { name:'王浩然', student_number:'2024010301', class_name:'24飞行器设计1班',
+      kind:'助学金', amount:'3800', batch:'2025-2026学年国家助学金 一等', status:'待发放',
+      note:'材料已齐，处于学院公示期。' },
+    { name:'李思颖', student_number:'2024010103', class_name:'24机器人1班',
+      kind:'奖学金', amount:'5000', batch:'2024-2025学年国家励志奖学金', status:'已发放',
+      note:'已发放到校园卡账户。' },
+    { name:'刘子豪', student_number:'2024010205', class_name:'24机器人2班',
+      kind:'勤工助学', amount:'600', batch:'2025年秋季学期 实验室助理岗', status:'待发放',
+      note:'按月结算，需提交考勤表。' },
+    { name:'张明', student_number:'2024010101', class_name:'24机器人1班',
+      kind:'困难补助', amount:'1000', batch:'2025年冬季临时困难补助', status:'已发放',
+      note:'家庭突发变故临时补助。' },
+  ].map(x => normGrant(Object.assign({ _demo:true }, x)));
+
   DB.custom = {};
   save();
 }
@@ -1342,6 +1473,22 @@ function buildTodo() {
              <button class="btn btn-sm" data-act="node-edit" data-id="${n.id}">详情</button>`
     });
   });
+  DB.warn.forEach(w => {
+    if (w.resolved || w.level !== '红') return;
+    out.push({
+      kind:'warn', ref:w.id, level:'d', sort:-4,
+      title: `学业预警（红色）：${w.name} · ${w.type}`,
+      meta: [
+        `<span class="tag tag-red">红色预警未解除</span>`,
+        `<span class="tag tag-duty">学业预警</span>`,
+        w.class_name ? `<span>${esc(w.class_name)}</span>` : '',
+        w.course ? `<span class="tiny">${esc(String(w.course).slice(0, 40))}</span>` : '',
+      ].filter(Boolean).join(''),
+      acts: `<button class="btn btn-sm btn-ok" data-act="warn-resolve" data-id="${w.id}"><svg class="ic ic-sm"><use href="#i-check"/></svg>标记解除</button>
+             <button class="btn btn-sm btn-primary" data-act="help-new" data-id="${w.id}">建帮扶记录</button>
+             <button class="btn btn-sm" data-act="warn-edit" data-id="${w.id}">详情</button>`
+    });
+  });
   return out.sort((a, b) => a.sort - b.sort);
 }
 
@@ -1358,6 +1505,9 @@ const app = {
     pleave:{ q:'', status:'' },
     attend:{ q:'', cls:'', type:'' },
     node:{ q:'', status:'' },
+    warn:{ q:'', level:'' },
+    help:{ q:'', type:'' },
+    grant:{ q:'', kind:'' },
   },
 };
 
@@ -2151,6 +2301,185 @@ function viewNode() {
   </div>`;
 }
 
+/* ---------- 11.9.4 学业预警台账 ---------- */
+const WARN_TYPES = ['挂科过多','学分不足','旷课过多','学业困难','其他'];
+const WARN_LEVELS = ['红','橙','黄'];
+const HELP_TYPES = ['学业帮扶','经济帮扶','心理帮扶','就业帮扶'];
+const GRANT_KINDS = ['奖学金','助学金','勤工助学','困难补助'];
+function filterWarn() {
+  const f = app.filters.warn;
+  return DB.warn.filter(s => {
+    if (f.level && s.level !== f.level) return false;
+    if (f.q) { const t = (s.name+s.student_number+s.class_name+s.type+s.course+s.note).toLowerCase(); if (!t.includes(f.q.toLowerCase())) return false; }
+    return true;
+  }).sort((a,b)=> ((a.level==='红'?0:a.level==='橙'?1:2) - (b.level==='红'?0:b.level==='橙'?1:2)));
+}
+function warnLevelTag(l) {
+  if (l === '红') return '<span class="tag tag-red">红</span>';
+  if (l === '橙') return '<span class="tag tag-amber">橙</span>';
+  return '<span class="tag tag-blue">黄</span>';
+}
+function viewWarn() {
+  const f = app.filters.warn, list = filterWarn();
+  const red = list.filter(s=>s.level==='红'&&!s.resolved).length;
+  const orange = list.filter(s=>s.level==='橙'&&!s.resolved).length;
+  const yellow = list.filter(s=>s.level==='黄'&&!s.resolved).length;
+  return `
+  <div class="card">
+    <div class="card-hd"><h2><svg class="ic" style="color:var(--brand)"><use href="#i-alert"/></svg>学业预警台账</h2>
+      <span class="sp"></span>
+      <button class="btn btn-sm" data-act="warn-export">导出 CSV</button>
+      <button class="btn btn-primary btn-sm" data-act="warn-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增预警</button>
+    </div>
+    <div class="kpis">
+      <div class="kpi danger"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-alert"/></svg>红色未解除</div><div class="kpi-v" data-num="${red}">0</div></div>
+      <div class="kpi warn"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-clock"/></svg>橙色未解除</div><div class="kpi-v" data-num="${orange}">0</div></div>
+      <div class="kpi brand"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-book"/></svg>黄色未解除</div><div class="kpi-v" data-num="${yellow}">0</div></div>
+    </div>
+    <div class="toolbar">
+      <div class="search"><svg class="ic ic-sm"><use href="#i-search"/></svg>
+        <input class="inp" placeholder="搜索姓名、学号、班级、课程" data-filter="warn.q" value="${esc(f.q)}"></div>
+      <select class="inp" style="width:auto;min-width:110px" data-filter="warn.level">
+        <option value="">全部等级</option>${WARN_LEVELS.map(l=>`<option value="${l}"${f.level===l?' selected':''}>${l}色</option>`).join('')}</select>
+    </div>
+    ${list.length?`
+    <div class="tw"><table>
+      <thead><tr><th>姓名</th><th>班级</th><th>预警类型</th><th>等级</th><th>关联课程</th><th>干预措施</th><th>状态</th><th class="td-acts">操作</th></tr></thead>
+      <tbody>${list.map(s=>`
+        <tr class="${s.level==='红'&&!s.resolved?'row-danger':''}">
+          <td><div style="font-weight:600">${esc(s.name)}</div><div class="tiny">${esc(s.student_number||'')}</div></td>
+          <td class="muted">${esc(s.class_name||'—')}</td>
+          <td>${esc(s.type||'—')}</td>
+          <td>${warnLevelTag(s.level)}</td>
+          <td class="muted">${esc(s.course||'—')}</td>
+          <td class="muted" style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(s.measure||'—')}</td>
+          <td>${s.resolved?'<span class="tag tag-green">已解决</span>':'<span class="tag tag-amber">跟踪中</span>'}</td>
+          <td class="td-acts">
+            ${!s.resolved?`<button class="link-btn" data-act="warn-resolve" data-id="${s.id}">标记解决</button>`:''}
+            <button class="link-btn" data-act="warn-edit" data-id="${s.id}" style="margin-left:8px">编辑</button>
+            <button class="link-btn danger" data-act="warn-del" data-id="${s.id}" style="margin-left:8px">删除</button></td>
+        </tr>`).join('')}</tbody></table></div>
+    <div class="mcards">${list.map(s=>`
+      <div class="mcard">
+        <div class="mcard-hd"><div class="mcard-t">${esc(s.name)}</div>${s.resolved?'<span class="tag tag-green">已解决</span>':warnLevelTag(s.level)}</div>
+        <div class="mcard-meta"><span>${esc(s.class_name||'')}</span><span>${esc(s.type||'')}</span><span>${esc(s.course||'')}</span></div>
+        <div class="mcard-acts">
+          ${!s.resolved?`<button class="btn btn-sm btn-ok" data-act="warn-resolve" data-id="${s.id}">标记解决</button>`:''}
+          <button class="btn btn-sm" data-act="warn-edit" data-id="${s.id}">编辑</button>
+        </div>
+      </div>`).join('')}</div>`
+    : emptyBox('还没有学业预警记录', `<button class="btn btn-primary btn-sm" data-act="warn-new">新增预警</button>`)}
+  </div>`;
+}
+
+/* ---------- 11.9.5 学业帮扶台账 ---------- */
+function filterHelp() {
+  const f = app.filters.help;
+  return DB.help.filter(s=>{
+    if (f.type && s.type!==f.type) return false;
+    if (f.q) { const t=(s.name+s.student_number+s.class_name+s.helper+s.measure+s.effect).toLowerCase(); if(!t.includes(f.q.toLowerCase())) return false; }
+    return true;
+  });
+}
+function viewHelp() {
+  const f = app.filters.help, list = filterHelp();
+  const tracking = list.filter(s=>s.status!=='已结束').length;
+  return `
+  <div class="card">
+    <div class="card-hd"><h2><svg class="ic" style="color:var(--brand)"><use href="#i-heart"/></svg>学业帮扶台账</h2>
+      <span class="sp"></span>
+      <button class="btn btn-sm" data-act="help-export">导出 CSV</button>
+      <button class="btn btn-primary btn-sm" data-act="help-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增帮扶</button>
+    </div>
+    <div class="kpis">
+      <div class="kpi brand"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-heart"/></svg>帮扶中</div><div class="kpi-v" data-num="${tracking}">0</div></div>
+      <div class="kpi ok"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-check"/></svg>已结束</div><div class="kpi-v" data-num="${list.length-tracking}">0</div></div>
+    </div>
+    <div class="toolbar">
+      <div class="search"><svg class="ic ic-sm"><use href="#i-search"/></svg>
+        <input class="inp" placeholder="搜索姓名、学号、帮扶人" data-filter="help.q" value="${esc(f.q)}"></div>
+      <select class="inp" style="width:auto;min-width:120px" data-filter="help.type">
+        <option value="">全部类型</option>${HELP_TYPES.map(t=>`<option value="${t}"${f.type===t?' selected':''}>${t}</option>`).join('')}</select>
+    </div>
+    ${list.length?`
+    <div class="tw"><table>
+      <thead><tr><th>姓名</th><th>班级</th><th>帮扶类型</th><th>帮扶人</th><th>周期</th><th>状态</th><th class="td-acts">操作</th></tr></thead>
+      <tbody>${list.map(s=>`
+        <tr>
+          <td><div style="font-weight:600">${esc(s.name)}</div><div class="tiny">${esc(s.student_number||'')}</div></td>
+          <td class="muted">${esc(s.class_name||'—')}</td>
+          <td>${esc(s.type||'—')}</td>
+          <td class="muted">${esc(s.helper||'—')}</td>
+          <td class="muted">${esc(s.cycle||'—')}</td>
+          <td>${s.status==='已结束'?'<span class="tag tag-green">已结束</span>':'<span class="tag tag-blue">跟踪中</span>'}</td>
+          <td class="td-acts"><button class="link-btn" data-act="help-edit" data-id="${s.id}">编辑</button><button class="link-btn danger" data-act="help-del" data-id="${s.id}" style="margin-left:8px">删除</button></td>
+        </tr>`).join('')}</tbody></table></div>
+    <div class="mcards">${list.map(s=>`
+      <div class="mcard">
+        <div class="mcard-hd"><div class="mcard-t">${esc(s.name)}</div>${s.status==='已结束'?'<span class="tag tag-green">已结束</span>':'<span class="tag tag-blue">跟踪中</span>'}</div>
+        <div class="mcard-meta"><span>${esc(s.class_name||'')}</span><span>${esc(s.type||'')}</span><span>${esc(s.helper||'')}</span></div>
+        <div class="mcard-acts"><button class="btn btn-sm" data-act="help-edit" data-id="${s.id}">编辑</button><button class="btn btn-sm btn-danger" data-act="help-del" data-id="${s.id}">删除</button></div>
+      </div>`).join('')}</div>`
+    : emptyBox('还没有帮扶记录', `<button class="btn btn-primary btn-sm" data-act="help-new">新增帮扶</button>`)}
+  </div>`;
+}
+
+/* ---------- 11.9.6 奖助勤补管理 ---------- */
+function filterGrant() {
+  const f = app.filters.grant;
+  return DB.grant.filter(s=>{
+    if (f.kind && s.kind!==f.kind) return false;
+    if (f.q) { const t=(s.name+s.student_number+s.class_name+s.batch+s.note).toLowerCase(); if(!t.includes(f.q.toLowerCase())) return false; }
+    return true;
+  });
+}
+function viewGrant() {
+  const f = app.filters.grant, list = filterGrant();
+  const pending = list.filter(s=>s.status!=='已发放').length;
+  const total = list.reduce((a,s)=>a + (Number(s.amount)||0), 0);
+  const byKind = {}; list.forEach(s=>{ byKind[s.kind]=(byKind[s.kind]||0)+(Number(s.amount)||0); });
+  const kindItems = Object.keys(byKind).map(k=>({label:k, value:byKind[k], color:'#0ea5e9'}));
+  return `
+  <div class="card">
+    <div class="card-hd"><h2><svg class="ic" style="color:var(--brand)"><use href="#i-shield"/></svg>奖助勤补管理</h2>
+      <span class="sp"></span>
+      <button class="btn btn-sm" data-act="grant-export">导出 CSV</button>
+      <button class="btn btn-primary btn-sm" data-act="grant-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增记录</button>
+    </div>
+    <div class="kpis">
+      <div class="kpi brand"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-shield"/></svg>待发放</div><div class="kpi-v" data-num="${pending}">0</div></div>
+      <div class="kpi ok"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-check"/></svg>发放总额</div><div class="kpi-v" data-num="${total}">0</div><div class="kpi-s">元</div></div>
+    </div>
+    ${kindItems.length?`<div class="card-bd" style="padding:6px 18px 0">${hBarChart(kindItems)}</div>`:''}
+    <div class="toolbar">
+      <div class="search"><svg class="ic ic-sm"><use href="#i-search"/></svg>
+        <input class="inp" placeholder="搜索姓名、学号、班级、批次" data-filter="grant.q" value="${esc(f.q)}"></div>
+      <select class="inp" style="width:auto;min-width:120px" data-filter="grant.kind">
+        <option value="">全部项目</option>${GRANT_KINDS.map(k=>`<option value="${k}"${f.kind===k?' selected':''}>${k}</option>`).join('')}</select>
+    </div>
+    ${list.length?`
+    <div class="tw"><table>
+      <thead><tr><th>姓名</th><th>班级</th><th>项目类型</th><th>金额(元)</th><th>批次/年度</th><th>发放状态</th><th class="td-acts">操作</th></tr></thead>
+      <tbody>${list.map(s=>`
+        <tr>
+          <td><div style="font-weight:600">${esc(s.name)}</div><div class="tiny">${esc(s.student_number||'')}</div></td>
+          <td class="muted">${esc(s.class_name||'—')}</td>
+          <td>${esc(s.kind||'—')}</td>
+          <td class="muted">${esc(s.amount||'—')}</td>
+          <td class="muted">${esc(s.batch||'—')}</td>
+          <td>${s.status==='已发放'?'<span class="tag tag-green">已发放</span>':s.status==='已驳回'?'<span class="tag tag-red">已驳回</span>':'<span class="tag tag-amber">待发放</span>'}</td>
+          <td class="td-acts"><button class="link-btn" data-act="grant-edit" data-id="${s.id}">编辑</button><button class="link-btn danger" data-act="grant-del" data-id="${s.id}" style="margin-left:8px">删除</button></td>
+        </tr>`).join('')}</tbody></table></div>
+    <div class="mcards">${list.map(s=>`
+      <div class="mcard">
+        <div class="mcard-hd"><div class="mcard-t">${esc(s.name)}</div>${s.status==='已发放'?'<span class="tag tag-green">已发放</span>':s.status==='已驳回'?'<span class="tag tag-red">已驳回</span>':'<span class="tag tag-amber">待发放</span>'}</div>
+        <div class="mcard-meta"><span>${esc(s.class_name||'')}</span><span>${esc(s.kind||'')}</span><span>${esc(s.amount||'')} 元</span><span>${esc(s.batch||'')}</span></div>
+        <div class="mcard-acts"><button class="btn btn-sm" data-act="grant-edit" data-id="${s.id}">编辑</button><button class="btn btn-sm btn-danger" data-act="grant-del" data-id="${s.id}">删除</button></div>
+      </div>`).join('')}</div>`
+    : emptyBox('还没有奖助勤补记录', `<button class="btn btn-primary btn-sm" data-act="grant-new">新增记录</button>`)}
+  </div>`;
+}
+
 /* ---------- 11.10 工作留痕与汇总 ---------- */
 function reportRange() {
   const r = app.reportRange || { mode:'term' };
@@ -2518,6 +2847,82 @@ function nodeForm(s) {
     }
   });
 }
+function warnForm(s) {
+  const isNew = !s;
+  ui.form({
+    title: isNew ? '新增学业预警' : '编辑学业预警',
+    data: s || { type:'挂科过多', level:'黄' },
+    fields: [
+      { key:'name', label:'学生姓名', required:true, list:'dl-w-stu' },
+      { key:'student_number', label:'学号' },
+      { key:'class_name', label:'班级', list:'dl-w-cls' },
+      { key:'type', label:'预警类型', type:'select', options: WARN_TYPES },
+      { key:'level', label:'预警等级', type:'select', options: WARN_LEVELS },
+      { key:'course', label:'关联课程', ph:'如：高等数学（上）' },
+      { key:'measure', label:'干预措施', type:'textarea', rows:2, ph:'谈心、家长沟通、学业帮扶等', span:2 },
+      { key:'follow', label:'回访记录', type:'textarea', rows:2, span:2 },
+      { key:'resolved', label:'是否已解除预警', type:'checkbox' },
+      { key:'note', label:'备注', type:'textarea', rows:2, span:2 },
+    ],
+    extra: stuPickerExtra('dl-w-stu', 'dl-w-cls'),
+    onOpen(mask) { bindStuPicker(mask, 'name', 'student_number', 'class_name'); },
+    onSave(v) {
+      if (isNew) { DB.warn.push(normWarn(v)); ui.toast('预警已登记', 'ok'); }
+      else { Object.assign(s, normWarn(Object.assign({}, s, v))); ui.toast('已保存', 'ok'); }
+      save('warn'); render();
+    }
+  });
+}
+function helpForm(s, pre) {
+  const isNew = !s;
+  ui.form({
+    title: isNew ? '新增帮扶记录' : '编辑帮扶记录',
+    data: s || Object.assign({ type:'学业帮扶', status:'跟踪中' }, pre || {}),
+    fields: [
+      { key:'name', label:'学生姓名', required:true, list:'dl-h-stu' },
+      { key:'student_number', label:'学号' },
+      { key:'class_name', label:'班级', list:'dl-h-cls' },
+      { key:'type', label:'帮扶类型', type:'select', options: HELP_TYPES },
+      { key:'helper', label:'帮扶人', ph:'辅导员 / 学业导师 / 学生党员' },
+      { key:'cycle', label:'帮扶周期', ph:'如：本学期 / 4周' },
+      { key:'measure', label:'帮扶措施', type:'textarea', rows:2, ph:'一对一辅导、资源共享等', span:2 },
+      { key:'effect', label:'效果记录', type:'textarea', rows:2, span:2 },
+      { key:'status', label:'状态', type:'select', options:['跟踪中','已结束'] },
+      { key:'note', label:'备注', type:'textarea', rows:2, span:2 },
+    ],
+    extra: stuPickerExtra('dl-h-stu', 'dl-h-cls'),
+    onOpen(mask) { bindStuPicker(mask, 'name', 'student_number', 'class_name'); },
+    onSave(v) {
+      if (isNew) { DB.help.push(normHelp(v)); ui.toast('帮扶已登记', 'ok'); }
+      else { Object.assign(s, normHelp(Object.assign({}, s, v))); ui.toast('已保存', 'ok'); }
+      save('help'); render();
+    }
+  });
+}
+function grantForm(s) {
+  const isNew = !s;
+  ui.form({
+    title: isNew ? '新增奖助勤补记录' : '编辑奖助勤补记录',
+    data: s || { kind:'助学金', status:'待发放' },
+    fields: [
+      { key:'name', label:'学生姓名', required:true, list:'dl-g-stu' },
+      { key:'student_number', label:'学号' },
+      { key:'class_name', label:'班级', list:'dl-g-cls' },
+      { key:'kind', label:'项目类型', type:'select', options: GRANT_KINDS },
+      { key:'amount', label:'金额(元)', type:'number', ph:'如 5000' },
+      { key:'batch', label:'批次 / 年度', ph:'如：2025-2026 学年' },
+      { key:'status', label:'发放状态', type:'select', options:['待发放','已发放','已驳回'] },
+      { key:'note', label:'备注', type:'textarea', rows:2, span:2 },
+    ],
+    extra: stuPickerExtra('dl-g-stu', 'dl-g-cls'),
+    onOpen(mask) { bindStuPicker(mask, 'name', 'student_number', 'class_name'); },
+    onSave(v) {
+      if (isNew) { DB.grant.push(normGrant(v)); ui.toast('记录已添加', 'ok'); }
+      else { Object.assign(s, normGrant(Object.assign({}, s, v))); ui.toast('已保存', 'ok'); }
+      save('grant'); render();
+    }
+  });
+}
 function stayForm(t) {
   const isNew = !t;
   ui.form({
@@ -2766,7 +3171,8 @@ function clearAll() {
     '将删除本机所有学生、任务和谈话记录，<b style="color:var(--danger)">此操作不可恢复</b>。<br><br>建议先导出一份 JSON 备份。确定继续吗？',
     () => {
       ui.confirm('再次确认', '真的要清空吗？这是最后一次确认。', () => {
-        DB.students = []; DB.tasks = []; DB.talks = []; DB.stay = []; DB.leave = []; DB.honor = []; DB.pleave = []; DB.attend = []; DB.node = []; DB.custom = {};
+        DB.students = []; DB.tasks = []; DB.talks = []; DB.stay = []; DB.leave = []; DB.honor = []; DB.pleave = []; DB.attend = []; DB.node = [];
+        DB.warn = []; DB.help = []; DB.grant = []; DB.custom = {};
         DB.settings.seeded = true; save();
         render(); ui.toast('已清空全部数据', 'ok');
       }, true);
@@ -2778,6 +3184,7 @@ const VIEWS = {
   home:viewHome, tasks:viewTasks, students:viewStudents, talks:viewTalks,
   stay:viewStay, leave:viewLeave, honor:viewHonor, report:viewReport, bridge:viewBridge,
   pleave:viewPleave, attend:viewAttend, node:viewNode,
+  warn:viewWarn, help:viewHelp, grant:viewGrant,
 };
 function render() {
   const fn = VIEWS[app.view] || (customModules[app.view] && customModules[app.view].render) || viewHome;
@@ -2979,6 +3386,39 @@ const ACTS = {
     download(`工作节点_${today()}.csv`, toCSV(rows), 'text/csv'); ui.toast('已导出','ok');
   },
 
+  /* ---------- 学业预警 ---------- */
+  'warn-new': () => warnForm(null),
+  'warn-edit': id => warnForm(DB.warn.find(s => s.id === id)),
+  'warn-del': id => ui.confirm('删除记录', '确定删除这条学业预警吗？', () => { DB.warn = DB.warn.filter(s => s.id !== id); save('warn'); render(); ui.toast('已删除','ok'); }, true),
+  'warn-resolve': id => { const s = DB.warn.find(x => x.id === id); if (!s) return; ui.confirm('标记解决', `确认 <b>${esc(s.name)}</b> 的学业预警已解除吗？解除后将不再置顶提醒。`, () => { s.resolved = true; s.resolved_at = today(); save('warn'); render(); ui.toast('已标记解决','ok'); }); },
+  'warn-export': () => {
+    const rows = [['姓名','学号','班级','预警类型','等级','关联课程','干预措施','回访记录','是否解决','解决日期','备注']]
+      .concat(DB.warn.map(s => [s.name, s.student_number, s.class_name, s.type, s.level, s.course, s.measure, s.follow, s.resolved ? '已解决' : '跟踪中', s.resolved_at, s.note]));
+    download(`学业预警_${today()}.csv`, toCSV(rows), 'text/csv'); ui.toast('已导出','ok');
+  },
+  /* ---------- 学业帮扶 ---------- */
+  'help-new': id => {
+    const w = id ? DB.warn.find(x => x.id === id) : null;
+    helpForm(null, w ? { name:w.name, student_number:w.student_number, class_name:w.class_name,
+      measure: w.measure || '', note: `由学业预警「${w.type}·${w.level}级」转入。` } : null);
+  },
+  'help-edit': id => helpForm(DB.help.find(s => s.id === id)),
+  'help-del': id => ui.confirm('删除记录', '确定删除这条帮扶记录吗？', () => { DB.help = DB.help.filter(s => s.id !== id); save('help'); render(); ui.toast('已删除','ok'); }, true),
+  'help-export': () => {
+    const rows = [['姓名','学号','班级','帮扶类型','帮扶人','周期','帮扶措施','效果记录','状态','备注']]
+      .concat(DB.help.map(s => [s.name, s.student_number, s.class_name, s.type, s.helper, s.cycle, s.measure, s.effect, s.status, s.note]));
+    download(`学业帮扶_${today()}.csv`, toCSV(rows), 'text/csv'); ui.toast('已导出','ok');
+  },
+  /* ---------- 奖助勤补 ---------- */
+  'grant-new': () => grantForm(null),
+  'grant-edit': id => grantForm(DB.grant.find(s => s.id === id)),
+  'grant-del': id => ui.confirm('删除记录', '确定删除这条奖助记录吗？', () => { DB.grant = DB.grant.filter(s => s.id !== id); save('grant'); render(); ui.toast('已删除','ok'); }, true),
+  'grant-export': () => {
+    const rows = [['姓名','学号','班级','项目类型','金额(元)','批次/年度','发放状态','备注']]
+      .concat(DB.grant.map(s => [s.name, s.student_number, s.class_name, s.kind, s.amount, s.batch, s.status, s.note]));
+    download(`奖助勤补_${today()}.csv`, toCSV(rows), 'text/csv'); ui.toast('已导出','ok');
+  },
+
   'export-json': exportJSON,
   'import-json': () => $('#file-json').click(),
   'pkg-export': exportPackage,
@@ -2990,7 +3430,9 @@ const ACTS = {
   'go-report': () => go('report'),
   'clear-demo': () => {
     const n = DB.students.filter(x => x._demo).length + DB.tasks.filter(x => x._demo).length + DB.talks.filter(x => x._demo).length
-      + DB.stay.filter(x => x._demo).length + DB.leave.filter(x => x._demo).length + DB.honor.filter(x => x._demo).length;
+      + DB.stay.filter(x => x._demo).length + DB.leave.filter(x => x._demo).length + DB.honor.filter(x => x._demo).length
+      + DB.pleave.filter(x => x._demo).length + DB.attend.filter(x => x._demo).length + DB.node.filter(x => x._demo).length
+      + DB.warn.filter(x => x._demo).length + DB.help.filter(x => x._demo).length + DB.grant.filter(x => x._demo).length;
     if (!n) { ui.toast('示例数据已经清理干净了', 'ok'); return; }
     ui.confirm('清空示例数据',
       `将删除 <b>${n}</b> 条系统预置的示例记录（示例老师、张明、李思颖等），<b>你自己录入的数据不受影响</b>。确定清理吗？`,
@@ -3004,6 +3446,9 @@ const ACTS = {
         DB.pleave = DB.pleave.filter(x => !x._demo);
         DB.attend = DB.attend.filter(x => !x._demo);
         DB.node = DB.node.filter(x => !x._demo);
+        DB.warn = DB.warn.filter(x => !x._demo);
+        DB.help = DB.help.filter(x => !x._demo);
+        DB.grant = DB.grant.filter(x => !x._demo);
         if (DB.settings.counselor_name === '示例老师') { DB.settings.counselor_name = ''; DB.settings.college_name = ''; }
         save(); render(); paintWho(); ui.toast(`已清理 ${n} 条示例数据`, 'ok');
       }, true);
@@ -3127,10 +3572,16 @@ function boot() {
 window.CWB = {
   version: APP_VERSION,
   db: DB, store, schema, ui, hooks, bridge, modules,
-  consts: { DUTIES, FOCUS, LEVELS, PRIOS, SOURCES, TALK_WAYS, CRISIS_LEVELS, CRISIS_WAYS, STU_TYPES, HONOR_TYPES, MORAL_LEVELS, POLITICS },
+  consts: { DUTIES, FOCUS, LEVELS, PRIOS, SOURCES, TALK_WAYS, CRISIS_LEVELS, CRISIS_WAYS, STU_TYPES, HONOR_TYPES, MORAL_LEVELS, POLITICS,
+    PLEAVE_TYPES, ATTEND_TYPES, NODE_REPEAT, WARN_TYPES, WARN_LEVELS, HELP_TYPES, GRANT_KINDS },
   utils: { esc, uid, today, shiftDay, daysFromToday, cnDate, toCSV, parseCSV, download },
   save, render, go,
-  norm: { student:normStudent, task:normTask, talk:normTalk, stay:normStay, leave:normLeave, honor:normHonor },
+  norm: {
+    student:normStudent, task:normTask, talk:normTalk, stay:normStay, leave:normLeave, honor:normHonor,
+    pleave:normPleave, attend:normAttend, node:normNode, warn:normWarn, help:normHelp, grant:normGrant,
+    normStudent, normTask, normTalk, normStay, normLeave, normHonor,
+    normPleave, normAttend, normNode, normWarn, normHelp, normGrant,
+  },
 };
 
 boot();
