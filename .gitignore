@@ -1,0 +1,19 @@
+# 依赖（仅测试用，非运行依赖）
+node_modules/
+
+# 临时测试 / 构建产物
+*.log
+.DS_Store
+Thumbs.db
+.cache/
+dist/
+build/
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+*.swp
+
+# 切勿提交含真实学生数据的导出备份
+*.backup.json
+backups/
