@@ -7,28 +7,35 @@
 <title>辅导员工作台</title>
 <style>
 /* ============================================================
-   辅导员工作台 Counselor Desk
+   辅导员工作台 Counselor Desk  v2.1.0
    单文件 / 零依赖 / 数据仅存本机 localStorage
+   设计：现代质感 + 微动效（无外部资源）
    ============================================================ */
 :root{
-  --brand:#2563eb; --brand-dark:#1d4ed8; --brand-soft:#eff6ff; --brand-line:#bfdbfe;
+  --brand:#4f46e5; --brand-2:#6366f1; --brand-dark:#4338ca; --brand-soft:#eef2ff; --brand-line:#c7d2fe;
   --ink:#0f172a; --ink-2:#334155; --ink-3:#64748b; --ink-4:#94a3b8;
-  --line:#e2e8f0; --line-2:#f1f5f9; --bg:#f5f7fa; --card:#fff;
-  --danger:#dc2626; --danger-soft:#fef2f2; --danger-line:#fecaca;
+  --line:#e9edf3; --line-2:#f4f6fb; --bg:#f6f8fc; --card:#ffffff;
+  --danger:#e11d48; --danger-soft:#fff1f3; --danger-line:#fecdd3;
   --warn:#d97706; --warn-soft:#fffbeb; --warn-line:#fde68a;
   --ok:#16a34a; --ok-soft:#f0fdf4; --ok-line:#bbf7d0;
   --purple:#7c3aed; --purple-soft:#f5f3ff;
-  --r:12px; --r-sm:8px;
-  --sh:0 1px 2px rgba(15,23,42,.04),0 1px 3px rgba(15,23,42,.06);
-  --sh-lg:0 10px 30px rgba(15,23,42,.12);
-  --nav-w:212px;
+  --r:16px; --r-sm:10px; --r-xs:8px;
+  --sh:0 1px 2px rgba(15,23,42,.05),0 4px 16px rgba(15,23,42,.05);
+  --sh-lg:0 18px 50px rgba(15,23,42,.18);
+  --nav-w:228px;
+  --grad:linear-gradient(135deg,#4f46e5,#7c3aed);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
 body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;
-  background:var(--bg); color:var(--ink); font-size:14px; line-height:1.6;
+  background:
+    radial-gradient(1200px 600px at 100% -10%, #eef2ff 0%, rgba(238,242,255,0) 55%),
+    radial-gradient(1000px 500px at -10% 0%, #faf5ff 0%, rgba(250,245,255,0) 50%),
+    var(--bg);
+  color:var(--ink); font-size:14px; line-height:1.6;
   -webkit-font-smoothing:antialiased;
+  background-attachment:fixed;
 }
 button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
 button{cursor:pointer;border:none;background:none;padding:0}
@@ -40,99 +47,114 @@ a{color:var(--brand);text-decoration:none}
 
 /* ---------- 顶栏 ---------- */
 .topbar{
-  position:sticky;top:0;z-index:60;background:#fff;border-bottom:1px solid var(--line);
-  display:flex;align-items:center;gap:12px;padding:0 16px;height:56px;
+  position:sticky;top:0;z-index:60;
+  background:rgba(255,255,255,.82);backdrop-filter:saturate(180%) blur(12px);
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:12px;padding:0 16px;height:58px;
 }
-.brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:16px;letter-spacing:.2px;white-space:nowrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:16px;letter-spacing:.2px;white-space:nowrap}
 .brand-mark{
-  width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--brand),#4f46e5);
+  width:32px;height:32px;border-radius:10px;background:var(--grad);
   color:#fff;display:flex;align-items:center;justify-content:center;flex:0 0 auto;
+  box-shadow:0 6px 16px rgba(79,70,229,.35);
 }
-.brand-sub{font-size:11px;color:var(--ink-4);font-weight:500;padding:2px 7px;border:1px solid var(--line);border-radius:20px}
+.brand-sub{font-size:11px;color:var(--ink-3);font-weight:600;padding:3px 9px;border:1px solid var(--line);border-radius:20px;background:#fff}
 .topbar-sp{flex:1}
 .topbar-acts{display:flex;align-items:center;gap:8px}
-.who{font-size:13px;color:var(--ink-3);white-space:nowrap;max-width:180px;overflow:hidden;text-overflow:ellipsis}
+.who{font-size:13px;color:var(--ink-3);white-space:nowrap;max-width:200px;overflow:hidden;text-overflow:ellipsis}
 
 /* ---------- 按钮 ---------- */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:6px;
-  min-height:36px;padding:0 13px;border-radius:var(--r-sm);
+  min-height:38px;padding:0 14px;border-radius:var(--r-sm);
   border:1px solid var(--line);background:#fff;color:var(--ink-2);
-  font-size:13px;font-weight:500;transition:.15s;white-space:nowrap;
+  font-size:13px;font-weight:600;transition:transform .12s ease,box-shadow .18s ease,background .18s ease,border-color .18s ease;white-space:nowrap;
 }
-.btn:hover{background:var(--line-2);border-color:#cbd5e1}
-.btn:active{transform:translateY(1px)}
-.btn-primary{background:var(--brand);border-color:var(--brand);color:#fff}
-.btn-primary:hover{background:var(--brand-dark);border-color:var(--brand-dark)}
+.btn:hover{background:var(--line-2);border-color:#cbd5e1;transform:translateY(-1px)}
+.btn:active{transform:translateY(1px) scale(.99)}
+.btn-primary{background:var(--grad);border-color:transparent;color:#fff;box-shadow:0 6px 16px rgba(79,70,229,.28)}
+.btn-primary:hover{box-shadow:0 10px 22px rgba(79,70,229,.4);filter:saturate(1.05)}
 .btn-danger{background:#fff;border-color:var(--danger-line);color:var(--danger)}
 .btn-danger:hover{background:var(--danger-soft)}
-.btn-ok{background:var(--ok);border-color:var(--ok);color:#fff}
-.btn-ok:hover{filter:brightness(.94)}
-.btn-sm{min-height:30px;padding:0 10px;font-size:12.5px;border-radius:7px}
-.btn-icon{min-width:36px;padding:0 9px}
+.btn-ok{background:var(--ok);border-color:transparent;color:#fff;box-shadow:0 6px 16px rgba(22,163,74,.22)}
+.btn-ok:hover{filter:brightness(.96)}
+.btn-sm{min-height:32px;padding:0 11px;font-size:12.5px;border-radius:9px}
+.btn-icon{min-width:38px;padding:0 9px}
 .btn-ghost{border-color:transparent;background:transparent;color:var(--ink-3)}
 .btn-ghost:hover{background:var(--line-2);color:var(--ink)}
 
 /* ---------- 布局 ---------- */
-.layout{display:flex;align-items:flex-start;max-width:1560px;margin:0 auto}
+.layout{display:flex;align-items:flex-start;max-width:1640px;margin:0 auto}
 .sidenav{
-  width:var(--nav-w);flex:0 0 var(--nav-w);position:sticky;top:56px;
-  height:calc(100vh - 56px);padding:16px 12px;overflow-y:auto;
-  border-right:1px solid var(--line);background:#fff;
+  width:var(--nav-w);flex:0 0 var(--nav-w);position:sticky;top:58px;
+  height:calc(100vh - 58px);padding:18px 14px;overflow-y:auto;
+  border-right:1px solid var(--line);
+  background:rgba(255,255,255,.6);backdrop-filter:blur(8px);
 }
-.nav-group{font-size:11px;font-weight:600;color:var(--ink-4);letter-spacing:.6px;padding:10px 10px 6px}
+.nav-group{font-size:11px;font-weight:700;color:var(--ink-4);letter-spacing:.8px;padding:14px 12px 7px}
+.nav-group:first-child{padding-top:4px}
 .nav-item{
-  display:flex;align-items:center;gap:10px;width:100%;min-height:42px;padding:0 11px;
-  border-radius:var(--r-sm);color:var(--ink-2);font-size:14px;font-weight:500;transition:.15s;margin-bottom:2px;
+  position:relative;display:flex;align-items:center;gap:11px;width:100%;min-height:44px;padding:0 12px;
+  border-radius:12px;color:var(--ink-2);font-size:14px;font-weight:600;transition:.16s;margin-bottom:3px;overflow:hidden;
 }
+.nav-item:before{content:"";position:absolute;left:0;top:50%;transform:translateY(-50%) scaleY(0);width:3px;height:22px;border-radius:3px;background:var(--grad);transition:transform .2s ease}
 .nav-item:hover{background:var(--line-2)}
-.nav-item.on{background:var(--brand-soft);color:var(--brand-dark);font-weight:600}
-.nav-item .ic{color:var(--ink-4)}
+.nav-item.on{background:var(--brand-soft);color:var(--brand-dark)}
+.nav-item.on:before{transform:translateY(-50%) scaleY(1)}
+.nav-item .ic{color:var(--ink-4);transition:color .16s}
 .nav-item.on .ic{color:var(--brand)}
 .nav-badge{margin-left:auto;font-size:11px;font-weight:700;min-width:20px;height:19px;padding:0 6px;border-radius:20px;
   background:var(--danger);color:#fff;display:flex;align-items:center;justify-content:center}
 .nav-badge.gray{background:var(--line);color:var(--ink-3)}
-.nav-foot{margin-top:18px;padding:11px;border-top:1px solid var(--line-2);font-size:11.5px;color:var(--ink-4);line-height:1.7}
+.nav-foot{margin-top:16px;padding:12px;border-top:1px solid var(--line-2);font-size:11.5px;color:var(--ink-4);line-height:1.7;border-radius:12px;background:var(--line-2)}
 
-.main{flex:1;min-width:0;padding:18px 20px 40px}
+.main{flex:1;min-width:0;padding:20px 22px 48px}
 
 /* ---------- 卡片 ---------- */
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:16px}
-.card-hd{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line-2);flex-wrap:wrap}
-.card-hd h2{margin:0;font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:16px;overflow:hidden}
+.card-hd{display:flex;align-items:center;gap:10px;padding:15px 18px;border-bottom:1px solid var(--line-2);flex-wrap:wrap;background:linear-gradient(180deg,#fff,#fcfdff)}
+.card-hd h2{margin:0;font-size:15px;font-weight:800;display:flex;align-items:center;gap:8px}
+.card-hd h2 .ic{color:var(--brand)}
 .card-hd .sp{flex:1}
-.card-bd{padding:16px}
+.card-bd{padding:18px}
 .card-bd.tight{padding:0}
 .muted{color:var(--ink-3);font-size:13px}
 .tiny{font-size:12px;color:var(--ink-4)}
 
+/* ---------- 入场动效 ---------- */
+@keyframes riseIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.anim-in{animation:riseIn .46s cubic-bezier(.22,.7,.3,1) both}
+@keyframes viewIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+#main{animation:viewIn .35s ease both}
+
 /* ---------- 今日待办 ---------- */
-.today{border:1px solid var(--line);border-radius:var(--r);background:#fff;box-shadow:var(--sh);margin-bottom:16px;overflow:hidden}
-.today-hd{display:flex;align-items:center;gap:10px;padding:13px 16px;background:linear-gradient(90deg,#eff6ff,#fff);border-bottom:1px solid var(--line-2);flex-wrap:wrap}
-.today-hd h2{margin:0;font-size:15.5px;font-weight:700;display:flex;align-items:center;gap:8px}
-.today-date{font-size:12.5px;color:var(--ink-3)}
-.today-stats{display:flex;gap:7px;margin-left:auto;flex-wrap:wrap}
-.pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:3px 10px;border-radius:20px;border:1px solid}
+.today{border:1px solid var(--line);border-radius:var(--r);background:linear-gradient(180deg,#ffffff,#fcfdff);box-shadow:var(--sh);margin-bottom:16px;overflow:hidden}
+.today-hd{display:flex;align-items:center;gap:10px;padding:14px 18px;background:linear-gradient(90deg,#eef2ff,#faf5ff);border-bottom:1px solid var(--line-2);flex-wrap:wrap}
+.today-hd h2{margin:0;font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px}
+.today-hd h2 .ic{color:var(--brand)}
+.today-date{font-size:12.5px;color:var(--ink-3);font-weight:600}
+.today-stats{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;padding:4px 11px;border-radius:20px;border:1px solid}
 .pill-danger{background:var(--danger-soft);border-color:var(--danger-line);color:var(--danger)}
 .pill-warn{background:var(--warn-soft);border-color:var(--warn-line);color:var(--warn)}
 .pill-ok{background:var(--ok-soft);border-color:var(--ok-line);color:var(--ok)}
 .pill-info{background:var(--brand-soft);border-color:var(--brand-line);color:var(--brand-dark)}
 .pill-gray{background:var(--line-2);border-color:var(--line);color:var(--ink-3)}
 .today-list{max-height:none}
-.todo-row{display:flex;align-items:flex-start;gap:11px;padding:11px 16px;border-bottom:1px solid var(--line-2)}
+.todo-row{display:flex;align-items:flex-start;gap:12px;padding:12px 18px;border-bottom:1px solid var(--line-2);transition:background .15s}
 .todo-row:last-child{border-bottom:none}
-.todo-row:hover{background:#fafbfc}
+.todo-row:hover{background:#fafbff}
 .todo-bar{width:3px;align-self:stretch;border-radius:3px;flex:0 0 3px;background:var(--line)}
 .todo-bar.d{background:var(--danger)} .todo-bar.w{background:var(--warn)} .todo-bar.i{background:var(--brand)}
 .todo-main{flex:1;min-width:0}
-.todo-t{font-weight:600;font-size:13.8px;line-height:1.45;word-break:break-word}
-.todo-m{font-size:12.3px;color:var(--ink-3);margin-top:3px;display:flex;flex-wrap:wrap;gap:5px 10px;align-items:center}
-.todo-acts{display:flex;gap:6px;align-items:center;flex-wrap:wrap;flex:0 0 auto}
+.todo-t{font-weight:700;font-size:13.8px;line-height:1.45;word-break:break-word}
+.todo-m{font-size:12.3px;color:var(--ink-3);margin-top:4px;display:flex;flex-wrap:wrap;gap:5px 10px;align-items:center}
+.todo-acts{display:flex;gap:7px;align-items:center;flex-wrap:wrap;flex:0 0 auto}
 .empty{text-align:center;padding:34px 16px;color:var(--ink-4)}
 .empty .ic{width:34px;height:34px;stroke-width:1.4;margin-bottom:8px;color:var(--line)}
 
 /* ---------- 标签 ---------- */
-.tag{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:6px;
+.tag{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:7px;
   background:var(--line-2);color:var(--ink-3);white-space:nowrap;border:1px solid transparent}
 .tag-red{background:var(--danger-soft);color:var(--danger);border-color:var(--danger-line)}
 .tag-amber{background:var(--warn-soft);color:var(--warn);border-color:var(--warn-line)}
@@ -143,102 +165,106 @@ a{color:var(--brand);text-decoration:none}
 .dot{width:7px;height:7px;border-radius:50%;flex:0 0 7px;display:inline-block}
 
 /* ---------- 工具条 ---------- */
-.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--line-2);background:#fcfdfe}
+.toolbar{display:flex;gap:9px;align-items:center;flex-wrap:wrap;padding:13px 18px;border-bottom:1px solid var(--line-2);background:#fcfdff}
 .field{display:flex;flex-direction:column;gap:5px}
-.field label,.lab{font-size:12.5px;font-weight:600;color:var(--ink-2)}
+.field label,.lab{font-size:12.5px;font-weight:700;color:var(--ink-2)}
 .inp,select.inp,textarea.inp{
   width:100%;min-height:38px;padding:8px 11px;border:1px solid var(--line);border-radius:var(--r-sm);
-  background:#fff;font-size:16px;transition:.15s;outline:none;
+  background:#fff;font-size:16px;transition:border-color .15s,box-shadow .15s;outline:none;
 }
 @media (min-width:768px){.inp,select.inp,textarea.inp{font-size:13.5px}}
-.inp:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
-textarea.inp{min-height:80px;resize:vertical;line-height:1.6}
+.inp:focus{border-color:var(--brand);box-shadow:0 0 0 4px rgba(79,70,229,.12)}
+textarea.inp{min-height:84px;resize:vertical;line-height:1.6}
 select.inp{cursor:pointer;appearance:none;
   background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
   background-repeat:no-repeat;background-position:right 9px center;background-size:15px;padding-right:30px}
-.search{position:relative;flex:1;min-width:170px}
+.search{position:relative;flex:1;min-width:180px}
 .search .ic{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--ink-4);pointer-events:none}
 .search .inp{padding-left:34px}
-.seg{display:inline-flex;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden;background:#fff}
-.seg button{padding:0 12px;height:36px;font-size:13px;color:var(--ink-3);border-right:1px solid var(--line);font-weight:500}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden;background:#fff;box-shadow:var(--sh)}
+.seg button{padding:0 13px;height:38px;font-size:13px;color:var(--ink-3);border-right:1px solid var(--line);font-weight:600;transition:.15s}
 .seg button:last-child{border-right:none}
-.seg button.on{background:var(--brand);color:#fff;font-weight:600}
+.seg button.on{background:var(--grad);color:#fff;font-weight:700;box-shadow:0 4px 12px rgba(79,70,229,.3)}
 
 /* ---------- 表格 ---------- */
 .tw{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:13.3px}
-th{text-align:left;font-weight:600;color:var(--ink-3);font-size:12.3px;padding:10px 12px;background:#fafbfc;
+th{text-align:left;font-weight:700;color:var(--ink-3);font-size:12.3px;padding:11px 13px;background:#fafbff;
   border-bottom:1px solid var(--line);white-space:nowrap;position:sticky;top:0;z-index:1}
-td{padding:10px 12px;border-bottom:1px solid var(--line-2);vertical-align:middle}
-tbody tr:hover{background:#fafbfc}
+td{padding:11px 13px;border-bottom:1px solid var(--line-2);vertical-align:middle}
+tbody tr{transition:background .14s}
+tbody tr:hover{background:#fafbff}
 tbody tr:last-child td{border-bottom:none}
 .td-acts{white-space:nowrap;text-align:right}
 .row-danger{background:var(--danger-soft) !important}
-.row-danger:hover{background:#fee9e9 !important}
-.name-cell{display:flex;align-items:center;gap:8px}
-.avatar{width:28px;height:28px;border-radius:50%;background:var(--brand-soft);color:var(--brand-dark);
-  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:0 0 28px}
+.row-danger:hover{background:#ffe9ee !important}
+.name-cell{display:flex;align-items:center;gap:9px}
+.avatar{width:30px;height:30px;border-radius:50%;background:var(--brand-soft);color:var(--brand-dark);
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex:0 0 30px;box-shadow:inset 0 0 0 1px rgba(79,70,229,.12)}
 .avatar.f{background:#fdf2f8;color:#db2777}
-.link-btn{color:var(--brand);font-weight:600;font-size:12.5px}
+.link-btn{color:var(--brand);font-weight:700;font-size:12.5px}
 .link-btn:hover{text-decoration:underline}
 .link-btn.danger{color:var(--danger)}
 
 /* 移动端卡片列表 */
 .mcards{display:none}
-.mcard{padding:13px 16px;border-bottom:1px solid var(--line-2)}
+.mcard{padding:14px 16px;border-bottom:1px solid var(--line-2)}
 .mcard:last-child{border-bottom:none}
-.mcard-hd{display:flex;align-items:center;gap:9px;margin-bottom:7px}
-.mcard-t{font-weight:600;font-size:14.5px;flex:1;min-width:0;word-break:break-word}
+.mcard-hd{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.mcard-t{font-weight:700;font-size:14.5px;flex:1;min-width:0;word-break:break-word}
 .mcard-meta{display:flex;flex-wrap:wrap;gap:6px 9px;font-size:12.3px;color:var(--ink-3);margin-bottom:9px}
 .mcard-acts{display:flex;gap:7px;flex-wrap:wrap}
 
 /* ---------- KPI ---------- */
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
-.kpi{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;box-shadow:var(--sh)}
-.kpi-l{font-size:12.3px;color:var(--ink-3);display:flex;align-items:center;gap:6px;margin-bottom:6px}
-.kpi-v{font-size:26px;font-weight:700;letter-spacing:-.5px;line-height:1.15}
-.kpi-s{font-size:11.5px;color:var(--ink-4);margin-top:3px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:13px;margin-bottom:16px}
+.kpi{background:linear-gradient(180deg,#fff,#fcfdff);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;box-shadow:var(--sh);position:relative;overflow:hidden;transition:transform .2s ease,box-shadow .2s ease}
+.kpi:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(15,23,42,.1)}
+.kpi:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--grad);opacity:.85}
+.kpi.l::before{background:var(--ok)} .kpi.w::before{background:var(--warn)} .kpi.d::before{background:var(--danger)}
+.kpi-l{font-size:12.3px;color:var(--ink-3);display:flex;align-items:center;gap:6px;margin-bottom:7px;font-weight:600}
+.kpi-v{font-size:28px;font-weight:800;letter-spacing:-.5px;line-height:1.1}
+.kpi-s{font-size:11.5px;color:var(--ink-4);margin-top:4px}
 .kpi.danger .kpi-v{color:var(--danger)} .kpi.warn .kpi-v{color:var(--warn)}
 .kpi.ok .kpi-v{color:var(--ok)} .kpi.brand .kpi-v{color:var(--brand)}
 
 /* ---------- 弹窗 ---------- */
 .mask{position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:200;display:flex;align-items:center;justify-content:center;
-  padding:16px;backdrop-filter:blur(2px);animation:fade .16s ease}
+  padding:16px;backdrop-filter:blur(3px);animation:fade .16s ease}
 @keyframes fade{from{opacity:0}to{opacity:1}}
-.modal{background:#fff;border-radius:14px;box-shadow:var(--sh-lg);width:100%;max-width:620px;max-height:90vh;
-  display:flex;flex-direction:column;animation:pop .18s cubic-bezier(.2,.9,.3,1.2)}
+.modal{background:#fff;border-radius:18px;box-shadow:var(--sh-lg);width:100%;max-width:620px;max-height:92vh;
+  display:flex;flex-direction:column;animation:pop .2s cubic-bezier(.2,.9,.3,1.2)}
 .modal.narrow{max-width:420px}
-.modal.wide{max-width:820px}
-@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
-.modal-hd{display:flex;align-items:center;gap:10px;padding:15px 18px;border-bottom:1px solid var(--line-2)}
-.modal-hd h3{margin:0;font-size:16px;font-weight:700;flex:1}
-.modal-bd{padding:18px;overflow-y:auto;flex:1}
-.modal-ft{display:flex;gap:9px;justify-content:flex-end;padding:13px 18px;border-top:1px solid var(--line-2);flex-wrap:wrap}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px}
+.modal.wide{max-width:860px}
+@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+.modal-hd{display:flex;align-items:center;gap:10px;padding:16px 20px;border-bottom:1px solid var(--line-2)}
+.modal-hd h3{margin:0;font-size:17px;font-weight:800;flex:1}
+.modal-bd{padding:20px;overflow-y:auto;flex:1}
+.modal-ft{display:flex;gap:9px;justify-content:flex-end;padding:14px 20px;border-top:1px solid var(--line-2);flex-wrap:wrap}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
 .span2{grid-column:1/-1}
-.form-row{margin-bottom:13px}
+.form-row{margin-bottom:14px}
 .chk{display:flex;align-items:center;gap:8px;font-size:13.5px;cursor:pointer;padding:6px 0}
-.chk input{width:17px;height:17px;accent-color:var(--brand);cursor:pointer;flex:0 0 17px}
-.chips{display:flex;flex-wrap:wrap;gap:7px}
-.chip{padding:6px 12px;border:1px solid var(--line);border-radius:20px;font-size:12.5px;font-weight:500;
-  background:#fff;color:var(--ink-3);transition:.15s;min-height:32px;display:inline-flex;align-items:center}
+.chk input{width:18px;height:18px;accent-color:var(--brand);cursor:pointer;flex:0 0 18px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:7px 13px;border:1px solid var(--line);border-radius:20px;font-size:12.5px;font-weight:600;
+  background:#fff;color:var(--ink-3);transition:.15s;min-height:34px;display:inline-flex;align-items:center}
 .chip:hover{border-color:var(--brand-line)}
-.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
+.chip.on{background:var(--brand);border-color:transparent;color:#fff;font-weight:700;box-shadow:0 4px 12px rgba(79,70,229,.3)}
 .hint{font-size:12px;color:var(--ink-4);margin-top:5px;line-height:1.6}
 
 /* ---------- Toast ---------- */
-#toast-root{position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:300;display:flex;flex-direction:column;gap:8px;
-  align-items:center;pointer-events:none;width:calc(100% - 32px);max-width:420px}
-.toast{background:var(--ink);color:#fff;padding:10px 17px;border-radius:22px;font-size:13.5px;font-weight:500;
-  box-shadow:var(--sh-lg);display:flex;align-items:center;gap:8px;animation:tin .2s ease;max-width:100%}
+#toast-root{position:fixed;top:72px;left:50%;transform:translateX(-50%);z-index:300;display:flex;flex-direction:column;gap:8px;
+  align-items:center;pointer-events:none;width:calc(100% - 32px);max-width:440px}
+.toast{background:var(--ink);color:#fff;padding:11px 18px;border-radius:22px;font-size:13.5px;font-weight:600;
+  box-shadow:var(--sh-lg);display:flex;align-items:center;gap:8px;animation:tin .22s ease;max-width:100%}
 .toast.ok{background:var(--ok)} .toast.err{background:var(--danger)} .toast.warn{background:var(--warn)}
-@keyframes tin{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+@keyframes tin{from{opacity:0;transform:translateY(-12px) scale(.96)}to{opacity:1;transform:none}}
 
 /* ---------- 提示条 ---------- */
-.banner{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--r-sm);font-size:13px;margin-bottom:14px;border:1px solid}
+.banner{display:flex;align-items:center;gap:10px;padding:11px 15px;border-radius:var(--r-sm);font-size:13px;margin-bottom:14px;border:1px solid}
 .banner-warn{background:var(--warn-soft);border-color:var(--warn-line);color:#92400e}
-.banner-info{background:var(--brand-soft);border-color:var(--brand-line);color:#1e40af}
+.banner-info{background:var(--brand-soft);border-color:var(--brand-line);color:#3730a3}
 .banner .sp{flex:1}
 
 /* ---------- SVG 图表 ---------- */
@@ -246,16 +272,23 @@ tbody tr:last-child td{border-bottom:none}
 .chart-wrap svg{display:block;max-width:100%;height:auto}
 .legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:12px;font-size:12.3px;color:var(--ink-3)}
 .legend i{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:6px;vertical-align:-1px}
+@keyframes drawBar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.bar-val{transform-origin:left;animation:drawBar .8s cubic-bezier(.22,.7,.3,1) both}
+@keyframes donutIn{from{transform:scale(.92) rotate(-6deg);opacity:0}to{opacity:1;transform:none}}
+.donut-anim{animation:donutIn .7s cubic-bezier(.22,.7,.3,1) both;transform-origin:center}
 
 /* ---------- 时间线 ---------- */
 .tl{position:relative;padding-left:22px}
-.tl:before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl:before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:2px;background:linear-gradient(var(--brand),var(--purple))}
 .tl-item{position:relative;padding-bottom:16px}
 .tl-item:last-child{padding-bottom:0}
-.tl-item:before{content:"";position:absolute;left:-20px;top:5px;width:10px;height:10px;border-radius:50%;
-  background:#fff;border:2px solid var(--brand)}
-.tl-d{font-size:12px;color:var(--ink-4);font-weight:600}
+.tl-item:before{content:"";position:absolute;left:-20px;top:5px;width:11px;height:11px;border-radius:50%;
+  background:#fff;border:3px solid var(--brand);transition:.2s}
+.tl-d{font-size:12px;color:var(--ink-4);font-weight:700}
 .tl-c{font-size:13.3px;margin-top:3px;line-height:1.65;white-space:pre-wrap;word-break:break-word}
+
+/* ---------- 左侧抽屉遮罩（移动端）---------- */
+.scrim{position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:65;opacity:0;pointer-events:none;transition:opacity .25s}
 
 /* ---------- 底部 Tab（移动端）---------- */
 .tabbar{display:none}
@@ -263,40 +296,42 @@ tbody tr:last-child td{border-bottom:none}
 /* ---------- 移动端适配 ---------- */
 @media (max-width:900px){
   :root{--nav-w:0px}
-  .sidenav{display:none}
-  .main{padding:14px 12px calc(78px + env(safe-area-inset-bottom))}
+  .sidenav{position:fixed;top:0;left:0;bottom:0;z-index:66;width:264px;flex:none;
+    background:#fff;box-shadow:0 0 40px rgba(15,23,42,.25);transform:translateX(-104%);transition:transform .28s cubic-bezier(.22,.7,.3,1);height:100%}
+  .sidenav.open{transform:none}
+  .main{padding:14px 12px calc(82px + env(safe-area-inset-bottom))}
   .topbar{padding:0 12px;gap:8px}
   .brand-sub,.who,.mo-hide{display:none}
   .brand{font-size:15px}
   .tw{display:none}
   .mcards{display:block}
   .kpis{grid-template-columns:1fr 1fr;gap:10px}
-  .kpi{padding:12px 13px}
-  .kpi-v{font-size:22px}
+  .kpi{padding:13px 14px}
+  .kpi-v{font-size:23px}
   .grid2,.grid3{grid-template-columns:1fr}
   .today-stats{width:100%;margin-left:0}
   .todo-row{flex-wrap:wrap}
-  .todo-acts{width:100%;padding-left:14px}
-  .btn{min-height:40px}
-  .btn-sm{min-height:34px}
+  .todo-acts{width:100%;padding-left:15px}
+  .btn{min-height:42px}
+  .btn-sm{min-height:36px}
   .modal{max-height:94vh}
-  .modal-ft{padding-bottom:calc(13px + env(safe-area-inset-bottom))}
+  .modal-ft{padding-bottom:calc(14px + env(safe-area-inset-bottom))}
   .tabbar{
-    display:flex;position:fixed;left:0;right:0;bottom:0;z-index:70;background:#fff;
-    border-top:1px solid var(--line);padding:5px 4px calc(5px + env(safe-area-inset-bottom));
-    box-shadow:0 -2px 12px rgba(15,23,42,.06);
+    display:flex;position:fixed;left:0;right:0;bottom:0;z-index:70;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);
+    border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+    box-shadow:0 -4px 18px rgba(15,23,42,.08);
   }
   .tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
-    min-height:50px;font-size:11px;color:var(--ink-4);font-weight:500;position:relative;border-radius:9px}
-  .tab.on{color:var(--brand);font-weight:600;background:var(--brand-soft)}
-  .tab-dot{position:absolute;top:5px;right:calc(50% - 20px);min-width:16px;height:16px;padding:0 4px;border-radius:9px;
+    min-height:52px;font-size:11px;color:var(--ink-4);font-weight:600;position:relative;border-radius:10px}
+  .tab.on{color:var(--brand);font-weight:800;background:var(--brand-soft)}
+  .tab-dot{position:absolute;top:5px;right:calc(50% - 22px);min-width:16px;height:16px;padding:0 4px;border-radius:9px;
     background:var(--danger);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
 }
 @media (max-width:400px){ .kpis{grid-template-columns:1fr} }
 
 /* ---------- 打印 ---------- */
 @media print{
-  .topbar,.sidenav,.tabbar,.toolbar,.todo-acts,.td-acts,.btn{display:none !important}
+  .topbar,.sidenav,.tabbar,.toolbar,.todo-acts,.td-acts,.btn,.scrim{display:none !important}
   .main{padding:0}
   .card{box-shadow:none;break-inside:avoid}
   body{background:#fff}
@@ -332,11 +367,16 @@ tbody tr:last-child td{border-bottom:none}
   <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></symbol>
   <symbol id="i-menu" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></symbol>
   <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></symbol>
+  <symbol id="i-bed" viewBox="0 0 24 24"><path d="M3 18V7h18v11"/><path d="M3 13h18"/><path d="M7 10h4v3H7z"/><path d="M14 10h3v3h-3z"/></symbol>
+  <symbol id="i-plane" viewBox="0 0 24 24"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5 6 5.5-2 2-3.5-1-1 1 3 2.5 1 4.5 1-1 3.5-3.5 2-2 .5-1.1.1-1.3"/><path d="M7 17l-1.5 1.5"/></symbol>
+  <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 01-10 0V4z"/><path d="M5 4H3v3a3 3 0 003 3M19 4h2v3a3 3 0 01-3 3"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.2 7.6-8 8.5C7.2 20.6 4 17.5 4 12V6l8-3z"/><path d="M9 12l2 2 4-4"/></symbol>
 </svg>
 
 <!-- ========== 顶栏 ========== -->
 <header class="topbar">
-  <button class="btn btn-ghost btn-icon hide" id="btn-menu" title="菜单"><svg class="ic"><use href="#i-menu"/></svg></button>
+  <button class="btn btn-ghost btn-icon" id="btn-menu" title="菜单"><svg class="ic"><use href="#i-menu"/></svg></button>
   <div class="brand">
     <span class="brand-mark"><svg class="ic ic-lg"><use href="#i-logo"/></svg></span>
     <span>辅导员工作台</span>
@@ -350,21 +390,26 @@ tbody tr:last-child td{border-bottom:none}
     <button class="btn btn-sm btn-icon" id="btn-settings" title="设置"><svg class="ic ic-sm"><use href="#i-gear"/></svg></button>
   </div>
 </header>
+<div class="scrim" id="scrim"></div>
 
 <!-- ========== 主体 ========== -->
 <div class="layout">
   <nav class="sidenav" id="sidenav">
-    <div class="nav-group">工作模块</div>
-    <button class="nav-item on" data-view="home"><svg class="ic"><use href="#i-sun"/></svg>今日概览</button>
+    <div class="nav-group">工作台</div>
+    <button class="nav-item on" data-view="home"><svg class="ic"><use href="#i-home"/></svg>今日概览</button>
     <button class="nav-item" data-view="tasks"><svg class="ic"><use href="#i-task"/></svg>工作任务<span class="nav-badge hide" id="nb-tasks">0</span></button>
     <button class="nav-item" data-view="students"><svg class="ic"><use href="#i-users"/></svg>学生台账<span class="nav-badge gray" id="nb-students">0</span></button>
     <button class="nav-item" data-view="talks"><svg class="ic"><use href="#i-talk"/></svg>谈心谈话<span class="nav-badge hide" id="nb-talks">0</span></button>
     <button class="nav-item" data-view="report"><svg class="ic"><use href="#i-chart"/></svg>工作留痕</button>
+    <div class="nav-group">专项管理</div>
+    <button class="nav-item" data-view="stay"><svg class="ic"><use href="#i-bed"/></svg>校外住宿</button>
+    <button class="nav-item" data-view="leave"><svg class="ic"><use href="#i-plane"/></svg>假期去向</button>
+    <button class="nav-item" data-view="honor"><svg class="ic"><use href="#i-trophy"/></svg>评优榜样</button>
     <div class="nav-group">数据</div>
     <button class="nav-item" data-view="bridge"><svg class="ic"><use href="#i-link"/></svg>平台联动</button>
     <div class="nav-foot">
-      <div style="font-weight:600;color:var(--ink-3);margin-bottom:3px">Counselor Desk</div>
-      <div id="ver-txt">v1.0.0 · 本地版</div>
+      <div style="font-weight:700;color:var(--ink-3);margin-bottom:3px">Counselor Desk</div>
+      <div id="ver-txt">v2.1.0 · 本地版</div>
       <div style="margin-top:6px">依据教育部 43 号令<br>九项工作职责设计</div>
     </div>
   </nav>
@@ -374,7 +419,7 @@ tbody tr:last-child td{border-bottom:none}
 
 <!-- ========== 底部 Tab（移动端） ========== -->
 <nav class="tabbar">
-  <button class="tab on" data-view="home"><svg class="ic"><use href="#i-sun"/></svg>今日</button>
+  <button class="tab on" data-view="home"><svg class="ic"><use href="#i-home"/></svg>今日</button>
   <button class="tab" data-view="tasks"><svg class="ic"><use href="#i-task"/></svg>任务<span class="tab-dot hide" id="tb-tasks">0</span></button>
   <button class="tab" data-view="students"><svg class="ic"><use href="#i-users"/></svg>学生</button>
   <button class="tab" data-view="talks"><svg class="ic"><use href="#i-talk"/></svg>谈话</button>
@@ -385,12 +430,15 @@ tbody tr:last-child td{border-bottom:none}
 <div id="toast-root"></div>
 <input type="file" id="file-json" accept=".json,application/json" style="display:none">
 <input type="file" id="file-csv" accept=".csv,.txt" style="display:none">
+<input type="file" id="file-stay" accept=".csv,.txt" style="display:none">
+<input type="file" id="file-leave" accept=".csv,.txt" style="display:none">
 
 <script>
 /* ============================================================================
- * 辅导员工作台 Counselor Desk v1.0.0
+ * 辅导员工作台 Counselor Desk v2.1.0
  * 单文件 · 零依赖 · 数据仅存本机 localStorage
  * 模块划分依据：教育部令第 43 号《普通高等学校辅导员队伍建设规定》第五条
+ * 专项模块参考本院真实工作台账（心理危机预警库 / 校外住宿 / 假期去向 / 青春榜样）
  * ----------------------------------------------------------------------------
  * 二次开发入口：全局对象 window.CWB
  *   CWB.store      数据读写
@@ -439,6 +487,22 @@ const LEVELS = [
 ];
 const LEVEL_MAP = Object.fromEntries(LEVELS.map(l => [l.k, l]));
 
+/* 心理危机预警库（参照本院《心理危机预警库名单》） */
+const CRISIS_LEVELS = ['校级','院级',''];
+const CRISIS_WAYS = ['学生自我报告','心理普查发现','其他人发现','其他'];
+
+/* 校外住宿 / 走读 */
+const STU_TYPES = ['本科生','研究生'];
+const APPROVALS = ['审批通过','审批中','待审批','未通过'];
+
+/* 评优榜样 / 先进个人 申请类型 */
+const HONOR_TYPES = [
+  { v:'先锋', n:'低空先锋' }, { v:'德育', n:'德育之星' }, { v:'智育', n:'智育之星' },
+  { v:'体育', n:'体育之星' }, { v:'美育', n:'美育之星' }, { v:'劳育', n:'劳育之星' },
+];
+const MORAL_LEVELS = ['优','良','及格',''];
+const POLITICS = ['中共党员','中共预备党员','入党积极分子','共青团员','群众','其他'];
+
 const PRIOS = [
   { k:'P0', n:'紧急', c:'tag-red' },
   { k:'P1', n:'常规', c:'tag-amber' },
@@ -448,6 +512,7 @@ const PRIO_MAP = Object.fromEntries(PRIOS.map(p => [p.k, p]));
 const SOURCES = ['学校下发','学院安排','平台下发','自主计划','学生诉求'];
 const TALK_WAYS = ['面谈','电话','线上','家访','集体'];
 const STATUS_TXT = { todo:'待办', doing:'进行中', done:'已完成' };
+const ENROLL_STATUS = ['在读','休学','复学','退学','毕业','结业'];
 
 /* ===================== 2. 工具函数 ===================== */
 const $  = (s, r) => (r || document).querySelector(s);
@@ -463,7 +528,6 @@ function shiftDay(dateStr, n) {
   d.setDate(d.getDate() + n);
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 }
-/** 返回 date 距今天的天数：负数=已过期，0=今天，正数=还有几天 */
 function daysFromToday(dateStr) {
   if (!dateStr) return null;
   const a = new Date(dateStr + 'T00:00:00'), b = new Date(today() + 'T00:00:00');
@@ -485,7 +549,6 @@ function dueText(dateStr) {
 }
 function monthOf(dateStr) { return (dateStr || '').slice(0, 7); }
 function thisMonth() { return today().slice(0, 7); }
-/** 当前学期：3-8 月为春季学期，9-次年2月为秋季学期 */
 function termRange() {
   const d = new Date(), y = d.getFullYear(), m = d.getMonth() + 1;
   if (m >= 3 && m <= 8) return { name:`${y} 春季学期`, from:`${y}-03-01`, to:`${y}-08-31` };
@@ -499,7 +562,6 @@ function download(filename, content, mime) {
   a.href = url; a.download = filename; document.body.appendChild(a); a.click();
   setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 200);
 }
-/** CSV：带 BOM，Excel 直接双击不乱码 */
 function toCSV(rows) {
   const cell = v => {
     const s = v == null ? '' : String(v);
@@ -549,21 +611,22 @@ const store = {
   }
 };
 
-/* 应用状态（内存镜像，改完即写盘） */
 const DB = {
-  settings: {}, students: [], tasks: [], talks: [], custom: {}
+  settings: {}, students: [], tasks: [], talks: [],
+  stay: [], leave: [], honor: [], custom: {}
 };
 function save(part) {
   if (!part || part === 'settings') store.write('settings', DB.settings);
   if (!part || part === 'students') store.write('students', DB.students);
   if (!part || part === 'tasks')    store.write('tasks', DB.tasks);
   if (!part || part === 'talks')    store.write('talks', DB.talks);
+  if (!part || part === 'stay')     store.write('stay', DB.stay);
+  if (!part || part === 'leave')    store.write('leave', DB.leave);
+  if (!part || part === 'honor')    store.write('honor', DB.honor);
   if (!part || part === 'custom')   store.write('custom', DB.custom);
 }
 
 /* ===================== 4. 字段 schema（与服务端平台对齐） ===================== */
-/* 说明：student 的前 8 个字段与「辅导员工作平台」students / student_profiles
- * 表字段同名，导入导出可直接映射，无需再做字段翻译。 */
 const schema = {
   student: {
     student_number:{ label:'学号', platform:true, required:true },
@@ -574,27 +637,16 @@ const schema = {
     grade:         { label:'年级', platform:true },
     college_name:  { label:'学院', platform:true },
     counselor_name:{ label:'辅导员', platform:true },
-    enrollment_status:{ label:'学籍状态', platform:true },
+    enrollment_status:{ label:'学生当前状态', platform:true },
+    politics:      { label:'政治面貌', local:true },
     phone:         { label:'联系电话', local:true },
     dorm:          { label:'宿舍', local:true },
     focus:         { label:'关注类型', local:true, type:'array' },
     focus_level:   { label:'关注等级', local:true },
+    crisis_level:  { label:'危机预警级别', local:true },
+    crisis_way:    { label:'危机发现方式', local:true },
+    crisis_relieved:{ label:'是否已解除预警', local:true },
     note:          { label:'备注', local:true },
-  },
-  task: {
-    title:{ label:'任务名称', required:true }, duty:{ label:'职责分类' },
-    source:{ label:'任务来源' }, classes:{ label:'涉及班级' },
-    due:{ label:'截止日期' }, priority:{ label:'优先级' },
-    status:{ label:'状态' }, note:{ label:'备注' },
-    platform_ref:{ label:'平台任务号', hint:'与服务端平台任务关联时填写' },
-  },
-  talk: {
-    date:{ label:'谈话日期', required:true }, student_number:{ label:'学号' },
-    student_name:{ label:'学生姓名', required:true }, way:{ label:'谈话方式' },
-    duty:{ label:'主题分类' }, summary:{ label:'谈话内容', required:true },
-    judge:{ label:'问题研判' }, action:{ label:'处理措施' },
-    need_follow:{ label:'需要跟进' }, follow_date:{ label:'跟进日期' },
-    done_follow:{ label:'跟进已完成' },
   }
 };
 
@@ -608,8 +660,6 @@ const ui = {
     $('#toast-root').appendChild(el);
     setTimeout(() => { el.style.transition = '.25s'; el.style.opacity = '0'; setTimeout(() => el.remove(), 260); }, ms || 2400);
   },
-
-  /** 通用弹窗；返回 close() */
   modal(opts) {
     const mask = document.createElement('div');
     mask.className = 'mask';
@@ -634,7 +684,6 @@ const ui = {
     if (opts.onOpen) opts.onOpen(mask, close);
     return close;
   },
-
   confirm(title, msg, onYes, danger) {
     ui.modal({
       title, size:'narrow', sticky:true,
@@ -646,8 +695,6 @@ const ui = {
       }
     });
   },
-
-  /** 表单生成器：fields = [{key,label,type,options,required,span,hint,rows}] */
   form(opts) {
     const fields = opts.fields, data = Object.assign({}, opts.data || {});
     const html = `<div class="grid2">` + fields.map(f => {
@@ -686,7 +733,6 @@ const ui = {
       body: html,
       footer: `${opts.extraBtn || ''}<button class="btn" data-close>取消</button>
                <button class="btn btn-primary" data-ok>${esc(opts.okText || '保存')}</button>`,
-      /* 注意：这里必须用 modal 回传的 mClose，不能引用外层 const close（此时仍在 TDZ） */
       onOpen(mask, mClose) {
         $$('[data-chips]', mask).forEach(box => {
           box.addEventListener('click', e => {
@@ -726,12 +772,8 @@ const hooks = {
 };
 
 /* ===================== 7. 平台联动桥 bridge ===================== */
-/* 设计目标：本地工作台产出的数据，能被服务端「辅导员工作平台」直接消费；
- * 现阶段走「文件交换」（导出 → 上传），API 通道已预留，接通只需实现 request()。*/
 const bridge = {
-  PACKAGE_VERSION: 1,
-
-  /** 生成标准交换包（可直接上传到平台，或作为本地备份） */
+  PACKAGE_VERSION: 2,
   buildPackage(scope) {
     scope = scope || {};
     const inRange = d => (!scope.from || d >= scope.from) && (!scope.to || d <= scope.to);
@@ -749,12 +791,13 @@ const bridge = {
       students: scope.students === false ? [] : DB.students,
       tasks: (scope.tasks === false ? [] : DB.tasks).filter(t => !scope.from || inRange(t.due || t.created_at.slice(0, 10))),
       talks: (scope.talks === false ? [] : DB.talks).filter(t => inRange(t.date)),
+      stay: scope.stay === false ? [] : DB.stay,
+      leave: scope.leave === false ? [] : DB.leave,
+      honor: scope.honor === false ? [] : DB.honor,
       custom: DB.custom,
       stats: this.stats(scope),
     };
   },
-
-  /** 按九项职责汇总的工作量统计（平台看板可直接吃这段） */
   stats(scope) {
     scope = scope || {};
     const inRange = d => (!scope.from || d >= scope.from) && (!scope.to || d <= scope.to);
@@ -770,14 +813,16 @@ const bridge = {
     return {
       student_total: DB.students.length,
       focus_total: DB.students.filter(s => s.focus_level).length,
+      crisis_total: DB.students.filter(s => s.crisis_level && !s.crisis_relieved).length,
       task_total: DB.tasks.length,
       task_done: DB.tasks.filter(t => t.status === 'done').length,
       talk_total: DB.talks.filter(t => inRange(t.date)).length,
+      stay_total: DB.stay.length,
+      leave_total: DB.leave.length,
+      honor_total: DB.honor.length,
       by_duty: Object.values(byDuty),
     };
   },
-
-  /** 导入交换包 / 备份文件；mode: 'merge' | 'replace' */
   applyPackage(pkg, mode) {
     if (!pkg || typeof pkg !== 'object') throw new Error('文件格式无法识别');
     const isPkg = pkg.package === 'counselor-desk';
@@ -785,10 +830,14 @@ const bridge = {
     const S = Array.isArray(src.students) ? src.students : [];
     const T = Array.isArray(src.tasks) ? src.tasks : [];
     const K = Array.isArray(src.talks) ? src.talks : [];
-    if (!S.length && !T.length && !K.length) throw new Error('文件中没有可导入的数据');
+    const ST = Array.isArray(src.stay) ? src.stay : [];
+    const LV = Array.isArray(src.leave) ? src.leave : [];
+    const HO = Array.isArray(src.honor) ? src.honor : [];
+    if (!S.length && !T.length && !K.length && !ST.length && !LV.length && !HO.length) throw new Error('文件中没有可导入的数据');
 
     if (mode === 'replace') {
       DB.students = S.map(normStudent); DB.tasks = T.map(normTask); DB.talks = K.map(normTalk);
+      DB.stay = ST.map(normStay); DB.leave = LV.map(normLeave); DB.honor = HO.map(normHonor);
       if (src.custom) DB.custom = src.custom;
     } else {
       const sKey = x => x.student_number || x.id;
@@ -802,6 +851,9 @@ const bridge = {
       };
       DB.tasks = merge(DB.tasks, T, normTask);
       DB.talks = merge(DB.talks, K, normTalk);
+      DB.stay = merge(DB.stay, ST, normStay);
+      DB.leave = merge(DB.leave, LV, normLeave);
+      DB.honor = merge(DB.honor, HO, normHonor);
     }
     if (isPkg && src.counselor && !DB.settings.counselor_name) {
       DB.settings.counselor_name = src.counselor.name || '';
@@ -809,10 +861,8 @@ const bridge = {
       DB.settings.org_code = src.counselor.org_code || '';
     }
     save();
-    return { students:S.length, tasks:T.length, talks:K.length };
+    return { students:S.length, tasks:T.length, talks:K.length, stay:ST.length, leave:LV.length, honor:HO.length };
   },
-
-  /* ---- 以下为 API 通道预留：平台开放接口后，实现 request 即可全部打通 ---- */
   get baseUrl() { return (DB.settings.platform_url || '').replace(/\/$/, ''); },
   get enabled() { return !!this.baseUrl && !!DB.settings.platform_api_on; },
   async request(path, init) {
@@ -823,7 +873,6 @@ const bridge = {
     if (!res.ok) throw new Error('平台返回 ' + res.status);
     return res.json();
   },
-  /** 预留：拉取平台下发给本人的收集任务 → 本地任务台 */
   async pullTasks() {
     const data = await this.request('/api/collection/assignments');
     const list = (data.items || data.assignments || []);
@@ -842,7 +891,6 @@ const bridge = {
     if (added) save('tasks');
     return added;
   },
-  /** 预留：把本地留痕推送到平台 */
   async pushSummary(scope) {
     return this.request('/api/local-desk/summary', { method:'POST', body: JSON.stringify(this.buildPackage(scope)) });
   }
@@ -862,10 +910,14 @@ function normStudent(x) {
     college_name: x.college_name || '',
     counselor_name: x.counselor_name || '',
     enrollment_status: x.enrollment_status || '在读',
+    politics: x.politics || '',
     phone: x.phone || '',
     dorm: x.dorm || '',
     focus: Array.isArray(x.focus) ? x.focus : (x.focus ? String(x.focus).split(/[、,，\s]+/).filter(Boolean) : []),
     focus_level: x.focus_level || '',
+    crisis_level: x.crisis_level || '',
+    crisis_way: x.crisis_way || '',
+    crisis_relieved: !!x.crisis_relieved,
     note: x.note || '',
     created_at: x.created_at || new Date().toISOString(),
     _demo: !!x._demo,
@@ -908,8 +960,67 @@ function normTalk(x) {
     _demo: !!x._demo,
   };
 }
+function normStay(x) {
+  x = x || {};
+  return {
+    id: x.id || uid(),
+    student_name: String(x.student_name || '').trim(),
+    student_number: x.student_number || '',
+    grade_major: x.grade_major || '',
+    stu_type: x.stu_type || '本科生',
+    reason: x.reason || '',
+    start: x.start || '',
+    end: x.end || '',
+    emergency_name: x.emergency_name || '',
+    emergency_phone: x.emergency_phone || '',
+    approval: x.approval || '待审批',
+    note: x.note || '',
+    created_at: x.created_at || new Date().toISOString(),
+    _demo: !!x._demo,
+  };
+}
+function normLeave(x) {
+  x = x || {};
+  return {
+    id: x.id || uid(),
+    name: String(x.name || '').trim(),
+    student_number: x.student_number || '',
+    class_major: x.class_major || '',
+    home_addr: x.home_addr || '',
+    leave_date: x.leave_date || '',
+    return_date: x.return_date || '',
+    dorm: x.dorm || '',
+    phone: x.phone || '',
+    delayed: x.delayed || '否',
+    delay_reason: x.delay_reason || '',
+    teacher: x.teacher || '',
+    consent: x.consent || '',
+    note: x.note || '',
+    created_at: x.created_at || new Date().toISOString(),
+    _demo: !!x._demo,
+  };
+}
+function normHonor(x) {
+  x = x || {};
+  return {
+    id: x.id || uid(),
+    name: String(x.name || '').trim(),
+    student_number: x.student_number || '',
+    major: x.major || '',
+    class_name: x.class_name || '',
+    apply_type: x.apply_type || '',
+    politics: x.politics || '',
+    rank: x.rank || '',
+    moral: x.moral || '',
+    scholarships: x.scholarships || '',
+    social: x.social || '',
+    others: x.others || '',
+    created_at: x.created_at || new Date().toISOString(),
+    _demo: !!x._demo,
+  };
+}
 
-const APP_VERSION = '1.0.0';
+const APP_VERSION = '2.1.0';
 
 /* ===================== 9. 示例数据（首次打开可见效果） ===================== */
 function seedDemo() {
@@ -920,11 +1031,11 @@ function seedDemo() {
     seeded: true, backup_notified_at: '',
   };
   DB.students = [
-    { student_number:'2024010101', full_name:'张明', gender:'男', class_name:'24机器人1班', major_name:'机器人工程', grade:'2024级', college_name:'示例学院', counselor_name:'示例老师', phone:'138****0001', dorm:'3号楼412', focus:['study'], focus_level:'L2', note:'高数、C语言连续两次预警，已联系任课老师。' },
-    { student_number:'2024010102', full_name:'李思颖', gender:'女', class_name:'24机器人1班', major_name:'机器人工程', grade:'2024级', college_name:'示例学院', counselor_name:'示例老师', phone:'138****0002', dorm:'7号楼208', focus:['psych','family'], focus_level:'L1', note:'父母离异，近期情绪波动，已报心理中心备案，每周谈话。' },
-    { student_number:'2024010203', full_name:'王浩然', gender:'男', class_name:'24机器人2班', major_name:'机器人工程', grade:'2024级', college_name:'示例学院', counselor_name:'示例老师', phone:'138****0003', dorm:'3号楼415', focus:['econ'], focus_level:'L3', note:'建档立卡户，已申请国家助学金，勤工助学岗在岗。' },
-    { student_number:'2024010204', full_name:'陈雨欣', gender:'女', class_name:'24机器人2班', major_name:'机器人工程', grade:'2024级', college_name:'示例学院', counselor_name:'示例老师', phone:'138****0004', dorm:'7号楼210', focus:[], focus_level:'', note:'班长，入党积极分子。' },
-    { student_number:'2024010205', full_name:'刘子豪', gender:'男', class_name:'24机器人2班', major_name:'机器人工程', grade:'2024级', college_name:'示例学院', counselor_name:'示例老师', phone:'138****0005', dorm:'3号楼418', focus:['disc'], focus_level:'L2', note:'两次夜不归宿记录，已通知家长。' },
+    { student_number:'2024010101', full_name:'张明', gender:'男', class_name:'24机器人1班', major_name:'机器人工程', grade:'2024级', college_name:'示例学院', counselor_name:'示例老师', enrollment_status:'在读', politics:'共青团员', phone:'138****0001', dorm:'3号楼412', focus:['study'], focus_level:'L2', crisis_level:'', crisis_way:'', crisis_relieved:false, note:'高数、C语言连续两次预警，已联系任课老师。' },
+    { student_number:'2024010102', full_name:'李思颖', gender:'女', class_name:'24机器人1班', major_name:'机器人工程', grade:'2024级', college_name:'示例学院', counselor_name:'示例老师', enrollment_status:'在读', politics:'共青团员', phone:'138****0002', dorm:'7号楼208', focus:['psych','family'], focus_level:'L1', crisis_level:'院级', crisis_way:'学生自我报告', crisis_relieved:false, note:'父母离异，近期情绪波动，已报心理中心备案，每周谈话。' },
+    { student_number:'2024010203', full_name:'王浩然', gender:'男', class_name:'24机器人2班', major_name:'机器人工程', grade:'2024级', college_name:'示例学院', counselor_name:'示例老师', enrollment_status:'在读', politics:'群众', phone:'138****0003', dorm:'3号楼415', focus:['econ'], focus_level:'L3', crisis_level:'', crisis_way:'', crisis_relieved:false, note:'建档立卡户，已申请国家助学金，勤工助学岗在岗。' },
+    { student_number:'2024010204', full_name:'陈雨欣', gender:'女', class_name:'24机器人2班', major_name:'机器人工程', grade:'2024级', college_name:'示例学院', counselor_name:'示例老师', enrollment_status:'在读', politics:'入党积极分子', phone:'138****0004', dorm:'7号楼210', focus:[], focus_level:'', crisis_level:'', crisis_way:'', crisis_relieved:false, note:'班长，入党积极分子。' },
+    { student_number:'2024010205', full_name:'刘子豪', gender:'男', class_name:'24机器人2班', major_name:'机器人工程', grade:'2024级', college_name:'示例学院', counselor_name:'示例老师', enrollment_status:'在读', politics:'共青团员', phone:'138****0005', dorm:'3号楼418', focus:['disc'], focus_level:'L2', crisis_level:'', crisis_way:'', crisis_relieved:false, note:'两次夜不归宿记录，已通知家长。' },
   ].map(x => normStudent(Object.assign({ _demo:true }, x)));
 
   DB.tasks = [
@@ -956,14 +1067,45 @@ function seedDemo() {
       summary:'回访助学金申请材料补交情况，家庭经济情况核实无误。',
       judge:'材料齐全，无异常。', action:'已提交学院初审。', need_follow:false }),
   ];
+
+  DB.stay = [
+    { student_name:'孙佳怡', student_number:'2024010306', grade_major:'24电子02', stu_type:'本科生',
+      reason:'家住本地，步行可达，便于照顾家中老人。', start: shiftDay(T, 10), end: shiftDay(T, 180),
+      emergency_name:'孙先生', emergency_phone:'139****6677', approval:'审批通过', note:'家长知情同意书已收。' },
+    { student_name:'赵宇航', student_number:'2024010307', grade_major:'24软件01', stu_type:'本科生',
+      reason:'校外实习单位提供住宿，需长期走读。', start: shiftDay(T, 5), end: shiftDay(T, 120),
+      emergency_name:'赵女士', emergency_phone:'137****2233', approval:'审批中', note:'实习协议待补充。' },
+  ].map(x => normStay(Object.assign({ _demo:true }, x)));
+
+  DB.leave = [
+    { name:'周晓彤', student_number:'2024010408', class_major:'24计算机澳01', home_addr:'山东省威海市环翠区',
+      leave_date: shiftDay(T, 3), return_date: shiftDay(T, 60), dorm:'5-6-212', phone:'150****8821',
+      delayed:'否', delay_reason:'', teacher:'示例老师', consent:'已签', note:'暑期返乡。' },
+    { name:'吴俊熙', student_number:'2024010409', class_major:'24人工智能', home_addr:'辽宁省大连市甘井子区',
+      leave_date: shiftDay(T, 3), return_date: shiftDay(T, 60), dorm:'5-6-218', phone:'150****9043',
+      delayed:'是', delay_reason:'参加国家级竞赛集训', teacher:'示例老师', consent:'已签', note:'留校备赛。' },
+  ].map(x => normLeave(Object.assign({ _demo:true }, x)));
+
+  DB.honor = [
+    { name:'李思颖', student_number:'2024010102', major:'机器人工程', class_name:'24机器人1班',
+      apply_type:'德育', politics:'共青团员', rank:'8/42', moral:'优',
+      scholarships:'1.山东大学优秀学生奖一等1次\n2.山东大学特长奖（社会服务类）1次',
+      social:'1.2024-2025 班级团支书\n2.学院学生会新闻中心成员',
+      others:'山东大学（威海）寒假社会实践先进个人' },
+    { name:'王泽洋', student_number:'202400800124', major:'智能制造工程', class_name:'23智能制造04班',
+      apply_type:'智育', politics:'党员发展对象', rank:'17/170', moral:'优',
+      scholarships:'1.国家奖学金1次\n2.山东大学优秀学生奖一等1次',
+      social:'1.班级就业科研委员\n2.学生创新创业朋辈导师',
+      others:'第十九届iCAN大学生创新创业大赛 国家一等奖' },
+  ].map(x => normHonor(Object.assign({ _demo:true }, x)));
+
   DB.custom = {};
   save();
 }
 
-/* ===================== 10. 今日待办聚合（铁律：昨天没做完的自动顺延） ===================== */
+/* ===================== 10. 今日待办聚合 ===================== */
 function buildTodo() {
   const out = [];
-  /* 10.1 任务：逾期 / 今天 / 3 天内 */
   DB.tasks.forEach(t => {
     if (t.status === 'done') return;
     const d = daysFromToday(t.due);
@@ -983,7 +1125,6 @@ function buildTodo() {
              <button class="btn btn-sm" data-act="task-edit" data-id="${t.id}">详情</button>`
     });
   });
-  /* 10.2 谈话跟进到期 */
   DB.talks.forEach(t => {
     if (!t.need_follow || t.done_follow) return;
     const d = daysFromToday(t.follow_date);
@@ -1002,13 +1143,26 @@ function buildTodo() {
              <button class="btn btn-sm" data-act="talk-view" data-id="${t.id}">详情</button>`
     });
   });
-  /* 10.3 重点关注学生周期性谈话到期 */
   DB.students.forEach(s => {
+    if (s.crisis_level && !s.crisis_relieved) {
+      out.push({
+        kind:'crisis', ref:s.id, level:'d', sort:-5,
+        title: `${s.full_name} · 心理危机预警（${s.crisis_level}）${s.crisis_relieved ? '已解除' : '未解除'}`,
+        meta: [
+          `<span class="tag tag-red">危机预警</span>`,
+          `<span class="tag ${s.crisis_level === '校级' ? 'tag-red' : 'tag-amber'}">${esc(s.crisis_level)}</span>`,
+          s.crisis_way ? `<span>${esc(s.crisis_way)}</span>` : '',
+          `<span>${esc(s.class_name)}</span>`,
+        ].filter(Boolean).join(''),
+        acts: `<button class="btn btn-sm btn-primary" data-act="talk-new-student" data-id="${s.id}"><svg class="ic ic-sm"><use href="#i-talk"/></svg>记录谈话</button>
+             <button class="btn btn-sm" data-act="student-view" data-id="${s.id}">学生档案</button>`
+      });
+    }
     const L = LEVEL_MAP[s.focus_level];
     if (!L || !L.days) return;
     const talks = DB.talks.filter(t => t.student_number === s.student_number || t.student_name === s.full_name);
     const last = talks.map(t => t.date).sort().pop();
-    const over = last ? (daysFromToday(last) + L.days) : -1;   /* over<=0 表示已到期 */
+    const over = last ? (daysFromToday(last) + L.days) : -1;
     if (over > 1) return;
     out.push({
       kind:'focus', ref:s.id, level: over < 0 ? 'd' : 'w', sort: over - 0.2,
@@ -1027,13 +1181,20 @@ function buildTodo() {
   return out.sort((a, b) => a.sort - b.sort);
 }
 
-/* ===================== 11. 视图渲染（下方续） ===================== */
+/* ===================== 11. 视图渲染 ===================== */
 const app = {
   view: 'home',
-  filters: { tasks:{ q:'', status:'open', duty:'' }, students:{ q:'', cls:'', focus:'' }, talks:{ q:'', duty:'' } },
+  filters: {
+    tasks:{ q:'', status:'open', duty:'' },
+    students:{ q:'', cls:'', focus:'' },
+    talks:{ q:'', duty:'' },
+    stay:{ q:'', approval:'' },
+    leave:{ q:'', delayed:'' },
+    honor:{ q:'', type:'' },
+  },
 };
 
-/* ---------- 11.1 内联 SVG 图表（不引任何图表库） ---------- */
+/* ---------- 11.1 内联 SVG 图表 ---------- */
 function hBarChart(items, opt) {
   opt = opt || {};
   const W = 680, rowH = 30, padL = opt.padL || 92, padR = 54, top = 6;
@@ -1044,8 +1205,8 @@ function hBarChart(items, opt) {
   items.forEach((it, i) => {
     const y = top + i * rowH, len = Math.max(it.value > 0 ? 3 : 0, (it.value / max) * bw);
     g += `<text x="${padL - 8}" y="${y + 19}" text-anchor="end" font-size="12" fill="#64748b">${esc(it.label)}</text>
-      <rect x="${padL}" y="${y + 7}" width="${bw}" height="15" rx="4" fill="#f1f5f9"/>
-      <rect x="${padL}" y="${y + 7}" width="${len.toFixed(1)}" height="15" rx="4" fill="${it.color || '#2563eb'}"><title>${esc(it.label)}：${it.value}</title></rect>
+      <rect x="${padL}" y="${y + 7}" width="${bw}" height="15" rx="4" fill="#eef2ff"/>
+      <rect class="bar-val" x="${padL}" y="${y + 7}" width="${len.toFixed(1)}" height="15" rx="4" fill="${it.color || '#4f46e5'}"><title>${esc(it.label)}：${it.value}</title></rect>
       <text x="${padL + len + 8}" y="${y + 19}" font-size="12" font-weight="700" fill="${it.value ? '#0f172a' : '#cbd5e1'}">${it.value}</text>`;
   });
   return `<div class="chart-wrap"><svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="分类统计柱状图">${g}</svg></div>`;
@@ -1064,9 +1225,9 @@ function donutChart(items, centerTop, centerSub) {
       off += len;
     });
   } else {
-    ring = `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="#f1f5f9" stroke-width="20"/>`;
+    ring = `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="#eef2ff" stroke-width="20"/>`;
   }
-  return `<div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+  return `<div class="donut-anim" style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
     <svg viewBox="0 0 140 140" width="140" height="140" role="img" aria-label="占比环形图">
       ${ring}
       <text x="70" y="66" text-anchor="middle" font-size="24" font-weight="700" fill="#0f172a">${esc(centerTop)}</text>
@@ -1080,12 +1241,17 @@ function donutChart(items, centerTop, centerSub) {
 /* ---------- 11.2 通用片段 ---------- */
 const dutyTag = k => { const d = DUTY_MAP[k]; return d ? `<span class="tag tag-duty"><span class="dot" style="background:${d.c}"></span>${esc(d.s)}</span>` : ''; };
 const avatarOf = s => `<span class="avatar${s.gender === '女' ? ' f' : ''}">${esc(pinyinInitial(s.full_name))}</span>`;
-const avatarBig = s => `<span class="avatar${s.gender === '女' ? ' f' : ''}" style="width:46px;height:46px;flex:0 0 46px;font-size:17px">${esc(pinyinInitial(s.full_name))}</span>`;
+const avatarBig = s => `<span class="avatar${s.gender === '女' ? ' f' : ''}" style="width:48px;height:48px;flex:0 0 48px;font-size:18px">${esc(pinyinInitial(s.full_name))}</span>`;
 const focusTags = s => (s.focus || []).map(f => FOCUS_MAP[f] ? `<span class="tag ${FOCUS_MAP[f].c}">${esc(FOCUS_MAP[f].n)}</span>` : '').join('');
+function crisisTag(s) {
+  if (!s.crisis_level) return '';
+  return `<span class="tag ${s.crisis_relieved ? 'tag-green' : (s.crisis_level === '校级' ? 'tag-red' : 'tag-amber')}">
+    ${esc(s.crisis_level)}危机${s.crisis_relieved ? '·已解除' : ''}</span>`;
+}
 function emptyBox(text, btn) {
   return `<div class="empty"><svg class="ic"><use href="#i-inbox"/></svg><div>${esc(text)}</div>${btn ? `<div style="margin-top:12px">${btn}</div>` : ''}</div>`;
 }
-function dataCount() { return DB.students.length + DB.tasks.length + DB.talks.length; }
+function dataCount() { return DB.students.length + DB.tasks.length + DB.talks.length + DB.stay.length + DB.leave.length + DB.honor.length; }
 
 /* ---------- 11.3 今日概览 ---------- */
 function viewHome() {
@@ -1093,6 +1259,7 @@ function viewHome() {
   const overdue = todo.filter(t => t.level === 'd').length;
   const openTasks = DB.tasks.filter(t => t.status !== 'done').length;
   const focusN = DB.students.filter(s => s.focus_level).length;
+  const crisisN = DB.students.filter(s => s.crisis_level && !s.crisis_relieved).length;
   const monthTalks = DB.talks.filter(t => monthOf(t.date) === thisMonth()).length;
   const d = new Date();
   const wk = ['日','一','二','三','四','五','六'][d.getDay()];
@@ -1129,13 +1296,15 @@ function viewHome() {
 
   <div class="kpis">
     <div class="kpi ${overdue ? 'danger' : 'ok'}"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-alert"/></svg>逾期未办</div>
-      <div class="kpi-v">${overdue}</div><div class="kpi-s">含任务与回访</div></div>
+      <div class="kpi-v" data-num="${overdue}">${overdue}</div><div class="kpi-s">含任务与回访</div></div>
     <div class="kpi brand"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-task"/></svg>在办任务</div>
-      <div class="kpi-v">${openTasks}</div><div class="kpi-s">共 ${DB.tasks.length} 条</div></div>
+      <div class="kpi-v" data-num="${openTasks}">${openTasks}</div><div class="kpi-s">共 ${DB.tasks.length} 条</div></div>
     <div class="kpi warn"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-heart"/></svg>重点关注学生</div>
-      <div class="kpi-v">${focusN}</div><div class="kpi-s">全部 ${DB.students.length} 人</div></div>
+      <div class="kpi-v" data-num="${focusN}">${focusN}</div><div class="kpi-s">全部 ${DB.students.length} 人</div></div>
+    <div class="kpi ${crisisN ? 'danger' : 'l'}"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-shield"/></svg>心理危机预警</div>
+      <div class="kpi-v" data-num="${crisisN}">${crisisN}</div><div class="kpi-s">未解除</div></div>
     <div class="kpi ok"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-talk"/></svg>本月谈话</div>
-      <div class="kpi-v">${monthTalks}</div><div class="kpi-s">累计 ${DB.talks.length} 次</div></div>
+      <div class="kpi-v" data-num="${monthTalks}">${monthTalks}</div><div class="kpi-s">累计 ${DB.talks.length} 次</div></div>
   </div>
 
   <div class="card">
@@ -1185,11 +1354,6 @@ function filterTasks() {
 }
 function viewTasks() {
   const f = app.filters.tasks, list = filterTasks();
-  const row = t => {
-    const du = dueText(t.due), P = PRIO_MAP[t.priority] || PRIOS[1];
-    const late = t.status !== 'done' && daysFromToday(t.due) !== null && daysFromToday(t.due) < 0;
-    return { du, P, late };
-  };
   return `
   <div class="card">
     <div class="card-hd"><h2><svg class="ic" style="color:var(--brand)"><use href="#i-task"/></svg>工作任务</h2>
@@ -1214,8 +1378,9 @@ function viewTasks() {
     ${list.length ? `
     <div class="tw"><table>
       <thead><tr><th style="width:34px"></th><th>任务名称</th><th>职责分类</th><th>来源</th><th>涉及班级</th><th>截止</th><th>优先级</th><th class="td-acts">操作</th></tr></thead>
-      <tbody>${list.map(t => { const r = row(t); return `
-        <tr${r.late ? ' class="row-danger"' : ''}>
+      <tbody>${list.map(t => { const r = dueText(t.due), P = PRIO_MAP[t.priority] || PRIOS[1];
+        const late = t.status !== 'done' && daysFromToday(t.due) !== null && daysFromToday(t.due) < 0; return `
+        <tr${late ? ' class="row-danger"' : ''}>
           <td><input type="checkbox" style="width:17px;height:17px;accent-color:var(--ok);cursor:pointer" data-act="task-toggle" data-id="${t.id}"${t.status === 'done' ? ' checked' : ''}></td>
           <td><div style="font-weight:600;${t.status === 'done' ? 'text-decoration:line-through;color:var(--ink-4)' : ''}">${esc(t.title)}</div>
               ${t.note ? `<div class="tiny" style="margin-top:2px">${esc(t.note.slice(0, 50))}</div>` : ''}
@@ -1223,21 +1388,22 @@ function viewTasks() {
           <td>${dutyTag(t.duty)}</td>
           <td class="muted">${esc(t.source)}</td>
           <td class="muted">${esc(t.classes || '—')}</td>
-          <td>${t.status === 'done' ? `<span class="tag tag-green">已完成</span>` : `<span class="tag ${r.du.cls}">${esc(r.du.t)}</span>`}</td>
-          <td><span class="tag ${r.P.c}">${esc(r.P.n)}</span></td>
+          <td>${t.status === 'done' ? `<span class="tag tag-green">已完成</span>` : `<span class="tag ${r.cls}">${esc(r.t)}</span>`}</td>
+          <td><span class="tag ${P.c}">${esc(P.n)}</span></td>
           <td class="td-acts">
             <button class="link-btn" data-act="task-edit" data-id="${t.id}">编辑</button>
             <button class="link-btn danger" data-act="task-del" data-id="${t.id}" style="margin-left:8px">删除</button></td>
         </tr>`; }).join('')}</tbody></table></div>
-    <div class="mcards">${list.map(t => { const r = row(t); return `
-      <div class="mcard"${r.late ? ' style="background:var(--danger-soft)"' : ''}>
+    <div class="mcards">${list.map(t => { const r = dueText(t.due), P = PRIO_MAP[t.priority] || PRIOS[1];
+      const late = t.status !== 'done' && daysFromToday(t.due) !== null && daysFromToday(t.due) < 0; return `
+      <div class="mcard"${late ? ' style="background:var(--danger-soft)"' : ''}>
         <div class="mcard-hd">
           <input type="checkbox" style="width:20px;height:20px;accent-color:var(--ok)" data-act="task-toggle" data-id="${t.id}"${t.status === 'done' ? ' checked' : ''}>
           <div class="mcard-t"${t.status === 'done' ? ' style="text-decoration:line-through;color:var(--ink-4)"' : ''}>${esc(t.title)}</div>
         </div>
         <div class="mcard-meta">
-          ${t.status === 'done' ? '<span class="tag tag-green">已完成</span>' : `<span class="tag ${r.du.cls}">${esc(r.du.t)}</span>`}
-          ${dutyTag(t.duty)}<span class="tag ${r.P.c}">${esc(r.P.n)}</span>
+          ${t.status === 'done' ? '<span class="tag tag-green">已完成</span>' : `<span class="tag ${r.cls}">${esc(r.t)}</span>`}
+          ${dutyTag(t.duty)}<span class="tag ${P.c}">${esc(P.n)}</span>
           <span>${esc(t.source)}</span>${t.classes ? `<span>${esc(t.classes)}</span>` : ''}
         </div>
         <div class="mcard-acts">
@@ -1259,9 +1425,10 @@ function filterStudents() {
   return DB.students.filter(s => {
     if (f.cls && s.class_name !== f.cls) return false;
     if (f.focus === '__any' && !s.focus_level) return false;
-    if (f.focus && f.focus !== '__any' && !(s.focus || []).includes(f.focus)) return false;
+    if (f.focus === '__crisis' && !(s.crisis_level && !s.crisis_relieved)) return false;
+    if (f.focus && f.focus !== '__any' && f.focus !== '__crisis' && !(s.focus || []).includes(f.focus)) return false;
     if (f.q) {
-      const t = (s.full_name + s.student_number + s.class_name + s.dorm + s.note + s.phone).toLowerCase();
+      const t = (s.full_name + s.student_number + s.class_name + s.dorm + s.note + s.phone + s.politics).toLowerCase();
       if (!t.includes(f.q.toLowerCase())) return false;
     }
     return true;
@@ -1293,16 +1460,17 @@ function viewStudents() {
         <option value="">全部班级</option>
         ${classList().map(c => `<option value="${esc(c)}"${f.cls === c ? ' selected' : ''}>${esc(c)}</option>`).join('')}
       </select>
-      <select class="inp" style="width:auto;min-width:140px" data-filter="students.focus">
+      <select class="inp" style="width:auto;min-width:150px" data-filter="students.focus">
         <option value="">全部学生</option>
         <option value="__any"${f.focus === '__any' ? ' selected' : ''}>仅重点关注</option>
+        <option value="__crisis"${f.focus === '__crisis' ? ' selected' : ''}>仅危机预警</option>
         ${FOCUS.map(x => `<option value="${x.k}"${f.focus === x.k ? ' selected' : ''}>${esc(x.n)}</option>`).join('')}
       </select>
       <span class="tiny" style="margin-left:auto">共 ${list.length} 人 · 重点关注 ${DB.students.filter(s => s.focus_level).length} 人</span>
     </div>
     ${list.length ? `
     <div class="tw"><table>
-      <thead><tr><th>学生</th><th>学号</th><th>班级</th><th>关注等级</th><th>关注类型</th><th>最近谈话</th><th>宿舍</th><th class="td-acts">操作</th></tr></thead>
+      <thead><tr><th>学生</th><th>学号</th><th>班级</th><th>关注等级</th><th>关注类型</th><th>危机预警</th><th>最近谈话</th><th>宿舍</th><th class="td-acts">操作</th></tr></thead>
       <tbody>${list.map(s => {
         const L = LEVEL_MAP[s.focus_level], lt = lastTalkOf(s);
         const gap = lt ? -daysFromToday(lt) : null;
@@ -1310,11 +1478,12 @@ function viewStudents() {
         return `<tr${late ? ' class="row-danger"' : ''}>
           <td><div class="name-cell">${avatarOf(s)}<div>
             <div style="font-weight:600">${esc(s.full_name)}</div>
-            <div class="tiny">${esc(s.gender || '')} ${esc(s.major_name || '')}</div></div></div></td>
+            <div class="tiny">${esc(s.gender || '')} ${esc(s.politics || s.major_name || '')}</div></div></div></td>
           <td class="muted">${esc(s.student_number)}</td>
           <td class="muted">${esc(s.class_name)}</td>
           <td>${L && L.k ? `<span class="tag ${L.c}">${esc(L.n)}</span>` : '<span class="tiny">—</span>'}</td>
           <td>${focusTags(s) || '<span class="tiny">—</span>'}</td>
+          <td>${crisisTag(s) || '<span class="tiny">—</span>'}</td>
           <td>${lt ? `<span class="${late ? 'tag tag-red' : 'muted'}">${cnDate(lt)}${gap !== null ? `（${gap} 天前）` : ''}</span>` : '<span class="tag tag-amber">无记录</span>'}</td>
           <td class="muted">${esc(s.dorm || '—')}</td>
           <td class="td-acts">
@@ -1330,7 +1499,7 @@ function viewStudents() {
           <span class="tiny" style="font-weight:400">${esc(s.student_number)}</span></div>
           ${L && L.k ? `<span class="tag ${L.c}">${esc(L.n)}</span>` : ''}</div>
         <div class="mcard-meta"><span>${esc(s.class_name)}</span>${s.dorm ? `<span>${esc(s.dorm)}</span>` : ''}
-          ${focusTags(s)}
+          ${focusTags(s)}${crisisTag(s)}
           <span class="${late ? 'tag tag-red' : ''}">${lt ? `最近谈话 ${cnDate(lt)}` : '暂无谈话记录'}</span></div>
         <div class="mcard-acts">
           <button class="btn btn-sm" data-act="student-view" data-id="${s.id}">档案</button>
@@ -1344,6 +1513,7 @@ function viewStudents() {
       从平台导出的名单可直接导入，本地整理后也能原样回传。</span>
     <button class="btn btn-sm" data-act="student-template">下载模板</button></div>`;
 }
+
 /* ---------- 11.6 谈心谈话 ---------- */
 function filterTalks() {
   const f = app.filters.talks;
@@ -1416,7 +1586,198 @@ function viewTalks() {
       这既是 43 号令要求的工作留痕，也是学期末写总结、评优述职时最省事的素材来源。</span></div>`;
 }
 
-/* ---------- 11.7 工作留痕与汇总 ---------- */
+/* ---------- 11.7 校外住宿 / 走读 ---------- */
+function filterStay() {
+  const f = app.filters.stay;
+  return DB.stay.filter(s => {
+    if (f.approval && s.approval !== f.approval) return false;
+    if (f.q) {
+      const t = (s.student_name + s.student_number + s.grade_major + s.reason + s.emergency_name).toLowerCase();
+      if (!t.includes(f.q.toLowerCase())) return false;
+    }
+    return true;
+  }).sort((a, b) => (a.student_name || '') < (b.student_name || '') ? -1 : 1);
+}
+function viewStay() {
+  const f = app.filters.stay, list = filterStay();
+  return `
+  <div class="card">
+    <div class="card-hd"><h2><svg class="ic" style="color:var(--brand)"><use href="#i-bed"/></svg>校外住宿 / 走读管理</h2>
+      <span class="sp"></span>
+      <button class="btn btn-sm" data-act="stay-export">导出 CSV</button>
+      <button class="btn btn-primary btn-sm" data-act="stay-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增走读</button>
+    </div>
+    <div class="toolbar">
+      <div class="search"><svg class="ic ic-sm"><use href="#i-search"/></svg>
+        <input class="inp" placeholder="搜索姓名、学号、申请理由" data-filter="stay.q" value="${esc(f.q)}"></div>
+      <select class="inp" style="width:auto;min-width:140px" data-filter="stay.approval">
+        <option value="">全部审批状态</option>
+        ${APPROVALS.map(a => `<option value="${a}"${f.approval === a ? ' selected' : ''}>${esc(a)}</option>`).join('')}
+      </select>
+      <span class="tiny" style="margin-left:auto">共 ${list.length} 人走读</span>
+    </div>
+    ${list.length ? `
+    <div class="tw"><table>
+      <thead><tr><th>姓名</th><th>学号</th><th>年级专业</th><th>学生类型</th><th>走读起止</th><th>紧急联系人</th><th>审批</th><th class="td-acts">操作</th></tr></thead>
+      <tbody>${list.map(s => `
+        <tr>
+          <td><div style="font-weight:600">${esc(s.student_name)}</div><div class="tiny">${esc(s.student_number || '')}</div></td>
+          <td class="muted">${esc(s.grade_major || '—')}</td>
+          <td class="muted">${esc(s.stu_type || '—')}</td>
+          <td class="muted">${s.start ? `${cnDate(s.start)} ~ ${cnDate(s.end)}` : '—'}</td>
+          <td>${s.emergency_name ? `${esc(s.emergency_name)}<div class="tiny">${esc(s.emergency_phone || '')}</div>` : '—'}</td>
+          <td><span class="tag ${s.approval === '审批通过' ? 'tag-green' : s.approval === '未通过' ? 'tag-red' : 'tag-amber'}">${esc(s.approval)}</span></td>
+          <td class="td-acts">
+            <button class="link-btn" data-act="stay-edit" data-id="${s.id}">编辑</button>
+            <button class="link-btn danger" data-act="stay-del" data-id="${s.id}" style="margin-left:8px">删除</button></td>
+        </tr>`).join('')}</tbody></table></div>
+    <div class="mcards">${list.map(s => `
+      <div class="mcard">
+        <div class="mcard-hd"><div class="mcard-t">${esc(s.student_name)}</div><span class="tag ${s.approval === '审批通过' ? 'tag-green' : s.approval === '未通过' ? 'tag-red' : 'tag-amber'}">${esc(s.approval)}</span></div>
+        <div class="mcard-meta">
+          <span>${esc(s.student_number || '')}</span><span>${esc(s.grade_major || '')}</span><span>${esc(s.stu_type || '')}</span>
+          ${s.start ? `<span>${cnDate(s.start)} ~ ${cnDate(s.end)}</span>` : ''}
+          ${s.emergency_name ? `<span>紧急联系人：${esc(s.emergency_name)} ${esc(s.emergency_phone || '')}</span>` : ''}
+        </div>
+        ${s.reason ? `<div class="tiny" style="margin-bottom:8px">理由：${esc(s.reason)}</div>` : ''}
+        <div class="mcard-acts">
+          <button class="btn btn-sm" data-act="stay-edit" data-id="${s.id}">编辑</button>
+          <button class="btn btn-sm btn-danger" data-act="stay-del" data-id="${s.id}">删除</button>
+        </div>
+      </div>`).join('')}</div>`
+    : emptyBox('还没有走读记录', `<button class="btn btn-primary btn-sm" data-act="stay-new">新增走读</button>`)}
+  </div>`;
+}
+
+/* ---------- 11.8 假期去向 ---------- */
+function filterLeave() {
+  const f = app.filters.leave;
+  return DB.leave.filter(s => {
+    if (f.delayed && s.delayed !== f.delayed) return false;
+    if (f.q) {
+      const t = (s.name + s.student_number + s.class_major + s.home_addr + s.teacher).toLowerCase();
+      if (!t.includes(f.q.toLowerCase())) return false;
+    }
+    return true;
+  }).sort((a, b) => (a.name || '') < (b.name || '') ? -1 : 1);
+}
+function viewLeave() {
+  const f = app.filters.leave, list = filterLeave();
+  const delayedN = list.filter(s => s.delayed === '是').length;
+  return `
+  <div class="card">
+    <div class="card-hd"><h2><svg class="ic" style="color:var(--brand)"><use href="#i-plane"/></svg>假期去向管理</h2>
+      <span class="sp"></span>
+      <button class="btn btn-sm" data-act="leave-export">导出 CSV</button>
+      <button class="btn btn-primary btn-sm" data-act="leave-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增去向</button>
+    </div>
+    <div class="toolbar">
+      <div class="search"><svg class="ic ic-sm"><use href="#i-search"/></svg>
+        <input class="inp" placeholder="搜索姓名、班级、家庭地址" data-filter="leave.q" value="${esc(f.q)}"></div>
+      <select class="inp" style="width:auto;min-width:140px" data-filter="leave.delayed">
+        <option value="">全部（含延迟离校）</option>
+        <option value="否"${f.delayed === '否' ? ' selected' : ''}>正常离校</option>
+        <option value="是"${f.delayed === '是' ? ' selected' : ''}>延迟离校 / 留校</option>
+      </select>
+      <span class="tiny" style="margin-left:auto">共 ${list.length} 人${delayedN ? ` · 留校 ${delayedN} 人` : ''}</span>
+    </div>
+    ${list.length ? `
+    <div class="tw"><table>
+      <thead><tr><th>姓名</th><th>班级</th><th>家庭所在省市区</th><th>离 / 返校</th><th>宿舍</th><th>是否延迟</th><th>指导老师</th><th class="td-acts">操作</th></tr></thead>
+      <tbody>${list.map(s => `
+        <tr>
+          <td><div style="font-weight:600">${esc(s.name)}</div><div class="tiny">${esc(s.student_number || '')}</div></td>
+          <td class="muted">${esc(s.class_major || '—')}</td>
+          <td class="muted">${esc(s.home_addr || '—')}</td>
+          <td>${s.leave_date ? `${cnDate(s.leave_date)} 离 / ${cnDate(s.return_date)} 回` : '—'}</td>
+          <td class="muted">${esc(s.dorm || '—')}</td>
+          <td>${s.delayed === '是' ? `<span class="tag tag-amber">延迟 · ${esc(s.delay_reason || '')}</span>` : '<span class="tag tag-green">正常离校</span>'}</td>
+          <td class="muted">${esc(s.teacher || '—')}</td>
+          <td class="td-acts">
+            <button class="link-btn" data-act="leave-edit" data-id="${s.id}">编辑</button>
+            <button class="link-btn danger" data-act="leave-del" data-id="${s.id}" style="margin-left:8px">删除</button></td>
+        </tr>`).join('')}</tbody></table></div>
+    <div class="mcards">${list.map(s => `
+      <div class="mcard">
+        <div class="mcard-hd"><div class="mcard-t">${esc(s.name)}</div>${s.delayed === '是' ? `<span class="tag tag-amber">延迟离校</span>` : `<span class="tag tag-green">正常离校</span>`}</div>
+        <div class="mcard-meta">
+          <span>${esc(s.student_number || '')}</span><span>${esc(s.class_major || '')}</span>
+          <span>${esc(s.home_addr || '')}</span>
+          ${s.leave_date ? `<span>${cnDate(s.leave_date)} 离 / ${cnDate(s.return_date)} 回</span>` : ''}
+          <span>${esc(s.teacher || '')}</span>
+        </div>
+        <div class="mcard-acts">
+          <button class="btn btn-sm" data-act="leave-edit" data-id="${s.id}">编辑</button>
+          <button class="btn btn-sm btn-danger" data-act="leave-del" data-id="${s.id}">删除</button>
+        </div>
+      </div>`).join('')}</div>`
+    : emptyBox('还没有假期去向记录', `<button class="btn btn-primary btn-sm" data-act="leave-new">新增去向</button>`)}
+  </div>`;
+}
+
+/* ---------- 11.9 评优榜样 ---------- */
+function filterHonor() {
+  const f = app.filters.honor;
+  return DB.honor.filter(s => {
+    if (f.type && s.apply_type !== f.type) return false;
+    if (f.q) {
+      const t = (s.name + s.student_number + s.major + s.class_name + s.scholarships + s.social + s.others).toLowerCase();
+      if (!t.includes(f.q.toLowerCase())) return false;
+    }
+    return true;
+  }).sort((a, b) => (a.name || '') < (b.name || '') ? -1 : 1);
+}
+function viewHonor() {
+  const f = app.filters.honor, list = filterHonor();
+  return `
+  <div class="card">
+    <div class="card-hd"><h2><svg class="ic" style="color:var(--brand)"><use href="#i-trophy"/></svg>评优榜样 / 先进个人</h2>
+      <span class="sp"></span>
+      <button class="btn btn-sm" data-act="honor-export">导出 CSV</button>
+      <button class="btn btn-primary btn-sm" data-act="honor-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增申报</button>
+    </div>
+    <div class="toolbar">
+      <div class="search"><svg class="ic ic-sm"><use href="#i-search"/></svg>
+        <input class="inp" placeholder="搜索姓名、专业、获奖情况" data-filter="honor.q" value="${esc(f.q)}"></div>
+      <select class="inp" style="width:auto;min-width:150px" data-filter="honor.type">
+        <option value="">全部申请类型</option>
+        ${HONOR_TYPES.map(x => `<option value="${x.v}"${f.type === x.v ? ' selected' : ''}>${esc(x.n)}</option>`).join('')}
+      </select>
+      <span class="tiny" style="margin-left:auto">共 ${list.length} 人申报</span>
+    </div>
+    ${list.length ? `
+    <div class="tw"><table>
+      <thead><tr><th>姓名</th><th>申请类型</th><th>政治面貌</th><th>专业班级</th><th>综合排名</th><th>德育考核</th><th class="td-acts">操作</th></tr></thead>
+      <tbody>${list.map(s => `
+        <tr>
+          <td><div style="font-weight:600">${esc(s.name)}</div><div class="tiny">${esc(s.student_number || '')}</div></td>
+          <td>${s.apply_type ? `<span class="tag tag-purple">${esc((HONOR_TYPES.find(x => x.v === s.apply_type) || {}).n || s.apply_type)}</span>` : '<span class="tiny">—</span>'}</td>
+          <td class="muted">${esc(s.politics || '—')}</td>
+          <td class="muted">${esc(s.major || '')} ${esc(s.class_name ? '· ' + s.class_name : '')}</td>
+          <td class="muted">${esc(s.rank || '—')}</td>
+          <td>${s.moral ? `<span class="tag ${s.moral === '优' ? 'tag-green' : s.moral === '及格' ? 'tag-amber' : 'tag-blue'}">${esc(s.moral)}</span>` : '<span class="tiny">—</span>'}</td>
+          <td class="td-acts">
+            <button class="link-btn" data-act="honor-view" data-id="${s.id}">详情</button>
+            <button class="link-btn" data-act="honor-edit" data-id="${s.id}" style="margin-left:8px">编辑</button>
+            <button class="link-btn danger" data-act="honor-del" data-id="${s.id}" style="margin-left:8px">删除</button></td>
+        </tr>`).join('')}</tbody></table></div>
+    <div class="mcards">${list.map(s => `
+      <div class="mcard">
+        <div class="mcard-hd"><div class="mcard-t">${esc(s.name)}</div>${s.apply_type ? `<span class="tag tag-purple">${esc((HONOR_TYPES.find(x => x.v === s.apply_type) || {}).n || s.apply_type)}</span>` : ''}</div>
+        <div class="mcard-meta">
+          <span>${esc(s.politics || '')}</span><span>${esc(s.major || '')}</span><span>${esc(s.class_name || '')}</span>
+          <span>排名 ${esc(s.rank || '—')}</span><span>德育 ${esc(s.moral || '—')}</span>
+        </div>
+        <div class="mcard-acts">
+          <button class="btn btn-sm" data-act="honor-view" data-id="${s.id}">详情</button>
+          <button class="btn btn-sm" data-act="honor-edit" data-id="${s.id}">编辑</button>
+        </div>
+      </div>`).join('')}</div>`
+    : emptyBox('还没有评优申报记录', `<button class="btn btn-primary btn-sm" data-act="honor-new">新增申报</button>`)}
+  </div>`;
+}
+
+/* ---------- 11.10 工作留痕与汇总 ---------- */
 function reportRange() {
   const r = app.reportRange || { mode:'term' };
   if (r.mode === 'month') { const m = thisMonth(); return { name:`${m.replace('-', ' 年 ')} 月`, from:m + '-01', to:m + '-31' }; }
@@ -1429,7 +1790,7 @@ function viewReport() {
   const talks = DB.talks.filter(t => t.date >= R.from && t.date <= R.to);
   const wayItems = TALK_WAYS.map((w, i) => ({
     label:w, value: talks.filter(t => t.way === w).length,
-    color:['#2563eb','#16a34a','#7c3aed','#d97706','#0891b2'][i]
+    color:['#4f46e5','#16a34a','#7c3aed','#d97706','#0891b2'][i]
   }));
   const dutyItems = st.by_duty.map(b => ({ label: DUTY_MAP[b.duty].s, value: b.tasks + b.talks, color: DUTY_MAP[b.duty].c }));
   const rate = st.task_total ? Math.round(st.task_done / st.task_total * 100) : 0;
@@ -1452,12 +1813,12 @@ function viewReport() {
       <div class="kpis" style="margin-bottom:0">
         <div class="kpi brand"><div class="kpi-l">统计区间</div><div style="font-size:15px;font-weight:700;margin-top:4px">${esc(R.name)}</div>
           <div class="kpi-s">${R.from} ~ ${R.to}</div></div>
-        <div class="kpi"><div class="kpi-l">任务完成</div><div class="kpi-v">${st.task_done}<span style="font-size:15px;color:var(--ink-4)">/${st.task_total}</span></div>
+        <div class="kpi"><div class="kpi-l">任务完成</div><div class="kpi-v" data-num="${st.task_done}">${st.task_done}<span style="font-size:15px;color:var(--ink-4)">/${st.task_total}</span></div>
           <div class="kpi-s">完成率 ${rate}%</div></div>
-        <div class="kpi ok"><div class="kpi-l">谈心谈话</div><div class="kpi-v">${talks.length}</div>
+        <div class="kpi ok"><div class="kpi-l">谈心谈话</div><div class="kpi-v" data-num="${talks.length}">${talks.length}</div>
           <div class="kpi-s">覆盖 ${new Set(talks.map(t => t.student_name)).size} 名学生</div></div>
-        <div class="kpi warn"><div class="kpi-l">重点关注在册</div><div class="kpi-v">${st.focus_total}</div>
-          <div class="kpi-s">学生总数 ${st.student_total}</div></div>
+        <div class="kpi warn"><div class="kpi-l">重点关注在册</div><div class="kpi-v" data-num="${st.focus_total}">${st.focus_total}</div>
+          <div class="kpi-s">危机未解除 ${st.crisis_total}</div></div>
       </div>
     </div>
   </div>
@@ -1495,10 +1856,10 @@ function buildSummary(R) {
   L.push('');
   L.push(`辅导员：${who}${DB.settings.college_name ? '（' + DB.settings.college_name + '）' : ''}`);
   L.push(`统计区间：${R.from} 至 ${R.to}`);
-  L.push(`带班学生：${st.student_total} 人，其中纳入重点关注 ${st.focus_total} 人。`);
+  L.push(`带班学生：${st.student_total} 人，其中纳入重点关注 ${st.focus_total} 人，心理危机预警未解除 ${st.crisis_total} 人。`);
   L.push('');
   L.push('一、工作总量');
-  L.push(`本区间共承接和推进各类工作任务 ${st.task_total} 项，已完成 ${st.task_done} 项；开展谈心谈话 ${talks.length} 人次，覆盖学生 ${new Set(talks.map(t => t.student_name)).size} 名。`);
+  L.push(`本区间共承接和推进各类工作任务 ${st.task_total} 项，已完成 ${st.task_done} 项；开展谈心谈话 ${talks.length} 人次，覆盖学生 ${new Set(talks.map(t => t.student_name)).size} 名；校外住宿（走读）${st.stay_total} 人、假期去向跟踪 ${st.leave_total} 人、评优榜样申报 ${st.honor_total} 人。`);
   L.push('');
   L.push('二、按九项工作职责开展情况');
   st.by_duty.forEach((b, i) => {
@@ -1519,6 +1880,8 @@ function buildSummary(R) {
     const td = Object.keys(types).map(k => `${FOCUS_MAP[k] ? FOCUS_MAP[k].n : k} ${types[k]} 人`).join('，');
     if (td) L.push(`关注类型分布：${td}。`);
   } else L.push('本区间无纳入重点关注的学生。');
+  const crisis = DB.students.filter(s => s.crisis_level && !s.crisis_relieved);
+  if (crisis.length) L.push(`心理危机预警（未解除）：${crisis.map(s => `${s.full_name}（${s.crisis_level}，${s.crisis_way || '来源未填'}）`).join('、')}。`);
   L.push('');
   L.push('四、下一步计划');
   const undone = DB.tasks.filter(t => t.status !== 'done').slice(0, 5);
@@ -1528,7 +1891,7 @@ function buildSummary(R) {
   return L.join('\n');
 }
 
-/* ---------- 11.8 平台联动 ---------- */
+/* ---------- 11.11 平台联动 ---------- */
 function viewBridge() {
   const s = DB.settings;
   const fields = Object.keys(schema.student).map(k => {
@@ -1582,7 +1945,7 @@ function viewBridge() {
         <div class="lab" style="margin-bottom:6px">已开放的扩展接口（在浏览器控制台可直接调用）</div>
         <div class="tw"><table><tbody>
           <tr><td><code>CWB.store</code></td><td class="muted">读写本地数据：<code>CWB.store.read(key, 默认值)</code> / <code>write(key, 值)</code></td></tr>
-          <tr><td><code>CWB.db</code></td><td class="muted">当前全部数据：<code>students / tasks / talks / settings / custom</code></td></tr>
+          <tr><td><code>CWB.db</code></td><td class="muted">当前全部数据：<code>students / tasks / talks / stay / leave / honor / settings / custom</code></td></tr>
           <tr><td><code>CWB.ui.form()</code></td><td class="muted">一行代码生成带校验的弹窗表单</td></tr>
           <tr><td><code>CWB.ui.toast()</code></td><td class="muted">轻提示</td></tr>
           <tr><td><code>CWB.modules.register()</code></td><td class="muted">注册自定义模块，自动出现在左侧导航</td></tr>
@@ -1644,9 +2007,13 @@ function studentForm(s) {
       { key:'grade', label:'年级', ph:'如 2024级' },
       { key:'phone', label:'联系电话' },
       { key:'dorm', label:'宿舍' },
-      { key:'enrollment_status', label:'学籍状态', type:'select', options:['在读','休学','复学','退学','毕业'] },
+      { key:'enrollment_status', label:'学生当前状态', type:'select', options: ENROLL_STATUS },
+      { key:'politics', label:'政治面貌', type:'select', options: POLITICS },
       { key:'focus_level', label:'关注等级', type:'select', options: LEVELS.map(l => ({ v:l.k, n:l.n + (l.days ? ` · ${l.desc}` : '') })) },
       { key:'focus', label:'关注类型（可多选）', type:'chips', options: FOCUS.map(f => ({ v:f.k, n:f.n })) },
+      { key:'crisis_level', label:'心理危机预警级别', type:'select', options: CRISIS_LEVELS.map(v => ({ v, n:v || '未纳入' })) },
+      { key:'crisis_way', label:'危机发现方式', type:'select', options: CRISIS_WAYS },
+      { key:'crisis_relieved', label:'是否已解除危机预警', type:'checkbox' },
       { key:'note', label:'情况备注', type:'textarea', rows:3, ph:'家庭情况、既往问题、帮扶措施等' },
     ],
     extra: `<datalist id="dl-class2">${classList().map(c => `<option value="${esc(c)}">`).join('')}</datalist>`,
@@ -1692,6 +2059,83 @@ function talkForm(t, preset) {
     }
   });
 }
+function stayForm(t) {
+  const isNew = !t;
+  ui.form({
+    title: isNew ? '新增走读 / 校外住宿' : '编辑走读记录',
+    data: t || { stu_type:'本科生', approval:'待审批' },
+    fields: [
+      { key:'student_name', label:'学生姓名', required:true },
+      { key:'student_number', label:'学号' },
+      { key:'grade_major', label:'年级专业', ph:'如 24电子02' },
+      { key:'stu_type', label:'学生类型', type:'select', options: STU_TYPES },
+      { key:'reason', label:'申请理由', type:'textarea', rows:2 },
+      { key:'start', label:'走读开始', type:'date' },
+      { key:'end', label:'走读结束', type:'date' },
+      { key:'emergency_name', label:'紧急联系人' },
+      { key:'emergency_phone', label:'紧急联系人电话' },
+      { key:'approval', label:'系统审批情况', type:'select', options: APPROVALS },
+      { key:'note', label:'备注', type:'textarea', rows:2 },
+    ],
+    onSave(v) {
+      if (isNew) { DB.stay.push(normStay(v)); ui.toast('已添加', 'ok'); }
+      else { Object.assign(t, normStay(Object.assign({}, t, v))); ui.toast('已保存', 'ok'); }
+      save('stay'); render();
+    }
+  });
+}
+function leaveForm(t) {
+  const isNew = !t;
+  ui.form({
+    title: isNew ? '新增假期去向' : '编辑去向记录',
+    data: t || { delayed:'否' },
+    fields: [
+      { key:'name', label:'学生姓名', required:true },
+      { key:'student_number', label:'学号' },
+      { key:'class_major', label:'专业班级', ph:'如 24计算机澳01' },
+      { key:'home_addr', label:'家庭所在省市区', ph:'如 山东省威海市环翠区' },
+      { key:'leave_date', label:'离校时间', type:'date' },
+      { key:'return_date', label:'返校时间', type:'date' },
+      { key:'dorm', label:'宿舍号' },
+      { key:'phone', label:'本人手机号' },
+      { key:'delayed', label:'是否延迟离校', type:'select', options:['否','是'] },
+      { key:'delay_reason', label:'留校缘由（延迟离校填写）', ph:'如 参加竞赛集训' },
+      { key:'teacher', label:'指导老师' },
+      { key:'consent', label:'家长知情同意书', ph:'已签 / 未签' },
+      { key:'note', label:'特殊情况备注', type:'textarea', rows:2 },
+    ],
+    onSave(v) {
+      if (isNew) { DB.leave.push(normLeave(v)); ui.toast('已添加', 'ok'); }
+      else { Object.assign(t, normLeave(Object.assign({}, t, v))); ui.toast('已保存', 'ok'); }
+      save('leave'); render();
+    }
+  });
+}
+function honorForm(t) {
+  const isNew = !t;
+  ui.form({
+    title: isNew ? '新增评优榜样申报' : '编辑申报记录', size:'wide',
+    data: t || { politics:'共青团员' },
+    fields: [
+      { key:'name', label:'学生姓名', required:true },
+      { key:'student_number', label:'学号' },
+      { key:'apply_type', label:'申请类型', type:'select', options: HONOR_TYPES },
+      { key:'politics', label:'政治面貌', type:'select', options: POLITICS },
+      { key:'major', label:'专业', },
+      { key:'class_name', label:'班级' },
+      { key:'rank', label:'综合成绩专业排名', ph:'如 17/170' },
+      { key:'moral', label:'德育素质考核等级', type:'select', options: MORAL_LEVELS.map(v => ({ v, n:v || '未评' })) },
+      { key:'scholarships', label:'入学来获奖学金情况', type:'textarea', rows:3, ph:'每行一项' },
+      { key:'social', label:'社会工作情况', type:'textarea', rows:3 },
+      { key:'others', label:'其他获奖情况（突出表现）', type:'textarea', rows:3 },
+    ],
+    onSave(v) {
+      if (isNew) { DB.honor.push(normHonor(v)); ui.toast('已添加', 'ok'); }
+      else { Object.assign(t, normHonor(Object.assign({}, t, v))); ui.toast('已保存', 'ok'); }
+      save('honor'); render();
+    }
+  });
+}
 function openStudent(s) {
   const talks = DB.talks.filter(t => t.student_number === s.student_number || t.student_name === s.full_name)
     .sort((a, b) => a.date < b.date ? 1 : -1);
@@ -1703,7 +2147,8 @@ function openStudent(s) {
         ${avatarBig(s)}
         <div style="flex:1;min-width:180px">
           <div style="font-size:17px;font-weight:700">${esc(s.full_name)}
-            ${L && L.k ? `<span class="tag ${L.c}" style="margin-left:6px">${esc(L.n)}</span>` : ''}</div>
+            ${L && L.k ? `<span class="tag ${L.c}" style="margin-left:6px">${esc(L.n)}</span>` : ''}
+            ${crisisTag(s)}</div>
           <div class="muted">${esc(s.student_number)} · ${esc(s.class_name)} · ${esc(s.major_name)}</div>
         </div>
         <button class="btn btn-sm" data-edit-stu>编辑档案</button>
@@ -1714,8 +2159,8 @@ function openStudent(s) {
         <div><div class="tiny">联系电话</div><div>${esc(s.phone || '—')}</div></div>
         <div><div class="tiny">宿舍</div><div>${esc(s.dorm || '—')}</div></div>
         <div><div class="tiny">年级</div><div>${esc(s.grade || '—')}</div></div>
-        <div><div class="tiny">学籍状态</div><div>${esc(s.enrollment_status || '—')}</div></div>
-        <div><div class="tiny">辅导员</div><div>${esc(s.counselor_name || '—')}</div></div>
+        <div><div class="tiny">学生当前状态</div><div>${esc(s.enrollment_status || '—')}</div></div>
+        <div><div class="tiny">政治面貌</div><div>${esc(s.politics || '—')}</div></div>
       </div>
       ${(s.focus || []).length ? `<div style="margin-bottom:12px"><div class="tiny" style="margin-bottom:5px">关注类型</div>${focusTags(s)}</div>` : ''}
       ${s.note ? `<div style="margin-bottom:14px"><div class="tiny" style="margin-bottom:4px">情况备注</div>
@@ -1731,6 +2176,26 @@ function openStudent(s) {
       $('[data-edit-stu]', mask).onclick = () => { close(); studentForm(s); };
       $('[data-new-talk]', mask).onclick = () => { close(); talkForm(null, { student_name:s.full_name, student_number:s.student_number }); };
     }
+  });
+}
+function openHonor(s) {
+  ui.modal({
+    title: `评优申报详情 · ${s.name}`, size:'wide',
+    body: `
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px">
+        ${s.apply_type ? `<span class="tag tag-purple">${esc((HONOR_TYPES.find(x => x.v === s.apply_type) || {}).n || s.apply_type)}</span>` : ''}
+        <span class="muted">${esc(s.student_number || '')} · ${esc(s.major || '')} ${esc(s.class_name ? '· ' + s.class_name : '')}</span>
+      </div>
+      <div class="grid2" style="gap:9px;margin-bottom:14px">
+        <div><div class="tiny">政治面貌</div><div>${esc(s.politics || '—')}</div></div>
+        <div><div class="tiny">综合成绩专业排名</div><div>${esc(s.rank || '—')}</div></div>
+        <div><div class="tiny">德育素质考核等级</div><div>${s.moral ? `<span class="tag ${s.moral === '优' ? 'tag-green' : s.moral === '及格' ? 'tag-amber' : 'tag-blue'}">${esc(s.moral)}</span>` : '—'}</div></div>
+      </div>
+      ${s.scholarships ? `<div style="margin-bottom:12px"><div class="tiny" style="margin-bottom:4px">入学来获奖学金情况</div><div style="background:var(--line-2);padding:10px 12px;border-radius:8px;font-size:13.3px;line-height:1.7;white-space:pre-wrap">${esc(s.scholarships)}</div></div>` : ''}
+      ${s.social ? `<div style="margin-bottom:12px"><div class="tiny" style="margin-bottom:4px">社会工作情况</div><div style="background:var(--line-2);padding:10px 12px;border-radius:8px;font-size:13.3px;line-height:1.7;white-space:pre-wrap">${esc(s.social)}</div></div>` : ''}
+      ${s.others ? `<div><div class="tiny" style="margin-bottom:4px">其他获奖情况（突出表现）</div><div style="background:var(--line-2);padding:10px 12px;border-radius:8px;font-size:13.3px;line-height:1.7;white-space:pre-wrap">${esc(s.others)}</div></div>` : ''}`,
+    footer: `<button class="btn" data-close>关闭</button><button class="btn btn-primary" data-e>编辑</button>`,
+    onOpen(mask, close) { $('[data-e]', mask).onclick = () => { close(); honorForm(s); }; }
   });
 }
 function openSettings() {
@@ -1755,10 +2220,11 @@ function openSettings() {
 const CSV_MAP = {
   '学号':'student_number','姓名':'full_name','性别':'gender','班级':'class_name','专业':'major_name',
   '年级':'grade','学院':'college_name','辅导员':'counselor_name','联系电话':'phone','电话':'phone',
-  '手机号':'phone','宿舍':'dorm','备注':'note','学籍状态':'enrollment_status','关注等级':'focus_level','关注类型':'focus',
+  '手机号':'phone','宿舍':'dorm','备注':'note','学生当前状态':'enrollment_status','学籍状态':'enrollment_status',
+  '政治面貌':'politics','关注等级':'focus_level','关注类型':'focus',
 };
 function exportStudentsCSV() {
-  const cols = ['student_number','full_name','gender','class_name','major_name','grade','college_name','counselor_name','enrollment_status','phone','dorm','focus_level','focus','note'];
+  const cols = ['student_number','full_name','gender','class_name','major_name','grade','college_name','counselor_name','enrollment_status','politics','phone','dorm','focus_level','focus','note'];
   const head = cols.map(c => schema.student[c].label + '(' + c + ')');
   const rows = [head].concat(DB.students.map(s => cols.map(c => c === 'focus' ? (s.focus || []).map(f => FOCUS_MAP[f] ? FOCUS_MAP[f].n : f).join('、') : s[c])));
   download(`学生台账_${today()}.csv`, toCSV(rows), 'text/csv');
@@ -1816,7 +2282,10 @@ function doImportJSON(text) {
     body:`<div style="line-height:1.8;font-size:13.5px">
       检测到：学生 <b>${(pkg.data || pkg).students ? (pkg.data || pkg).students.length : 0}</b> 条，
       任务 <b>${(pkg.data || pkg).tasks ? (pkg.data || pkg).tasks.length : 0}</b> 条，
-      谈话 <b>${(pkg.data || pkg).talks ? (pkg.data || pkg).talks.length : 0}</b> 条。<br><br>
+      谈话 <b>${(pkg.data || pkg).talks ? (pkg.data || pkg).talks.length : 0}</b> 条，
+      校外住宿 <b>${(pkg.data || pkg).stay ? (pkg.data || pkg).stay.length : 0}</b> 条，
+      假期去向 <b>${(pkg.data || pkg).leave ? (pkg.data || pkg).leave.length : 0}</b> 条，
+      评优 <b>${(pkg.data || pkg).honor ? (pkg.data || pkg).honor.length : 0}</b> 条。<br><br>
       <b>合并</b>：保留现有数据，同学号 / 同 ID 的记录被更新（推荐）。<br>
       <b>覆盖</b>：清空现有数据后完全替换。</div>`,
     footer:`<button class="btn" data-close>取消</button>
@@ -1827,7 +2296,7 @@ function doImportJSON(text) {
         try {
           const r = bridge.applyPackage(pkg, b.dataset.mode);
           close(); render(); paintWho();
-          ui.toast(`导入成功：学生 ${r.students} / 任务 ${r.tasks} / 谈话 ${r.talks}`, 'ok', 3200);
+          ui.toast(`导入成功：学生 ${r.students} / 任务 ${r.tasks} / 谈话 ${r.talks} / 走读 ${r.stay} / 去向 ${r.leave} / 评优 ${r.honor}`, 'ok', 3600);
         } catch (e) { ui.toast('导入失败：' + e.message, 'err', 3600); }
       });
     }
@@ -1838,7 +2307,7 @@ function clearAll() {
     '将删除本机所有学生、任务和谈话记录，<b style="color:var(--danger)">此操作不可恢复</b>。<br><br>建议先导出一份 JSON 备份。确定继续吗？',
     () => {
       ui.confirm('再次确认', '真的要清空吗？这是最后一次确认。', () => {
-        DB.students = []; DB.tasks = []; DB.talks = []; DB.custom = {};
+        DB.students = []; DB.tasks = []; DB.talks = []; DB.stay = []; DB.leave = []; DB.honor = []; DB.custom = {};
         DB.settings.seeded = true; save();
         render(); ui.toast('已清空全部数据', 'ok');
       }, true);
@@ -1846,18 +2315,46 @@ function clearAll() {
 }
 
 /* ---------- 14. 路由与事件 ---------- */
-const VIEWS = { home:viewHome, tasks:viewTasks, students:viewStudents, talks:viewTalks, report:viewReport, bridge:viewBridge };
+const VIEWS = {
+  home:viewHome, tasks:viewTasks, students:viewStudents, talks:viewTalks,
+  stay:viewStay, leave:viewLeave, honor:viewHonor, report:viewReport, bridge:viewBridge,
+};
 function render() {
   const fn = VIEWS[app.view] || (customModules[app.view] && customModules[app.view].render) || viewHome;
-  $('#main').innerHTML = fn();
+  const main = $('#main');
+  main.innerHTML = fn();
   $$('.nav-item').forEach(b => b.classList.toggle('on', b.dataset.view === app.view));
   $$('.tab').forEach(b => b.classList.toggle('on', b.dataset.view === app.view));
   updateBadges();
+  animateIn();
   hooks.emit('view:render', { view: app.view });
+}
+function animateIn() {
+  const main = $('#main');
+  const kids = $$('.card, .today, .banner', main);
+  kids.forEach((el, i) => {
+    el.classList.remove('anim-in');
+    void el.offsetWidth;
+    el.style.animationDelay = (i * 55) + 'ms';
+    el.classList.add('anim-in');
+  });
+  $$('.kpi-v[data-num]', main).forEach(el => countUp(el, parseInt(el.dataset.num, 10) || 0));
+}
+function countUp(el, target) {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) { el.textContent = target; return; }
+  const dur = 600, t0 = performance.now();
+  function step(now) {
+    const p = Math.min(1, (now - t0) / dur);
+    const eased = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(target * eased);
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
 }
 function go(view) {
   app.view = view; render();
-  window.scrollTo({ top:0, behavior:'smooth' });
+  closeDrawer();
+  try { window.scrollTo({ top:0, behavior:'smooth' }); } catch (e) {}
 }
 function updateBadges() {
   const todo = buildTodo();
@@ -1875,6 +2372,14 @@ function updateBadges() {
 function paintWho() {
   const s = DB.settings;
   $('#who').textContent = s.counselor_name ? `${s.counselor_name}${s.college_name ? ' · ' + s.college_name : ''}` : '';
+}
+function closeDrawer() {
+  const nav = $('#sidenav'); if (nav) nav.classList.remove('open');
+  const sc = $('#scrim'); if (sc) sc.classList.remove('open');
+}
+function openDrawer() {
+  $('#sidenav').classList.add('open');
+  $('#scrim').classList.add('open');
 }
 
 const ACTS = {
@@ -1932,7 +2437,7 @@ const ACTS = {
           <div><div class="tiny">方式</div><div>${esc(t.way)}</div></div>
           <div><div class="tiny">主题</div><div>${dutyTag(t.duty)}</div></div></div>
         ${['summary','judge','action'].map(k => t[k] ? `<div style="margin-bottom:12px">
-          <div class="lab" style="margin-bottom:4px">${esc(schema.talk[k].label)}</div>
+          <div class="lab" style="margin-bottom:4px">${esc(schema.talk[k] ? schema.talk[k].label : k)}</div>
           <div style="background:var(--line-2);padding:10px 12px;border-radius:8px;font-size:13.3px;line-height:1.75;white-space:pre-wrap">${esc(t[k])}</div></div>` : '').join('')}
         ${t.need_follow ? `<div class="banner ${t.done_follow ? 'banner-info' : 'banner-warn'}" style="margin:0">
           <svg class="ic ic-sm"><use href="#i-clock"/></svg>
@@ -1948,6 +2453,34 @@ const ACTS = {
         t.need_follow ? '是' : '否', t.follow_date, t.done_follow ? '是' : '否']));
     download(`谈心谈话记录_${today()}.csv`, toCSV(rows), 'text/csv'); ui.toast('已导出', 'ok');
   },
+  'stay-new': () => stayForm(null),
+  'stay-edit': id => stayForm(DB.stay.find(s => s.id === id)),
+  'stay-del': id => ui.confirm('删除记录', '确定删除这条走读记录吗？', () => {
+    DB.stay = DB.stay.filter(s => s.id !== id); save('stay'); render(); ui.toast('已删除', 'ok'); }, true),
+  'stay-export': () => {
+    const rows = [['姓名','学号','年级专业','学生类型','申请理由','走读开始','走读结束','紧急联系人','紧急联系人电话','审批情况','备注']]
+      .concat(DB.stay.map(s => [s.student_name, s.student_number, s.grade_major, s.stu_type, s.reason, s.start, s.end, s.emergency_name, s.emergency_phone, s.approval, s.note]));
+    download(`校外住宿_${today()}.csv`, toCSV(rows), 'text/csv'); ui.toast('已导出', 'ok');
+  },
+  'leave-new': () => leaveForm(null),
+  'leave-edit': id => leaveForm(DB.leave.find(s => s.id === id)),
+  'leave-del': id => ui.confirm('删除记录', '确定删除这条去向记录吗？', () => {
+    DB.leave = DB.leave.filter(s => s.id !== id); save('leave'); render(); ui.toast('已删除', 'ok'); }, true),
+  'leave-export': () => {
+    const rows = [['姓名','学号','专业班级','家庭所在省市区','离校时间','返校时间','宿舍','本人手机号','是否延迟离校','留校缘由','指导老师','家长知情同意书','特殊情况备注']]
+      .concat(DB.leave.map(s => [s.name, s.student_number, s.class_major, s.home_addr, s.leave_date, s.return_date, s.dorm, s.phone, s.delayed, s.delay_reason, s.teacher, s.consent, s.note]));
+    download(`假期去向_${today()}.csv`, toCSV(rows), 'text/csv'); ui.toast('已导出', 'ok');
+  },
+  'honor-new': () => honorForm(null),
+  'honor-edit': id => honorForm(DB.honor.find(s => s.id === id)),
+  'honor-del': id => ui.confirm('删除记录', '确定删除这条申报记录吗？', () => {
+    DB.honor = DB.honor.filter(s => s.id !== id); save('honor'); render(); ui.toast('已删除', 'ok'); }, true),
+  'honor-view': id => { const s = DB.honor.find(x => x.id === id); if (s) openHonor(s); },
+  'honor-export': () => {
+    const rows = [['姓名','学号','申请类型','政治面貌','专业','班级','综合成绩专业排名','德育素质考核等级','入学来获奖学金情况','社会工作情况','其他获奖情况']]
+      .concat(DB.honor.map(s => [s.name, s.student_number, (HONOR_TYPES.find(x => x.v === s.apply_type) || {}).n || s.apply_type, s.politics, s.major, s.class_name, s.rank, s.moral, s.scholarships, s.social, s.others]));
+    download(`评优榜样_${today()}.csv`, toCSV(rows), 'text/csv'); ui.toast('已导出', 'ok');
+  },
   'export-json': exportJSON,
   'import-json': () => $('#file-json').click(),
   'pkg-export': exportPackage,
@@ -1958,7 +2491,8 @@ const ACTS = {
   'dismiss-backup': () => { DB.settings.backup_notified_at = today(); save('settings'); render(); },
   'go-report': () => go('report'),
   'clear-demo': () => {
-    const n = DB.students.filter(x => x._demo).length + DB.tasks.filter(x => x._demo).length + DB.talks.filter(x => x._demo).length;
+    const n = DB.students.filter(x => x._demo).length + DB.tasks.filter(x => x._demo).length + DB.talks.filter(x => x._demo).length
+      + DB.stay.filter(x => x._demo).length + DB.leave.filter(x => x._demo).length + DB.honor.filter(x => x._demo).length;
     if (!n) { ui.toast('示例数据已经清理干净了', 'ok'); return; }
     ui.confirm('清空示例数据',
       `将删除 <b>${n}</b> 条系统预置的示例记录（示例老师、张明、李思颖等），<b>你自己录入的数据不受影响</b>。确定清理吗？`,
@@ -1966,6 +2500,9 @@ const ACTS = {
         DB.students = DB.students.filter(x => !x._demo);
         DB.tasks = DB.tasks.filter(x => !x._demo);
         DB.talks = DB.talks.filter(x => !x._demo);
+        DB.stay = DB.stay.filter(x => !x._demo);
+        DB.leave = DB.leave.filter(x => !x._demo);
+        DB.honor = DB.honor.filter(x => !x._demo);
         if (DB.settings.counselor_name === '示例老师') { DB.settings.counselor_name = ''; DB.settings.college_name = ''; }
         save(); render(); paintWho(); ui.toast(`已清理 ${n} 条示例数据`, 'ok');
       }, true);
@@ -2024,6 +2561,8 @@ document.addEventListener('change', e => {
 $('#btn-export').onclick = exportJSON;
 $('#btn-import').onclick = () => $('#file-json').click();
 $('#btn-settings').onclick = openSettings;
+$('#btn-menu').onclick = openDrawer;
+$('#scrim').onclick = closeDrawer;
 $('#file-json').onchange = function () {
   const f = this.files[0]; if (!f) return;
   const r = new FileReader(); r.onload = () => { doImportJSON(r.result); this.value = ''; }; r.readAsText(f, 'utf-8');
@@ -2034,10 +2573,13 @@ $('#file-csv').onchange = function () {
 };
 document.addEventListener('keydown', e => {
   if (e.target.matches('input,textarea,select')) return;
-  if ($('#modal-root').children.length) return;      /* 弹窗打开时不触发快捷键 */
+  if ($('#modal-root').children.length) return;
   if (e.key === 'n' && !e.ctrlKey && !e.metaKey) {
     if (app.view === 'students') studentForm(null);
     else if (app.view === 'talks') talkForm(null);
+    else if (app.view === 'stay') stayForm(null);
+    else if (app.view === 'leave') leaveForm(null);
+    else if (app.view === 'honor') honorForm(null);
     else taskForm(null);
   }
 });
@@ -2068,13 +2610,16 @@ function boot() {
     DB.students = (store.read('students', []) || []).map(normStudent);
     DB.tasks = (store.read('tasks', []) || []).map(normTask);
     DB.talks = (store.read('talks', []) || []).map(normTalk);
+    DB.stay = (store.read('stay', []) || []).map(normStay);
+    DB.leave = (store.read('leave', []) || []).map(normLeave);
+    DB.honor = (store.read('honor', []) || []).map(normHonor);
     DB.custom = store.read('custom', {}) || {};
   }
   paintWho();
   $('#ver-txt').textContent = `v${APP_VERSION} · 本地版`;
   render();
   console.log('%c辅导员工作台 v' + APP_VERSION,
-    'background:#2563eb;color:#fff;padding:3px 10px;border-radius:5px;font-weight:700');
+    'background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;padding:3px 10px;border-radius:5px;font-weight:700');
   console.log('二次开发入口：window.CWB —— 试试 CWB.db.students 或 CWB.modules.register({...})');
 }
 
@@ -2082,10 +2627,10 @@ function boot() {
 window.CWB = {
   version: APP_VERSION,
   db: DB, store, schema, ui, hooks, bridge, modules,
-  consts: { DUTIES, FOCUS, LEVELS, PRIOS, SOURCES, TALK_WAYS },
+  consts: { DUTIES, FOCUS, LEVELS, PRIOS, SOURCES, TALK_WAYS, CRISIS_LEVELS, CRISIS_WAYS, STU_TYPES, HONOR_TYPES, MORAL_LEVELS, POLITICS },
   utils: { esc, uid, today, shiftDay, daysFromToday, cnDate, toCSV, parseCSV, download },
   save, render, go,
-  norm: { student:normStudent, task:normTask, talk:normTalk },
+  norm: { student:normStudent, task:normTask, talk:normTalk, stay:normStay, leave:normLeave, honor:normHonor },
 };
 
 boot();
