@@ -12,20 +12,20 @@
    设计：现代质感 + 微动效（无外部资源）
    ============================================================ */
 :root{
-  --brand:#5b51dd; --brand-2:#7c73ef; --brand-dark:#4338ca; --brand-soft:#eef1ff; --brand-line:#c7d2fe;
+  --brand:#0ea5e9; --brand-2:#38bdf8; --brand-dark:#075985; --brand-soft:#e0f2fe; --brand-line:#bae6fd;
   --ink:#0f172a; --ink-2:#334155; --ink-3:#64748b; --ink-4:#94a3b8;
-  --line:#e9edf3; --line-2:#f4f6fb; --bg:#f8f9fd; --card:#ffffff;
+  --line:#e2e8f0; --line-2:#f1f5f9; --bg:#f8fafc; --card:#ffffff;
   --danger:#e11d48; --danger-soft:#fff1f3; --danger-line:#fecdd3;
-  --warn:#d97706; --warn-soft:#fffbeb; --warn-line:#fde68a;
+  --warn:#f59e0b; --warn-soft:#fffbeb; --warn-line:#fde68a;
   --ok:#10b981; --ok-soft:#ecfdf5; --ok-line:#a7f3d0;
-  --purple:#8b5cf6; --purple-soft:#faf5ff;
+  --navy:#1e3a5f; --navy-2:#0c4a6e; --steel:#64748b;
   --r:16px; --r-sm:10px; --r-xs:8px;
-  --sh:0 1px 3px rgba(15,23,42,.04),0 4px 20px rgba(15,23,42,.04);
-  --sh-lg:0 24px 60px rgba(15,23,42,.12);
-  --sh-kpi:0 2px 12px rgba(91,81,221,.08);
+  --sh:0 1px 3px rgba(15,23,42,.05),0 4px 20px rgba(15,23,42,.04);
+  --sh-lg:0 24px 60px rgba(15,23,42,.14);
+  --sh-kpi:0 2px 14px rgba(14,165,233,.12);
   --nav-w:240px;
-  --grad:linear-gradient(135deg,#5b51dd,#8b5cf6);
-  --grad-warm:linear-gradient(135deg,#f97316,#ec4899);
+  --grad:linear-gradient(135deg,#1e3a5f,#0ea5e9);
+  --grad-warm:linear-gradient(135deg,#f59e0b,#f97316);
   --grad-ocean:linear-gradient(135deg,#0891b2,#06b6d4);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -33,9 +33,9 @@ html,body{margin:0;padding:0}
 body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue","PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;
   background:
-    radial-gradient(ellipse 900px 500px at 100% -8%, rgba(91,81,221,.10) 0%, transparent 55%),
-    radial-gradient(ellipse 700px 400px at -6% 4%, rgba(139,92,246,.08) 0%, transparent 50%),
-    linear-gradient(180deg, #f8f9fd 0%, #f1f3f9 100%);
+    radial-gradient(ellipse 900px 500px at 100% -8%, rgba(14,165,233,.10) 0%, transparent 55%),
+    radial-gradient(ellipse 700px 400px at -6% 4%, rgba(30,58,95,.07) 0%, transparent 50%),
+    linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
   color:var(--ink); font-size:14px; line-height:1.65;
   -webkit-font-smoothing:antialiased;
   background-attachment:fixed;
@@ -153,7 +153,7 @@ a{color:var(--brand);text-decoration:none}
 .todo-row:last-child{border-bottom:none}
 .todo-row:hover{background:linear-gradient(135deg,rgba(91,81,221,.02),rgba(139,92,246,.02))}
 .todo-bar{width:3.5px;align-self:stretch;border-radius:4px;flex:0 0 3.5px;background:var(--line);transition:background .15s}
-.todo-bar.d{background:linear-gradient(180deg,var(--danger),#f87171)} .todo-bar.w{background:linear-gradient(180deg,var(--warn),#fbbf24)} .todo-bar.i{background:linear-gradient(180deg,var(--brand),var(--purple))}
+.todo-bar.d{background:linear-gradient(180deg,var(--danger),#f87171)} .todo-bar.w{background:linear-gradient(180deg,var(--warn),#fbbf24)} .todo-bar.i{background:linear-gradient(180deg,var(--brand),var(--brand-2))}
 .todo-main{flex:1;min-width:0}
 .todo-t{font-weight:700;font-size:14px;line-height:1.5;word-break:break-word;color:var(--ink)}
 .todo-m{font-size:12.5px;color:var(--ink-3);margin-top:5px;display:flex;flex-wrap:wrap;gap:5px 10px;align-items:center}
@@ -168,7 +168,7 @@ a{color:var(--brand);text-decoration:none}
 .tag-amber{background:linear-gradient(135deg,rgba(245,158,11,.08),rgba(245,158,11,.04));color:var(--warn);border-color:var(--warn-line)}
 .tag-green{background:linear-gradient(135deg,rgba(16,185,129,.08),rgba(16,185,129,.04));color:var(--ok);border-color:var(--ok-line)}
 .tag-blue{background:linear-gradient(135deg,rgba(91,81,221,.07),rgba(91,81,221,.03));color:var(--brand-dark);border-color:var(--brand-line)}
-.tag-purple{background:linear-gradient(135deg,rgba(139,92,246,.08),rgba(139,92,246,.04));color:var(--purple);border-color:#ddd6fe}
+.tag-purple{background:linear-gradient(135deg,rgba(14,165,233,.08),rgba(14,165,233,.04));color:var(--brand-dark);border-color:var(--brand-line)}
 .tag-duty{background:#f8fafc;color:var(--ink-3);border-color:var(--line)}
 .dot{width:7px;height:7px;border-radius:50%;flex:0 0 7px;display:inline-block}
 
@@ -209,7 +209,7 @@ tbody tr:last-child td{border-bottom:none}
 .name-cell{display:flex;align-items:center;gap:10px}
 .avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--brand-soft),rgba(139,92,246,.1));color:var(--brand-dark);
   display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex:0 0 32px;border:2px solid rgba(91,81,221,.08);box-shadow:0 2px 6px rgba(91,81,221,.06)}
-.avatar.f{background:linear-gradient(135deg,#fdf2f8,#fce7f3);color:#db2777;border-color:rgba(219,39,119,.1)}
+.avatar.f{background:linear-gradient(135deg,#e0f2fe,#cffafe);color:#0369a1;border-color:rgba(3,105,161,.12)}
 .link-btn{color:var(--brand);font-weight:700;font-size:12.5px}
 .link-btn:hover{text-decoration:underline}
 .link-btn.danger{color:var(--danger)}
@@ -241,7 +241,7 @@ tbody tr:last-child td{border-bottom:none}
 .kpi.danger .kpi-v{background:linear-gradient(135deg,var(--danger),#be123c);-webkit-background-clip:text;background-clip:text}
 .kpi.warn .kpi-v{background:linear-gradient(135deg,var(--warn),#b45309);-webkit-background-clip:text;background-clip:text}
 .kpi.ok .kpi-v{background:linear-gradient(135deg,var(--ok),#047857);-webkit-background-clip:text;background-clip:text}
-.kpi.brand .kpi-v{background:linear-gradient(135deg,var(--brand),var(--purple));-webkit-background-clip:text;background-clip:text}
+.kpi.brand .kpi-v{background:linear-gradient(135deg,var(--brand),var(--brand-2));-webkit-background-clip:text;background-clip:text}
 
 /* ---------- 弹窗 ---------- */
 .mask{position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:200;display:flex;align-items:center;justify-content:center;
@@ -297,7 +297,7 @@ tbody tr:last-child td{border-bottom:none}
 
 /* ---------- 时间线 ---------- */
 .tl{position:relative;padding-left:24px}
-.tl:before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2.5px;background:linear-gradient(180deg,var(--brand),var(--purple));border-radius:3px}
+.tl:before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2.5px;background:linear-gradient(180deg,var(--brand),var(--brand-2));border-radius:3px}
 .tl-item{position:relative;padding-bottom:18px}
 .tl-item:last-child{padding-bottom:0}
 .tl-item:before{content:"";position:absolute;left:-22px;top:5px;width:12px;height:12px;border-radius:50%;
@@ -423,6 +423,9 @@ tbody tr:last-child td{border-bottom:none}
     <button class="nav-item" data-view="stay"><svg class="ic"><use href="#i-bed"/></svg>校外住宿</button>
     <button class="nav-item" data-view="leave"><svg class="ic"><use href="#i-plane"/></svg>假期去向</button>
     <button class="nav-item" data-view="honor"><svg class="ic"><use href="#i-trophy"/></svg>评优榜样</button>
+    <button class="nav-item" data-view="pleave"><svg class="ic"><use href="#i-clock"/></svg>请销假</button>
+    <button class="nav-item" data-view="attend"><svg class="ic"><use href="#i-check"/></svg>考勤台账</button>
+    <button class="nav-item" data-view="node"><svg class="ic"><use href="#i-flag"/></svg>工作节点</button>
     <div class="nav-group">数据</div>
     <button class="nav-item" data-view="bridge"><svg class="ic"><use href="#i-link"/></svg>平台联动</button>
     <div class="nav-foot">
@@ -479,7 +482,7 @@ const DUTIES = [
   { k:'study',    n:'学风建设',               s:'学风建设', c:'#2563eb' },
   { k:'daily',    n:'学生日常事务管理',       s:'日常事务', c:'#0891b2' },
   { k:'psych',    n:'心理健康教育与咨询',     s:'心理健康', c:'#16a34a' },
-  { k:'net',      n:'网络思想政治教育',       s:'网络思政', c:'#7c3aed' },
+  { k:'net',      n:'网络思想政治教育',       s:'网络思政', c:'#0ea5e9' },
   { k:'crisis',   n:'校园危机事件应对',       s:'危机应对', c:'#ea580c' },
   { k:'career',   n:'职业规划与就业创业指导', s:'就业指导', c:'#d97706' },
   { k:'research', n:'理论和实践研究',         s:'理论研究', c:'#64748b' },
@@ -633,7 +636,8 @@ const store = {
 
 const DB = {
   settings: {}, students: [], tasks: [], talks: [],
-  stay: [], leave: [], honor: [], custom: {}
+  stay: [], leave: [], honor: [], custom: {},
+  pleave: [], attend: [], node: []
 };
 function save(part) {
   if (!part || part === 'settings') store.write('settings', DB.settings);
@@ -643,6 +647,9 @@ function save(part) {
   if (!part || part === 'stay')     store.write('stay', DB.stay);
   if (!part || part === 'leave')    store.write('leave', DB.leave);
   if (!part || part === 'honor')    store.write('honor', DB.honor);
+  if (!part || part === 'pleave')   store.write('pleave', DB.pleave);
+  if (!part || part === 'attend')   store.write('attend', DB.attend);
+  if (!part || part === 'node')     store.write('node', DB.node);
   if (!part || part === 'custom')   store.write('custom', DB.custom);
 }
 
@@ -814,6 +821,9 @@ const bridge = {
       stay: scope.stay === false ? [] : DB.stay,
       leave: scope.leave === false ? [] : DB.leave,
       honor: scope.honor === false ? [] : DB.honor,
+      pleave: scope.pleave === false ? [] : DB.pleave,
+      attend: scope.attend === false ? [] : DB.attend,
+      node: scope.node === false ? [] : DB.node,
       custom: DB.custom,
       stats: this.stats(scope),
     };
@@ -840,6 +850,11 @@ const bridge = {
       stay_total: DB.stay.length,
       leave_total: DB.leave.length,
       honor_total: DB.honor.length,
+      pleave_total: DB.pleave.length,
+      pleave_pending: DB.pleave.filter(p => p.status === '待审批').length,
+      attend_total: DB.attend.length,
+      node_total: DB.node.length,
+      node_overdue: DB.node.filter(n => n.status !== 'done' && n.due && daysFromToday(n.due) < 0).length,
       by_duty: Object.values(byDuty),
     };
   },
@@ -853,11 +868,15 @@ const bridge = {
     const ST = Array.isArray(src.stay) ? src.stay : [];
     const LV = Array.isArray(src.leave) ? src.leave : [];
     const HO = Array.isArray(src.honor) ? src.honor : [];
-    if (!S.length && !T.length && !K.length && !ST.length && !LV.length && !HO.length) throw new Error('文件中没有可导入的数据');
+    const PL = Array.isArray(src.pleave) ? src.pleave : [];
+    const AT = Array.isArray(src.attend) ? src.attend : [];
+    const NO = Array.isArray(src.node) ? src.node : [];
+    if (!S.length && !T.length && !K.length && !ST.length && !LV.length && !HO.length && !PL.length && !AT.length && !NO.length) throw new Error('文件中没有可导入的数据');
 
     if (mode === 'replace') {
       DB.students = S.map(normStudent); DB.tasks = T.map(normTask); DB.talks = K.map(normTalk);
       DB.stay = ST.map(normStay); DB.leave = LV.map(normLeave); DB.honor = HO.map(normHonor);
+      DB.pleave = PL.map(normPleave); DB.attend = AT.map(normAttend); DB.node = NO.map(normNode);
       if (src.custom) DB.custom = src.custom;
     } else {
       const sKey = x => x.student_number || x.id;
@@ -874,6 +893,9 @@ const bridge = {
       DB.stay = merge(DB.stay, ST, normStay);
       DB.leave = merge(DB.leave, LV, normLeave);
       DB.honor = merge(DB.honor, HO, normHonor);
+      DB.pleave = merge(DB.pleave, PL, normPleave);
+      DB.attend = merge(DB.attend, AT, normAttend);
+      DB.node = merge(DB.node, NO, normNode);
     }
     if (isPkg && src.counselor && !DB.settings.counselor_name) {
       DB.settings.counselor_name = src.counselor.name || '';
@@ -881,7 +903,7 @@ const bridge = {
       DB.settings.org_code = src.counselor.org_code || '';
     }
     save();
-    return { students:S.length, tasks:T.length, talks:K.length, stay:ST.length, leave:LV.length, honor:HO.length };
+    return { students:S.length, tasks:T.length, talks:K.length, stay:ST.length, leave:LV.length, honor:HO.length, pleave:PL.length, attend:AT.length, node:NO.length };
   },
   get baseUrl() { return (DB.settings.platform_url || '').replace(/\/$/, ''); },
   get enabled() { return !!this.baseUrl && !!DB.settings.platform_api_on; },
@@ -1039,8 +1061,61 @@ function normHonor(x) {
     _demo: !!x._demo,
   };
 }
+function normPleave(x) {
+  x = x || {};
+  return {
+    id: x.id || uid(),
+    student_number: x.student_number || '',
+    name: String(x.name || '').trim(),
+    class_name: x.class_name || '',
+    start: x.start || '',
+    end: x.end || '',
+    type: x.type || '事假',
+    reason: x.reason || '',
+    approver: x.approver || '',
+    status: x.status || '待审批',
+    cancel: x.cancel || false,
+    leave_at: x.leave_at || today(),
+    note: x.note || '',
+    created_at: x.created_at || new Date().toISOString(),
+    _demo: !!x._demo,
+  };
+}
+function normAttend(x) {
+  x = x || {};
+  return {
+    id: x.id || uid(),
+    student_number: x.student_number || '',
+    name: String(x.name || '').trim(),
+    class_name: x.class_name || '',
+    date: x.date || today(),
+    type: x.type || '旷课',
+    duration: x.duration || '',
+    teacher: x.teacher || '',
+    note: x.note || '',
+    created_at: x.created_at || new Date().toISOString(),
+    _demo: !!x._demo,
+  };
+}
+function normNode(x) {
+  x = x || {};
+  return {
+    id: x.id || uid(),
+    title: String(x.title || '').trim(),
+    category: x.category || 'daily',
+    due: x.due || '',
+    remind_days: (x.remind_days === '' || x.remind_days == null) ? 3 : Number(x.remind_days),
+    status: x.status || 'todo',
+    repeat: x.repeat || 'none',
+    summary: x.summary || '',
+    attachment: x.attachment || '',
+    done_at: x.done_at || '',
+    created_at: x.created_at || new Date().toISOString(),
+    _demo: !!x._demo,
+  };
+}
 
-const APP_VERSION = '2.1.0';
+const APP_VERSION = '3.0.0';
 
 /* ===================== 9. 示例数据（首次打开可见效果） ===================== */
 function seedDemo() {
@@ -1118,6 +1193,41 @@ function seedDemo() {
       social:'1.班级就业科研委员\n2.学生创新创业朋辈导师',
       others:'第十九届iCAN大学生创新创业大赛 国家一等奖' },
   ].map(x => normHonor(Object.assign({ _demo:true }, x)));
+
+  DB.pleave = [
+    { name:'刘子豪', student_number:'2024010205', class_name:'24机器人2班',
+      start: shiftDay(T, -1), end: shiftDay(T, 5), type:'事假', reason:'家中急事需返乡处理，已通知家长。',
+      approver:'示例老师', status:'已通过', cancel:false, leave_at: shiftDay(T, -2),
+      note:'家长知情同意书已收。' },
+    { name:'陈雨欣', student_number:'2024010204', class_name:'24机器人2班',
+      start: shiftDay(T, 2), end: shiftDay(T, 9), type:'病假', reason:'急性肠胃炎，校医院建议休息一周。',
+      approver:'', status:'待审批', cancel:false, leave_at: T,
+      note:'需附就诊证明。' },
+    { name:'张明', student_number:'2024010101', class_name:'24机器人1班',
+      start: shiftDay(T, -10), end: shiftDay(T, -3), type:'事假', reason:'返校后未按时销假。',
+      approver:'示例老师', status:'已通过', cancel:false, leave_at: shiftDay(T, -11),
+      note:'示例：假期已结束但未销假，会在首页「今天要处理」标红提醒。' },
+  ].map(x => normPleave(Object.assign({ _demo:true }, x)));
+
+  DB.attend = [
+    { name:'刘子豪', student_number:'2024010205', class_name:'24机器人2班',
+      date: shiftDay(T, -3), type:'旷课', duration:'2 节', teacher:'示例老师', note:'高等数学缺课，已联系家长。' },
+    { name:'张明', student_number:'2024010101', class_name:'24机器人1班',
+      date: shiftDay(T, -1), type:'迟到', duration:'1 节', teacher:'王老师', note:'C语言程序设计迟到约 15 分钟。' },
+    { name:'刘子豪', student_number:'2024010205', class_name:'24机器人2班',
+      date: shiftDay(T, -1), type:'旷课', duration:'2 节', teacher:'示例老师', note:'本周第二次旷课，纳入重点关注。' },
+  ].map(x => normAttend(Object.assign({ _demo:true }, x)));
+
+  DB.node = [
+    { title:'报送本月心理危机预警库更新名单', category:'crisis', due: shiftDay(T, 1), remind_days:3, status:'todo', repeat:'month',
+      summary:'汇总各班心理关注学生动态，更新预警库并上报学院。', attachment:'附件-预警名单.xlsx' },
+    { title:'组织新学期主题班会并归档记录', category:'ideology', due: shiftDay(T, -2), remind_days:2, status:'todo', repeat:'term',
+      summary:'开学第一课班会，需留存签到表与活动照片。', attachment:'' },
+    { title:'完成国家助学金发放名单公示', category:'daily', due: shiftDay(T, 8), remind_days:5, status:'doing', repeat:'none',
+      summary:'按学校资助中心要求完成公示 5 个工作日。', attachment:'' },
+    { title:'毕业生生源信息核对与就业意向摸底', category:'career', due: shiftDay(T, 15), remind_days:7, status:'todo', repeat:'year',
+      summary:'联系毕业班班委，逐人核对生源地与就业意向。', attachment:'' },
+  ].map(x => normNode(Object.assign({ _demo:true }, x)));
 
   DB.custom = {};
   save();
@@ -1198,6 +1308,40 @@ function buildTodo() {
              <button class="btn btn-sm" data-act="student-view" data-id="${s.id}">学生档案</button>`
     });
   });
+  DB.pleave.forEach(p => {
+    if (p.status !== '已通过' || p.cancel) return;
+    const d = daysFromToday(p.end);
+    if (d === null || d > 0) return;
+    out.push({
+      kind:'pleave', ref:p.id, level:'d', sort:-3,
+      title: `销假提醒：${p.name} 假期已结束`,
+      meta: [
+        `<span class="tag tag-red">逾期 ${-d} 天未销假</span>`,
+        `<span class="tag tag-duty">请销假</span>`,
+        p.class_name ? `<span>${esc(p.class_name)}</span>` : '',
+      ].filter(Boolean).join(''),
+      acts: `<button class="btn btn-sm btn-ok" data-act="pleave-cancel" data-id="${p.id}"><svg class="ic ic-sm"><use href="#i-check"/></svg>确认销假</button>
+             <button class="btn btn-sm" data-act="pleave-edit" data-id="${p.id}">详情</button>`
+    });
+  });
+  DB.node.forEach(n => {
+    if (n.status === 'done' || !n.due) return;
+    const d = daysFromToday(n.due);
+    const rd = n.remind_days || 3;
+    if (d === null || d > rd) return;
+    out.push({
+      kind:'node', ref:n.id, level: d < 0 ? 'd' : 'w', sort: d < 0 ? -2 : (rd - d),
+      title: `工作节点：${n.title}`,
+      meta: [
+        d < 0 ? `<span class="tag tag-red">逾期 ${-d} 天</span>` : (d === 0 ? '<span class="tag tag-red">今天截止</span>' : `<span class="tag tag-amber">还有 ${d} 天</span>`),
+        `<span class="tag tag-duty">${esc(DUTY_MAP[n.category] ? DUTY_MAP[n.category].s : '')}</span>`,
+        `<span>提前 ${rd} 天提醒</span>`,
+        (NODE_REPEAT[n.repeat] && n.repeat !== 'none') ? `<span class="tag tag-blue">${esc(NODE_REPEAT[n.repeat])}</span>` : '',
+      ].filter(Boolean).join(''),
+      acts: `<button class="btn btn-sm btn-ok" data-act="node-done" data-id="${n.id}"><svg class="ic ic-sm"><use href="#i-check"/></svg>完成</button>
+             <button class="btn btn-sm" data-act="node-edit" data-id="${n.id}">详情</button>`
+    });
+  });
   return out.sort((a, b) => a.sort - b.sort);
 }
 
@@ -1211,6 +1355,9 @@ const app = {
     stay:{ q:'', approval:'' },
     leave:{ q:'', delayed:'' },
     honor:{ q:'', type:'' },
+    pleave:{ q:'', status:'' },
+    attend:{ q:'', cls:'', type:'' },
+    node:{ q:'', status:'' },
   },
 };
 
@@ -1225,7 +1372,7 @@ function hBarChart(items, opt) {
   items.forEach((it, i) => {
     const y = top + i * rowH, len = Math.max(it.value > 0 ? 3 : 0, (it.value / max) * bw);
     g += `<text x="${padL - 8}" y="${y + 19}" text-anchor="end" font-size="12" fill="#64748b">${esc(it.label)}</text>
-      <rect x="${padL}" y="${y + 7}" width="${bw}" height="15" rx="4" fill="#eef2ff"/>
+      <rect x="${padL}" y="${y + 7}" width="${bw}" height="15" rx="4" fill="#e0f2fe"/>
       <rect class="bar-val" x="${padL}" y="${y + 7}" width="${len.toFixed(1)}" height="15" rx="4" fill="${it.color || '#4f46e5'}"><title>${esc(it.label)}：${it.value}</title></rect>
       <text x="${padL + len + 8}" y="${y + 19}" font-size="12" font-weight="700" fill="${it.value ? '#0f172a' : '#cbd5e1'}">${it.value}</text>`;
   });
@@ -1245,7 +1392,7 @@ function donutChart(items, centerTop, centerSub) {
       off += len;
     });
   } else {
-    ring = `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="#eef2ff" stroke-width="20"/>`;
+    ring = `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="#e0f2fe" stroke-width="20"/>`;
   }
   return `<div class="donut-anim" style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
     <svg viewBox="0 0 140 140" width="140" height="140" role="img" aria-label="占比环形图">
@@ -1797,6 +1944,213 @@ function viewHonor() {
   </div>`;
 }
 
+/* ---------- 11.9.1 请销假管理 ---------- */
+function statusTag(st) {
+  if (st === '已通过') return '<span class="tag tag-green">已通过</span>';
+  if (st === '已驳回') return '<span class="tag tag-red">已驳回</span>';
+  if (st === '待审批') return '<span class="tag tag-amber">待审批</span>';
+  if (st === 'done' || st === '已完成') return '<span class="tag tag-green">已完成</span>';
+  if (st === 'doing' || st === '进行中') return '<span class="tag tag-blue">进行中</span>';
+  if (st === 'todo' || st === '待办') return '<span class="tag tag-amber">待办</span>';
+  return '<span class="tag">' + esc(st || '') + '</span>';
+}
+const PLEAVE_TYPES = ['事假','病假','公假','其他'];
+const ATTEND_TYPES = ['旷课','迟到','早退','请假','病假'];
+const NODE_REPEAT = { none:'不重复', week:'每周', month:'每月', term:'每学期', year:'每年' };
+function filterPleave() {
+  const f = app.filters.pleave;
+  return DB.pleave.filter(s => {
+    if (f.status && s.status !== f.status) return false;
+    if (f.q) { const t = (s.name+s.student_number+s.class_name+s.reason+s.approver).toLowerCase(); if (!t.includes(f.q.toLowerCase())) return false; }
+    return true;
+  }).sort((a,b)=> (b.start||'') < (a.start||'') ? -1 : 1);
+}
+function viewPleave() {
+  const f = app.filters.pleave, list = filterPleave();
+  const pending = list.filter(s=>s.status==='待审批').length;
+  const active = list.filter(s=>s.status==='已通过' && !s.cancel && daysFromToday(s.end)>=0).length;
+  const overdue = list.filter(s=>s.status==='已通过' && !s.cancel && daysFromToday(s.end)<0).length;
+  return `
+  <div class="card">
+    <div class="card-hd"><h2><svg class="ic" style="color:var(--brand)"><use href="#i-clock"/></svg>请销假管理</h2>
+      <span class="sp"></span>
+      <button class="btn btn-sm" data-act="pleave-export">导出 CSV</button>
+      <button class="btn btn-primary btn-sm" data-act="pleave-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>登记请假</button>
+    </div>
+    <div class="kpis">
+      <div class="kpi brand"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-alert"/></svg>待审批</div><div class="kpi-v" data-num="${pending}">0</div></div>
+      <div class="kpi ok"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-check"/></svg>在假中</div><div class="kpi-v" data-num="${active}">0</div></div>
+      <div class="kpi warn"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-clock"/></svg>逾期未销假</div><div class="kpi-v" data-num="${overdue}">0</div></div>
+    </div>
+    <div class="toolbar">
+      <div class="search"><svg class="ic ic-sm"><use href="#i-search"/></svg>
+        <input class="inp" placeholder="搜索姓名、学号、班级、事由" data-filter="pleave.q" value="${esc(f.q)}"></div>
+      <select class="inp" style="width:auto;min-width:120px" data-filter="pleave.status">
+        <option value="">全部状态</option>
+        <option value="待审批"${f.status==='待审批'?' selected':''}>待审批</option>
+        <option value="已通过"${f.status==='已通过'?' selected':''}>已通过</option>
+        <option value="已驳回"${f.status==='已驳回'?' selected':''}>已驳回</option>
+      </select>
+    </div>
+    ${list.length ? `
+    <div class="tw"><table>
+      <thead><tr><th>姓名</th><th>班级</th><th>请假起止</th><th>类型</th><th>事由</th><th>审批人</th><th>状态</th><th class="td-acts">操作</th></tr></thead>
+      <tbody>${list.map(s=>`
+        <tr class="${s.status==='已通过'&&!s.cancel&&daysFromToday(s.end)<0?'row-danger':''}">
+          <td><div style="font-weight:600">${esc(s.name)}</div><div class="tiny">${esc(s.student_number||'')}</div></td>
+          <td class="muted">${esc(s.class_name||'—')}</td>
+          <td>${s.start?`${cnDate(s.start)} 至 ${cnDate(s.end)}`:'—'}</td>
+          <td>${esc(s.type||'—')}</td>
+          <td class="muted" style="max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(s.reason||'—')}</td>
+          <td class="muted">${esc(s.approver||'—')}</td>
+          <td>${s.cancel?'<span class="tag tag-gray">已销假</span>':statusTag(s.status)}</td>
+          <td class="td-acts">
+            ${s.status==='待审批'?`<button class="link-btn" data-act="pleave-approve" data-id="${s.id}">审批</button>`:''}
+            ${s.status==='已通过'&&!s.cancel?`<button class="link-btn" data-act="pleave-cancel" data-id="${s.id}">销假</button>`:''}
+            <button class="link-btn" data-act="pleave-edit" data-id="${s.id}" style="margin-left:8px">编辑</button>
+            <button class="link-btn danger" data-act="pleave-del" data-id="${s.id}" style="margin-left:8px">删除</button></td>
+        </tr>`).join('')}</tbody></table></div>
+    <div class="mcards">${list.map(s=>`
+      <div class="mcard">
+        <div class="mcard-hd"><div class="mcard-t">${esc(s.name)}</div>${s.cancel?'<span class="tag tag-gray">已销假</span>':statusTag(s.status)}</div>
+        <div class="mcard-meta"><span>${esc(s.student_number||'')}</span><span>${esc(s.class_name||'')}</span>${s.start?`<span>${cnDate(s.start)} 至 ${cnDate(s.end)}</span>`:''}<span>${esc(s.type||'')}</span></div>
+        <div class="mcard-acts">
+          ${s.status==='待审批'?`<button class="btn btn-sm" data-act="pleave-approve" data-id="${s.id}">审批</button>`:''}
+          ${s.status==='已通过'&&!s.cancel?`<button class="btn btn-sm" data-act="pleave-cancel" data-id="${s.id}">销假</button>`:''}
+          <button class="btn btn-sm" data-act="pleave-edit" data-id="${s.id}">编辑</button>
+        </div>
+      </div>`).join('')}</div>`
+    : emptyBox('还没有请假记录', `<button class="btn btn-primary btn-sm" data-act="pleave-new">登记请假</button>`)}
+  </div>`;
+}
+
+/* ---------- 11.9.2 考勤台账 ---------- */
+function filterAttend() {
+  const f = app.filters.attend;
+  return DB.attend.filter(s=>{
+    if (f.cls && s.class_name!==f.cls) return false;
+    if (f.type && s.type!==f.type) return false;
+    if (f.q) { const t=(s.name+s.student_number+s.class_name+s.teacher+s.note).toLowerCase(); if (!t.includes(f.q.toLowerCase())) return false; }
+    return true;
+  }).sort((a,b)=> (b.date||'') < (a.date||'') ? -1 : 1);
+}
+function viewAttend() {
+  const f = app.filters.attend, list = filterAttend();
+  const kuang = list.filter(s=>s.type==='旷课').length;
+  const late = list.filter(s=>s.type==='迟到').length;
+  const clsMap = {}; list.forEach(s=>{ if(s.class_name) clsMap[s.class_name]=(clsMap[s.class_name]||0)+1; });
+  const clsItems = Object.keys(clsMap).map(c=>({label:c,value:clsMap[c],color:'#0ea5e9'}));
+  const clsSet = [...new Set(DB.students.map(s=>s.class_name).filter(Boolean))];
+  return `
+  <div class="card">
+    <div class="card-hd"><h2><svg class="ic" style="color:var(--brand)"><use href="#i-check"/></svg>考勤台账 / 学风建设</h2>
+      <span class="sp"></span>
+      <button class="btn btn-sm" data-act="attend-export">导出 CSV</button>
+      <button class="btn btn-sm" data-act="attend-month">月度报表</button>
+      <button class="btn btn-primary btn-sm" data-act="attend-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>登记考勤</button>
+    </div>
+    <div class="kpis">
+      <div class="kpi danger"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-alert"/></svg>旷课人次</div><div class="kpi-v" data-num="${kuang}">0</div></div>
+      <div class="kpi warn"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-clock"/></svg>迟到人次</div><div class="kpi-v" data-num="${late}">0</div></div>
+      <div class="kpi brand"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-users"/></svg>记录总数</div><div class="kpi-v" data-num="${list.length}">0</div></div>
+    </div>
+    ${clsItems.length?`<div class="card-bd" style="padding:6px 18px 0">${hBarChart(clsItems)}</div>`:''}
+    <div class="toolbar">
+      <div class="search"><svg class="ic ic-sm"><use href="#i-search"/></svg>
+        <input class="inp" placeholder="搜索姓名、学号、班级、记录人" data-filter="attend.q" value="${esc(f.q)}"></div>
+      <select class="inp" style="width:auto;min-width:130px" data-filter="attend.cls">
+        <option value="">全部班级</option>${clsSet.map(c=>`<option value="${esc(c)}"${f.cls===c?' selected':''}>${esc(c)}</option>`).join('')}</select>
+      <select class="inp" style="width:auto;min-width:110px" data-filter="attend.type">
+        <option value="">全部类型</option>${ATTEND_TYPES.map(t=>`<option value="${t}"${f.type===t?' selected':''}>${t}</option>`).join('')}</select>
+    </div>
+    ${list.length?`
+    <div class="tw"><table>
+      <thead><tr><th>姓名</th><th>班级</th><th>日期</th><th>类型</th><th>时长/节次</th><th>记录人</th><th>备注</th><th class="td-acts">操作</th></tr></thead>
+      <tbody>${list.map(s=>`
+        <tr>
+          <td><div style="font-weight:600">${esc(s.name)}</div><div class="tiny">${esc(s.student_number||'')}</div></td>
+          <td class="muted">${esc(s.class_name||'—')}</td>
+          <td>${s.date?cnDate(s.date):'—'}</td>
+          <td>${s.type==='旷课'?'<span class="tag tag-red">旷课</span>':s.type==='迟到'?'<span class="tag tag-amber">迟到</span>':s.type==='早退'?'<span class="tag tag-amber">早退</span>':'<span class="tag tag-blue">'+esc(s.type)+'</span>'}</td>
+          <td class="muted">${esc(s.duration||'—')}</td>
+          <td class="muted">${esc(s.teacher||'—')}</td>
+          <td class="muted" style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(s.note||'—')}</td>
+          <td class="td-acts"><button class="link-btn" data-act="attend-edit" data-id="${s.id}">编辑</button><button class="link-btn danger" data-act="attend-del" data-id="${s.id}" style="margin-left:8px">删除</button></td>
+        </tr>`).join('')}</tbody></table></div>
+    <div class="mcards">${list.map(s=>`
+      <div class="mcard">
+        <div class="mcard-hd"><div class="mcard-t">${esc(s.name)}</div>${s.type==='旷课'?'<span class="tag tag-red">旷课</span>':s.type==='迟到'?'<span class="tag tag-amber">迟到</span>':'<span class="tag tag-blue">'+esc(s.type)+'</span>'}</div>
+        <div class="mcard-meta"><span>${esc(s.class_name||'')}</span>${s.date?`<span>${cnDate(s.date)}</span>`:''}<span>${esc(s.teacher||'')}</span><span>${esc(s.duration||'')}</span></div>
+        <div class="mcard-acts"><button class="btn btn-sm" data-act="attend-edit" data-id="${s.id}">编辑</button><button class="btn btn-sm btn-danger" data-act="attend-del" data-id="${s.id}">删除</button></div>
+      </div>`).join('')}</div>`
+    : emptyBox('还没有考勤记录', `<button class="btn btn-primary btn-sm" data-act="attend-new">登记考勤</button>`)}
+  </div>`;
+}
+
+/* ---------- 11.9.3 工作日历与节点 ---------- */
+function filterNode() {
+  const f = app.filters.node;
+  return DB.node.filter(s=>{
+    if (f.status && s.status!==f.status) return false;
+    if (f.q) { const t=(s.title+s.summary+(DUTY_MAP[s.category]?DUTY_MAP[s.category].n:'')).toLowerCase(); if (!t.includes(f.q.toLowerCase())) return false; }
+    return true;
+  }).sort((a,b)=> (a.due||'9999') < (b.due||'9999') ? -1 : 1);
+}
+function viewNode() {
+  const f = app.filters.node, list = filterNode();
+  const soon = list.filter(s=>s.status!=='done' && s.due && daysFromToday(s.due)!==null && daysFromToday(s.due)<= (s.remind_days||3) && daysFromToday(s.due)>=0).length;
+  const overdue = list.filter(s=>s.status!=='done' && s.due && daysFromToday(s.due)<0).length;
+  return `
+  <div class="card">
+    <div class="card-hd"><h2><svg class="ic" style="color:var(--brand)"><use href="#i-flag"/></svg>工作日历与节点</h2>
+      <span class="sp"></span>
+      <button class="btn btn-sm" data-act="node-export">导出 CSV</button>
+      <button class="btn btn-primary btn-sm" data-act="node-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增节点</button>
+    </div>
+    <div class="kpis">
+      <div class="kpi danger"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-alert"/></svg>已逾期</div><div class="kpi-v" data-num="${overdue}">0</div></div>
+      <div class="kpi warn"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-clock"/></svg>临近提醒</div><div class="kpi-v" data-num="${soon}">0</div></div>
+      <div class="kpi brand"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-flag"/></svg>节点总数</div><div class="kpi-v" data-num="${list.length}">0</div></div>
+    </div>
+    <div class="toolbar">
+      <div class="search"><svg class="ic ic-sm"><use href="#i-search"/></svg>
+        <input class="inp" placeholder="搜索工作标题、小结" data-filter="node.q" value="${esc(f.q)}"></div>
+      <select class="inp" style="width:auto;min-width:120px" data-filter="node.status">
+        <option value="">全部状态</option>
+        <option value="todo"${f.status==='todo'?' selected':''}>待办</option>
+        <option value="doing"${f.status==='doing'?' selected':''}>进行中</option>
+        <option value="done"${f.status==='done'?' selected':''}>已完成</option>
+      </select>
+    </div>
+    ${list.length?`
+    <div class="tw"><table>
+      <thead><tr><th>工作标题</th><th>分类</th><th>截止日期</th><th>提前提醒</th><th>周期</th><th>状态</th><th class="td-acts">操作</th></tr></thead>
+      <tbody>${list.map(s=>`
+        <tr class="${s.status!=='done'&&s.due&&daysFromToday(s.due)<0?'row-danger':''}">
+          <td><div style="font-weight:600">${esc(s.title)}</div>${s.summary?`<div class="tiny" style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(s.summary)}</div>`:''}</td>
+          <td>${dutyTag(s.category)}</td>
+          <td>${s.due?cnDate(s.due):'—'}</td>
+          <td class="muted">提前 ${esc(s.remind_days||3)} 天</td>
+          <td class="muted">${esc(NODE_REPEAT[s.repeat]||'不重复')}</td>
+          <td>${statusTag(s.status)}</td>
+          <td class="td-acts">
+            ${s.status!=='done'?`<button class="link-btn" data-act="node-done" data-id="${s.id}">完成</button>`:''}
+            <button class="link-btn" data-act="node-edit" data-id="${s.id}" style="margin-left:8px">编辑</button>
+            <button class="link-btn danger" data-act="node-del" data-id="${s.id}" style="margin-left:8px">删除</button></td>
+        </tr>`).join('')}</tbody></table></div>
+    <div class="mcards">${list.map(s=>`
+      <div class="mcard">
+        <div class="mcard-hd"><div class="mcard-t">${esc(s.title)}</div>${statusTag(s.status)}</div>
+        <div class="mcard-meta"><span>${dutyTag(s.category)}</span>${s.due?`<span>截止 ${cnDate(s.due)}</span>`:''}<span>提前${esc(s.remind_days||3)}天</span><span>${esc(NODE_REPEAT[s.repeat]||'不重复')}</span></div>
+        <div class="mcard-acts">
+          ${s.status!=='done'?`<button class="btn btn-sm btn-ok" data-act="node-done" data-id="${s.id}">完成</button>`:''}
+          <button class="btn btn-sm" data-act="node-edit" data-id="${s.id}">编辑</button>
+        </div>
+      </div>`).join('')}</div>`
+    : emptyBox('还没有工作节点', `<button class="btn btn-primary btn-sm" data-act="node-new">新增节点</button>`)}
+  </div>`;
+}
+
 /* ---------- 11.10 工作留痕与汇总 ---------- */
 function reportRange() {
   const r = app.reportRange || { mode:'term' };
@@ -1810,7 +2164,7 @@ function viewReport() {
   const talks = DB.talks.filter(t => t.date >= R.from && t.date <= R.to);
   const wayItems = TALK_WAYS.map((w, i) => ({
     label:w, value: talks.filter(t => t.way === w).length,
-    color:['#4f46e5','#16a34a','#7c3aed','#d97706','#0891b2'][i]
+    color:['#0ea5e9','#16a34a','#1e3a5f','#f59e0b','#0891b2'][i]
   }));
   const dutyItems = st.by_duty.map(b => ({ label: DUTY_MAP[b.duty].s, value: b.tasks + b.talks, color: DUTY_MAP[b.duty].c }));
   const rate = st.task_total ? Math.round(st.task_done / st.task_total * 100) : 0;
@@ -2079,6 +2433,91 @@ function talkForm(t, preset) {
     }
   });
 }
+function stuPickerExtra(id, cid) {
+  const opts = DB.students.map(x => `<option value="${esc(x.full_name)}">${esc(x.student_number)} ${esc(x.class_name)}</option>`).join('');
+  const cls = classList().map(c => `<option value="${esc(c)}">`).join('');
+  return `<datalist id="${id}">${opts}</datalist><datalist id="${cid}">${cls}</datalist>`;
+}
+function bindStuPicker(mask, nameKey, numKey, clsKey) {
+  const n = $('[data-k="' + nameKey + '"]', mask); if (!n) return;
+  const num = $('[data-k="' + numKey + '"]', mask), cls = $('[data-k="' + clsKey + '"]', mask);
+  n.addEventListener('change', () => {
+    const hit = DB.students.find(x => x.full_name === n.value.trim());
+    if (hit) { if (num) num.value = hit.student_number; if (cls) cls.value = hit.class_name; }
+  });
+}
+function pleaveForm(s, mode) {
+  const isNew = !s;
+  ui.form({
+    title: mode === 'approve' ? '请假审批' : (isNew ? '登记请假' : '编辑请假记录'),
+    data: s || { type:'事假', status:'待审批', leave_at: today(), start: today(), end: shiftDay(today(), 3) },
+    fields: [
+      { key:'name', label:'学生姓名', required:true, list:'dl-p-stu' },
+      { key:'student_number', label:'学号' },
+      { key:'class_name', label:'班级', list:'dl-p-cls' },
+      { key:'start', label:'请假开始', type:'date', required:true },
+      { key:'end', label:'请假结束', type:'date', required:true },
+      { key:'type', label:'请假类型', type:'select', options: PLEAVE_TYPES },
+      { key:'reason', label:'请假事由', type:'textarea', rows:2, required:true, ph:'如：回家处理家事 / 病假需就诊', span:2 },
+      { key:'approver', label:'审批人', ph:'辅导员姓名' },
+      { key:'status', label:'审批状态', type:'select', options:['待审批','已通过','已驳回'] },
+      { key:'note', label:'备注', type:'textarea', rows:2, span:2 },
+    ],
+    extra: stuPickerExtra('dl-p-stu', 'dl-p-cls'),
+    onOpen(mask) { bindStuPicker(mask, 'name', 'student_number', 'class_name'); },
+    onSave(v) {
+      if (isNew) { DB.pleave.push(normPleave(v)); ui.toast('请假已登记', 'ok'); }
+      else { Object.assign(s, normPleave(Object.assign({}, s, v))); ui.toast('已保存', 'ok'); }
+      save('pleave'); render();
+    }
+  });
+}
+function attendForm(s) {
+  const isNew = !s;
+  ui.form({
+    title: isNew ? '登记考勤' : '编辑考勤记录',
+    data: s || { type:'旷课', date: today(), teacher: DB.settings.counselor_name || '' },
+    fields: [
+      { key:'name', label:'学生姓名', required:true, list:'dl-a-stu' },
+      { key:'student_number', label:'学号' },
+      { key:'class_name', label:'班级', list:'dl-a-cls' },
+      { key:'date', label:'考勤日期', type:'date', required:true },
+      { key:'type', label:'缺勤类型', type:'select', options: ATTEND_TYPES },
+      { key:'duration', label:'时长 / 节次', ph:'如：2 节 / 半天' },
+      { key:'teacher', label:'记录人', ph:'辅导员或任课教师' },
+      { key:'note', label:'备注', type:'textarea', rows:2, span:2 },
+    ],
+    extra: stuPickerExtra('dl-a-stu', 'dl-a-cls'),
+    onOpen(mask) { bindStuPicker(mask, 'name', 'student_number', 'class_name'); },
+    onSave(v) {
+      if (isNew) { DB.attend.push(normAttend(v)); ui.toast('考勤已登记', 'ok'); }
+      else { Object.assign(s, normAttend(Object.assign({}, s, v))); ui.toast('已保存', 'ok'); }
+      save('attend'); render();
+    }
+  });
+}
+function nodeForm(s) {
+  const isNew = !s;
+  ui.form({
+    title: isNew ? '新增工作节点' : '编辑工作节点', size:'wide',
+    data: s || { category:'daily', status:'todo', remind_days:3, repeat:'none', due: shiftDay(today(), 7) },
+    fields: [
+      { key:'title', label:'工作标题', required:true, span:2 },
+      { key:'category', label:'工作分类（43 号令）', type:'select', options: DUTIES.map(d => ({ v:d.k, n:d.n })) },
+      { key:'due', label:'截止日期', type:'date', required:true },
+      { key:'remind_days', label:'提前提醒天数', type:'number', def:3, ph:'如 3' },
+      { key:'status', label:'状态', type:'select', options:[{v:'todo',n:'待办'},{v:'doing',n:'进行中'},{v:'done',n:'已完成'}] },
+      { key:'repeat', label:'周期', type:'select', options: Object.keys(NODE_REPEAT).map(k => ({ v:k, n:NODE_REPEAT[k] })) },
+      { key:'summary', label:'工作小结', type:'textarea', rows:3, ph:'完成情况、成果、问题…', span:2 },
+      { key:'attachment', label:'附件说明（选填）', ph:'如：附件1-会议纪要.docx' },
+    ],
+    onSave(v) {
+      if (isNew) { DB.node.push(normNode(v)); ui.toast('节点已添加', 'ok'); }
+      else { if (v.status === 'done' && s.status !== 'done') v.done_at = today(); Object.assign(s, normNode(Object.assign({}, s, v))); ui.toast('已保存', 'ok'); }
+      save('node'); render();
+    }
+  });
+}
 function stayForm(t) {
   const isNew = !t;
   ui.form({
@@ -2327,7 +2766,7 @@ function clearAll() {
     '将删除本机所有学生、任务和谈话记录，<b style="color:var(--danger)">此操作不可恢复</b>。<br><br>建议先导出一份 JSON 备份。确定继续吗？',
     () => {
       ui.confirm('再次确认', '真的要清空吗？这是最后一次确认。', () => {
-        DB.students = []; DB.tasks = []; DB.talks = []; DB.stay = []; DB.leave = []; DB.honor = []; DB.custom = {};
+        DB.students = []; DB.tasks = []; DB.talks = []; DB.stay = []; DB.leave = []; DB.honor = []; DB.pleave = []; DB.attend = []; DB.node = []; DB.custom = {};
         DB.settings.seeded = true; save();
         render(); ui.toast('已清空全部数据', 'ok');
       }, true);
@@ -2338,6 +2777,7 @@ function clearAll() {
 const VIEWS = {
   home:viewHome, tasks:viewTasks, students:viewStudents, talks:viewTalks,
   stay:viewStay, leave:viewLeave, honor:viewHonor, report:viewReport, bridge:viewBridge,
+  pleave:viewPleave, attend:viewAttend, node:viewNode,
 };
 function render() {
   const fn = VIEWS[app.view] || (customModules[app.view] && customModules[app.view].render) || viewHome;
@@ -2501,6 +2941,44 @@ const ACTS = {
       .concat(DB.honor.map(s => [s.name, s.student_number, (HONOR_TYPES.find(x => x.v === s.apply_type) || {}).n || s.apply_type, s.politics, s.major, s.class_name, s.rank, s.moral, s.scholarships, s.social, s.others]));
     download(`评优榜样_${today()}.csv`, toCSV(rows), 'text/csv'); ui.toast('已导出', 'ok');
   },
+
+  /* ---------- 请销假 ---------- */
+  'pleave-new': () => pleaveForm(null),
+  'pleave-edit': id => pleaveForm(DB.pleave.find(s => s.id === id)),
+  'pleave-del': id => ui.confirm('删除记录', '确定删除这条请假记录吗？', () => { DB.pleave = DB.pleave.filter(s => s.id !== id); save('pleave'); render(); ui.toast('已删除','ok'); }, true),
+  'pleave-approve': id => { const s = DB.pleave.find(x => x.id === id); if (s) pleaveForm(s, 'approve'); },
+  'pleave-cancel': id => { const s = DB.pleave.find(x => x.id === id); if (!s) return; ui.confirm('销假', `确认 <b>${esc(s.name)}</b> 已返校销假吗？`, () => { s.cancel = true; save('pleave'); render(); ui.toast('已销假','ok'); }, true); },
+  'pleave-export': () => {
+    const rows = [['姓名','学号','班级','请假开始','请假结束','类型','事由','审批人','审批状态','是否销假','登记日期','备注']]
+      .concat(DB.pleave.map(s => [s.name, s.student_number, s.class_name, s.start, s.end, s.type, s.reason, s.approver, s.status, s.cancel ? '已销假' : '否', s.leave_at, s.note]));
+    download(`请销假_${today()}.csv`, toCSV(rows), 'text/csv'); ui.toast('已导出','ok');
+  },
+  /* ---------- 考勤 ---------- */
+  'attend-new': () => attendForm(null),
+  'attend-edit': id => attendForm(DB.attend.find(s => s.id === id)),
+  'attend-del': id => ui.confirm('删除记录', '确定删除这条考勤记录吗？', () => { DB.attend = DB.attend.filter(s => s.id !== id); save('attend'); render(); ui.toast('已删除','ok'); }, true),
+  'attend-export': () => {
+    const rows = [['姓名','学号','班级','日期','缺勤类型','时长/节次','记录人','备注']]
+      .concat(DB.attend.map(s => [s.name, s.student_number, s.class_name, s.date, s.type, s.duration, s.teacher, s.note]));
+    download(`考勤台账_${today()}.csv`, toCSV(rows), 'text/csv'); ui.toast('已导出','ok');
+  },
+  'attend-month': () => {
+    const m = thisMonth();
+    const rows = [['姓名','学号','班级','日期','缺勤类型','时长/节次','记录人','备注']]
+      .concat(DB.attend.filter(s => (s.date||'').slice(0,7) === m).map(s => [s.name, s.student_number, s.class_name, s.date, s.type, s.duration, s.teacher, s.note]));
+    download(`考勤台账_${m}.csv`, toCSV(rows), 'text/csv'); ui.toast('已导出月度报表','ok');
+  },
+  /* ---------- 工作节点 ---------- */
+  'node-new': () => nodeForm(null),
+  'node-edit': id => nodeForm(DB.node.find(s => s.id === id)),
+  'node-del': id => ui.confirm('删除节点', '确定删除这个工作节点吗？', () => { DB.node = DB.node.filter(s => s.id !== id); save('node'); render(); ui.toast('已删除','ok'); }, true),
+  'node-done': id => { const s = DB.node.find(x => x.id === id); if (!s) return; s.status = 'done'; s.done_at = today(); save('node'); render(); ui.toast('已标记完成','ok'); },
+  'node-export': () => {
+    const rows = [['工作标题','分类','截止日期','提前提醒天数','状态','周期','工作小结','附件','完成日期']]
+      .concat(DB.node.map(s => [s.title, (DUTY_MAP[s.category]?DUTY_MAP[s.category].n:''), s.due, s.remind_days, STATUS_TXT[s.status]||s.status, NODE_REPEAT[s.repeat]||'不重复', s.summary, s.attachment, s.done_at]));
+    download(`工作节点_${today()}.csv`, toCSV(rows), 'text/csv'); ui.toast('已导出','ok');
+  },
+
   'export-json': exportJSON,
   'import-json': () => $('#file-json').click(),
   'pkg-export': exportPackage,
@@ -2523,6 +3001,9 @@ const ACTS = {
         DB.stay = DB.stay.filter(x => !x._demo);
         DB.leave = DB.leave.filter(x => !x._demo);
         DB.honor = DB.honor.filter(x => !x._demo);
+        DB.pleave = DB.pleave.filter(x => !x._demo);
+        DB.attend = DB.attend.filter(x => !x._demo);
+        DB.node = DB.node.filter(x => !x._demo);
         if (DB.settings.counselor_name === '示例老师') { DB.settings.counselor_name = ''; DB.settings.college_name = ''; }
         save(); render(); paintWho(); ui.toast(`已清理 ${n} 条示例数据`, 'ok');
       }, true);
@@ -2638,7 +3119,7 @@ function boot() {
   paintWho();
   render();
   console.log('%c辅导员工作台 v' + APP_VERSION,
-    'background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;padding:3px 10px;border-radius:5px;font-weight:700');
+    'background:linear-gradient(135deg,#1e3a5f,#0ea5e9);color:#fff;padding:3px 10px;border-radius:5px;font-weight:700');
   console.log('二次开发入口：window.CWB —— 试试 CWB.db.students 或 CWB.modules.register({...})');
 }
 
