@@ -112,23 +112,23 @@
 
 ### 首页 · 今日概览
 
-![首页](./assets/screenshots/dashboard.svg)
+![首页](./assets/screenshots/dashboard.png)
 
 ### 学生工作台 · 列表视图
 
-![学生](./assets/screenshots/students.svg)
+![学生](./assets/screenshots/students.png)
 
 ### 工作日历与节点
 
-![节点](./assets/screenshots/calendar.svg)
+![节点](./assets/screenshots/calendar.png)
 
 ### 重点学生档案（隐私锁）
 
-![重点档案](./assets/screenshots/focus.svg)
+![重点档案](./assets/screenshots/focus.png)
 
 ### 深色模式
 
-![深色](./assets/screenshots/dark.svg)
+![深色](./assets/screenshots/dark.png)
 
 </div>
 
