@@ -602,8 +602,12 @@ tbody tr:last-child td{border-bottom:none}
   .tab.on{color:var(--accent);font-weight:600;background:var(--accent-soft)}
   .tab-dot{position:absolute;top:5px;right:calc(50% - 22px);min-width:15px;height:15px;padding:0 4px;border-radius:8px;
     background:var(--danger);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
+ }
+@media (max-width:480px){
+  .topbar{padding:0 12px}
+  .topbar-search-wrap{display:none}
 }
-@media (max-width:400px){ .kpis{grid-template-columns:1fr} }
+ @media (max-width:400px){ .kpis{grid-template-columns:1fr} }
 
 /* ---------- 打印 ---------- */
 @media print{

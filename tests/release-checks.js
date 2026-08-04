@@ -19,4 +19,10 @@ const publicSurface = run('scripts/check-public-surface.js');
 assert.equal(publicSurface.status, 0, publicSurface.stderr || publicSurface.stdout);
 assert.match(publicSurface.stdout, /Public surface check passed/);
 
+const html = require('node:fs').readFileSync(path.join(root, 'index.html'), 'utf8');
+const compactHeader = html.match(/@media \(max-width:480px\)\s*\{([\s\S]*?)\n\}/);
+assert.ok(compactHeader, 'Expected a compact mobile header media query');
+assert.match(compactHeader[1], /\.topbar-search-wrap\{display:none\}/);
+assert.match(compactHeader[1], /\.topbar\{padding:0 12px/);
+
 console.log('PASS release-checks');
