@@ -12,35 +12,134 @@
    设计：克制高级感 — 航空蓝调 · 纯色面 · 极细边框 · 柔和阴影
    ============================================================ */
 :root{
-  /* 主色：克制航空蓝（单一 accent，不分裂）*/
-  --accent:#2563eb; --accent-soft:#eff6ff; --accent-line:#bfdbfe;
-  --accent-dark:#1d4ed8;
-  /* 文字层级（ink system）*/
-  --ink:#0f172a; --ink-2:#334155; --ink-3:#64748b; --ink-4:#94a3b8;
-  /* 边界系统（hairline）*/
-  --line:#e5e7eb; --line-2:#f3f4f6; --bg:#f5f6fa; --card:#ffffff;
-  /* 语义色（低饱和，仅用于状态传达）*/
-  --danger:#dc2626; --danger-soft:#fef2f2; --danger-line:#fecaca;
-  --warn:#d97706; --warn-soft:#fffbeb; --warn-line:#fde68a;
-  --ok:#059669; --ok-soft:#ecfdf5; --ok-line:#a7f3d0;
-  /* 深色面（导航/顶栏 — 纯色 matte）*/
-  --navy:#0c1628; --navy-light:#162032; --navy-border:rgba(255,255,255,.06);
-  /* 圆角与阴影（统一、克制）*/
-  --r:12px; --r-sm:8px; --r-xs:6px;
-  --sh:0 1px 2px rgba(0,0,0,.04),0 4px 12px rgba(0,0,0,.03);
-  --sh-lg:0 20px 50px rgba(0,0,0,.10);
-  --sh-kpi:0 1px 3px rgba(0,0,0,.04),0 4px 16px rgba(0,0,0,.03);
-  --nav-w:252px;
-  /* 渐变仅在品牌 mark 处使用一次 */
-  --grad:linear-gradient(135deg,#2563eb,#3b82f6);
-  --grad-warm:linear-gradient(135deg,#d97706,#ea580c);
+  /* ===== 字体与排版（模块化阶梯） ===== */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "PingFang SC", "HarmonyOS Sans SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  --fs-display: 30px;
+  --fs-h1: 22px;
+  --fs-h2: 17px;
+  --fs-h3: 15px;
+  --fs-body: 14px;
+  --fs-sm: 13px;
+  --fs-xs: 12px;
+  --fs-2xs: 11px;
+  --lh-tight: 1.3;
+  --lh-snug: 1.45;
+  --lh-body: 1.62;
+  --weight-rg: 400;
+  --weight-md: 500;
+  --weight-sb: 600;
+  --weight-bd: 700;
+  --track-tight: -0.01em;
+  --track-wide: 0.04em;
+
+  /* ===== 主色：深邃品牌蓝 ===== */
+  --accent: #2f6bff;
+  --accent-hover: #1f5af0;
+  --accent-active: #1a4fd8;
+  --accent-soft: #eaf1ff;
+  --accent-line: #c6d8ff;
+  --accent-dark: #1d4ed8;
+  --accent-contrast: #ffffff;
+
+  /* ===== 文字层级（单一冷灰） ===== */
+  --ink: #0b1220;
+  --ink-2: #2f3848;
+  --ink-3: #5b6573;
+  --ink-4: #8b94a3;
+  --ink-on-accent: #ffffff;
+
+  /* ===== 表面与边界 ===== */
+  --bg: #f4f6fb;
+  --bg-sunken: #eef1f7;
+  --card: #ffffff;
+  --card-2: #fbfcfe;
+  --line: #e6e9f0;
+  --line-2: #f1f3f8;
+  --line-strong: #d7dce6;
+
+  /* ===== 语义色（降饱和） ===== */
+  --danger: #e0413e; --danger-soft: #fdecec; --danger-line: #f6c9c8;
+  --warn: #d98324;  --warn-soft: #fdf3e6;  --warn-line: #f6dca8;
+  --ok: #12a06b;    --ok-soft: #e7f7f0;    --ok-line: #aee7cf;
+  --info: #2f6bff;
+
+  /* ===== 深色面（导航/顶栏） ===== */
+  --navy: #0b1322;
+  --navy-light: #142033;
+  --navy-border: rgba(255,255,255,.07);
+
+  /* ===== 圆角 ===== */
+  --r-lg: 16px;
+  --r: 12px;
+  --r-sm: 9px;
+  --r-xs: 6px;
+  --r-pill: 999px;
+
+  /* ===== 阴影（分层、冷调） ===== */
+  --sh: 0 1px 2px rgba(16,24,40,.05), 0 2px 6px rgba(16,24,40,.06);
+  --sh-xs: 0 1px 2px rgba(16,24,40,.05);
+  --sh-sm: 0 1px 2px rgba(16,24,40,.05), 0 2px 6px rgba(16,24,40,.06);
+  --sh-md: 0 4px 10px -2px rgba(16,24,40,.08), 0 10px 28px -6px rgba(16,24,40,.10);
+  --sh-lg: 0 16px 40px -12px rgba(16,24,40,.22), 0 32px 80px -20px rgba(16,24,40,.28);
+  --sh-kpi: 0 1px 3px rgba(16,24,40,.05), 0 6px 18px -6px rgba(16,24,40,.08);
+  --sh-focus: 0 0 0 3px rgba(47,107,255,.28);
+
+  /* ===== 动效 ===== */
+  --ease: cubic-bezier(.4,0,.2,1);
+  --ease-out: cubic-bezier(.16,1,.3,1);
+  --dur-fast: 130ms;
+  --dur: 200ms;
+  --dur-slow: 320ms;
+
+  /* ===== 间距（8pt 栅格） ===== */
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px;
+  --sp-5: 20px; --sp-6: 24px; --sp-8: 32px; --sp-10: 40px;
+
+  --nav-w: 256px;
+
+  /* 渐变仅在品牌 mark 处使用 */
+  --grad: linear-gradient(135deg,#2f6bff,#5b8bff);
+  --grad-warm: linear-gradient(135deg,#d98324,#ef7a1a);
+}
+
+/* ===== 完整深色模式 ===== */
+[data-theme="dark"]{
+  --bg: #0a0e16;
+  --bg-sunken: #070a11;
+  --card: #121826;
+  --card-2: #161e2e;
+  --line: #232c3d;
+  --line-2: #1b2333;
+  --line-strong: #2b3548;
+  --ink: #e8ecf3;
+  --ink-2: #b3bccb;
+  --ink-3: #828c9c;
+  --ink-4: #5f697a;
+  --accent: #5b8bff;
+  --accent-hover: #6f9bff;
+  --accent-active: #4f7ff0;
+  --accent-soft: rgba(91,139,255,.14);
+  --accent-line: rgba(91,139,255,.32);
+  --accent-dark: #5b8bff;
+  --accent-contrast: #0a0e16;
+  --danger: #ff6b66; --danger-soft: rgba(255,107,102,.12); --danger-line: rgba(255,107,102,.30);
+  --warn: #f0a23a;  --warn-soft: rgba(240,162,58,.12);  --warn-line: rgba(240,162,58,.30);
+  --ok: #2fd19a;    --ok-soft: rgba(47,209,154,.12);    --ok-line: rgba(47,209,154,.30);
+  --info: #5b8bff;
+  --sh-xs: 0 1px 2px rgba(0,0,0,.4);
+  --sh-sm: 0 1px 2px rgba(0,0,0,.4), 0 2px 8px rgba(0,0,0,.45);
+  --sh-md: 0 6px 16px -4px rgba(0,0,0,.55), 0 12px 32px -8px rgba(0,0,0,.6);
+  --sh-lg: 0 20px 50px -12px rgba(0,0,0,.72);
+  --sh-kpi: 0 1px 3px rgba(0,0,0,.4), 0 8px 22px -8px rgba(0,0,0,.5);
+  --sh-focus: 0 0 0 3px rgba(91,139,255,.42);
+  --grad: linear-gradient(135deg,#3b6fff,#6f9bff);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
 body{
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue","PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;
+  font-family:var(--font-sans);
   background:var(--bg);
-  color:var(--ink); font-size:14px; line-height:1.65;
+  color:var(--ink); font-size:var(--fs-body); line-height:var(--lh-body);
   -webkit-font-smoothing:antialiased;
   min-height:100vh;
 }
@@ -441,6 +540,97 @@ details.adv>summary::before{content:"";width:7px;height:7px;border-right:1.6px s
 details.adv[open]>summary::before{transform:rotate(45deg)}
 details.adv>summary:hover{color:var(--ink)}
 details.adv .adv-body{padding-top:14px}
+/* ===================== v3.6 视觉与交互升级 ===================== */
+
+/* 全局聚焦环（无障碍 / WCAG AA） */
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:var(--r-xs)}
+.btn:focus-visible,.chip:focus-visible,.nav-item:focus-visible,.nav-search:focus-within{outline-offset:2px}
+
+/* 字体与基础排版 */
+.btn{font-weight:var(--weight-sb);letter-spacing:.01em}
+.card-hd h2{font-size:var(--fs-h2);font-weight:var(--weight-bd);letter-spacing:var(--track-tight)}
+.modal-hd h3{font-size:var(--fs-h2);font-weight:var(--weight-bd);letter-spacing:var(--track-tight)}
+.field label,.lab{font-size:var(--fs-sm);font-weight:var(--weight-sb);color:var(--ink-2);letter-spacing:.01em}
+.muted{color:var(--ink-3);font-size:var(--fs-sm)}
+.tiny{font-size:var(--fs-xs);color:var(--ink-4)}
+.num,.kpi-v{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+
+/* 按钮：精致悬浮 / 按下 */
+.btn-sm{min-height:34px}
+.btn-primary{color:var(--accent-contrast);box-shadow:var(--sh-xs)}
+.btn-primary:hover{background:var(--accent-hover);box-shadow:var(--sh-sm);transform:translateY(-1px)}
+.btn-primary:active{transform:translateY(0) scale(.985)}
+.btn:hover{transform:translateY(-1px)}
+.btn:active{transform:translateY(0) scale(.98)}
+
+/* 输入框：聚焦环 + 淡 tint */
+.inp,select.inp,textarea.inp{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-sm);
+  font-size:var(--fs-body);color:var(--ink);
+  transition:border-color var(--dur) var(--ease),box-shadow var(--dur) var(--ease),background var(--dur) var(--ease)}
+.inp:focus,select.inp:focus,textarea.inp:focus{border-color:var(--accent);box-shadow:var(--sh-focus);background:var(--card)}
+.topbar-search .inp{border:none;background:transparent}
+
+/* 卡片：双描边 + 悬浮抬升 */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--sh-sm), inset 0 1px 0 rgba(255,255,255,.7);margin-bottom:var(--sp-4);
+  transition:box-shadow var(--dur) var(--ease),transform var(--dur) var(--ease),border-color var(--dur) var(--ease)}
+.card:hover{box-shadow:var(--sh-md), inset 0 1px 0 rgba(255,255,255,.7);border-color:var(--accent-line);transform:translateY(-2px)}
+.card-hd{background:var(--card-2)}
+.card-bd{padding:var(--sp-5)}
+.today{background:var(--card)}
+.insight{background:var(--card)}
+
+/* 标签 / 药丸：更柔 */
+.pill{font-weight:var(--weight-sb)}
+.tag{font-weight:var(--weight-sb);letter-spacing:.01em}
+.chip{background:var(--card-2)}
+
+/* 表格：数字右对齐 + sticky 头 + 行 hover + 发丝分隔 */
+table{width:100%;border-collapse:collapse;font-size:var(--fs-sm)}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line-2)}
+th{font-size:var(--fs-xs);font-weight:var(--weight-sb);color:var(--ink-3);text-transform:uppercase;letter-spacing:var(--track-wide);background:var(--card-2);position:sticky;top:0;z-index:1}
+tbody tr{transition:background var(--dur-fast) var(--ease)}
+tbody tr:hover{background:var(--accent-soft)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+tbody tr:last-child td{border-bottom:none}
+
+/* 空状态：内联插画 + 引导 */
+.empty{display:flex;flex-direction:column;align-items:center;gap:12px;padding:56px 20px;color:var(--ink-4)}
+.empty .ic{width:40px;height:40px;color:var(--ink-4);opacity:.5}
+.empty div{font-size:var(--fs-sm);line-height:1.6}
+
+/* 弹窗：更顺滑入场 + 主题化 */
+.modal{background:var(--card);color:var(--ink);border-radius:var(--r-lg);box-shadow:var(--sh-lg);animation:pop var(--dur-slow) var(--ease-out)}
+.mask{background:rgba(10,14,22,.42);animation:fade var(--dur) var(--ease)}
+.toast{animation:tin var(--dur) var(--ease-out);font-weight:var(--weight-md);border-radius:var(--r-sm)}
+.anim-in{animation:riseIn .55s var(--ease-out) both}
+
+/* 选区 & 滚动条 */
+::selection{background:var(--accent-soft);color:var(--accent-dark)}
+*::-webkit-scrollbar{width:10px;height:10px}
+*::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:999px;border:3px solid var(--bg)}
+*::-webkit-scrollbar-thumb:hover{background:var(--ink-4)}
+
+/* 骨架屏 */
+.skeleton{background:linear-gradient(90deg,var(--line-2) 25%,var(--line) 37%,var(--line-2) 63%);background-size:400% 100%;animation:shimmer 1.4s ease infinite;border-radius:var(--r-sm)}
+@keyframes shimmer{from{background-position:100% 0}to{background-position:0 0}}
+
+/* 深色模式补白表面 */
+[data-theme="dark"] .card{box-shadow:var(--sh-sm), inset 0 1px 0 rgba(255,255,255,.04)}
+[data-theme="dark"] .card:hover{box-shadow:var(--sh-md), inset 0 1px 0 rgba(255,255,255,.04)}
+[data-theme="dark"] .inp, [data-theme="dark"] select.inp, [data-theme="dark"] textarea.inp{background:var(--card-2);border-color:var(--line-strong)}
+[data-theme="dark"] .chip{background:var(--card-2);color:var(--ink-3);border-color:var(--line)}
+[data-theme="dark"] .nav-item:hover{background:rgba(255,255,255,.05)}
+[data-theme="dark"] .btn-danger{background:var(--card-2);border-color:var(--danger-line);color:var(--danger)}
+[data-theme="dark"] .btn-ok{color:#04231a}
+[data-theme="dark"] .btn-primary{color:var(--accent-contrast)}
+
+/* 尊重 reduce-motion */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important}
+}
 </style>
 </head>
 <body>
@@ -453,6 +643,7 @@ details.adv .adv-body{padding-top:14px}
   <symbol id="i-talk" viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.4 8.4 0 01-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.4 8.4 0 013.8-.9h.5a8.5 8.5 0 018 8v.5z"/></symbol>
   <symbol id="i-chart" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></symbol>
   <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
   <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
   <symbol id="i-down" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
@@ -511,6 +702,7 @@ details.adv .adv-body{padding-top:14px}
     <button class="btn btn-sm" id="btn-export" title="导出 JSON 备份"><svg class="ic ic-sm"><use href="#i-down"/></svg><span class="mo-hide">备份</span></button>
     <button class="btn btn-sm" id="btn-import" title="从备份恢复"><svg class="ic ic-sm"><use href="#i-up"/></svg><span class="mo-hide">恢复</span></button>
     <button class="btn btn-sm btn-icon" id="btn-settings" title="设置"><svg class="ic ic-sm"><use href="#i-gear"/></svg></button>
+    <button class="btn btn-sm btn-icon" id="btn-theme" data-act="toggle-theme" title="切换深色 / 浅色"><svg class="ic ic-sm"><use href="#i-moon"/></svg></button>
   </div>
 </header>
 <div class="scrim" id="scrim"></div>
@@ -1505,7 +1697,7 @@ function normTpl(x) {
   };
 }
 
-const APP_VERSION = '3.5.0';
+const APP_VERSION = '3.6.0';
 
 /* ===================== 9. 示例数据（首次打开可见效果） ===================== */
 function seedDemo() {
@@ -4671,6 +4863,15 @@ function paintWho() {
   const s = DB.settings;
   $('#who').textContent = s.counselor_name ? `${s.counselor_name}${s.college_name ? ' · ' + s.college_name : ''}` : '';
 }
+function applyTheme(t, persist) {
+  const root = document.documentElement;
+  if (t === 'dark') root.setAttribute('data-theme', 'dark');
+  else root.removeAttribute('data-theme');
+  const btn = $('#btn-theme');
+  if (btn) { const u = btn.querySelector('use'); if (u) u.setAttribute('href', t === 'dark' ? '#i-sun' : '#i-moon'); }
+  DB.settings.theme = t;
+  if (persist) save('settings');
+}
 function closeDrawer() {
   const nav = $('#sidenav'); if (nav) nav.classList.remove('open');
   const sc = $('#scrim'); if (sc) sc.classList.remove('open');
@@ -4681,6 +4882,12 @@ function openDrawer() {
 }
 
 const ACTS = {
+  'toggle-theme': () => {
+    const cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    const next = cur === 'dark' ? 'light' : 'dark';
+    applyTheme(next, true);
+    ui.toast(next === 'dark' ? '已切换到深色模式' : '已切换到浅色模式', 'ok');
+  },
   'task-new': () => taskForm(null),
   'task-edit': id => taskForm(DB.tasks.find(t => t.id === id)),
   'task-del': id => ui.confirm('删除任务', '确定删除这条任务吗？', () => {
@@ -5353,9 +5560,10 @@ function boot() {
     DB.custom = store.read('custom', {}) || {};
   }
   paintWho();
+  applyTheme(DB.settings.theme || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'), false);
   injectNavExtras(); applyFold(); renderPinned(); updatePinStates(); bindNavSearch();
   render();
-  console.log('%c辅导员工作台 ' + APP_VERSION, 'color:#2563eb;font-weight:700');
+  console.log('%c辅导员工作台 ' + APP_VERSION, 'color:#2f6bff;font-weight:700');
 }
 
 /* ---------- 17. 对外暴露 ---------- */
