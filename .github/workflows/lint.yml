@@ -17,23 +17,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.9.0
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
-      - name: Extract & validate inline JS
-        run: |
-          node -e "
-          const fs = require('fs');
-          const html = fs.readFileSync('index.html', 'utf8');
-          const m = html.match(/<script>([\s\S]*?)<\/script>/);
-          if (!m) { console.error('No <script> tag found'); process.exit(1); }
-          const js = m[1];
-          // 用 Function 构造器做语法解析（不执行）
-          try { new Function(js); console.log('✓ index.html 内联 JS 语法正确（' + js.length + ' 字符）'); }
-          catch (e) { console.error('✗ 语法错误:', e.message); process.exit(1); }
-          "
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate inline JavaScript
+        run: pnpm run lint
+
+      - name: Validate public release surface
+        run: pnpm run check:public
 
       - name: Size check
         run: |
