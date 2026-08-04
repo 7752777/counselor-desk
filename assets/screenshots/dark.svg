@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-label="深色模式 占位">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0c1322"/>
+      <stop offset="100%" stop-color="#131c2e"/>
+    </linearGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#34446a" stroke-width="0.3" stroke-opacity="0.3"/>
+    </pattern>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bg)"/>
+  <rect width="1280" height="720" fill="url(#grid)"/>
+  <g transform="translate(640, 360)" text-anchor="middle" fill="#2dd0e0" font-family="Inter, 'PingFang SC', sans-serif">
+    <text y="-12" font-size="28" font-weight="600">📸 截图占位</text>
+    <text y="20" font-size="14" fill="#a3d5e0">深色模式（comfort-dim）</text>
+    <text y="48" font-size="12" fill="#7a90b4" font-family="monospace">assets/screenshots/dark.svg</text>
+  </g>
+</svg>

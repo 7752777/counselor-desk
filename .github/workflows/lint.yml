@@ -1,0 +1,44 @@
+name: Lint index.html
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+  workflow_dispatch:
+
+jobs:
+  syntax:
+    name: HTML / JS syntax check
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Extract & validate inline JS
+        run: |
+          node -e "
+          const fs = require('fs');
+          const html = fs.readFileSync('index.html', 'utf8');
+          const m = html.match(/<script>([\s\S]*?)<\/script>/);
+          if (!m) { console.error('No <script> tag found'); process.exit(1); }
+          const js = m[1];
+          // 用 Function 构造器做语法解析（不执行）
+          try { new Function(js); console.log('✓ index.html 内联 JS 语法正确（' + js.length + ' 字符）'); }
+          catch (e) { console.error('✗ 语法错误:', e.message); process.exit(1); }
+          "
+
+      - name: Size check
+        run: |
+          SIZE=$(stat -c%s index.html)
+          echo "index.html size: $SIZE bytes"
+          if [ $SIZE -gt 1000000 ]; then
+            echo "⚠️ index.html > 1MB"
+          fi

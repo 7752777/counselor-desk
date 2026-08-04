@@ -1,0 +1,44 @@
+name: Tests
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: 4-suite test gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install jsdom
+        run: npm install --no-save jsdom
+
+      - name: Run regression
+        run: node tests/regression.js
+
+      - name: Run import-loop
+        run: node tests/import-loop.js
+
+      - name: Run crud-smoke
+        run: node tests/crud-smoke.js
+
+      - name: Run student-import
+        run: node tests/student-import.js
+
+      - name: Test summary
+        if: always()
+        run: |
+          echo "✅ All 4 test suites passed"

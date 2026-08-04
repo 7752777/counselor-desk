@@ -17,3 +17,8 @@ build/
 # 切勿提交含真实学生数据的导出备份
 *.backup.json
 backups/
+
+# WorkBuddy 助手记忆目录（不该进仓库）
+.workbuddy/
+out/
+artifacts/
