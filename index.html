@@ -395,6 +395,13 @@ tbody tr:last-child td{border-bottom:none}
   .card{box-shadow:none;break-inside:avoid}
   body{background:#fff}
 }
+details.adv{margin:0}
+details.adv>summary{list-style:none;cursor:pointer;padding:13px 16px;background:#f7f8fa;border:1px solid var(--line);border-radius:12px;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:9px;user-select:none}
+details.adv>summary::-webkit-details-marker{display:none}
+details.adv>summary::before{content:"";width:7px;height:7px;border-right:1.6px solid var(--muted);border-bottom:1.6px solid var(--muted);transform:rotate(-45deg);transition:transform .2s}
+details.adv[open]>summary::before{transform:rotate(45deg)}
+details.adv>summary:hover{color:var(--ink)}
+details.adv .adv-body{padding-top:14px}
 </style>
 </head>
 <body>
@@ -432,6 +439,7 @@ tbody tr:last-child td{border-bottom:none}
   <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 01-10 0V4z"/><path d="M5 4H3v3a3 3 0 003 3M19 4h2v3a3 3 0 01-3 3"/></symbol>
   <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.2 7.6-8 8.5C7.2 20.6 4 17.5 4 12V6l8-3z"/><path d="M9 12l2 2 4-4"/></symbol>
   <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/><path d="M12 15v2"/></symbol>
+  <symbol id="i-usb" viewBox="0 0 24 24"><rect x="7" y="8" width="10" height="10" rx="2"/><path d="M10 8V5h4v3M9.5 12h5M9.5 15.5h5"/></symbol>
   <symbol id="i-mind" viewBox="0 0 24 24"><path d="M12 3a7 7 0 00-7 7c0 2 .5 3.2 1.2 4.3L5 17h3.5l1 2h4l1-2H18l-.2-2.7C18.5 13.2 19 12 19 10a7 7 0 00-7-7z"/><circle cx="12" cy="11" r="2.1"/></symbol>
   <symbol id="i-grad" viewBox="0 0 24 24"><path d="M12 4L2 9l10 5 10-5-10-5z"/><path d="M6 11v4.5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V11"/><path d="M22 9v4.5"/></symbol>
   <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
@@ -1426,7 +1434,7 @@ function normTpl(x) {
   };
 }
 
-const APP_VERSION = '3.0.0';
+const APP_VERSION = '3.3.0';
 
 /* ===================== 9. 示例数据（首次打开可见效果） ===================== */
 function seedDemo() {
@@ -1991,6 +1999,10 @@ function emptyBox(text, btn) {
   return `<div class="empty"><svg class="ic"><use href="#i-inbox"/></svg><div>${esc(text)}</div>${btn ? `<div style="margin-top:12px">${btn}</div>` : ''}</div>`;
 }
 function dataCount() { return DB.students.length + DB.tasks.length + DB.talks.length + DB.stay.length + DB.leave.length + DB.honor.length; }
+function hasDemo() {
+  return ['students','tasks','talks','stay','leave','honor','pleave','attend','node','warn','help','grant','focus','psych','graduate','policy','material','comp','tpl']
+    .some(k => (DB[k] || []).some(x => x && x._demo));
+}
 
 /* ---------- 11.3 今日概览 ---------- */
 function viewHome() {
@@ -2018,11 +2030,16 @@ function viewHome() {
   const d = new Date();
   const wk = ['日','一','二','三','四','五','六'][d.getDay()];
 
-  const banner = (dataCount() >= 30 && DB.settings.backup_notified_at !== today())
+  const backupBanner = (dataCount() >= 30 && DB.settings.backup_notified_at !== today())
     ? `<div class="banner banner-warn"><svg class="ic ic-sm"><use href="#i-alert"/></svg>
         <span class="sp">本机已积累 <b>${dataCount()}</b> 条数据，建议现在导出一份 JSON 备份，换电脑或清缓存都不会丢。</span>
         <button class="btn btn-sm" data-act="export-json">立即备份</button>
         <button class="btn btn-sm btn-ghost" data-act="dismiss-backup">今天不提醒</button></div>` : '';
+  const demoBanner = hasDemo()
+    ? `<div class="banner banner-info"><svg class="ic ic-sm"><use href="#i-inbox"/></svg>
+        <span class="sp">当前展示的是<b>示例数据</b>（示例老师、张明、李思颖等），方便你先看效果。要录入自己的真实数据，可点右侧「清空示例数据」；清空后不会影响你之后录入的内容。</span>
+        <button class="btn btn-sm" data-act="clear-demo">清空示例数据</button></div>` : '';
+  const banner = backupBanner + demoBanner;
 
   return `${banner}
   <div class="today">
@@ -3497,58 +3514,23 @@ function viewBridge() {
   }).join('');
   return `
   <div class="card">
-    <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-link"/></svg>与「辅导员工作平台」联动</h2></div>
+    <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-shield"/></svg>数据存储与备份</h2></div>
     <div class="card-bd">
       <div class="banner banner-info" style="margin-bottom:16px"><svg class="ic ic-sm"><use href="#i-inbox"/></svg>
-        <span class="sp">本工作台是<b>纯本地</b>的。当前阶段通过<b>文件交换</b>与服务端平台协作：
-        平台导出名单 → 本地导入干活 → 本地导出交换包 → 上传平台汇总。API 直连通道已预留，平台开放接口后即可打通。</span></div>
+        <span class="sp">你的数据都<b>保存在本机浏览器</b>里，关闭网页也不会丢，更不会上传到任何服务器。<b>换电脑、重装系统或换浏览器前，请先把数据带走</b>。</span></div>
       <div class="grid2">
-        <div class="form-row"><label class="lab" style="display:block;margin-bottom:5px">平台地址（可留空）</label>
-          <input class="inp" data-set="platform_url" value="${esc(s.platform_url || '')}" placeholder="https://your-platform.example.com">
-          <div class="hint">仅用于将来 API 直连；留空不影响任何本地功能。</div></div>
-        <div class="form-row"><label class="lab" style="display:block;margin-bottom:5px">组织代码</label>
-          <input class="inp" data-set="org_code" value="${esc(s.org_code || '')}" placeholder="如 demo">
-          <div class="hint">与平台端组织代码保持一致，导出包会带上此标识。</div></div>
+        <div class="form-row"><label class="lab" style="display:block;margin-bottom:5px">辅导员姓名</label>
+          <input class="inp" data-set="counselor_name" value="${esc(s.counselor_name || '')}" placeholder="如 王老师"></div>
+        <div class="form-row"><label class="lab" style="display:block;margin-bottom:5px">学院 / 院系</label>
+          <input class="inp" data-set="college_name" value="${esc(s.college_name || '')}" placeholder="如 计算机学院"></div>
       </div>
-      <label class="chk"><input type="checkbox" data-set-chk="platform_api_on"${s.platform_api_on ? ' checked' : ''}>
-        <span>启用 API 直连（平台接口就绪后再打开）</span></label>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-hd"><h2>数据交换</h2></div>
-    <div class="card-bd" style="display:flex;gap:9px;flex-wrap:wrap">
-      <button class="btn btn-primary" data-act="pkg-export"><svg class="ic ic-sm"><use href="#i-down"/></svg>导出交换包（上报用）</button>
-      <button class="btn" data-act="export-json"><svg class="ic ic-sm"><use href="#i-down"/></svg>导出完整备份</button>
-      <button class="btn" data-act="import-json"><svg class="ic ic-sm"><use href="#i-up"/></svg>导入备份 / 交换包</button>
-      <button class="btn" data-act="student-template">下载学生名单模板</button>
-      <button class="btn" data-act="pkg-pull"${bridge.enabled ? '' : ' disabled style="opacity:.5;cursor:not-allowed"'}>
-        <svg class="ic ic-sm"><use href="#i-arrow"/></svg>从平台拉取任务${bridge.enabled ? '' : '（未启用）'}</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-hd"><h2>字段对照表</h2><span class="sp"></span><span class="tiny">导入导出无需改字段名</span></div>
-    <div class="tw"><table><thead><tr><th>字段名</th><th>含义</th><th>与平台关系</th></tr></thead><tbody>${fields}</tbody></table></div>
-  </div>
-
-  <div class="card">
-    <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-book"/></svg>自己动手改造它</h2></div>
-    <div class="card-bd">
-      <p class="muted" style="margin-top:0">这个工作台是<b>单个 HTML 文件</b>，用记事本就能改。想加模块时，把下面这段话连同 index.html 一起交给 AI 就行：</p>
-      <textarea class="inp" rows="4" readonly style="font-size:12.5px;background:#fafbfc">帮我在这个辅导员工作台里增加一个「XX」模块：字段有 A、B、C。请沿用文件里已有的 CWB.store 存储、ui.form 表单和卡片样式，只新增代码，不要改动原有模块。</textarea>
-      <div style="margin-top:14px">
-        <div class="lab" style="margin-bottom:6px">已开放的扩展接口（在浏览器控制台可直接调用）</div>
-        <div class="tw"><table><tbody>
-          <tr><td><code>CWB.store</code></td><td class="muted">读写本地数据：<code>CWB.store.read(key, 默认值)</code> / <code>write(key, 值)</code></td></tr>
-          <tr><td><code>CWB.db</code></td><td class="muted">当前全部数据：<code>students / tasks / talks / stay / leave / honor / settings / custom</code></td></tr>
-          <tr><td><code>CWB.ui.form()</code></td><td class="muted">一行代码生成带校验的弹窗表单</td></tr>
-          <tr><td><code>CWB.ui.toast()</code></td><td class="muted">轻提示</td></tr>
-          <tr><td><code>CWB.modules.register()</code></td><td class="muted">注册自定义模块，自动出现在左侧导航</td></tr>
-          <tr><td><code>CWB.hooks.on()</code></td><td class="muted">监听 <code>store:write</code> / <code>view:render</code> 等事件</td></tr>
-          <tr><td><code>CWB.bridge</code></td><td class="muted">交换包生成、导入、平台 API 通道</td></tr>
-        </tbody></table></div>
+      <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:14px">
+        <button class="btn btn-primary" data-act="export-portable"><svg class="ic ic-sm"><use href="#i-usb"/></svg>生成便携工作台（数据已内置）</button>
+        <button class="btn" data-act="export-json"><svg class="ic ic-sm"><use href="#i-down"/></svg>导出完整备份</button>
+        <button class="btn" data-act="import-json"><svg class="ic ic-sm"><use href="#i-up"/></svg>导入备份 / 交换包</button>
+        <button class="btn" data-act="student-template">下载学生名单模板</button>
       </div>
+      <div class="hint" style="margin-top:12px">① <b>便携工作台</b>：生成一个自带数据的 HTML 文件，双击就能用，最适合用 U 盘随身携带。② <b>完整备份</b>：导出一个 .json 文件，以后可随时导入恢复。两种方式不冲突，建议都留一份。</div>
     </div>
   </div>
 
@@ -3559,7 +3541,57 @@ function viewBridge() {
       <button class="btn btn-danger" data-act="clear-all">清空全部数据</button>
       <span class="tiny">当前本机占用约 ${(store.bytes() / 1024).toFixed(1)} KB · 共 ${dataCount()} 条记录</span>
     </div>
-  </div>`;
+  </div>
+
+  <details class="adv">
+    <summary>高级 · 平台联动与扩展（技术人员用）</summary>
+    <div class="adv-body">
+      <div class="card">
+        <div class="card-hd"><h2>与「辅导员工作平台」联动</h2></div>
+        <div class="card-bd">
+          <div class="grid2">
+            <div class="form-row"><label class="lab" style="display:block;margin-bottom:5px">平台地址（可留空）</label>
+              <input class="inp" data-set="platform_url" value="${esc(s.platform_url || '')}" placeholder="https://your-platform.example.com">
+              <div class="hint">仅用于将来 API 直连；留空不影响任何本地功能。</div></div>
+            <div class="form-row"><label class="lab" style="display:block;margin-bottom:5px">组织代码</label>
+              <input class="inp" data-set="org_code" value="${esc(s.org_code || '')}" placeholder="如 demo">
+              <div class="hint">与平台端组织代码保持一致，导出包会带上此标识。</div></div>
+          </div>
+          <label class="chk"><input type="checkbox" data-set-chk="platform_api_on"${s.platform_api_on ? ' checked' : ''}>
+            <span>启用 API 直连（平台接口就绪后再打开）</span></label>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><h2>数据交换包（上报用）</h2></div>
+        <div class="card-bd" style="display:flex;gap:9px;flex-wrap:wrap">
+          <button class="btn" data-act="pkg-export"><svg class="ic ic-sm"><use href="#i-down"/></svg>导出交换包（上报用）</button>
+          <button class="btn" data-act="pkg-pull"${bridge.enabled ? '' : ' disabled style="opacity:.5;cursor:not-allowed"'}>
+            <svg class="ic ic-sm"><use href="#i-arrow"/></svg>从平台拉取任务${bridge.enabled ? '' : '（未启用）'}</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><h2>字段对照表</h2><span class="sp"></span><span class="tiny">导入导出无需改字段名</span></div>
+        <div class="tw"><table><thead><tr><th>字段名</th><th>含义</th><th>与平台关系</th></tr></thead><tbody>${fields}</tbody></table></div>
+      </div>
+      <div class="card">
+        <div class="card-hd"><h2>自己动手改造它</h2></div>
+        <div class="card-bd">
+          <p class="muted" style="margin-top:0">这个工作台是<b>单个 HTML 文件</b>，用记事本就能改。想加模块时，把下面这段话连同 index.html 一起交给 AI 就行：</p>
+          <textarea class="inp" rows="4" readonly style="font-size:12.5px;background:#fafbfc">帮我在这个辅导员工作台里增加一个「XX」模块：字段有 A、B、C。请沿用文件里已有的 CWB.store 存储、ui.form 表单和卡片样式，只新增代码，不要改动原有模块。</textarea>
+          <div style="margin-top:14px">
+            <div class="lab" style="margin-bottom:6px">已开放的扩展接口（在浏览器控制台可直接调用）</div>
+            <div class="tw"><table><tbody>
+              <tr><td><code>CWB.store</code></td><td class="muted">读写本地数据</td></tr>
+              <tr><td><code>CWB.db</code></td><td class="muted">当前全部数据</td></tr>
+              <tr><td><code>CWB.ui.form()</code></td><td class="muted">生成带校验的弹窗表单</td></tr>
+              <tr><td><code>CWB.modules.register()</code></td><td class="muted">注册自定义模块</td></tr>
+              <tr><td><code>CWB.bridge</code></td><td class="muted">交换包生成与导入</td></tr>
+            </tbody></table></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </details>`;
 }
 
 /* ---------- 12. 弹窗表单 ---------- */
@@ -4567,6 +4599,7 @@ const ACTS = {
   },
 
   'export-json': exportJSON,
+  'export-portable': exportPortable,
   'import-json': () => $('#file-json').click(),
   'pkg-export': exportPackage,
   'pkg-pull': async () => {
@@ -4770,9 +4803,59 @@ const modules = {
 };
 
 /* ---------- 16. 启动 ---------- */
+/* ---------- 15.5 便携数据 / 内置数据 ---------- */
+function collectData() {
+  return {
+    settings: DB.settings,
+    students: DB.students, tasks: DB.tasks, talks: DB.talks,
+    stay: DB.stay, leave: DB.leave, honor: DB.honor, pleave: DB.pleave,
+    attend: DB.attend, node: DB.node, warn: DB.warn, help: DB.help,
+    grant: DB.grant, focus: DB.focus, psych: DB.psych, graduate: DB.graduate,
+    policy: DB.policy, material: DB.material, comp: DB.comp, tpl: DB.tpl,
+    custom: DB.custom,
+  };
+}
+function applyEmbedded() {
+  const e = window.__CWB_EMBED__ || {};
+  DB.settings = e.settings || null;
+  DB.students = (e.students || []).map(normStudent);
+  DB.tasks = (e.tasks || []).map(normTask);
+  DB.talks = (e.talks || []).map(normTalk);
+  DB.stay = (e.stay || []).map(normStay);
+  DB.leave = (e.leave || []).map(normLeave);
+  DB.honor = (e.honor || []).map(normHonor);
+  DB.pleave = (e.pleave || []).map(normPleave);
+  DB.attend = (e.attend || []).map(normAttend);
+  DB.node = (e.node || []).map(normNode);
+  DB.warn = (e.warn || []).map(normWarn);
+  DB.help = (e.help || []).map(normHelp);
+  DB.grant = (e.grant || []).map(normGrant);
+  DB.focus = (e.focus || []).map(normFocus);
+  DB.psych = (e.psych || []).map(normPsych);
+  DB.graduate = (e.graduate || []).map(normGraduate);
+  DB.policy = (e.policy || []).map(normPolicy);
+  DB.material = (e.material || []).map(normMaterial);
+  DB.comp = (e.comp || []).map(normComp);
+  DB.tpl = (e.tpl || []).map(normTpl);
+  DB.custom = e.custom || {};
+  save();
+}
+function exportPortable() {
+  const data = collectData();
+  let js = JSON.stringify(data);
+  js = js.replace(/<\/(script)/gi, '<\\/$1');
+  const dataScript = '<' + 'script>window.__CWB_EMBED__=' + js + '<' + '/script>';
+  let html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+  html = html.replace(/<script>\s*window\.__CWB_EMBED__=[\s\S]*?<\/script>/i, '');
+  html = html.replace(/<head>/i, '<head>' + dataScript);
+  const stamp = (DB.settings && DB.settings.counselor_name ? DB.settings.counselor_name + '_' : '') + today();
+  download('辅导员工作台-含数据-' + stamp + '.html', html, 'text/html');
+  ui.toast('已生成便携工作台（数据已内置），请在下载文件夹找到它', 'ok', 4500);
+}
+
 function boot() {
   DB.settings = store.read('settings', null);
-  if (!DB.settings) { seedDemo(); }
+  if (!DB.settings) { if (window.__CWB_EMBED__) applyEmbedded(); else seedDemo(); }
   else {
     DB.students = (store.read('students', []) || []).map(normStudent);
     DB.tasks = (store.read('tasks', []) || []).map(normTask);
@@ -4797,9 +4880,7 @@ function boot() {
   }
   paintWho();
   render();
-  console.log('%c辅导员工作台 v' + APP_VERSION,
-    'background:linear-gradient(135deg,#1e3a5f,#0ea5e9);color:#fff;padding:3px 10px;border-radius:5px;font-weight:700');
-  console.log('二次开发入口：window.CWB —— 试试 CWB.db.students 或 CWB.modules.register({...})');
+  console.log('%c辅导员工作台 ' + APP_VERSION, 'color:#2563eb;font-weight:700');
 }
 
 /* ---------- 17. 对外暴露 ---------- */
