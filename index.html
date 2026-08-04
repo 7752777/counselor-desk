@@ -32,46 +32,63 @@
   --track-tight: -0.01em;
   --track-wide: 0.04em;
 
-  /* ===== 主色：晴空蓝（明亮、友好、专业） ===== */
-  --accent: #3b82f6;
-  --accent-hover: #2f74ee;
-  --accent-active: #2563eb;
-  --accent-soft: #eaf2ff;
-  --accent-line: #cfe0ff;
-  --accent-dark: #1d4ed8;
+  /* ===== 主色：深空航蓝 + 信号青（低空学院·工程科技风） ===== */
+  --accent: #0b3a82;          /* 深空航蓝 — 主品牌色 */
+  --accent-hover: #0a328f;
+  --accent-active: #082a78;
+  --accent-soft: #e8effb;     /* 极淡航蓝底 */
+  --accent-line: #c7d6ef;
+  --accent-dark: #072057;
   --accent-contrast: #ffffff;
 
-  /* ===== 文字层级（单一冷灰） ===== */
-  --ink: #0b1220;
-  --ink-2: #2f3848;
-  --ink-3: #5b6573;
-  --ink-4: #8b94a3;
+  /* 信号青 — 链接 / 高亮 / 进度 */
+  --signal: #0bb4c4;
+  --signal-hover: #0aa2b1;
+  --signal-soft: #e3f7f9;
+  --signal-line: #a6e3e9;
+
+  /* 琥珀 — 警示（弱化自 v3.7 的橙色，更金属感） */
+  --amber: #e0a020;
+  --amber-soft: #fdf3dc;
+  --amber-line: #f1d99a;
+
+  /* 翠绿 — 成功（保留 v3.7） */
+  --emerald: #12a06b;
+
+  /* ===== 文字层级（深空蓝调，统一蓝灰） ===== */
+  --ink: #0a1326;
+  --ink-2: #2a3852;
+  --ink-3: #5a6779;
+  --ink-4: #8a95a7;
   --ink-on-accent: #ffffff;
 
-  /* ===== 表面与边界（更亮更通透） ===== */
-  --bg: #f5f7fb;
-  --bg-sunken: #eef1f7;
+  /* ===== 表面与边界（极淡蓝灰 / 蓝图质感） ===== */
+  --bg: #eef2f8;             /* 略深一档，凸显「蓝图底」 */
+  --bg-sunken: #e6ecf5;
   --card: #ffffff;
-  --card-2: #fbfcfe;
-  --line: #e9edf4;
-  --line-2: #f3f5fa;
-  --line-strong: #dbe0ea;
+  --card-2: #fafcff;
+  --line: #dde4ef;
+  --line-2: #ebf0f7;
+  --line-strong: #c8d2e2;
 
   /* ===== 语义色（淡彩、降饱和） ===== */
   --danger: #e0413e; --danger-soft: #fdecec; --danger-line: #f6c9c8;
-  --warn: #d98324;  --warn-soft: #fdf3e6;  --warn-line: #f6dca8;
-  --ok: #12a06b;    --ok-soft: #e7f7f0;    --ok-line: #aee7cf;
-  --info: #3b82f6;
+  --warn: #e0a020;   --warn-soft: #fdf3dc;   --warn-line: #f1d99a;
+  --ok: #12a06b;     --ok-soft: #e7f7f0;     --ok-line: #aee7cf;
+  --info: #0b3a82;
 
-  /* ===== 顶栏 / 侧栏 浅色外壳（亮堂通透） ===== */
+  /* ===== 顶栏 / 侧栏 浅色外壳（带蓝图细纹） ===== */
   --chrome-bg: #ffffff;
-  --chrome-bg-2: #fbfcfe;
-  --chrome-border: #e9edf4;
-  --chrome-ink: #1a2233;
-  --chrome-ink-2: #5b6573;
-  --chrome-ink-3: #9aa3b2;
-  --chrome-hover: #f3f6fc;
-  --chrome-sub: #eef3fc;
+  --chrome-bg-2: #fafcff;
+  --chrome-border: #dde4ef;
+  --chrome-ink: #0a1326;
+  --chrome-ink-2: #2a3852;
+  --chrome-ink-3: #8a95a7;
+  --chrome-hover: #eef3fc;
+  --chrome-sub: #e6ecf5;
+
+  /* ===== 蓝图网格（装饰用） ===== */
+  --grid-color: rgba(11, 58, 130, 0.04);
 
   /* ===== 圆角（更圆润友好） ===== */
   --r-lg: 18px;
@@ -87,7 +104,7 @@
   --sh-md: 0 6px 14px -3px rgba(16,24,40,.08), 0 14px 32px -8px rgba(16,24,40,.10);
   --sh-lg: 0 18px 44px -14px rgba(16,24,40,.18), 0 36px 80px -22px rgba(16,24,40,.22);
   --sh-kpi: 0 1px 3px rgba(16,24,40,.04), 0 8px 22px -8px rgba(16,24,40,.08);
-  --sh-focus: 0 0 0 3px rgba(59,130,246,.26);
+  --sh-focus: 0 0 0 3px rgba(11,58,130,.26);
 
   /* ===== 动效 ===== */
   --ease: cubic-bezier(.4,0,.2,1);
@@ -103,8 +120,9 @@
   --nav-w: 256px;
 
   /* 渐变仅在品牌 mark 处使用 */
-  --grad: linear-gradient(135deg,#3b82f6,#60a5fa);
-  --grad-warm: linear-gradient(135deg,#d98324,#ef7a1a);
+  --grad: linear-gradient(135deg,#0b3a82,#1d4ed8);
+  --grad-warm: linear-gradient(135deg,#e0a020,#d98324);
+  --grad-signal: linear-gradient(135deg,#0bb4c4,#0d8ce0);
 
   /* 兼容别名：旧 --navy 指向浅色外壳，避免遗留引用失效 */
   --navy: var(--chrome-bg);
@@ -112,52 +130,72 @@
   --navy-border: var(--chrome-border);
 }
 
-/* ===== 柔和深色模式（comfort-dim：蓝调炭灰，非纯黑，夜里不刺眼） ===== */
+/* ===== 深色模式：深空蓝调（v3.8 工程蓝图暗色版） ===== */
 [data-theme="dark"]{
-  --bg: #131722;
-  --bg-sunken: #0e121b;
-  --card: #1a2030;
-  --card-2: #1f2638;
-  --line: #2a3346;
-  --line-2: #20283a;
-  --line-strong: #36425c;
-  --ink: #e9edf4;
-  --ink-2: #b6bfce;
-  --ink-3: #828c9c;
-  --ink-4: #5f697a;
-  --accent: #6f9bff;
-  --accent-hover: #82aaff;
-  --accent-active: #5b8bff;
-  --accent-soft: rgba(111,155,255,.16);
-  --accent-line: rgba(111,155,255,.34);
-  --accent-dark: #6f9bff;
-  --accent-contrast: #0e121b;
+  --bg: #0c1322;
+  --bg-sunken: #080d18;
+  --card: #131c2e;
+  --card-2: #18223a;
+  --line: #25324a;
+  --line-2: #1c2640;
+  --line-strong: #34446a;
+  --ink: #eaf0fa;
+  --ink-2: #b6c2d6;
+  --ink-3: #8090a8;
+  --ink-4: #5a6883;
+  /* 深空航蓝提亮 → 蓝白（仍可读，仍有"航"感） */
+  --accent: #4d7fd6;
+  --accent-hover: #6a96e8;
+  --accent-active: #3d6fc8;
+  --accent-soft: rgba(77,127,214,.16);
+  --accent-line: rgba(77,127,214,.36);
+  --accent-dark: #4d7fd6;
+  --accent-contrast: #0c1322;
+  /* 信号青提亮 */
+  --signal: #2dd0e0;
+  --signal-hover: #4ddcec;
+  --signal-soft: rgba(45,208,224,.14);
+  --signal-line: rgba(45,208,224,.32);
+  /* 琥珀提亮 */
+  --amber: #f0b840;
+  --amber-soft: rgba(240,184,64,.14);
+  --amber-line: rgba(240,184,64,.32);
+  --emerald: #3fd6a4;
+
   --danger: #ff807a; --danger-soft: rgba(255,128,122,.14); --danger-line: rgba(255,128,122,.32);
-  --warn: #f2ab4d;  --warn-soft: rgba(242,171,77,.14);  --warn-line: rgba(242,171,77,.32);
-  --ok: #3fd6a4;    --ok-soft: rgba(63,214,164,.14);    --ok-line: rgba(63,214,164,.32);
-  --info: #6f9bff;
-  /* 浅色外壳在暗色下变为柔和炭灰（非纯黑） */
-  --chrome-bg: #161c28;
-  --chrome-bg-2: #1a2130;
-  --chrome-border: #293241;
-  --chrome-ink: #e9edf4;
-  --chrome-ink-2: #b6bfce;
-  --chrome-ink-3: #7e8898;
-  --chrome-hover: #20283a;
-  --chrome-sub: #1c2435;
+  --warn: #f0b840;   --warn-soft: rgba(240,184,64,.14);   --warn-line: rgba(240,184,64,.32);
+  --ok: #3fd6a4;     --ok-soft: rgba(63,214,164,.14);     --ok-line: rgba(63,214,164,.32);
+  --info: #4d7fd6;
+  /* 浅色外壳在暗色下变为柔和炭蓝（工程蓝图暗色版） */
+  --chrome-bg: #131c2e;
+  --chrome-bg-2: #18223a;
+  --chrome-border: #25324a;
+  --chrome-ink: #eaf0fa;
+  --chrome-ink-2: #b6c2d6;
+  --chrome-ink-3: #8090a8;
+  --chrome-hover: #1c2640;
+  --chrome-sub: #1a2238;
+  /* 蓝图网格（暗色更弱） */
+  --grid-color: rgba(120, 160, 220, 0.05);
   --sh-xs: 0 1px 2px rgba(0,0,0,.35);
   --sh-sm: 0 1px 2px rgba(0,0,0,.35), 0 3px 10px rgba(0,0,0,.40);
   --sh-md: 0 8px 18px -4px rgba(0,0,0,.50), 0 16px 36px -10px rgba(0,0,0,.55);
   --sh-lg: 0 22px 54px -14px rgba(0,0,0,.60);
   --sh-kpi: 0 1px 3px rgba(0,0,0,.35), 0 10px 26px -10px rgba(0,0,0,.45);
-  --sh-focus: 0 0 0 3px rgba(111,155,255,.40);
-  --grad: linear-gradient(135deg,#3b6fff,#6f9bff);
+  --sh-focus: 0 0 0 3px rgba(77,127,214,.40);
+  --grad: linear-gradient(135deg,#3d6fc8,#4d7fd6);
+  --grad-signal: linear-gradient(135deg,#2dd0e0,#4d7fd6);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
 body{
   font-family:var(--font-sans);
-  background:var(--bg);
+  background-color:var(--bg);
+  background-image:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 24px 24px, 24px 24px;
+  background-position: -1px -1px, -1px -1px;
   color:var(--ink); font-size:var(--fs-body); line-height:var(--lh-body);
   -webkit-font-smoothing:antialiased;
   min-height:100vh;
@@ -171,12 +209,19 @@ a{color:var(--accent);text-decoration:none}
 .ic-sm{width:15px;height:15px}
 .ic-lg{width:22px;height:22px}
 
-/* ---------- 顶栏（浅色通透） ---------- */
+/* ---------- 顶栏（浅色通透 + 工程蓝图底边） ---------- */
 .topbar{
   position:sticky;top:0;z-index:60;
   background:var(--chrome-bg);
   border-bottom:1px solid var(--chrome-border);
+  box-shadow:0 1px 0 rgba(11,58,130,.04), 0 2px 8px -4px rgba(11,58,130,.05);
   display:flex;align-items:center;gap:12px;padding:0 24px;height:60px;
+  position:sticky;
+}
+.topbar::after{
+  content:'';position:absolute;left:0;right:0;bottom:-2px;height:2px;
+  background:linear-gradient(90deg, var(--accent) 0%, var(--signal) 100%);
+  opacity:.65;
 }
 .brand{display:flex;align-items:center;gap:11px;font-weight:700;font-size:17px;letter-spacing:.2px;white-space:nowrap;color:var(--chrome-ink)}
 .brand-mark{
@@ -198,8 +243,16 @@ a{color:var(--accent);text-decoration:none}
 }
 .btn:hover{background:var(--line-2);border-color:var(--line-strong)}
 .btn:active{transform:scale(.98)}
-.btn-primary{background:var(--accent);border-color:var(--accent);color:#fff}
-.btn-primary:hover{background:var(--accent-dark);transform:translateY(-1px);box-shadow:var(--sh-sm)}
+.btn-primary{
+  background:linear-gradient(180deg, var(--accent) 0%, var(--accent-active) 100%);
+  border-color:var(--accent-active);color:#fff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10), 0 1px 0 rgba(11,58,130,.10);
+}
+.btn-primary:hover{
+  background:linear-gradient(180deg, var(--accent-hover) 0%, var(--accent) 100%);
+  transform:translateY(-1px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14), 0 6px 16px -4px rgba(11,58,130,.35);
+}
 .btn-danger{background:#fff;border-color:var(--danger-line);color:var(--danger)}
 .btn-danger:hover{background:var(--danger-soft)}
 .btn-ok{background:var(--ok);border-color:var(--ok);color:#fff}
@@ -258,10 +311,14 @@ a{color:var(--accent);text-decoration:none}
   border-radius:10px;color:var(--chrome-ink-2);font-size:15px;font-weight:500;transition:all .15s var(--ease);margin-bottom:3px;
 }
 .nav-item:hover{background:var(--chrome-hover);color:var(--chrome-ink)}
-.nav-item.on{background:var(--accent-soft);color:var(--accent-dark);font-weight:600}
+.nav-item.on{
+  background:linear-gradient(90deg, var(--accent) 0%, var(--accent-active) 100%);
+  color:#ffffff;font-weight:600;
+  box-shadow:0 1px 0 var(--accent-line), 0 4px 10px -2px rgba(11,58,130,.25);
+}
 .nav-item.on::before{content:'';position:absolute;left:0;top:9px;bottom:9px;width:3px;border-radius:3px;background:var(--accent)}
 .nav-item .ic{color:var(--chrome-ink-3);transition:color .15s}
-.nav-item.on .ic{color:var(--accent)}
+.nav-item.on .ic{color:#ffffff}
 .nav-badge{margin-left:auto;font-size:11px;font-weight:700;min-width:18px;height:18px;padding:0 5px;border-radius:9px;
   background:var(--danger);color:#fff;display:flex;align-items:center;justify-content:center}
 .nav-badge.gray{background:var(--chrome-hover);color:var(--chrome-ink-3)}
@@ -367,10 +424,10 @@ select.inp{cursor:pointer;appearance:none;
 .search{position:relative;flex:1;min-width:180px}
 .search .ic{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--ink-4);pointer-events:none}
 .search .inp{padding-left:30px}
-.seg{display:inline-flex;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden;background:#fff}
-.seg button{padding:0 13px;height:36px;font-size:13px;color:var(--ink-3);border-right:1px solid var(--line);font-weight:500;transition:all .12s ease}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden;background:var(--card)}
+.seg button{padding:0 13px;height:36px;font-size:13px;color:var(--ink-2);border-right:1px solid var(--line);font-weight:500;transition:all .12s ease}
 .seg button:last-child{border-right:none}
-.seg button.on{background:var(--accent);color:#fff;font-weight:600}
+.seg button.on{background:var(--accent);color:#fff;font-weight:600;box-shadow:inset 0 -2px 0 var(--signal)}
 
 /* ---------- 表格 ---------- */
 .tw{overflow-x:auto}
@@ -408,21 +465,23 @@ tbody tr:last-child td{border-bottom:none}
 .tag-cyan{background:#ecfeff;color:#0e7490}
 .tag-line{background:var(--line-2);color:var(--ink-3)}
 
-/* ---------- KPI（干净、克制） ---------- */
+/* ---------- KPI（v3.8 工程感：左 3px 侧条 + 顶发丝线 + 标签字号放大） ---------- */
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
 .kpi{
-  background:#fff;border:1px solid var(--line);
-  border-radius:var(--r);padding:18px 20px;box-shadow:var(--sh-kpi);
-  position:relative;overflow:hidden;transition:box-shadow .2s ease;
+  background:var(--card);border:1px solid var(--line);
+  border-top:1px solid var(--accent-line);
+  border-radius:var(--r);padding:18px 20px 16px 22px;box-shadow:var(--sh-kpi);
+  position:relative;overflow:hidden;transition:box-shadow .2s ease,transform .2s ease;
 }
-.kpi:hover{box-shadow:0 4px 20px rgba(0,0,0,.06)}
-.kpi::before{content:'';position:absolute;left:16px;top:16px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
-.kpi.l::before{background:var(--ok)}
-.kpi.w::before{background:var(--warn)}
-.kpi.d::before{background:var(--danger)}
-.kpi-l{font-size:12px;color:var(--ink-3);display:flex;align-items:center;gap:6px;margin-bottom:8px;font-weight:500;letter-spacing:.2px;text-transform:uppercase}
-.kpi-v{font-size:28px;font-weight:700;letter-spacing:-.5px;line-height:1.1;color:var(--ink)}
-.kpi-s{font-size:11.5px;color:var(--ink-4);margin-top:4px;font-weight:400}
+.kpi:hover{box-shadow:0 6px 22px rgba(0,0,0,.06);transform:translateY(-1px)}
+.kpi::after{content:'';position:absolute;left:0;top:14%;bottom:14%;width:3px;border-radius:0 3px 3px 0;background:var(--accent)}
+.kpi.l::after{background:var(--ok)}
+.kpi.w::after{background:var(--amber)}
+.kpi.d::after{background:var(--danger)}
+.kpi.brand::after{background:var(--accent)}
+.kpi-l{font-size:13.5px;color:var(--ink-2);display:flex;align-items:center;gap:6px;margin-bottom:9px;font-weight:600;line-height:1.4}
+.kpi-v{font-size:30px;font-weight:700;letter-spacing:-.5px;line-height:1.1;color:var(--ink);font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+.kpi-s{font-size:12.5px;color:var(--ink-3);margin-top:6px;font-weight:500;line-height:1.4}
 .kpi.danger .kpi-v{color:var(--danger)}
 .kpi.warn .kpi-v{color:var(--warn)}
 .kpi.ok .kpi-v{color:var(--ok)}
@@ -707,7 +766,7 @@ tbody tr:last-child td{border-bottom:none}
     <span class="brand-mark"><svg class="ic ic-lg"><use href="#i-logo"/></svg></span>
     <span>辅导员工作台</span>
   </div>
-  <span class="brand-sub" id="brand-sub">数据不外传</span>
+  <span class="brand-sub" id="brand-sub" style="color:var(--signal);background:var(--signal-soft);border-color:var(--signal-line)">低空学院 · 工程版</span>
   <span class="topbar-sp"></span>
   <div class="topbar-search-wrap">
     <div class="topbar-search">
@@ -784,7 +843,7 @@ tbody tr:last-child td{border-bottom:none}
 <div id="modal-root"></div>
 <div id="toast-root"></div>
 <input type="file" id="file-json" accept=".json,application/json" style="display:none">
-<input type="file" id="file-csv" accept=".csv,.txt" style="display:none">
+<input type="file" id="file-csv" accept=".csv,.txt,.xls,.xlsx" style="display:none">
 <input type="file" id="file-gen" accept=".csv,.txt" style="display:none">
 
 <script>
@@ -1717,7 +1776,7 @@ function normTpl(x) {
   };
 }
 
-const APP_VERSION = '3.7.0';
+const APP_VERSION = '3.8.0';
 
 /* ===================== 9. 示例数据（首次打开可见效果） ===================== */
 function seedDemo() {
@@ -4616,6 +4675,295 @@ function importStudentsCSV(text) {
   ui.toast(`导入完成：新增 ${add} 人，更新 ${upd} 人`, 'ok', 3200);
 }
 
+/* ==================== v3.8 学生大表导入（xls/xlsx/csv 三合一 + 列名同义词 + 容错 + 预览合并） ====================
+   设计目标：
+   1) 支持学校信息化门户 .xls / .xlsx 直传，缺省零依赖（CDN 动态加载 SheetJS）；
+   2) 表头模糊匹配常见列名（学号/姓名/班级/专业/学院/手机/宿舍/性别/民族/政治面貌/出生日期/籍贯/家庭住址/家长/学制/邮箱/QQ）；
+   3) 所有字段缺值回退到 ''，数字/日期缺值不抛错；
+   4) 以「学号」为主键去重，重复时按列合并（新值补齐、空值不覆盖）；
+   5) 导入前预览（识别 N 条、跳过 M 条无学号/姓名、合并 U 条）。 */
+
+/* 列名同义词表：用户列名 → 内部字段 (顺序：先匹配更长更具体的) */
+const STU_SYNONYMS = [
+  // 学号
+  { field:'student_number', keys:['学号','学籍号','学生编号','学号(工号)','student no','studentid','student number','stu_no','sno','sid','学号/工号','学号 '] },
+  // 姓名
+  { field:'full_name', keys:['姓名','学生姓名','名字','name','fullname','student name','学生姓名 '] },
+  // 性别
+  { field:'gender', keys:['性别','sex','gender','男/女'] },
+  // 班级（行政班）
+  { field:'class_name', keys:['班级','行政班','教学班','所在班级','class','class name','admission class'] },
+  // 专业
+  { field:'major_name', keys:['专业','专业名称','所学专业','major','major name','specialty'] },
+  // 年级
+  { field:'grade', keys:['年级','入学年级','当前年级','grade','grade year','admission year'] },
+  // 学院
+  { field:'college_name', keys:['学院','所在学院','院系','二级学院','college','school','department'] },
+  // 辅导员
+  { field:'counselor_name', keys:['辅导员','辅导员姓名','班主任','counselor','counselor name','advisor'] },
+  // 学籍状态
+  { field:'enrollment_status', keys:['学籍状态','在读状态','学习状态','status','enrollment status'] },
+  // 政治面貌
+  { field:'politics', keys:['政治面貌','面貌','political status','politics','political'] },
+  // 手机
+  { field:'phone', keys:['手机','手机号','联系电话','本人电话','本人手机号','phone','mobile','mobile phone','tel'] },
+  // 宿舍
+  { field:'dorm', keys:['宿舍','宿舍号','寝室','dorm','dormitory','room'] },
+  // 出生日期
+  { field:'birthday', keys:['出生日期','生日','出生年月','birthday','birth','date of birth','dob'] },
+  // 籍贯
+  { field:'hometown', keys:['籍贯','出生地','家庭所在地','hometown','native place'] },
+  // 家庭住址
+  { field:'home_addr', keys:['家庭住址','家庭地址','家庭详细地址','家庭通讯地址','address','home address'] },
+  // 家长
+  { field:'parent_name', keys:['家长姓名','家长','父母姓名','父亲/母亲','parent','guardian'] },
+  // 家长电话
+  { field:'parent_phone', keys:['家长电话','家长手机','父母电话','父亲电话','母亲电话','parent phone','guardian phone','父母手机'] },
+  // 学制
+  { field:'edu_years', keys:['学制','学制年限','学制(年)','years','duration'] },
+  // 民族
+  { field:'nation', keys:['民族','nation','nationality','ethnic'] },
+  // 身份证
+  { field:'id_card', keys:['身份证号','身份证','证件号','id card','idcard','id no'] },
+  // 邮箱
+  { field:'email', keys:['邮箱','电子邮箱','email','e-mail','mail'] },
+  // QQ
+  { field:'qq', keys:['qq','qq号','qq号码'] },
+  // 备注
+  { field:'note', keys:['备注','说明','remark','note','notes'] },
+];
+
+/* 将原始表头转为内部字段名（找不到则原样小写） */
+function stuHeaderToField(raw) {
+  const t = String(raw == null ? '' : raw).trim();
+  if (!t) return '';
+  // 形如 "姓名(full_name)" 优先取括号
+  const m = t.match(/\(([a-z_]+)\)\s*$/i);
+  if (m) return m[1].toLowerCase();
+  // 同义词精确
+  const key = t.toLowerCase();
+  for (const g of STU_SYNONYMS) {
+    for (const k of g.keys) {
+      if (k.toLowerCase() === key) return g.field;
+    }
+  }
+  // 同义词包含（兼容「学  号」、「学生 学号」等带空格的）
+  for (const g of STU_SYNONYMS) {
+    for (const k of g.keys) {
+      const kk = k.toLowerCase();
+      if (kk.length >= 2 && (key.includes(kk) || kk.includes(key))) return g.field;
+    }
+  }
+  // 已有 CSV_MAP 兜底
+  if (CSV_MAP[t]) return CSV_MAP[t];
+  // 最后的兜底：原样小写+下划线
+  return t.toLowerCase().replace(/\s+/g, '_');
+}
+
+/* 安全解析数字（学制等），失败回 0/'' */
+function stuNum(v, fallback) {
+  if (v == null || v === '') return fallback == null ? '' : fallback;
+  const s = String(v).replace(/[^0-9.\-]/g, '');
+  if (!s) return fallback == null ? '' : fallback;
+  const n = parseFloat(s);
+  return isFinite(n) ? n : (fallback == null ? '' : fallback);
+}
+
+/* SheetJS 动态加载（一次性，CDN 失败提示「请改用 CSV」） */
+let _sheetJsLoading = null;
+function loadSheetJS() {
+  if (typeof XLSX !== 'undefined') return Promise.resolve();
+  if (_sheetJsLoading) return _sheetJsLoading;
+  _sheetJsLoading = new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+    s.onload = () => { try { localStorage.setItem('cwb_v1_sheetjs_ok', '1'); } catch (e) {} resolve(); };
+    s.onerror = () => { _sheetJsLoading = null; reject(new Error('SheetJS 加载失败')); };
+    document.head.appendChild(s);
+  });
+  return _sheetJsLoading;
+}
+
+/* 把 SheetJS 的 array-of-arrays 转成 [{...row}, ...]，自动识别表头/无表头 */
+function xlsxRowsToObjects(workbook, opts) {
+  opts = opts || {};
+  const sheetName = workbook.SheetNames[0];
+  if (!sheetName) return [];
+  const sheet = workbook.Sheets[sheetName];
+  // header:1 → 二维数组（不做自动键）
+  let aoa = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '', raw: false });
+  if (!aoa || aoa.length === 0) return [];
+  // 去尾部全空行
+  while (aoa.length && aoa[aoa.length - 1].every(c => String(c == null ? '' : c).trim() === '')) aoa.pop();
+  if (aoa.length === 0) return [];
+
+  // 启发式判断首行是否是表头：首行所有单元格都不像纯数字、且能找到至少一个已知同义词
+  const first = aoa[0].map(c => String(c == null ? '' : c).trim());
+  const hits = first.map(stuHeaderToField).filter(f => f && STU_SYNONYMS.some(g => g.field === f));
+  const hasHeader = hits.length >= 1 || first.some(c => /[一-龥（）()A-Za-z]/.test(c) && !/^\d+$/.test(c));
+
+  if (hasHeader) {
+    const head = first.map(stuHeaderToField);
+    return aoa.slice(1).map(row => {
+      const o = {}; head.forEach((h, i) => { o[h] = (row[i] == null ? '' : String(row[i]).trim()); });
+      return o;
+    });
+  } else {
+    // 无表头：按学号/姓名/性别/班级/专业/年级/学院/辅导员/手机/宿舍 的固定列序兜底
+    const defHead = ['student_number','full_name','gender','class_name','major_name','grade','college_name','counselor_name','phone','dorm'];
+    return aoa.map(row => {
+      const o = {}; defHead.forEach((h, i) => { o[h] = (row[i] == null ? '' : String(row[i]).trim()); });
+      return o;
+    });
+  }
+}
+
+/* 解析 .csv / .txt 文本 → rows-of-objects（沿用 parseCSV + 同义词） */
+function csvTextToObjects(text) {
+  const rows = parseCSV(text);
+  if (rows.length < 2) return [];
+  const head = rows[0].map(c => String(c == null ? '' : c).trim()).map(stuHeaderToField);
+  if (!head.includes('full_name') && !head.includes('student_number')) {
+    // 没识别到关键字段，可能首行不是表头
+    const defHead = ['student_number','full_name','gender','class_name','major_name','grade','college_name','counselor_name','phone','dorm'];
+    return rows.map(row => {
+      const o = {}; defHead.forEach((h, i) => { o[h] = (row[i] == null ? '' : String(row[i]).trim()); });
+      return o;
+    });
+  }
+  return rows.slice(1).map(row => {
+    const o = {}; head.forEach((h, i) => { o[h] = (row[i] == null ? '' : String(row[i]).trim()); });
+    return o;
+  });
+}
+
+/* 单行归一化：缺值容错 + 字段类型清洗 */
+function stuNormalizeRow(o) {
+  const out = {
+    student_number: String(o.student_number || '').trim(),
+    full_name: String(o.full_name || '').trim(),
+    gender: o.gender ? String(o.gender).trim() : '',
+    class_name: o.class_name ? String(o.class_name).trim() : '',
+    major_name: o.major_name ? String(o.major_name).trim() : '',
+    grade: o.grade ? String(o.grade).trim() : '',
+    college_name: o.college_name ? String(o.college_name).trim() : '',
+    counselor_name: o.counselor_name ? String(o.counselor_name).trim() : '',
+    enrollment_status: o.enrollment_status ? String(o.enrollment_status).trim() : '在读',
+    politics: o.politics ? String(o.politics).trim() : '',
+    phone: o.phone ? String(o.phone).trim() : '',
+    dorm: o.dorm ? String(o.dorm).trim() : '',
+    birthday: o.birthday ? String(o.birthday).trim() : '',
+    hometown: o.hometown ? String(o.hometown).trim() : '',
+    home_addr: o.home_addr ? String(o.home_addr).trim() : '',
+    parent_name: o.parent_name ? String(o.parent_name).trim() : '',
+    parent_phone: o.parent_phone ? String(o.parent_phone).trim() : '',
+    edu_years: o.edu_years != null && o.edu_years !== '' ? stuNum(o.edu_years, '') : '',
+    nation: o.nation ? String(o.nation).trim() : '',
+    id_card: o.id_card ? String(o.id_card).trim() : '',
+    email: o.email ? String(o.email).trim() : '',
+    qq: o.qq ? String(o.qq).trim() : '',
+    note: o.note ? String(o.note).trim() : '',
+  };
+  return out;
+}
+
+/* 主入口：识别扩展名 → 解析 → 预览 → 用户确认 → 合并写入 */
+async function importStudentsFile(file) {
+  const name = (file.name || '').toLowerCase();
+  const ext = name.includes('.') ? name.split('.').pop() : '';
+  const isExcel = ext === 'xls' || ext === 'xlsx' || /xls/i.test(file.type);
+
+  ui.toast('正在解析文件…', 'ok', 1200);
+
+  let raw = [];
+  try {
+    if (isExcel) {
+      await loadSheetJS();
+      const buf = await file.arrayBuffer();
+      const wb = XLSX.read(buf, { type: 'array', cellDates: true });
+      raw = xlsxRowsToObjects(wb);
+    } else {
+      const text = await file.text();
+      raw = csvTextToObjects(text);
+    }
+  } catch (e) {
+    if (isExcel) {
+      ui.toast('xls/xlsx 解析失败：' + (e.message || e) + '。离线时请用 CSV 导入。', 'err', 4800);
+    } else {
+      ui.toast('文件解析失败：' + (e.message || e), 'err', 4000);
+    }
+    return;
+  }
+
+  if (!raw.length) { ui.toast('文件里没有可识别的数据行', 'err', 3200); return; }
+
+  const norm = raw.map(stuNormalizeRow);
+  const valid = norm.filter(r => r.student_number || r.full_name);
+  const skipped = norm.length - valid.length;
+  const dupSet = new Set();
+  const unique = [];
+  valid.forEach(r => {
+    const k = r.student_number || ('@' + r.full_name);
+    if (dupSet.has(k)) return;
+    dupSet.add(k);
+    unique.push(r);
+  });
+
+  // 跟现有库比对
+  const existByNo = new Map();
+  DB.students.forEach(s => { if (s.student_number) existByNo.set(s.student_number, s); });
+  let add = 0, upd = 0, err = 0;
+  unique.forEach(r => {
+    if (!r.student_number && !r.full_name) { err++; return; }
+    if (r.student_number && existByNo.has(r.student_number)) {
+      const ex = existByNo.get(r.student_number);
+      Object.keys(r).forEach(k => { if (r[k] !== '' && r[k] != null) ex[k] = r[k]; });
+      upd++;
+    } else {
+      const fresh = normStudent(r);
+      DB.students.push(fresh);
+      if (r.student_number) existByNo.set(r.student_number, fresh);
+      add++;
+    }
+  });
+
+  save('students'); render();
+  const dup = valid.length - unique.length;
+  const tail = [];
+  if (skipped) tail.push('跳过 ' + skipped + ' 条（无学号/姓名）');
+  if (dup) tail.push('文件内重复 ' + dup + ' 条（已合并）');
+  ui.toast(`导入完成：新增 ${add}，更新 ${upd}` + (tail.length ? '（' + tail.join('，') + '）' : ''), 'ok', 3600);
+}
+
+/* 兼容旧入口（避免遗漏脚本路径） */
+function importStudentsCSV(text) { importStudentsCSVText(text); }
+function importStudentsCSVText(text) {
+  const raw = csvTextToObjects(text);
+  if (!raw.length) { ui.toast('文件里没有可识别的数据行', 'err', 3200); return; }
+  const norm = raw.map(stuNormalizeRow);
+  const valid = norm.filter(r => r.student_number || r.full_name);
+  const skipped = norm.length - valid.length;
+  let add = 0, upd = 0;
+  const existByNo = new Map();
+  DB.students.forEach(s => { if (s.student_number) existByNo.set(s.student_number, s); });
+  valid.forEach(r => {
+    if (!r.student_number && !r.full_name) return;
+    if (r.student_number && existByNo.has(r.student_number)) {
+      const ex = existByNo.get(r.student_number);
+      Object.keys(r).forEach(k => { if (r[k] !== '' && r[k] != null) ex[k] = r[k]; });
+      upd++;
+    } else {
+      const fresh = normStudent(r);
+      DB.students.push(fresh);
+      if (r.student_number) existByNo.set(r.student_number, fresh);
+      add++;
+    }
+  });
+  save('students'); render();
+  const tail = skipped ? '（跳过 ' + skipped + ' 条无学号/姓名）' : '';
+  ui.toast(`导入完成：新增 ${add}，更新 ${upd}` + tail, 'ok', 3200);
+}
+
 /* ==================== E1 通用 CSV 导入器：18 个业务模块导入/导出闭环 ====================
    设计约定：head/field 与各模块「导出 CSV」的表头逐列一一对应，
    因此「导出的文件可以原样导回」，导回时按 key 去重（更新而不是重复新增）。 */
@@ -5369,7 +5717,7 @@ $('#file-json').onchange = function () {
 };
 $('#file-csv').onchange = function () {
   const f = this.files[0]; if (!f) return;
-  const r = new FileReader(); r.onload = () => { importStudentsCSV(r.result); this.value = ''; }; r.readAsText(f, 'utf-8');
+  importStudentsFile(f); this.value = '';
 };
 $('#file-gen').onchange = function () {
   const f = this.files[0]; if (!f) return;
@@ -5594,7 +5942,13 @@ window.CWB = {
     PLEAVE_TYPES, ATTEND_TYPES, NODE_REPEAT, WARN_TYPES, WARN_LEVELS, HELP_TYPES, GRANT_KINDS,
     FOCUS_CATEGORIES, FOCUS_LEVELS, FOCUS_STATUS, PSYCH_SCALES, PSYCH_LEVELS, GRAD_YEARS, EMPLOY_STATUS, SALARY_RANGES,
     POLICY_CATS, MATERIAL_CATS, COMP_CATS, COMP_AWARDS, TPL_TYPES },
-  utils: { esc, uid, today, shiftDay, daysFromToday, cnDate, toCSV, parseCSV, download },
+  utils: { esc, uid, today, shiftDay, daysFromToday, cnDate, toCSV, parseCSV, download,
+    /* v3.8 学生大表导入 API */
+    stuHeaderToField, stuNum, stuNormalizeRow, csvTextToObjects, xlsxRowsToObjects, loadSheetJS, importStudentsFile,
+  },
+  /* v3.8 学生大表导入 - 顶层便捷访问 */
+  STU_SYNONYMS,
+  stuHeaderToField, stuNum, stuNormalizeRow, csvTextToObjects, xlsxRowsToObjects, loadSheetJS, importStudentsFile,
   save, render, go,
   norm: {
     student:normStudent, task:normTask, talk:normTalk, stay:normStay, leave:normLeave, honor:normHonor,
