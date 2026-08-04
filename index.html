@@ -93,6 +93,37 @@ a{color:var(--accent);text-decoration:none}
 /* 顶栏内按钮（浅色，适配深色顶栏）*/
 .topbar .btn{background:rgba(255,255,255,.08);border-color:var(--navy-border);color:rgba(255,255,255,.7);font-size:12.5px}
 .topbar .btn:hover{background:rgba(255,255,255,.15);color:#fff}
+/* 顶栏全局搜索 */
+.topbar-search-wrap{position:relative;flex:1 1 260px;max-width:380px;min-width:0}
+.topbar-search{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.10);border:1px solid var(--navy-border);
+  border-radius:10px;padding:0 10px;height:38px;color:rgba(255,255,255,.7);transition:background .15s ease,border-color .15s ease}
+.topbar-search:focus-within{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.35)}
+.topbar-search .ic{color:rgba(255,255,255,.55);flex:none}
+.topbar-search .inp{background:transparent;border:none;outline:none;color:#fff;font-size:13.5px;flex:1;min-width:0;height:100%;padding:0}
+.topbar-search .inp::placeholder{color:rgba(255,255,255,.45)}
+.topbar-search .gs-clear{flex:none;background:none;border:none;color:rgba(255,255,255,.6);font-size:18px;line-height:1;cursor:pointer;padding:0 2px}
+.gs-panel{position:absolute;top:calc(100% + 8px);left:0;right:0;z-index:80;background:#fff;border:1px solid var(--line);
+  border-radius:12px;box-shadow:0 12px 40px rgba(15,23,42,.16);max-height:min(70vh,440px);overflow:auto;padding:6px}
+.gs-group{font-size:11px;font-weight:700;color:var(--ink-4);letter-spacing:.5px;padding:8px 10px 4px;text-transform:uppercase}
+.gs-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;cursor:pointer;transition:background .12s ease}
+.gs-item:hover,.gs-item.active{background:var(--accent-soft)}
+.gs-ic{flex:none;width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:var(--accent-soft);color:var(--accent)}
+.gs-ic .ic{width:15px;height:15px}
+.gs-main{min-width:0;flex:1}
+.gs-t{font-size:13.5px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gs-s{font-size:11.5px;color:var(--ink-4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gs-empty{padding:18px 10px;text-align:center;color:var(--ink-4);font-size:13px}
+.gs-foot{font-size:11px;color:var(--ink-4);text-align:center;padding:7px;border-top:1px solid var(--line);margin-top:4px}
+/* KPI 环比 */
+.kpi-delta{display:inline-flex;align-items:center;gap:3px;font-size:11.5px;font-weight:700;margin-left:6px;vertical-align:middle}
+.kpi-delta.up{color:var(--ok)}
+.kpi-delta.down{color:var(--danger)}
+.kpi-delta.flat{color:var(--ink-4)}
+.kpi-delta .ic{width:12px;height:12px}
+/* 趋势图卡片 */
+.trend-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px}
+.trend-legend span{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-2)}
+.trend-legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
 
 /* ---------- 布局 ---------- */
 .layout{display:flex;align-items:flex-start;max-width:1720px;margin:0 auto}
@@ -330,6 +361,7 @@ tbody tr:last-child td{border-bottom:none}
   .topbar{padding:0 14px;gap:8px;height:56px}
   .brand-sub,.who,.mo-hide{display:none}
   .brand{font-size:15.5px}
+  .topbar-search-wrap{max-width:none;flex:1 1 120px}
   .tw{display:none}
   .mcards{display:block}
   .kpis{grid-template-columns:1fr 1fr;gap:10px}
@@ -402,6 +434,10 @@ tbody tr:last-child td{border-bottom:none}
   <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/><path d="M12 15v2"/></symbol>
   <symbol id="i-mind" viewBox="0 0 24 24"><path d="M12 3a7 7 0 00-7 7c0 2 .5 3.2 1.2 4.3L5 17h3.5l1 2h4l1-2H18l-.2-2.7C18.5 13.2 19 12 19 10a7 7 0 00-7-7z"/><circle cx="12" cy="11" r="2.1"/></symbol>
   <symbol id="i-grad" viewBox="0 0 24 24"><path d="M12 4L2 9l10 5 10-5-10-5z"/><path d="M6 11v4.5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V11"/><path d="M22 9v4.5"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-plane" viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 00-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5L21 16z"/></symbol>
+  <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 01-10 0V4zM7 6H4v2a3 3 0 003 3M17 6h3v2a3 3 0 01-3 3"/></symbol>
+  <symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3l9 16H3l9-16z"/><path d="M12 10v4M12 17h.01"/></symbol>
 </svg>
 
 <!-- ========== 顶栏 ========== -->
@@ -413,6 +449,14 @@ tbody tr:last-child td{border-bottom:none}
   </div>
   <span class="brand-sub" id="brand-sub">数据不外传</span>
   <span class="topbar-sp"></span>
+  <div class="topbar-search-wrap">
+    <div class="topbar-search">
+      <svg class="ic ic-sm"><use href="#i-search"/></svg>
+      <input id="global-search" class="inp" type="search" placeholder="搜索学生 / 任务 / 谈话…" autocomplete="off" aria-label="全局搜索">
+      <button class="gs-clear" id="gs-clear" title="清除" hidden>×</button>
+    </div>
+    <div class="gs-panel" id="gs-panel" hidden></div>
+  </div>
   <span class="who" id="who"></span>
   <div class="topbar-acts">
     <button class="btn btn-sm" id="btn-export" title="导出 JSON 备份"><svg class="ic ic-sm"><use href="#i-down"/></svg><span class="mo-hide">备份</span></button>
@@ -1897,6 +1941,42 @@ function donutChart(items, centerTop, centerSub) {
     </div></div>`;
 }
 
+/* ---------- 11.1b 折线图 ---------- */
+function lineChart(series, opt) {
+  opt = opt || {};
+  const W = 680, H = opt.height || 220, padL = 34, padR = 14, padT = 14, padB = 26;
+  const labels = opt.labels || [];
+  const n = labels.length;
+  const all = series.flatMap(s => s.data);
+  const max = opt.max || Math.max(1, ...all);
+  const innerW = W - padL - padR, innerH = H - padT - padB;
+  const x = i => n <= 1 ? padL + innerW / 2 : padL + (i / (n - 1)) * innerW;
+  const y = v => padT + innerH - (v / max) * innerH;
+  let g = '';
+  const rows = 4;
+  for (let r = 0; r <= rows; r++) {
+    const gy = padT + (r / rows) * innerH;
+    g += `<line x1="${padL}" y1="${gy}" x2="${W - padR}" y2="${gy}" stroke="#eef2f7" stroke-width="1"/>`;
+    g += `<text x="${padL - 6}" y="${gy + 3}" text-anchor="end" font-size="10" fill="#94a3b8">${Math.round(max * (1 - r / rows))}</text>`;
+  }
+  labels.forEach((lb, i) => { g += `<text x="${x(i)}" y="${H - 8}" text-anchor="middle" font-size="10" fill="#94a3b8">${esc(lb)}</text>`; });
+  series.forEach(s => {
+    const pts = s.data.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+    const base = (padT + innerH).toFixed(1);
+    const area = `M${x(0).toFixed(1)},${base} ` + s.data.map((v, i) => `L${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ') + ` L${x(s.data.length - 1).toFixed(1)},${base} Z`;
+    g += `<path d="${area}" fill="${s.color}" opacity="0.07"/>`;
+    g += `<polyline points="${pts}" fill="none" stroke="${s.color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+    s.data.forEach((v, i) => { g += `<circle cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="3" fill="#fff" stroke="${s.color}" stroke-width="2"><title>${esc(s.name)} · ${esc(labels[i])}：${v}</title></circle>`; });
+  });
+  return `<div class="chart-wrap"><svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="趋势折线图">${g}</svg></div>`;
+}
+function lastMonths(n) {
+  const out = [], d = new Date();
+  for (let i = n - 1; i >= 0; i--) { const dt = new Date(d.getFullYear(), d.getMonth() - i, 1); out.push(dt.getFullYear() + '-' + pad(dt.getMonth() + 1)); }
+  return out;
+}
+function lastMonth() { const d = new Date(); const dt = new Date(d.getFullYear(), d.getMonth() - 1, 1); return dt.getFullYear() + '-' + pad(dt.getMonth() + 1); }
+
 /* ---------- 11.2 通用片段 ---------- */
 const dutyTag = k => { const d = DUTY_MAP[k]; return d ? `<span class="tag tag-duty"><span class="dot" style="background:${d.c}"></span>${esc(d.s)}</span>` : ''; };
 const avatarOf = s => `<span class="avatar${s.gender === '女' ? ' f' : ''}">${esc(pinyinInitial(s.full_name))}</span>`;
@@ -1920,6 +2000,21 @@ function viewHome() {
   const focusN = DB.students.filter(s => s.focus_level).length;
   const crisisN = DB.students.filter(s => s.crisis_level && !s.crisis_relieved).length;
   const monthTalks = DB.talks.filter(t => monthOf(t.date) === thisMonth()).length;
+  const thisM = thisMonth(), lm = lastMonth();
+  const months = lastMonths(6);
+  const monthLabels = months.map(m => (m.slice(5) === '01' ? m.slice(0, 4) + '年' : '') + parseInt(m.slice(5), 10) + '月');
+  const talksSeries = months.map(m => DB.talks.filter(t => monthOf(t.date) === m).length);
+  const tasksSeries = months.map(m => DB.tasks.filter(t => monthOf((t.created_at || '').slice(0, 10)) === m).length);
+  const talksThisM = DB.talks.filter(t => monthOf(t.date) === thisM).length;
+  const talksLastM = DB.talks.filter(t => monthOf(t.date) === lm).length;
+  const tasksThisM = DB.tasks.filter(t => t.status !== 'done' && monthOf(t.due || (t.created_at || '').slice(0, 10)) === thisM).length;
+  const tasksLastM = DB.tasks.filter(t => t.status !== 'done' && monthOf(t.due || (t.created_at || '').slice(0, 10)) === lm).length;
+  const deltaHtml = (cur, prev) => {
+    const diff = cur - prev;
+    if (!diff) return `<span class="kpi-delta flat"><svg class="ic"><use href="#i-minus"/></svg>持平</span>`;
+    const up = diff > 0;
+    return `<span class="kpi-delta ${up ? 'up' : 'down'}"><svg class="ic"><use href="#${up ? 'i-up' : 'i-down'}"/></svg>${up ? '+' : ''}${diff} 较上月</span>`;
+  };
   const d = new Date();
   const wk = ['日','一','二','三','四','五','六'][d.getDay()];
 
@@ -1957,13 +2052,13 @@ function viewHome() {
     <div class="kpi ${overdue ? 'danger' : 'ok'}"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-alert"/></svg>逾期未办</div>
       <div class="kpi-v" data-num="${overdue}">${overdue}</div><div class="kpi-s">含任务与回访</div></div>
     <div class="kpi brand"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-task"/></svg>在办任务</div>
-      <div class="kpi-v" data-num="${openTasks}">${openTasks}</div><div class="kpi-s">共 ${DB.tasks.length} 条</div></div>
+      <div class="kpi-v" data-num="${openTasks}">${openTasks}</div><div class="kpi-s">共 ${DB.tasks.length} 条 ${deltaHtml(tasksThisM, tasksLastM)}</div></div>
     <div class="kpi warn"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-heart"/></svg>重点关注学生</div>
       <div class="kpi-v" data-num="${focusN}">${focusN}</div><div class="kpi-s">全部 ${DB.students.length} 人</div></div>
     <div class="kpi ${crisisN ? 'danger' : 'l'}"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-shield"/></svg>心理危机预警</div>
       <div class="kpi-v" data-num="${crisisN}">${crisisN}</div><div class="kpi-s">未解除</div></div>
     <div class="kpi ok"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-talk"/></svg>本月谈话</div>
-      <div class="kpi-v" data-num="${monthTalks}">${monthTalks}</div><div class="kpi-s">累计 ${DB.talks.length} 次</div></div>
+      <div class="kpi-v" data-num="${monthTalks}">${monthTalks}</div><div class="kpi-s">累计 ${DB.talks.length} 次 ${deltaHtml(talksThisM, talksLastM)}</div></div>
   </div>
 
   <div class="card">
@@ -1974,6 +2069,21 @@ function viewHome() {
       <button class="btn" data-act="talk-new"><svg class="ic ic-sm"><use href="#i-talk"/></svg>记一次谈心谈话</button>
       <button class="btn" data-act="student-new"><svg class="ic ic-sm"><use href="#i-users"/></svg>新增学生</button>
       <button class="btn" data-act="go-report"><svg class="ic ic-sm"><use href="#i-chart"/></svg>生成工作小结</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-chart"/></svg>近半年工作趋势</h2>
+      <span class="sp"></span><span class="tiny">谈话次数 vs 新增任务</span></div>
+    <div class="card-bd">
+      ${lineChart([
+        { name: '谈话次数', color: '#2563eb', data: talksSeries },
+        { name: '新增任务', color: '#f59e0b', data: tasksSeries },
+      ], { labels: monthLabels })}
+      <div class="trend-legend">
+        <span><i style="background:#2563eb"></i>谈话次数</span>
+        <span><i style="background:#f59e0b"></i>新增任务</span>
+      </div>
     </div>
   </div>
 
@@ -4513,6 +4623,57 @@ const ACTS = {
   },
 };
 
+/* ---------- 全局搜索 ---------- */
+const GS_VIEWS = [
+  { v: 'students', ic: 'i-users', name: '学生台账', fields: s => [s.full_name, s.student_id, s.student_number, s.class_name, s.dorm, s.phone] },
+  { v: 'tasks', ic: 'i-task', name: '工作任务', fields: t => [t.title, t.note, t.classes, t.source] },
+  { v: 'talks', ic: 'i-talk', name: '谈心谈话', fields: t => [t.student_name, t.content, t.topic] },
+  { v: 'stay', ic: 'i-home', name: '校外住宿', fields: x => [x.full_name, x.student_number, x.reason, x.address] },
+  { v: 'leave', ic: 'i-plane', name: '假期去向', fields: x => [x.full_name, x.student_number, x.dest, x.reason] },
+  { v: 'honor', ic: 'i-trophy', name: '评优榜样', fields: x => [x.full_name, x.student_number, x.title, x.award] },
+  { v: 'warn', ic: 'i-alert', name: '学业预警', fields: x => [x.full_name, x.student_number, x.course, x.note] },
+  { v: 'grant', ic: 'i-grad', name: '奖助勤补', fields: x => [x.full_name, x.student_number, x.type, x.name] },
+];
+function runGlobalSearch(raw) {
+  const term = (raw || '').trim(), q = term.toLowerCase();
+  const panel = $('#gs-panel'); if (!panel) return;
+  if (!q) { hideSearch(); return; }
+  const out = [];
+  GS_VIEWS.forEach(({ v, ic, name, fields }) => {
+    const arr = DB[v]; if (!Array.isArray(arr)) return;
+    arr.forEach(it => {
+      const hay = fields(it).join(' ').toLowerCase();
+      if (hay.includes(q)) out.push({ v, ic, name, title: (it.full_name || it.student_name || it.title || it.name || '记录'), sub: v === 'tasks' ? (it.classes || it.source || '') : (it.student_number || it.date || '') });
+    });
+  });
+  if (!out.length) { panel.innerHTML = `<div class="gs-empty">没有匹配「${esc(term)}」的结果</div>`; panel.hidden = false; return; }
+  const groups = {};
+  out.slice(0, 24).forEach(r => { (groups[r.v] = groups[r.v] || []).push(r); });
+  let html = '';
+  Object.keys(groups).forEach(v => {
+    html += `<div class="gs-group">${esc(groups[v][0].name)} · ${groups[v].length}</div>`;
+    html += groups[v].map(r => `<div class="gs-item" data-gv="${v}" data-gq="${esc(term)}">
+      <span class="gs-ic"><svg class="ic"><use href="#${r.ic}"/></svg></span>
+      <span class="gs-main"><span class="gs-t">${esc(r.title)}</span>${r.sub ? `<span class="gs-s">${esc(r.sub)}</span>` : ''}</span></div>`).join('');
+  });
+  panel.innerHTML = html + `<div class="gs-foot">回车跳转首个结果 · Esc 关闭</div>`;
+  panel.hidden = false;
+}
+function hideSearch() { const p = $('#gs-panel'); if (p) { p.hidden = true; p.innerHTML = ''; } }
+
+document.addEventListener('click', e => {
+  const it = e.target.closest('.gs-item');
+  if (it) {
+    const v = it.dataset.gv;
+    app.filters[v] = app.filters[v] || {};
+    app.filters[v].q = it.dataset.gq || '';
+    go(v); hideSearch();
+    const inp = $('#global-search'); if (inp) inp.blur();
+    return;
+  }
+  if (!$('#gs-panel').hidden && !e.target.closest('.topbar-search-wrap')) hideSearch();
+});
+
 document.addEventListener('click', e => {
   const nav = e.target.closest('[data-view]');
   if (nav) { go(nav.dataset.view); return; }
@@ -4563,6 +4724,20 @@ $('#file-csv').onchange = function () {
   const f = this.files[0]; if (!f) return;
   const r = new FileReader(); r.onload = () => { importStudentsCSV(r.result); this.value = ''; }; r.readAsText(f, 'utf-8');
 };
+/* 全局搜索框事件 */
+$('#global-search').addEventListener('input', e => {
+  $('#gs-clear').hidden = !e.target.value;
+  clearTimeout(app._gsT);
+  app._gsT = setTimeout(() => runGlobalSearch(e.target.value), 120);
+});
+$('#gs-clear').addEventListener('click', () => {
+  const i = $('#global-search'); i.value = ''; $('#gs-clear').hidden = true; hideSearch(); i.focus();
+});
+$('#global-search').addEventListener('keydown', e => {
+  const panel = $('#gs-panel'); if (panel.hidden) return;
+  if (e.key === 'Enter') { const first = panel.querySelector('.gs-item'); if (first) first.click(); e.preventDefault(); }
+  else if (e.key === 'Escape') { hideSearch(); }
+});
 document.addEventListener('keydown', e => {
   if (e.target.matches('input,textarea,select')) return;
   if ($('#modal-root').children.length) return;
