@@ -5,7 +5,7 @@
  * 覆盖：列名模糊匹配（synonym）/ 缺省值容错 / 重复合并 / 非法行跳过。
  * 不依赖真实 .xls 文件，绕过 SheetJS 直接喂字符串测试底层函数。
  */
-const { JSDOM, VirtualConsole } = require('C:/Users/wby/.workbuddy/binaries/node/workspace/node_modules/jsdom');
+const { JSDOM, VirtualConsole } = require('jsdom');
 const path = require('path');
 const file = path.join(__dirname, '..', 'index.html');
 const sleep = ms => new Promise(r => setTimeout(r, ms));

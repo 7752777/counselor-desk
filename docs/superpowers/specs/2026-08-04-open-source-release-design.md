@@ -10,7 +10,7 @@
 
 - 修复 README 中指向缺失文件、占位仓库和占位联系方式的内容；
 - 保持 `index.html` 单文件、零运行时依赖、双击即可使用的交付方式；
-- 增加最小 Node 测试工程入口，使四套现有测试可以在干净环境中按统一命令运行；
+- 增加最小 Node 测试工程入口，使四套现有测试可以在干净环境中按统一命令运行，并用项目锁文件固定 jsdom 版本；
 - 完善 CI，使依赖安装、四套测试和内联 JS 语法检查能在 GitHub Actions 中复现；
 - 核对公开仓库不包含真实学生数据、备份文件和私密演示地址；
 - 配置 GitHub Pages 所需的静态发布工作流或仓库设置，并在发布后验证首页可访问。
@@ -24,7 +24,7 @@
 
 ## 方案
 
-应用继续以 `index.html` 为唯一运行入口。测试使用 Node.js + jsdom，依赖写入开发依赖并由 npm 脚本统一编排；运行时不加载 npm 包。GitHub Actions 使用锁定的 Node 版本，通过 `npm ci` 安装测试依赖，然后依次执行四套测试和内联 JS 语法检查。
+应用继续以 `index.html` 为唯一运行入口。测试使用 Node.js + jsdom，依赖写入开发依赖并由 npm scripts 统一编排；运行时不加载 npm 包。仓库使用 pnpm lockfile 固定开发依赖，GitHub Actions 使用锁定的 Node 和 pnpm 版本安装依赖，然后依次执行四套测试和内联 JS 语法检查。
 
 README 保留中文主文档，删除或改写当前仓库中不存在的英文文档引用；涉及仓库地址的徽章、克隆命令、Star/Issue/Discussion 链接统一使用 `counselor-desk` 的真实 GitHub 路径。无法确认的维护者邮箱不伪造，改为 GitHub Issues/Security Advisories 作为公开渠道。在线演示链接只在确认可长期访问时保留，否则改为 GitHub Pages 地址。
 
@@ -49,7 +49,7 @@ Git commit -> GitHub public repository -> GitHub Pages
 
 ## 错误处理
 
-- `npm ci` 失败时 CI 立即失败，避免出现“测试徽章为绿但没有真正执行测试”的假象；
+- `pnpm install --frozen-lockfile` 失败时 CI 立即失败，避免出现“测试徽章为绿但没有真正执行测试”的假象；
 - 任一测试失败时工作流失败，并保留后续日志用于定位；
 - Excel CDN 加载失败继续提示用户使用 CSV，不改变离线 CSV/JSON 工作流；
 - 发布前用扫描检查真实备份扩展名、占位 URL、缺失本地链接和敏感凭据模式；
@@ -72,4 +72,3 @@ Git commit -> GitHub public repository -> GitHub Pages
 4. 提交实现变更。
 5. 在目标 GitHub 账号下创建 `counselor-desk` 公开仓库并推送。
 6. 开启 Pages，验证公开地址和 CI 状态。
-

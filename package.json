@@ -1,0 +1,24 @@
+{
+  "name": "counselor-desk",
+  "version": "3.8.0",
+  "private": true,
+  "description": "A local-first, single-file counselor workspace for higher education.",
+  "license": "MIT",
+  "packageManager": "pnpm@11.9.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node tests/regression.js && node tests/import-loop.js && node tests/crud-smoke.js && node tests/student-import.js",
+    "test:regression": "node tests/regression.js",
+    "test:import-loop": "node tests/import-loop.js",
+    "test:crud-smoke": "node tests/crud-smoke.js",
+    "test:student-import": "node tests/student-import.js",
+    "test:release": "node tests/release-checks.js",
+    "lint": "node scripts/check-inline-js.js",
+    "check:public": "node scripts/check-public-surface.js"
+  },
+  "devDependencies": {
+    "jsdom": "^26.1.0"
+  }
+}

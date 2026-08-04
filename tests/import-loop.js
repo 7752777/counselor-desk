@@ -15,7 +15,7 @@
  *   6) 表头乱填导回 → 不抛异常、不误写数据。
  * 最后再做一次枚举 / 布尔 / 数字往返保真检查 + 全量视图复渲染。
  */
-const { JSDOM, VirtualConsole } = require('C:/Users/wby/.workbuddy/binaries/node/workspace/node_modules/jsdom');
+const { JSDOM, VirtualConsole } = require('jsdom');
 const path = require('path');
 const fs = require('fs');
 const file = path.join(__dirname, '..', 'index.html');

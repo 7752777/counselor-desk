@@ -6,7 +6,7 @@
 
 **为高校辅导员量身打造的本地化工作台 · 单文件 HTML · 零依赖 · 离线可用**
 
-[English](./README_EN.md) · [使用说明](./使用说明.md) · [二次开发指南](./docs/二次开发指南.md) · [数据格式与联动约定](./docs/数据格式与联动约定.md) · [更新日志](./CHANGELOG.md) · [贡献指南](./CONTRIBUTING.md)
+[使用说明](./使用说明.md) · [二次开发指南](./docs/二次开发指南.md) · [数据格式与联动约定](./docs/数据格式与联动约定.md) · [更新日志](./CHANGELOG.md) · [贡献指南](./CONTRIBUTING.md)
 
 </div>
 
@@ -21,13 +21,13 @@
 ![Tests](https://img.shields.io/badge/tests-4%20suites%20PASS-12a06b?style=flat-square&logo=checkmarx&logoColor=white)
 ![Build](https://img.shields.io/badge/build-no%20build%20step-6b7280?style=flat-square)
 ![Deps](https://img.shields.io/badge/dependencies-zero-6b7280?style=flat-square)
-![CI](https://img.shields.io/github/actions/workflow/status/7752777/counselor-desk/tests.yml?style=flat-square&logo=github-actions&logoColor=white&label=CI)
+![CI](https://img.shields.io/github/actions/workflow/status/dweeedon/counselor-desk/tests.yml?style=flat-square&logo=github-actions&logoColor=white&label=CI)
 
 </div>
 
 <div align="center">
 
-[**🌐 在线演示**](https://ea40c80e38ef48478bb12a2376e142ea.sh2.agentos-app.net) · [**📥 下载单文件**](./index.html) · [**📖 使用说明**](./使用说明.md) · [**⭐ Star**](../../stargazers)
+[**🌐 在线演示**](https://dweeedon.github.io/counselor-desk/) · [**📥 下载单文件**](./index.html) · [**📖 使用说明**](./使用说明.md) · [**⭐ Star**](https://github.com/dweeedon/counselor-desk/stargazers)
 
 </div>
 
@@ -132,8 +132,6 @@
 
 </div>
 
-> 截图待补——可在浏览器打开 `index.html` 后自行截屏，存到 `assets/screenshots/` 即可
-
 ---
 
 ## 🚀 30 秒上手
@@ -142,7 +140,7 @@
 
 ```bash
 # 1. 克隆仓库
-git clone https://github.com/<your-username>/counselor-desk.git
+git clone https://github.com/dweeedon/counselor-desk.git
 
 # 2. 打开单文件
 open index.html        # macOS
@@ -223,6 +221,10 @@ counselor-desk/
 │   ├── 使用指南.md                # 各模块怎么用（v3.8.0）
 │   ├── 二次开发指南.md             # window.CWB 扩展点详解 + 示例
 │   └── 数据格式与联动约定.md        # 字段、交换包 v5、CSV、接口约定
+├── package.json                  # 测试脚本与开发依赖
+├── pnpm-lock.yaml                # 测试依赖锁定文件
+├── scripts/                      # 语法与公开发布检查
+├── .github/workflows/            # 测试、Lint、Pages 发布
 ├── tests/                        # 本地测试（需 jsdom，4 套全 PASS）
 │   ├── regression.js             # 回归测试：22 视图渲染 + Phase A/B/C 关键特性
 │   ├── import-loop.js            # 导入/导出闭环：18 模块 CSV 往返 + JSON 备份恢复
@@ -238,16 +240,16 @@ counselor-desk/
 四套本地测试，全部 PASS ✅
 
 ```bash
-node tests/regression.js          # 回归（22 视图 + 关键特性）
-node tests/import-loop.js         # 导入/导出闭环（18 模块 + JSON 备份）
-node tests/crud-smoke.js          # 全模块增删改
-node tests/student-import.js      # v3.8 学生大表导入（63 项断言）
+pnpm install --frozen-lockfile
+pnpm test                         # 四套测试
+pnpm run lint                     # 内联 JavaScript 语法检查
+pnpm run check:public             # 公开发布面检查
 ```
 
-测试仅依赖 [jsdom](https://github.com/jsdom/jsdom)，无需浏览器：
+测试仅依赖 [jsdom](https://github.com/jsdom/jsdom)，无需浏览器；日常使用不需要安装任何依赖。Excel 导入会按需从 SheetJS CDN 加载解析器，离线时可使用 CSV 导入。
 
 ```bash
-npm install jsdom   # 或全局安装
+pnpm install --frozen-lockfile
 ```
 
 ---
@@ -291,6 +293,7 @@ npm install jsdom   # 或全局安装
 
 - 所有数据存在浏览器 `localStorage`，命名空间 `cwb_v1_`；
 - **不上传任何服务器**，断网可用；
+- **Excel 导入例外**：只有 xls/xlsx 直传会按需加载 SheetJS CDN；CSV、JSON 备份和已保存的本地数据不依赖后端；
 - 首屏提供「导出 JSON 备份 / 导入恢复」，建议定期导出；
 - 数据积累到 30 条会有温和备份提示；
 - 导出可带走、可迁移、可换设备；

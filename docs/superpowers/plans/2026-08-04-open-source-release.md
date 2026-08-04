@@ -4,7 +4,7 @@
 
 **Goal:** 将 Counselor Desk 整理为可复现测试、可公开维护并可通过 GitHub Pages 访问的公开仓库，同时保持单文件离线应用定位。
 
-**Architecture:** `index.html` 继续是唯一运行入口，不引入前端构建工具或运行时服务。Node.js + jsdom 只作为开发测试依赖；GitHub Actions 通过 npm 脚本执行测试和语法检查，Pages 直接发布仓库静态文件。
+**Architecture:** `index.html` 继续是唯一运行入口，不引入前端构建工具或运行时服务。Node.js + jsdom 只作为开发测试依赖；GitHub Actions 通过 npm scripts 执行测试和语法检查，使用 pnpm lockfile 保证依赖一致，Pages 直接发布仓库静态文件。
 
 **Tech Stack:** HTML/CSS/JavaScript、Node.js 22、npm、jsdom、GitHub Actions、GitHub Pages。
 
@@ -13,7 +13,7 @@
 ## 文件地图
 
 - Create: `package.json`，声明项目元数据、Node 版本、jsdom 开发依赖和统一 npm scripts。
-- Create: `package-lock.json`，锁定测试依赖，供 CI 使用 `npm ci`。
+- Create: `pnpm-lock.yaml`，锁定测试依赖，供 CI 使用 `pnpm install --frozen-lockfile`。
 - Create: `scripts/check-inline-js.js`，复用现有 CI 内联 JS 语法检查逻辑。
 - Create: `scripts/check-public-surface.js`，检查公开发布时的失效本地链接、占位配置和敏感备份文件。
 - Modify: `tests/regression.js`、`tests/import-loop.js`、`tests/crud-smoke.js`、`tests/student-import.js`，使用仓库声明的 `jsdom`，移除机器专属绝对路径。
@@ -27,7 +27,7 @@
 
 **Files:**
 - Create: `package.json`
-- Create: `package-lock.json`
+- Create: `pnpm-lock.yaml`
 - Modify: `tests/regression.js`
 - Modify: `tests/import-loop.js`
 - Modify: `tests/crud-smoke.js`
@@ -83,13 +83,13 @@ const { JSDOM, VirtualConsole } = require('jsdom');
 在仓库根目录运行：
 
 ```powershell
-pnpm dlx npm@10 install --package-lock-only --ignore-scripts
+pnpm install --lockfile-only --ignore-scripts
 ```
 
-预期生成 `package-lock.json`，且不改变 `package.json` 中的版本范围。检查：
+预期生成 `pnpm-lock.yaml`，且不改变 `package.json` 中的版本范围。检查：
 
 ```powershell
-Select-String -Path package-lock.json -Pattern '"name": "counselor-desk"','"jsdom"'
+Select-String -Path pnpm-lock.yaml -Pattern 'jsdom','specifier: \^26.1.0'
 git diff --check
 ```
 
@@ -98,16 +98,16 @@ git diff --check
 运行：
 
 ```powershell
-pnpm install --frozen-lockfile=false
+pnpm install --frozen-lockfile
 pnpm test
 ```
 
-预期四套测试均输出 `PASS` 并以退出码 0 结束。若当前运行时没有 npm，只使用 bundled pnpm 执行 npm scripts；GitHub Actions 使用仓库的 npm scripts。
+预期四套测试均输出 `PASS` 并以退出码 0 结束。使用仓库声明的 pnpm 版本执行 npm scripts；GitHub Actions 也使用同一版本的 pnpm。
 
 - [ ] **Step 5: Commit 测试工程入口**
 
 ```powershell
-git add package.json package-lock.json tests/regression.js tests/import-loop.js tests/crud-smoke.js tests/student-import.js
+git add package.json pnpm-lock.yaml tests/regression.js tests/import-loop.js tests/crud-smoke.js tests/student-import.js
 git commit -m "chore: make tests reproducible"
 ```
 
@@ -249,7 +249,7 @@ git commit -m "chore: add release quality checks"
 3. 将在线演示地址改为 `https://dweeedon.github.io/counselor-desk/`，Star 链接改为 `https://github.com/dweeedon/counselor-desk/stargazers`。
 4. 将 clone 示例改为 `https://github.com/dweeedon/counselor-desk.git`。
 5. 删除“截图待补”说明，保留已有五张截图。
-6. 将安装 jsdom 的说明改为 `npm ci`，测试统一用 `npm test`。
+6. 将安装 jsdom 的说明改为 `pnpm install --frozen-lockfile`，测试统一用 `pnpm test`。
 7. 新增“GitHub Pages / Excel CDN”说明：应用主流程可离线运行，只有 xls/xlsx 导入会按需请求 SheetJS CDN，离线时使用 CSV。
 8. 将项目结构中的 `tests/` 说明更新为“可通过 npm test 执行”，并加入 `scripts/`、`.github/workflows/pages.yml` 和 `package.json`。
 
@@ -260,7 +260,7 @@ git commit -m "chore: add release quality checks"
 1. 将 fork/clone 示例统一指向 `https://github.com/dweeedon/counselor-desk.git`。
 2. 删除需要填写 `<your-username>` 或 `<original-username>` 的 remote 命令，改为“从 GitHub Fork 后使用页面提供的 Clone 地址”。
 3. 删除 `<maintainer-email>`，保留 Issues、Discussions 和 Pull Request 作为项目协作入口。
-4. 将本地验证命令改为 `npm ci` 后执行 `npm test`、`npm run lint`、`npm run check:public`。
+4. 将本地验证命令改为 `pnpm install --frozen-lockfile` 后执行 `pnpm test`、`pnpm run lint`、`pnpm run check:public`。
 
 - [ ] **Step 3: 修正安全策略中的联系方式和 CDN 描述**
 
@@ -294,14 +294,19 @@ git commit -m "docs: prepare repository for public release"
 
 - [ ] **Step 1: 把测试工作流切换到锁定安装**
 
-在 `.github/workflows/tests.yml` 中保留 Node 22 和 push/PR/manual 触发，删除 `npm install --no-save jsdom`，改为：
+在 `.github/workflows/tests.yml` 中保留 Node 22 和 push/PR/manual 触发，删除 `npm install --no-save jsdom`，在 Setup Node.js 后加入 pnpm action，并改为：
 
 ```yaml
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.9.0
+
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Run test suites
-        run: npm test
+        run: pnpm test
 ```
 
 保留四套测试的可读日志名称，或在 `npm test` 前后用步骤名称标明四套测试；不得再把“无论结果如何都输出 All 4 test suites passed”作为假成功摘要。改为：
@@ -317,14 +322,19 @@ git commit -m "docs: prepare repository for public release"
 在 `.github/workflows/lint.yml` 的 Setup Node.js 后加入：
 
 ```yaml
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.9.0
+
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Validate inline JavaScript
-        run: npm run lint
+        run: pnpm run lint
 
       - name: Validate public release surface
-        run: npm run check:public
+        run: pnpm run check:public
 ```
 
 保留现有大小检查，确保 CI 同时覆盖语法、公开面和文件大小。
@@ -389,7 +399,7 @@ git commit -m "ci: add reproducible checks and pages deployment"
 - [ ] **Step 1: Run the complete local verification gate**
 
 ```powershell
-pnpm install --frozen-lockfile=false
+pnpm install --frozen-lockfile
 pnpm test
 pnpm run lint
 pnpm run check:public

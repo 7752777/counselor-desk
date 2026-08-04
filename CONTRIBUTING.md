@@ -151,12 +151,12 @@
 ```bash
 # 1. Fork 仓库（点击 GitHub 上的 Fork 按钮）
 
-# 2. Clone 你的 fork
-git clone https://github.com/<your-username>/counselor-desk.git
+# 2. 在 Fork 页面复制 Clone 地址并执行
+git clone https://github.com/dweeedon/counselor-desk.git
 cd counselor-desk
 
 # 3. 添加上游仓库
-git remote add upstream https://github.com/<original-username>/counselor-desk.git
+git remote add upstream https://github.com/dweeedon/counselor-desk.git
 ```
 
 ### 创建分支
@@ -184,11 +184,11 @@ git checkout -b fix/issue-number-description
 ### 本地验证
 
 ```bash
-# 运行所有测试（需先安装 jsdom）
-node tests/regression.js          # 应输出 PASS
-node tests/import-loop.js         # 应输出 PASS
-node tests/crud-smoke.js          # 应输出 PASS
-node tests/student-import.js      # 应输出 PASS
+# 安装锁定的测试依赖并运行全部检查
+pnpm install --frozen-lockfile
+pnpm test                         # 4 套测试应全部通过
+pnpm run lint                     # 内联 JavaScript 语法检查
+pnpm run check:public             # 公开发布面检查
 ```
 
 ### 提交
@@ -354,7 +354,7 @@ git commit -m "test(import): 新增 student-import.js 测试"
 - 📖 阅读 [**《二次开发指南》**](./docs/二次开发指南.md)
 - 📖 阅读 [**《数据格式与联动约定》**](./docs/数据格式与联动约定.md)
 - 💬 在 [Discussions](../../discussions) 里提问
-- 📧 邮件联系：`<maintainer-email>`
+- 🔐 安全问题请通过 [GitHub Security Advisories](../../security/advisories/new) 私密报告
 
 ---
 

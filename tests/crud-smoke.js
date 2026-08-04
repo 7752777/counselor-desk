@@ -9,7 +9,7 @@
  *           → 点「删除」→ 二次确认 → 确定（条数 -1）
  * 顺带验证必填校验：不填必填项点保存，不应该写进库。
  */
-const { JSDOM, VirtualConsole } = require('C:/Users/wby/.workbuddy/binaries/node/workspace/node_modules/jsdom');
+const { JSDOM, VirtualConsole } = require('jsdom');
 const path = require('path');
 const file = path.join(__dirname, '..', 'index.html');
 const sleep = ms => new Promise(r => setTimeout(r, ms));

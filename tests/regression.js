@@ -4,7 +4,7 @@
  *   node tests/regression.js
  * 覆盖：语法/加载无错、22 视图全量渲染、Phase A/B/C 关键特性。
  */
-const { JSDOM, VirtualConsole } = require('C:/Users/wby/.workbuddy/binaries/node/workspace/node_modules/jsdom');
+const { JSDOM, VirtualConsole } = require('jsdom');
 const path = require('path');
 const file = path.join(__dirname, '..', 'index.html');
 const sleep = ms => new Promise(r => setTimeout(r, ms));
