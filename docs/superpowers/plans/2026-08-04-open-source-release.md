@@ -158,7 +158,7 @@ const forbiddenText = [
   'README_EN.md',
   '<your-username>',
   '<maintainer-email>',
-  '7752777/counselor-desk',
+  'dweeedon/counselor-desk',
   'ea40c80e38ef48478bb12a2376e142ea.sh2.agentos-app.net'
 ];
 
@@ -245,9 +245,9 @@ git commit -m "chore: add release quality checks"
 在 `README.md` 中完成这些确定性修改：
 
 1. 删除不存在的 `README_EN.md` 链接。
-2. 将 CI badge 改为 `https://img.shields.io/github/actions/workflow/status/dweeedon/counselor-desk/tests.yml?...`。
-3. 将在线演示地址改为 `https://dweeedon.github.io/counselor-desk/`，Star 链接改为 `https://github.com/dweeedon/counselor-desk/stargazers`。
-4. 将 clone 示例改为 `https://github.com/dweeedon/counselor-desk.git`。
+2. 将 CI badge 改为 `https://img.shields.io/github/actions/workflow/status/7752777/counselor-desk/tests.yml?...`。
+3. 将在线演示地址改为 `https://7752777.github.io/counselor-desk/`，Star 链接改为 `https://github.com/7752777/counselor-desk/stargazers`。
+4. 将 clone 示例改为 `https://github.com/7752777/counselor-desk.git`。
 5. 删除“截图待补”说明，保留已有五张截图。
 6. 将安装 jsdom 的说明改为 `pnpm install --frozen-lockfile`，测试统一用 `pnpm test`。
 7. 新增“GitHub Pages / Excel CDN”说明：应用主流程可离线运行，只有 xls/xlsx 导入会按需请求 SheetJS CDN，离线时使用 CSV。
@@ -257,7 +257,7 @@ git commit -m "chore: add release quality checks"
 
 在 `CONTRIBUTING.md` 中：
 
-1. 将 fork/clone 示例统一指向 `https://github.com/dweeedon/counselor-desk.git`。
+1. 将 fork/clone 示例统一指向 `https://github.com/7752777/counselor-desk.git`。
 2. 删除需要填写 `<your-username>` 或 `<original-username>` 的 remote 命令，改为“从 GitHub Fork 后使用页面提供的 Clone 地址”。
 3. 删除 `<maintainer-email>`，保留 Issues、Discussions 和 Pull Request 作为项目协作入口。
 4. 将本地验证命令改为 `pnpm install --frozen-lockfile` 后执行 `pnpm test`、`pnpm run lint`、`pnpm run check:public`。
@@ -433,10 +433,10 @@ Expected: no matches and a clean worktree.
 
 - [ ] **Step 4: Create the public repository and push**
 
-Use GitHub account `dweeedon` and repository name `counselor-desk`. Create it as public with no auto-generated README, license, or `.gitignore` because those files already exist locally. Then set and verify the remote:
+Use GitHub account `7752777` and repository name `counselor-desk`. Create it as public with no auto-generated README, license, or `.gitignore` because those files already exist locally. Then set and verify the remote:
 
 ```powershell
-git remote add origin https://github.com/dweeedon/counselor-desk.git
+git remote add origin https://github.com/7752777/counselor-desk.git
 git push -u origin master
 ```
 
@@ -446,8 +446,8 @@ If the repository already exists, verify it is empty or belongs to this project 
 
 Open:
 
-- `https://github.com/dweeedon/counselor-desk/actions`
-- `https://dweeedon.github.io/counselor-desk/`
+- `https://github.com/7752777/counselor-desk/actions`
+- `https://7752777.github.io/counselor-desk/`
 
 Confirm the Tests, Lint and Pages workflows complete successfully, the README badge resolves to the real workflow, and the Pages URL renders `index.html`.
 
@@ -459,4 +459,4 @@ Do not create another source commit after push unless verification identifies a 
 
 - Spec coverage: release links, reproducible tests, public-data guard, CI, Pages, browser smoke verification, and publish order each have a task.
 - Placeholder scan: this plan contains no `TBD`, `TODO`, `<your-username>`, `<maintainer-email>`, or unspecified “appropriate handling” steps.
-- Consistency: scripts named in `package.json` are the same names used by CI and verification steps; GitHub owner is consistently `dweeedon`; repository name is consistently `counselor-desk`.
+- Consistency: scripts named in `package.json` are the same names used by CI and verification steps; GitHub owner is consistently `7752777`; repository name is consistently `counselor-desk`.

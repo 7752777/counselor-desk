@@ -21,13 +21,13 @@
 ![Tests](https://img.shields.io/badge/tests-4%20suites%20PASS-12a06b?style=flat-square&logo=checkmarx&logoColor=white)
 ![Build](https://img.shields.io/badge/build-no%20build%20step-6b7280?style=flat-square)
 ![Deps](https://img.shields.io/badge/dependencies-zero-6b7280?style=flat-square)
-![CI](https://img.shields.io/github/actions/workflow/status/dweeedon/counselor-desk/tests.yml?style=flat-square&logo=github-actions&logoColor=white&label=CI)
+![CI](https://img.shields.io/github/actions/workflow/status/7752777/counselor-desk/tests.yml?style=flat-square&logo=github-actions&logoColor=white&label=CI)
 
 </div>
 
 <div align="center">
 
-[**🌐 在线演示**](https://dweeedon.github.io/counselor-desk/) · [**📥 下载单文件**](./index.html) · [**📖 使用说明**](./使用说明.md) · [**⭐ Star**](https://github.com/dweeedon/counselor-desk/stargazers)
+[**🌐 在线演示**](https://7752777.github.io/counselor-desk/) · [**📥 下载单文件**](./index.html) · [**📖 使用说明**](./使用说明.md) · [**⭐ Star**](https://github.com/7752777/counselor-desk/stargazers)
 
 </div>
 
@@ -140,7 +140,7 @@
 
 ```bash
 # 1. 克隆仓库
-git clone https://github.com/dweeedon/counselor-desk.git
+git clone https://github.com/7752777/counselor-desk.git
 
 # 2. 打开单文件
 open index.html        # macOS

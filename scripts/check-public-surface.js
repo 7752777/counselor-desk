@@ -9,7 +9,7 @@ const forbiddenText = [
   '<your-username>',
   '<original-username>',
   '<maintainer-email>',
-  '7752777/counselor-desk',
+  'dweeedon/counselor-desk',
   'ea40c80e38ef48478bb12a2376e142ea.sh2.agentos-app.net'
 ];
 

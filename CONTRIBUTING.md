@@ -152,11 +152,11 @@
 # 1. Fork 仓库（点击 GitHub 上的 Fork 按钮）
 
 # 2. 在 Fork 页面复制 Clone 地址并执行
-git clone https://github.com/dweeedon/counselor-desk.git
+git clone https://github.com/7752777/counselor-desk.git
 cd counselor-desk
 
 # 3. 添加上游仓库
-git remote add upstream https://github.com/dweeedon/counselor-desk.git
+git remote add upstream https://github.com/7752777/counselor-desk.git
 ```
 
 ### 创建分支
