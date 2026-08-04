@@ -147,6 +147,31 @@ a{color:var(--accent);text-decoration:none}
   background:var(--danger);color:#fff;display:flex;align-items:center;justify-content:center}
 .nav-badge.gray{background:rgba(255,255,255,.08);color:rgba(255,255,255,.4)}
 .nav-foot{margin-top:20px;padding:16px 12px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid var(--navy-border);text-align:center}
+/* 侧边栏内搜索 */
+.nav-search{display:flex;align-items:center;gap:7px;margin:0 2px 10px;padding:0 10px;height:36px;border-radius:9px;background:rgba(255,255,255,.07);border:1px solid var(--navy-border);color:rgba(255,255,255,.6);transition:background .15s,border-color .15s}
+.nav-search:focus-within{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3)}
+.nav-search .ic{width:15px;height:15px;color:rgba(255,255,255,.45);flex:none}
+.nav-search input{flex:1;min-width:0;background:none;border:none;outline:none;color:#fff;font-size:13px}
+.nav-search input::placeholder{color:rgba(255,255,255,.4)}
+/* 分组折叠 */
+.nav-group{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.nav-fold-ic{width:14px;height:14px;color:rgba(255,255,255,.3);transition:transform .18s ease;flex:none}
+.nav-group.collapsed .nav-fold-ic{transform:rotate(-90deg)}
+/* 常用钉住区 */
+.nav-pinned{margin-bottom:6px;padding-bottom:8px;border-bottom:1px solid var(--navy-border)}
+.nav-pinned .nav-group{padding-top:2px}
+.nav-pinned .nav-group::after{content:'\2605';color:var(--accent);font-size:10px;margin-left:5px}
+.nav-pin{margin-left:auto;width:24px;height:24px;flex:none;display:flex;align-items:center;justify-content:center;border:none;background:none;color:rgba(255,255,255,.32);cursor:pointer;opacity:0;transition:opacity .14s,color .14s;padding:0}
+.nav-item:hover .nav-pin{opacity:.7}
+.nav-pin:hover{color:var(--accent);opacity:1}
+.nav-item.pinned .nav-pin{opacity:1;color:var(--accent)}
+.nav-pin .ic{width:14px;height:14px}
+/* B1 微交互：卡片 hover 边框反馈 */
+.card:hover{border-color:var(--accent-line)}
+/* B1 微交互：按钮点击涟漪 */
+.btn{position:relative;overflow:hidden}
+.ripple{position:absolute;border-radius:50%;background:currentColor;opacity:.16;transform:scale(0);animation:ripple .42s ease-out forwards;pointer-events:none}
+@keyframes ripple{to{transform:scale(1);opacity:0}}
 
 .main{flex:1;min-width:0;padding:24px 28px 56px}
 
@@ -207,6 +232,7 @@ a{color:var(--accent);text-decoration:none}
 
 /* ---------- 工具条 ---------- */
 .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px 20px;border-bottom:1px solid var(--line-2);background:#fafbfc}
+.bulk-bar{display:flex;align-items:center;gap:8px;margin-left:auto}
 .field{display:flex;flex-direction:column;gap:5px}
 .field label,.lab{font-size:12.5px;font-weight:600;color:var(--ink-2)}
 .inp,select.inp,textarea.inp{
@@ -446,6 +472,8 @@ details.adv .adv-body{padding-top:14px}
   <symbol id="i-plane" viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 00-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5L21 16z"/></symbol>
   <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 01-10 0V4zM7 6H4v2a3 3 0 003 3M17 6h3v2a3 3 0 01-3 3"/></symbol>
   <symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3l9 16H3l9-16z"/><path d="M12 10v4M12 17h.01"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M9 3h6l-1 7 3.5 3.5h-13L10 10 9 3z"/><path d="M12 13.5V21"/></symbol>
 </svg>
 
 <!-- ========== 顶栏 ========== -->
@@ -477,33 +505,35 @@ details.adv .adv-body{padding-top:14px}
 <!-- ========== 主体 ========== -->
 <div class="layout">
   <nav class="sidenav" id="sidenav">
-    <div class="nav-group">工作台</div>
+    <div class="nav-search"><svg class="ic ic-sm"><use href="#i-search"/></svg><input class="inp" id="nav-search" placeholder="搜索模块"></div>
+    <div class="nav-pinned" id="nav-pinned"></div>
+    <div class="nav-group" data-group="工作台">工作台<svg class="nav-fold-ic" data-fold="工作台"><use href="#i-chev"/></svg></div>
     <button class="nav-item on" data-view="home"><svg class="ic"><use href="#i-home"/></svg>今日概览</button>
     <button class="nav-item" data-view="tasks"><svg class="ic"><use href="#i-task"/></svg>工作任务<span class="nav-badge hide" id="nb-tasks">0</span></button>
     <button class="nav-item" data-view="students"><svg class="ic"><use href="#i-users"/></svg>学生台账<span class="nav-badge gray" id="nb-students">0</span></button>
     <button class="nav-item" data-view="talks"><svg class="ic"><use href="#i-talk"/></svg>谈心谈话<span class="nav-badge hide" id="nb-talks">0</span></button>
     <button class="nav-item" data-view="report"><svg class="ic"><use href="#i-chart"/></svg>工作留痕</button>
-    <div class="nav-group">专项管理</div>
+    <div class="nav-group" data-group="专项管理">专项管理<svg class="nav-fold-ic" data-fold="专项管理"><use href="#i-chev"/></svg></div>
     <button class="nav-item" data-view="stay"><svg class="ic"><use href="#i-bed"/></svg>校外住宿</button>
     <button class="nav-item" data-view="leave"><svg class="ic"><use href="#i-plane"/></svg>假期去向</button>
     <button class="nav-item" data-view="honor"><svg class="ic"><use href="#i-trophy"/></svg>评优榜样</button>
     <button class="nav-item" data-view="pleave"><svg class="ic"><use href="#i-clock"/></svg>请销假</button>
     <button class="nav-item" data-view="attend"><svg class="ic"><use href="#i-check"/></svg>考勤台账</button>
     <button class="nav-item" data-view="node"><svg class="ic"><use href="#i-flag"/></svg>工作节点</button>
-    <div class="nav-group">学业与资助</div>
+    <div class="nav-group" data-group="学业与资助">学业与资助<svg class="nav-fold-ic" data-fold="学业与资助"><use href="#i-chev"/></svg></div>
     <button class="nav-item" data-view="warn"><svg class="ic"><use href="#i-alert"/></svg>学业预警</button>
     <button class="nav-item" data-view="help"><svg class="ic"><use href="#i-heart"/></svg>学业帮扶</button>
     <button class="nav-item" data-view="grant"><svg class="ic"><use href="#i-shield"/></svg>奖助勤补</button>
-    <div class="nav-group">重点关怀与就业</div>
+    <div class="nav-group" data-group="重点关怀与就业">重点关怀与就业<svg class="nav-fold-ic" data-fold="重点关怀与就业"><use href="#i-chev"/></svg></div>
     <button class="nav-item" data-view="focus"><svg class="ic"><use href="#i-lock"/></svg>重点学生档案</button>
     <button class="nav-item" data-view="psych"><svg class="ic"><use href="#i-mind"/></svg>心理摸排</button>
     <button class="nav-item" data-view="graduate"><svg class="ic"><use href="#i-grad"/></svg>毕业生就业</button>
-    <div class="nav-group">资料与平台</div>
+    <div class="nav-group" data-group="资料与平台">资料与平台<svg class="nav-fold-ic" data-fold="资料与平台"><use href="#i-chev"/></svg></div>
     <button class="nav-item" data-view="policy"><svg class="ic"><use href="#i-book"/></svg>政策智库</button>
     <button class="nav-item" data-view="material"><svg class="ic"><use href="#i-link"/></svg>素材收藏</button>
     <button class="nav-item" data-view="comp"><svg class="ic"><use href="#i-trophy"/></svg>科创竞赛</button>
     <button class="nav-item" data-view="tpl"><svg class="ic"><use href="#i-copy"/></svg>模板库</button>
-    <div class="nav-group">数据</div>
+    <div class="nav-group" data-group="数据">数据<svg class="nav-fold-ic" data-fold="数据"><use href="#i-chev"/></svg></div>
     <button class="nav-item" data-view="bridge"><svg class="ic"><use href="#i-link"/></svg>平台联动</button>
     <div class="nav-foot">
       <div style="display:flex;align-items:center;justify-content:center;gap:8px">
@@ -1441,6 +1471,7 @@ function seedDemo() {
   const T = today();
   DB.settings = {
     counselor_name: '示例老师', college_name: '示例学院', org_code: 'demo',
+    navFold: {}, pinned: [],
     classes: '24机器人1班,24机器人2班', platform_url: '', platform_api_on: false,
     seeded: true, backup_notified_at: '',
   };
@@ -1885,6 +1916,7 @@ function buildTodo() {
 /* ===================== 11. 视图渲染 ===================== */
 const app = {
   view: 'home',
+  bulk: { on: false, sel: new Set() },
   filters: {
     tasks:{ q:'', status:'open', duty:'' },
     students:{ q:'', cls:'', focus:'' },
@@ -2159,7 +2191,13 @@ function viewTasks() {
         <option value="">全部职责分类</option>
         ${DUTIES.map(d => `<option value="${d.k}"${f.duty === d.k ? ' selected' : ''}>${esc(d.s)}</option>`).join('')}
       </select>
-      <span class="tiny" style="margin-left:auto">共 ${list.length} 条</span>
+      ${app.bulk.on ? `
+      <div class="bulk-bar"><span class="tiny">已选 <b id="bulk-count">${app.bulk.sel.size}</b> 项</span><span class="sp"></span>
+        <button class="btn btn-sm btn-ok" data-act="bulk-done"><svg class="ic ic-sm"><use href="#i-check"/></svg>批量完成</button>
+        <button class="btn btn-sm btn-danger" data-act="bulk-del">批量删除</button>
+        <button class="btn btn-sm btn-ghost" data-act="bulk-exit">退出</button></div>` : `
+      <button class="btn btn-sm" data-act="bulk-toggle"><svg class="ic ic-sm"><use href="#i-check"/></svg>批量管理</button>
+      <span class="tiny" style="margin-left:auto">共 ${list.length} 条</span>`}
     </div>
     ${list.length ? `
     <div class="tw"><table>
@@ -2167,7 +2205,7 @@ function viewTasks() {
       <tbody>${list.map(t => { const r = dueText(t.due), P = PRIO_MAP[t.priority] || PRIOS[1];
         const late = t.status !== 'done' && daysFromToday(t.due) !== null && daysFromToday(t.due) < 0; return `
         <tr${late ? ' class="row-danger"' : ''}>
-          <td><input type="checkbox" style="width:17px;height:17px;accent-color:var(--ok);cursor:pointer" data-act="task-toggle" data-id="${t.id}"${t.status === 'done' ? ' checked' : ''}></td>
+          <td><input type="checkbox" style="width:17px;height:17px;accent-color:var(--ok);cursor:pointer" data-act="${app.bulk.on ? 'bulk-sel' : 'task-toggle'}" data-id="${t.id}"${(app.bulk.on ? app.bulk.sel.has(t.id) : t.status === 'done') ? ' checked' : ''}></td>
           <td><div style="font-weight:600;${t.status === 'done' ? 'text-decoration:line-through;color:var(--ink-4)' : ''}">${esc(t.title)}</div>
               ${t.note ? `<div class="tiny" style="margin-top:2px">${esc(t.note.slice(0, 50))}</div>` : ''}
               ${t.platform_ref ? `<span class="tag tag-purple" style="margin-top:3px"><svg class="ic ic-sm"><use href="#i-link"/></svg>平台 #${esc(t.platform_ref)}</span>` : ''}</td>
@@ -2184,7 +2222,7 @@ function viewTasks() {
       const late = t.status !== 'done' && daysFromToday(t.due) !== null && daysFromToday(t.due) < 0; return `
       <div class="mcard"${late ? ' style="background:var(--danger-soft)"' : ''}>
         <div class="mcard-hd">
-          <input type="checkbox" style="width:20px;height:20px;accent-color:var(--ok)" data-act="task-toggle" data-id="${t.id}"${t.status === 'done' ? ' checked' : ''}>
+          <input type="checkbox" style="width:20px;height:20px;accent-color:var(--ok);cursor:pointer" data-act="${app.bulk.on ? 'bulk-sel' : 'task-toggle'}" data-id="${t.id}"${(app.bulk.on ? app.bulk.sel.has(t.id) : t.status === 'done') ? ' checked' : ''}>
           <div class="mcard-t"${t.status === 'done' ? ' style="text-decoration:line-through;color:var(--ink-4)"' : ''}>${esc(t.title)}</div>
         </div>
         <div class="mcard-meta">
@@ -4362,6 +4400,32 @@ const ACTS = {
     const t = DB.tasks.find(x => x.id === id); if (!t) return;
     t.status = 'done'; t.done_at = today(); save('tasks'); render(); ui.toast('任务已完成', 'ok');
   },
+  'bulk-toggle': () => {
+    app.bulk = (app.bulk && app.bulk.on) ? { on: false, sel: new Set() } : { on: true, sel: new Set() };
+    render();
+  },
+  'bulk-sel': id => {
+    app.bulk = app.bulk || { on: false, sel: new Set() };
+    if (app.bulk.sel.has(id)) app.bulk.sel.delete(id); else app.bulk.sel.add(id);
+    const c = $('#bulk-count'); if (c) c.textContent = app.bulk.sel.size;
+  },
+  'bulk-done': () => {
+    if (!app.bulk || !app.bulk.sel.size) return;
+    const ids = [...app.bulk.sel];
+    ui.confirm('批量完成', `确定将选中的 <b>${ids.length}</b> 条任务标记为已完成吗？`, () => {
+      DB.tasks.forEach(t => { if (ids.indexOf(t.id) >= 0 && t.status !== 'done') { t.status = 'done'; t.done_at = today(); } });
+      save('tasks'); app.bulk = { on: false, sel: new Set() }; render(); ui.toast('已批量完成 ' + ids.length + ' 条', 'ok');
+    }, true);
+  },
+  'bulk-del': () => {
+    if (!app.bulk || !app.bulk.sel.size) return;
+    const ids = [...app.bulk.sel];
+    ui.confirm('批量删除', `确定删除选中的 <b>${ids.length}</b> 条任务吗？此操作不可恢复。`, () => {
+      DB.tasks = DB.tasks.filter(t => ids.indexOf(t.id) < 0);
+      save('tasks'); app.bulk = { on: false, sel: new Set() }; render(); ui.toast('已批量删除 ' + ids.length + ' 条', 'ok');
+    }, true);
+  },
+  'bulk-exit': () => { app.bulk = { on: false, sel: new Set() }; render(); },
   'task-defer': id => {
     const t = DB.tasks.find(x => x.id === id); if (!t) return;
     t.due = shiftDay(t.due && daysFromToday(t.due) > 0 ? t.due : today(), 1);
@@ -4708,6 +4772,10 @@ document.addEventListener('click', e => {
 });
 
 document.addEventListener('click', e => {
+  const pinEl = e.target.closest('[data-pin]');
+  if (pinEl) { e.preventDefault(); e.stopPropagation(); togglePin(pinEl.dataset.pin); return; }
+  const foldEl = e.target.closest('[data-fold]');
+  if (foldEl) { e.preventDefault(); toggleFold(foldEl.dataset.fold); return; }
   const nav = e.target.closest('[data-view]');
   if (nav) { go(nav.dataset.view); return; }
   const rg = e.target.closest('[data-act="rg"]');
@@ -4743,6 +4811,21 @@ document.addEventListener('change', e => {
   if (s) { DB.settings[s.dataset.set] = s.value.trim(); save('settings'); ui.toast('已保存', 'ok', 1200); paintWho(); return; }
   const c = e.target.closest('[data-set-chk]');
   if (c) { DB.settings[c.dataset.setChk] = c.checked; save('settings'); ui.toast('已保存', 'ok', 1200); return; }
+});
+/* B1 微交互：按钮点击涟漪（克制、0.42s 淡出） */
+document.addEventListener('click', e => {
+  const b = e.target.closest('.btn');
+  if (b && !b.disabled && !b.classList.contains('btn-icon')) {
+    const r = document.createElement('span'); r.className = 'ripple';
+    const rect = b.getBoundingClientRect();
+    const sz = Math.max(rect.width, rect.height);
+    r.style.width = r.style.height = sz + 'px';
+    const cx = (e.clientX || rect.left + rect.width / 2) - rect.left - sz / 2;
+    const cy = (e.clientY || rect.top + rect.height / 2) - rect.top - sz / 2;
+    r.style.left = cx + 'px'; r.style.top = cy + 'px';
+    b.appendChild(r);
+    setTimeout(() => r.remove(), 440);
+  }
 });
 $('#btn-export').onclick = exportJSON;
 $('#btn-import').onclick = () => $('#file-json').click();
@@ -4853,6 +4936,86 @@ function exportPortable() {
   ui.toast('已生成便携工作台（数据已内置），请在下载文件夹找到它', 'ok', 4500);
 }
 
+/* ---------- 侧边栏增强：搜索 / 分组折叠 / 钉住常用 ---------- */
+function injectNavExtras() {
+  $$('#sidenav .nav-item').forEach(it => {
+    if (it.querySelector('.nav-pin')) return;
+    const v = it.dataset.view;
+    const pin = document.createElement('button');
+    pin.className = 'nav-pin'; pin.dataset.pin = v; pin.title = '钉到常用 / 取消钉住';
+    pin.innerHTML = '<svg class="ic"><use href="#i-pin"/></svg>';
+    it.appendChild(pin);
+  });
+}
+function applyFold() {
+  const g = DB.settings.navFold || {};
+  $$('#sidenav > .nav-group').forEach(grp => {
+    const name = grp.dataset.group;
+    const collapsed = !!g[name];
+    grp.classList.toggle('collapsed', collapsed);
+    let n = grp.nextElementSibling;
+    while (n && !n.classList.contains('nav-group')) {
+      if (n.classList.contains('nav-item')) n.style.display = collapsed ? 'none' : '';
+      n = n.nextElementSibling;
+    }
+  });
+}
+function updatePinStates() {
+  const pinned = DB.settings.pinned || [];
+  $$('#sidenav .nav-item[data-view]').forEach(it => {
+    it.classList.toggle('pinned', pinned.indexOf(it.dataset.view) >= 0);
+  });
+}
+function renderPinned() {
+  const box = $('#nav-pinned'); if (!box) return;
+  const pinned = DB.settings.pinned || [];
+  if (!pinned.length) { box.innerHTML = ''; return; }
+  const html = {};
+  $$('#sidenav .nav-item[data-view]').forEach(it => {
+    const v = it.dataset.view;
+    if (pinned.indexOf(v) >= 0) html[v] = it.innerHTML;
+  });
+  box.innerHTML = '<div class="nav-group">常用</div>' + pinned.map(v =>
+    `<button class="nav-item pinned" data-view="${v}">${html[v] || ''}</button>`).join('');
+  updatePinStates();
+}
+function toggleFold(group) {
+  DB.settings.navFold = DB.settings.navFold || {};
+  DB.settings.navFold[group] = !DB.settings.navFold[group];
+  save('settings'); applyFold();
+}
+function togglePin(view) {
+  DB.settings.pinned = DB.settings.pinned || [];
+  const i = DB.settings.pinned.indexOf(view);
+  if (i >= 0) DB.settings.pinned.splice(i, 1); else DB.settings.pinned.push(view);
+  save('settings'); renderPinned(); updatePinStates();
+  ui.toast(i >= 0 ? '已取消常用' : '已钉到常用', 'ok', 1200);
+}
+function bindNavSearch() {
+  const inp = $('#nav-search'); if (!inp || inp._bound) return; inp._bound = 1;
+  inp.addEventListener('input', () => {
+    const q = inp.value.trim().toLowerCase();
+    const folded = DB.settings.navFold || {};
+    $$('#sidenav > .nav-group').forEach(grp => {
+      const collapsed = !!folded[grp.dataset.group];
+      let n = grp.nextElementSibling, any = false;
+      while (n && !n.classList.contains('nav-group')) {
+        if (n.classList.contains('nav-item')) {
+          if (collapsed) { n.style.display = 'none'; }
+          else {
+            const txt = (n.textContent || '').replace(/[\s★]/g, '').toLowerCase();
+            n.style.display = (!q || txt.indexOf(q) >= 0) ? '' : 'none';
+          }
+          if (n.style.display !== 'none') any = true;
+        }
+        n = n.nextElementSibling;
+      }
+      grp.style.display = (collapsed || any) ? '' : 'none';
+    });
+    const pb = $('#nav-pinned'); if (pb) pb.style.display = q ? 'none' : '';
+  });
+}
+
 function boot() {
   DB.settings = store.read('settings', null);
   if (!DB.settings) { if (window.__CWB_EMBED__) applyEmbedded(); else seedDemo(); }
@@ -4879,6 +5042,7 @@ function boot() {
     DB.custom = store.read('custom', {}) || {};
   }
   paintWho();
+  injectNavExtras(); applyFold(); renderPinned(); updatePinStates(); bindNavSearch();
   render();
   console.log('%c辅导员工作台 ' + APP_VERSION, 'color:#2563eb;font-weight:700');
 }
