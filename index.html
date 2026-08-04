@@ -356,6 +356,19 @@ tbody tr:last-child td{border-bottom:none}
 .chart-wrap svg{display:block;max-width:100%;height:auto}
 .legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:12px;font-size:12.3px;color:var(--ink-3)}
 .legend i{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:6px;vertical-align:-1px}
+.sub-hd{font-size:13px;font-weight:700;color:var(--ink-2);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.warn-donut-wrap{border-top:1px solid var(--line);margin-top:14px}
+.insight{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fff}
+.insight-danger{border-color:#fecaca;background:#fef2f2}
+.insight-warn{border-color:#fde68a;background:#fffbeb}
+.insight-ok{border-color:#bbf7d0;background:#f0fdf4}
+.insight-t{font-size:12.5px;color:var(--ink-3);font-weight:600}
+.insight-v{font-size:26px;font-weight:800;letter-spacing:-.5px;margin:5px 0 3px;color:var(--ink)}
+.insight-danger .insight-v{color:var(--danger)}
+.insight-warn .insight-v{color:var(--warn)}
+.insight-ok .insight-v{color:var(--ok)}
+.insight-s{font-size:12.5px;color:var(--ink-3)}
+.insight-note{font-size:12px;color:var(--ink-4);margin-top:7px;line-height:1.5}
 @keyframes drawBar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 .bar-val{transform-origin:left;animation:drawBar .8s cubic-bezier(.22,.7,.3,1) both}
 @keyframes donutIn{from{transform:scale(.92) rotate(-6deg);opacity:0}to{opacity:1;transform:none}}
@@ -684,6 +697,21 @@ function termRange() {
   if (m >= 3 && m <= 8) return { name:`${y} 春季学期`, from:`${y}-03-01`, to:`${y}-08-31` };
   if (m >= 9) return { name:`${y}-${y+1} 秋季学期`, from:`${y}-09-01`, to:`${y+1}-02-28` };
   return { name:`${y-1}-${y} 秋季学期`, from:`${y-1}-09-01`, to:`${y}-02-28` };
+}
+function weekRange() {
+  const d = new Date(), day = d.getDay(), diff = (day === 0 ? -6 : 1 - day);
+  const mon = new Date(d.getFullYear(), d.getMonth(), d.getDate() + diff);
+  const sun = new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() + 6);
+  const fmt = dt => dt.getFullYear() + '-' + pad(dt.getMonth()+1) + '-' + pad(dt.getDate());
+  return { name:`本周（${fmt(mon)} ~ ${fmt(sun)}）`, from:fmt(mon), to:fmt(sun) };
+}
+function monthRangeObj() {
+  const m = thisMonth();
+  return { name:`${m.replace('-',' 年 ')} 月`, from:m + '-01', to:m + '-31' };
+}
+function downloadSummary(R, label) {
+  download(`工作小结_${label}_${today()}.txt`, buildSummary(R), 'text/plain');
+  ui.toast('已导出' + label + '工作小结', 'ok');
 }
 function download(filename, content, mime) {
   const blob = new Blob([content], { type: (mime || 'application/octet-stream') + ';charset=utf-8' });
@@ -1464,7 +1492,7 @@ function normTpl(x) {
   };
 }
 
-const APP_VERSION = '3.3.0';
+const APP_VERSION = '3.4.0';
 
 /* ===================== 9. 示例数据（首次打开可见效果） ===================== */
 function seedDemo() {
@@ -2140,6 +2168,66 @@ function viewHome() {
     <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-flag"/></svg>本学期九项职责工作量</h2>
       <span class="sp"></span><span class="tiny">${esc(termRange().name)}</span></div>
     <div class="card-bd">${dutyBars(termRange())}</div>
+  </div>
+
+  ${homeStudentDonut()}
+  ${homeInsights()}`;
+}
+function homeStudentDonut() {
+  const ss = DB.students;
+  if (!ss.length) return '';
+  const crisis = ss.filter(s => s.crisis_level && !s.crisis_relieved).length;
+  const focusOnly = ss.filter(s => s.focus_level && !(s.crisis_level && !s.crisis_relieved)).length;
+  const normal = ss.length - crisis - focusOnly;
+  const items = [
+    { label:'心理危机未解除', value:crisis, color:'#ef4444' },
+    { label:'重点关注', value:focusOnly, color:'#f59e0b' },
+    { label:'其余在读', value:normal, color:'#2563eb' },
+  ];
+  return `<div class="card">
+    <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-users"/></svg>学生关注结构</h2>
+      <span class="sp"></span><span class="tiny">共 ${ss.length} 人 · 危机 ${crisis} · 关注 ${focusOnly}</span></div>
+    <div class="card-bd">${crisis || focusOnly ? donutChart(items, String(crisis + focusOnly), '需关注') : emptyBox('暂无重点关注学生，状态良好。')}</div>
+  </div>`;
+}
+function warnDonut() {
+  const ws = DB.warn.filter(w => !w.resolved);
+  if (!ws.length) return emptyBox('暂无未解除的学业预警记录。');
+  const cnt = l => ws.filter(w => w.level === l).length;
+  const items = [
+    { label:'红色', value:cnt('红'), color:'#ef4444' },
+    { label:'橙色', value:cnt('橙'), color:'#f59e0b' },
+    { label:'黄色', value:cnt('黄'), color:'#0ea5e9' },
+  ];
+  return donutChart(items, String(ws.length), '未解除');
+}
+function homeInsights() {
+  const tasks = DB.tasks;
+  const openTasks = tasks.filter(t => t.status !== 'done');
+  const overdue = openTasks.filter(t => daysFromToday(t.due) < 0).length;
+  const overdueRate = openTasks.length ? Math.round(overdue / openTasks.length * 100) : 0;
+  const ss = DB.students;
+  const thisM = thisMonth();
+  const monthTalkStudents = new Set(DB.talks.filter(t => monthOf(t.date) === thisM).map(t => t.student_name)).size;
+  const coverage = ss.length ? Math.round(monthTalkStudents / ss.length * 100) : 0;
+  const focusN = ss.filter(s => s.focus_level).length;
+  const focusRate = ss.length ? Math.round(focusN / ss.length * 100) : 0;
+  const cards = [
+    { t:'任务逾期率', v:overdueRate + '%', s:`${overdue} / ${openTasks.length} 条未完成`, note: overdueRate > 30 ? '逾期偏多，建议优先清理' : '逾期控制良好', lv: overdueRate > 30 ? 'danger' : 'ok' },
+    { t:'本月谈话覆盖率', v:coverage + '%', s:`覆盖 ${monthTalkStudents} / ${ss.length} 人`, note: coverage < 50 ? '多数学生本月未谈，可排期' : '覆盖较广', lv: coverage < 50 ? 'warn' : 'ok' },
+    { t:'重点关注占比', v:focusRate + '%', s:`${focusN} / ${ss.length} 人`, note: focusRate > 20 ? '重点关注比例偏高' : '结构正常', lv: focusRate > 20 ? 'warn' : 'ok' },
+  ];
+  return `<div class="card">
+    <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-chart"/></svg>数据洞察</h2>
+      <span class="sp"></span><span class="tiny">基于本机记录自动计算</span></div>
+    <div class="card-bd" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">
+      ${cards.map(c => `<div class="insight insight-${c.lv}">
+        <div class="insight-t">${esc(c.t)}</div>
+        <div class="insight-v">${c.v}</div>
+        <div class="insight-s">${esc(c.s)}</div>
+        <div class="insight-note">${esc(c.note)}</div>
+      </div>`).join('')}
+    </div>
   </div>`;
 }
 function dutyBars(range) {
@@ -2860,6 +2948,10 @@ function viewWarn() {
       <div class="kpi warn"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-clock"/></svg>橙色未解除</div><div class="kpi-v" data-num="${orange}">0</div></div>
       <div class="kpi brand"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-book"/></svg>黄色未解除</div><div class="kpi-v" data-num="${yellow}">0</div></div>
     </div>
+    <div class="warn-donut-wrap" style="padding:14px 0 4px">
+      <div class="sub-hd"><svg class="ic ic-sm" style="color:var(--accent)"><use href="#i-chart"/></svg>预警等级分布（未解除）</div>
+      ${warnDonut()}
+    </div>
     <div class="toolbar">
       <div class="search"><svg class="ic ic-sm"><use href="#i-search"/></svg>
         <input class="inp" placeholder="搜索姓名、学号、班级、课程" data-filter="warn.q" value="${esc(f.q)}"></div>
@@ -3487,6 +3579,8 @@ function viewReport() {
   <div class="card">
     <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-book"/></svg>一键生成工作小结</h2>
       <span class="sp"></span>
+      <button class="btn btn-sm" data-act="sum-week">本周小结</button>
+      <button class="btn btn-sm" data-act="sum-month">本月小结</button>
       <button class="btn btn-sm" data-act="sum-copy"><svg class="ic ic-sm"><use href="#i-copy"/></svg>复制全文</button>
       <button class="btn btn-sm" data-act="sum-download">下载 TXT</button>
       <button class="btn btn-sm" data-act="print">打印 / 存 PDF</button>
@@ -4713,6 +4807,8 @@ const ACTS = {
       : (document.execCommand('copy'), ui.toast('已复制', 'ok'));
   },
   'sum-download': () => { download(`工作小结_${today()}.txt`, $('#sum-text').value, 'text/plain'); ui.toast('已下载', 'ok'); },
+  'sum-week': () => downloadSummary(weekRange(), '本周'),
+  'sum-month': () => downloadSummary(monthRangeObj(), '本月'),
   'print': () => window.print(),
   'rg-apply': () => {
     app.reportRange = { mode:'custom', from: $('[data-rg="from"]').value, to: $('[data-rg="to"]').value };
