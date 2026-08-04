@@ -573,8 +573,7 @@ details.adv .adv-body{padding-top:14px}
 <div id="toast-root"></div>
 <input type="file" id="file-json" accept=".json,application/json" style="display:none">
 <input type="file" id="file-csv" accept=".csv,.txt" style="display:none">
-<input type="file" id="file-stay" accept=".csv,.txt" style="display:none">
-<input type="file" id="file-leave" accept=".csv,.txt" style="display:none">
+<input type="file" id="file-gen" accept=".csv,.txt" style="display:none">
 
 <script>
 /* ============================================================================
@@ -1058,9 +1057,11 @@ const bridge = {
     const MA = Array.isArray(src.material) ? src.material : [];
     const CO = Array.isArray(src.comp) ? src.comp : [];
     const TP = Array.isArray(src.tpl) ? src.tpl : [];
+    /* 备份文件里会带上 settings（辅导员姓名、学院、带班信息、隐私锁等），换电脑恢复时不能丢 */
+    const SET = (src.settings && typeof src.settings === 'object' && !Array.isArray(src.settings)) ? src.settings : null;
     if (!S.length && !T.length && !K.length && !ST.length && !LV.length && !HO.length && !PL.length && !AT.length && !NO.length
       && !WA.length && !HP.length && !GR.length && !FO.length && !PS.length && !GD.length
-      && !PO.length && !MA.length && !CO.length && !TP.length) throw new Error('文件中没有可导入的数据');
+      && !PO.length && !MA.length && !CO.length && !TP.length && !SET) throw new Error('文件中没有可导入的数据');
 
     if (mode === 'replace') {
       DB.students = S.map(normStudent); DB.tasks = T.map(normTask); DB.talks = K.map(normTalk);
@@ -1104,11 +1105,22 @@ const bridge = {
       DB.settings.college_name = src.counselor.college_name || '';
       DB.settings.org_code = src.counselor.org_code || '';
     }
+    /* 备份恢复：覆盖模式整体还原设置；合并模式只补本机还空着的项，不覆盖你现在填好的 */
+    let setRestored = 0;
+    if (!isPkg && SET) {
+      if (mode === 'replace') { DB.settings = Object.assign({}, DB.settings, SET); setRestored = 1; }
+      else {
+        Object.keys(SET).forEach(k => {
+          const cur = DB.settings[k];
+          if (cur === '' || cur === undefined || cur === null) { DB.settings[k] = SET[k]; setRestored = 1; }
+        });
+      }
+    }
     save();
     return { students:S.length, tasks:T.length, talks:K.length, stay:ST.length, leave:LV.length, honor:HO.length,
       pleave:PL.length, attend:AT.length, node:NO.length, warn:WA.length, help:HP.length, grant:GR.length,
       focus:FO.length, psych:PS.length, graduate:GD.length,
-      policy:PO.length, material:MA.length, comp:CO.length, tpl:TP.length };
+      policy:PO.length, material:MA.length, comp:CO.length, tpl:TP.length, settings:setRestored };
   },
   get baseUrl() { return (DB.settings.platform_url || '').replace(/\/$/, ''); },
   get enabled() { return !!this.baseUrl && !!DB.settings.platform_api_on; },
@@ -1445,6 +1457,7 @@ function normPolicy(x) {
     summary: x.summary || '',
     url: x.url || '',
     starred: !!x.starred,
+    note: x.note || '',
     created_at: x.created_at || new Date().toISOString(),
     _demo: !!x._demo,
   };
@@ -1492,7 +1505,7 @@ function normTpl(x) {
   };
 }
 
-const APP_VERSION = '3.4.0';
+const APP_VERSION = '3.5.0';
 
 /* ===================== 9. 示例数据（首次打开可见效果） ===================== */
 function seedDemo() {
@@ -2264,7 +2277,9 @@ function viewTasks() {
   <div class="card">
     <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-task"/></svg>工作任务</h2>
       <span class="sp"></span>
-      <button class="btn btn-sm" data-act="task-export">导出 CSV</button>
+      <button class="btn btn-sm" data-act="gen-template" data-coll="tasks" title="下载该模块的 CSV 导入模板">模板</button>
+      <button class="btn btn-sm" data-act="gen-import" data-coll="tasks"><svg class="ic ic-sm"><use href="#i-up"/></svg>导入 CSV</button>
+      <button class="btn btn-sm" data-act="task-export"><svg class="ic ic-sm"><use href="#i-down"/></svg>导出 CSV</button>
       <button class="btn btn-primary btn-sm" data-act="task-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新建任务</button>
     </div>
     <div class="toolbar">
@@ -2445,7 +2460,9 @@ function viewTalks() {
   <div class="card">
     <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-talk"/></svg>谈心谈话记录</h2>
       <span class="sp"></span>
-      <button class="btn btn-sm" data-act="talk-export">导出 CSV</button>
+      <button class="btn btn-sm" data-act="gen-template" data-coll="talks" title="下载该模块的 CSV 导入模板">模板</button>
+      <button class="btn btn-sm" data-act="gen-import" data-coll="talks"><svg class="ic ic-sm"><use href="#i-up"/></svg>导入 CSV</button>
+      <button class="btn btn-sm" data-act="talk-export"><svg class="ic ic-sm"><use href="#i-down"/></svg>导出 CSV</button>
       <button class="btn btn-primary btn-sm" data-act="talk-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增记录</button>
     </div>
     <div class="toolbar">
@@ -2516,7 +2533,9 @@ function viewStay() {
   <div class="card">
     <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-bed"/></svg>校外住宿 / 走读管理</h2>
       <span class="sp"></span>
-      <button class="btn btn-sm" data-act="stay-export">导出 CSV</button>
+      <button class="btn btn-sm" data-act="gen-template" data-coll="stay" title="下载该模块的 CSV 导入模板">模板</button>
+      <button class="btn btn-sm" data-act="gen-import" data-coll="stay"><svg class="ic ic-sm"><use href="#i-up"/></svg>导入 CSV</button>
+      <button class="btn btn-sm" data-act="stay-export"><svg class="ic ic-sm"><use href="#i-down"/></svg>导出 CSV</button>
       <button class="btn btn-primary btn-sm" data-act="stay-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增走读</button>
     </div>
     <div class="toolbar">
@@ -2580,7 +2599,9 @@ function viewLeave() {
   <div class="card">
     <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-plane"/></svg>假期去向管理</h2>
       <span class="sp"></span>
-      <button class="btn btn-sm" data-act="leave-export">导出 CSV</button>
+      <button class="btn btn-sm" data-act="gen-template" data-coll="leave" title="下载该模块的 CSV 导入模板">模板</button>
+      <button class="btn btn-sm" data-act="gen-import" data-coll="leave"><svg class="ic ic-sm"><use href="#i-up"/></svg>导入 CSV</button>
+      <button class="btn btn-sm" data-act="leave-export"><svg class="ic ic-sm"><use href="#i-down"/></svg>导出 CSV</button>
       <button class="btn btn-primary btn-sm" data-act="leave-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增去向</button>
     </div>
     <div class="toolbar">
@@ -2645,7 +2666,9 @@ function viewHonor() {
   <div class="card">
     <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-trophy"/></svg>评优榜样 / 先进个人</h2>
       <span class="sp"></span>
-      <button class="btn btn-sm" data-act="honor-export">导出 CSV</button>
+      <button class="btn btn-sm" data-act="gen-template" data-coll="honor" title="下载该模块的 CSV 导入模板">模板</button>
+      <button class="btn btn-sm" data-act="gen-import" data-coll="honor"><svg class="ic ic-sm"><use href="#i-up"/></svg>导入 CSV</button>
+      <button class="btn btn-sm" data-act="honor-export"><svg class="ic ic-sm"><use href="#i-down"/></svg>导出 CSV</button>
       <button class="btn btn-primary btn-sm" data-act="honor-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增申报</button>
     </div>
     <div class="toolbar">
@@ -2719,7 +2742,9 @@ function viewPleave() {
   <div class="card">
     <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-clock"/></svg>请销假管理</h2>
       <span class="sp"></span>
-      <button class="btn btn-sm" data-act="pleave-export">导出 CSV</button>
+      <button class="btn btn-sm" data-act="gen-template" data-coll="pleave" title="下载该模块的 CSV 导入模板">模板</button>
+      <button class="btn btn-sm" data-act="gen-import" data-coll="pleave"><svg class="ic ic-sm"><use href="#i-up"/></svg>导入 CSV</button>
+      <button class="btn btn-sm" data-act="pleave-export"><svg class="ic ic-sm"><use href="#i-down"/></svg>导出 CSV</button>
       <button class="btn btn-primary btn-sm" data-act="pleave-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>登记请假</button>
     </div>
     <div class="kpis">
@@ -2790,7 +2815,9 @@ function viewAttend() {
   <div class="card">
     <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-check"/></svg>考勤台账 / 学风建设</h2>
       <span class="sp"></span>
-      <button class="btn btn-sm" data-act="attend-export">导出 CSV</button>
+      <button class="btn btn-sm" data-act="gen-template" data-coll="attend" title="下载该模块的 CSV 导入模板">模板</button>
+      <button class="btn btn-sm" data-act="gen-import" data-coll="attend"><svg class="ic ic-sm"><use href="#i-up"/></svg>导入 CSV</button>
+      <button class="btn btn-sm" data-act="attend-export"><svg class="ic ic-sm"><use href="#i-down"/></svg>导出 CSV</button>
       <button class="btn btn-sm" data-act="attend-month">月度报表</button>
       <button class="btn btn-primary btn-sm" data-act="attend-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>登记考勤</button>
     </div>
@@ -2849,7 +2876,9 @@ function viewNode() {
   <div class="card">
     <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-flag"/></svg>工作日历与节点</h2>
       <span class="sp"></span>
-      <button class="btn btn-sm" data-act="node-export">导出 CSV</button>
+      <button class="btn btn-sm" data-act="gen-template" data-coll="node" title="下载该模块的 CSV 导入模板">模板</button>
+      <button class="btn btn-sm" data-act="gen-import" data-coll="node"><svg class="ic ic-sm"><use href="#i-up"/></svg>导入 CSV</button>
+      <button class="btn btn-sm" data-act="node-export"><svg class="ic ic-sm"><use href="#i-down"/></svg>导出 CSV</button>
       <button class="btn btn-primary btn-sm" data-act="node-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增节点</button>
     </div>
     <div class="kpis">
@@ -2940,7 +2969,9 @@ function viewWarn() {
   <div class="card">
     <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-alert"/></svg>学业预警台账</h2>
       <span class="sp"></span>
-      <button class="btn btn-sm" data-act="warn-export">导出 CSV</button>
+      <button class="btn btn-sm" data-act="gen-template" data-coll="warn" title="下载该模块的 CSV 导入模板">模板</button>
+      <button class="btn btn-sm" data-act="gen-import" data-coll="warn"><svg class="ic ic-sm"><use href="#i-up"/></svg>导入 CSV</button>
+      <button class="btn btn-sm" data-act="warn-export"><svg class="ic ic-sm"><use href="#i-down"/></svg>导出 CSV</button>
       <button class="btn btn-primary btn-sm" data-act="warn-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增预警</button>
     </div>
     <div class="kpis">
@@ -3004,7 +3035,9 @@ function viewHelp() {
   <div class="card">
     <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-heart"/></svg>学业帮扶台账</h2>
       <span class="sp"></span>
-      <button class="btn btn-sm" data-act="help-export">导出 CSV</button>
+      <button class="btn btn-sm" data-act="gen-template" data-coll="help" title="下载该模块的 CSV 导入模板">模板</button>
+      <button class="btn btn-sm" data-act="gen-import" data-coll="help"><svg class="ic ic-sm"><use href="#i-up"/></svg>导入 CSV</button>
+      <button class="btn btn-sm" data-act="help-export"><svg class="ic ic-sm"><use href="#i-down"/></svg>导出 CSV</button>
       <button class="btn btn-primary btn-sm" data-act="help-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增帮扶</button>
     </div>
     <div class="kpis">
@@ -3059,7 +3092,9 @@ function viewGrant() {
   <div class="card">
     <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-shield"/></svg>奖助勤补管理</h2>
       <span class="sp"></span>
-      <button class="btn btn-sm" data-act="grant-export">导出 CSV</button>
+      <button class="btn btn-sm" data-act="gen-template" data-coll="grant" title="下载该模块的 CSV 导入模板">模板</button>
+      <button class="btn btn-sm" data-act="gen-import" data-coll="grant"><svg class="ic ic-sm"><use href="#i-up"/></svg>导入 CSV</button>
+      <button class="btn btn-sm" data-act="grant-export"><svg class="ic ic-sm"><use href="#i-down"/></svg>导出 CSV</button>
       <button class="btn btn-primary btn-sm" data-act="grant-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增记录</button>
     </div>
     <div class="kpis">
@@ -3147,7 +3182,9 @@ function viewFocus() {
       <span class="sp"></span>
       <span class="tag tag-green"><svg class="ic ic-sm"><use href="#i-lock"/></svg>已解锁</span>
       <button class="btn btn-sm" data-act="focus-lock">上锁</button>
-      <button class="btn btn-sm" data-act="focus-export">导出 CSV</button>
+      <button class="btn btn-sm" data-act="gen-template" data-coll="focus" title="下载该模块的 CSV 导入模板">模板</button>
+      <button class="btn btn-sm" data-act="gen-import" data-coll="focus"><svg class="ic ic-sm"><use href="#i-up"/></svg>导入 CSV</button>
+      <button class="btn btn-sm" data-act="focus-export"><svg class="ic ic-sm"><use href="#i-down"/></svg>导出 CSV</button>
       <button class="btn btn-primary btn-sm" data-act="focus-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增档案</button>
     </div>
     <div class="kpis">
@@ -3208,7 +3245,9 @@ function viewPsych() {
   <div class="card">
     <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-mind"/></svg>心理摸排台账</h2>
       <span class="sp"></span>
-      <button class="btn btn-sm" data-act="psych-export">导出 CSV</button>
+      <button class="btn btn-sm" data-act="gen-template" data-coll="psych" title="下载该模块的 CSV 导入模板">模板</button>
+      <button class="btn btn-sm" data-act="gen-import" data-coll="psych"><svg class="ic ic-sm"><use href="#i-up"/></svg>导入 CSV</button>
+      <button class="btn btn-sm" data-act="psych-export"><svg class="ic ic-sm"><use href="#i-down"/></svg>导出 CSV</button>
       <button class="btn btn-primary btn-sm" data-act="psych-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增摸排</button>
     </div>
     <div class="kpis">
@@ -3274,7 +3313,9 @@ function viewGraduate() {
   <div class="card">
     <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-grad"/></svg>毕业生档案与就业统计</h2>
       <span class="sp"></span>
-      <button class="btn btn-sm" data-act="graduate-export">导出 CSV</button>
+      <button class="btn btn-sm" data-act="gen-template" data-coll="graduate" title="下载该模块的 CSV 导入模板">模板</button>
+      <button class="btn btn-sm" data-act="gen-import" data-coll="graduate"><svg class="ic ic-sm"><use href="#i-up"/></svg>导入 CSV</button>
+      <button class="btn btn-sm" data-act="graduate-export"><svg class="ic ic-sm"><use href="#i-down"/></svg>导出 CSV</button>
       <button class="btn btn-primary btn-sm" data-act="graduate-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增毕业生</button>
     </div>
     <div class="kpis">
@@ -3329,7 +3370,9 @@ function viewPolicy() {
   <div class="card">
     <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-book"/></svg>政策智库库</h2>
       <span class="sp"></span>
-      <button class="btn btn-sm" data-act="policy-export">导出 CSV</button>
+      <button class="btn btn-sm" data-act="gen-template" data-coll="policy" title="下载该模块的 CSV 导入模板">模板</button>
+      <button class="btn btn-sm" data-act="gen-import" data-coll="policy"><svg class="ic ic-sm"><use href="#i-up"/></svg>导入 CSV</button>
+      <button class="btn btn-sm" data-act="policy-export"><svg class="ic ic-sm"><use href="#i-down"/></svg>导出 CSV</button>
       <button class="btn btn-primary btn-sm" data-act="policy-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增政策</button>
     </div>
     <div class="card-bd">
@@ -3377,7 +3420,9 @@ function viewMaterial() {
   <div class="card">
     <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-link"/></svg>工作素材收藏夹</h2>
       <span class="sp"></span>
-      <button class="btn btn-sm" data-act="material-export">导出 CSV</button>
+      <button class="btn btn-sm" data-act="gen-template" data-coll="material" title="下载该模块的 CSV 导入模板">模板</button>
+      <button class="btn btn-sm" data-act="gen-import" data-coll="material"><svg class="ic ic-sm"><use href="#i-up"/></svg>导入 CSV</button>
+      <button class="btn btn-sm" data-act="material-export"><svg class="ic ic-sm"><use href="#i-down"/></svg>导出 CSV</button>
       <button class="btn btn-primary btn-sm" data-act="material-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增素材</button>
     </div>
     <div class="card-bd">
@@ -3436,7 +3481,9 @@ function viewComp() {
   <div class="card">
     <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-trophy"/></svg>科创竞赛平台</h2>
       <span class="sp"></span>
-      <button class="btn btn-sm" data-act="comp-export">导出 CSV</button>
+      <button class="btn btn-sm" data-act="gen-template" data-coll="comp" title="下载该模块的 CSV 导入模板">模板</button>
+      <button class="btn btn-sm" data-act="gen-import" data-coll="comp"><svg class="ic ic-sm"><use href="#i-up"/></svg>导入 CSV</button>
+      <button class="btn btn-sm" data-act="comp-export"><svg class="ic ic-sm"><use href="#i-down"/></svg>导出 CSV</button>
       <button class="btn btn-primary btn-sm" data-act="comp-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增赛事</button>
     </div>
     <div class="card-bd">
@@ -3487,7 +3534,9 @@ function viewTpl() {
   <div class="card">
     <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-copy"/></svg>通知·流程·表单模板库</h2>
       <span class="sp"></span>
-      <button class="btn btn-sm" data-act="tpl-export">导出 CSV</button>
+      <button class="btn btn-sm" data-act="gen-template" data-coll="tpl" title="下载该模块的 CSV 导入模板">模板</button>
+      <button class="btn btn-sm" data-act="gen-import" data-coll="tpl"><svg class="ic ic-sm"><use href="#i-up"/></svg>导入 CSV</button>
+      <button class="btn btn-sm" data-act="tpl-export"><svg class="ic ic-sm"><use href="#i-down"/></svg>导出 CSV</button>
       <button class="btn btn-primary btn-sm" data-act="tpl-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增模板</button>
     </div>
     <div class="card-bd">
@@ -4354,6 +4403,148 @@ function importStudentsCSV(text) {
   save('students'); render();
   ui.toast(`导入完成：新增 ${add} 人，更新 ${upd} 人`, 'ok', 3200);
 }
+
+/* ==================== E1 通用 CSV 导入器：18 个业务模块导入/导出闭环 ====================
+   设计约定：head/field 与各模块「导出 CSV」的表头逐列一一对应，
+   因此「导出的文件可以原样导回」，导回时按 key 去重（更新而不是重复新增）。 */
+const REV = {
+  duty:   n => { const h = DUTIES.find(d => d.n === n || d.s === n || d.k === n); return h ? h.k : 'daily'; },
+  prio:   n => { const h = PRIOS.find(p => p.n === n || p.k === n); return h ? h.k : 'P1'; },
+  status: n => Object.keys(STATUS_TXT).find(k => STATUS_TXT[k] === n || k === n) || 'todo',
+  repeat: n => Object.keys(NODE_REPEAT).find(k => NODE_REPEAT[k] === n || k === n) || 'none',
+  honor:  n => { const h = HONOR_TYPES.find(x => x.n === n || x.v === n); return h ? h.v : n; },
+  bool:   v => /^(是|已销假|已解决|已完成|已收藏|true|1|y|yes)$/i.test(String(v == null ? '' : v).trim()),
+};
+const IMP = {
+  tasks: { norm:normTask, label:'工作任务', key:['title','due'], cast:{ duty:'duty', priority:'prio', status:'status' },
+    head:['任务名称','职责分类','来源','涉及班级','截止日期','优先级','状态','备注','平台任务号'],
+    field:['title','duty','source','classes','due','priority','status','note','platform_ref'] },
+  talks: { norm:normTalk, label:'谈心谈话', key:['student_name','date'], cast:{ duty:'duty' }, bool:['need_follow','done_follow'],
+    head:['日期','学号','姓名','方式','主题分类','谈话内容','问题研判','处理措施','需跟进','跟进日期','跟进完成'],
+    field:['date','student_number','student_name','way','duty','summary','judge','action','need_follow','follow_date','done_follow'], main:'student_name' },
+  stay: { norm:normStay, label:'校外住宿', key:['student_name','start'],
+    head:['姓名','学号','年级专业','学生类型','申请理由','走读开始','走读结束','紧急联系人','紧急联系人电话','审批情况','备注'],
+    field:['student_name','student_number','grade_major','stu_type','reason','start','end','emergency_name','emergency_phone','approval','note'] },
+  leave: { norm:normLeave, label:'假期去向', key:['name','leave_date'],
+    head:['姓名','学号','专业班级','家庭所在省市区','离校时间','返校时间','宿舍','本人手机号','是否延迟离校','留校缘由','指导老师','家长知情同意书','特殊情况备注'],
+    field:['name','student_number','class_major','home_addr','leave_date','return_date','dorm','phone','delayed','delay_reason','teacher','consent','note'] },
+  honor: { norm:normHonor, label:'评优榜样', key:['name','apply_type'], cast:{ apply_type:'honor' },
+    head:['姓名','学号','申请类型','政治面貌','专业','班级','综合成绩专业排名','德育素质考核等级','入学来获奖学金情况','社会工作情况','其他获奖情况'],
+    field:['name','student_number','apply_type','politics','major','class_name','rank','moral','scholarships','social','others'] },
+  pleave: { norm:normPleave, label:'请销假', key:['name','start'], bool:['cancel'],
+    head:['姓名','学号','班级','请假开始','请假结束','类型','事由','审批人','审批状态','是否销假','登记日期','备注'],
+    field:['name','student_number','class_name','start','end','type','reason','approver','status','cancel','leave_at','note'] },
+  attend: { norm:normAttend, label:'考勤台账', key:['name','date','type'],
+    head:['姓名','学号','班级','日期','缺勤类型','时长/节次','记录人','备注'],
+    field:['name','student_number','class_name','date','type','duration','teacher','note'] },
+  node: { norm:normNode, label:'工作节点', key:['title','due'], cast:{ category:'duty', status:'status', repeat:'repeat' }, num:['remind_days'],
+    head:['工作标题','分类','截止日期','提前提醒天数','状态','周期','工作小结','附件','完成日期'],
+    field:['title','category','due','remind_days','status','repeat','summary','attachment','done_at'] },
+  warn: { norm:normWarn, label:'学业预警', key:['name','type'], bool:['resolved'],
+    head:['姓名','学号','班级','预警类型','等级','关联课程','干预措施','回访记录','是否解决','解决日期','备注'],
+    field:['name','student_number','class_name','type','level','course','measure','follow','resolved','resolved_at','note'] },
+  help: { norm:normHelp, label:'学业帮扶', key:['name','type'],
+    head:['姓名','学号','班级','帮扶类型','帮扶人','周期','帮扶措施','效果记录','状态','备注'],
+    field:['name','student_number','class_name','type','helper','cycle','measure','effect','status','note'] },
+  grant: { norm:normGrant, label:'奖助勤补', key:['name','kind','batch'], num:['amount'],
+    head:['姓名','学号','班级','项目类型','金额(元)','批次/年度','发放状态','备注'],
+    field:['name','student_number','class_name','kind','amount','batch','status','note'] },
+  focus: { norm:normFocus, label:'重点学生档案', key:['name','category'],
+    head:['姓名','学号','班级','关注类别','关注级别','关注原因','干预措施','跟进记录','负责老师','管理状态','更新日期','备注'],
+    field:['name','student_number','class_name','category','level','reason','measures','follow_up','owner','status','updated_at','note'] },
+  psych: { norm:normPsych, label:'心理摸排', key:['name','screen_date'], num:['score'],
+    head:['姓名','学号','班级','摸排日期','使用量表','得分','评估结果','关注事项','干预建议','处理人','状态','备注'],
+    field:['name','student_number','class_name','screen_date','scale','score','level','concern','suggestion','handler','status','note'] },
+  graduate: { norm:normGraduate, label:'毕业生档案', key:['name','graduation_year'], num:['graduation_year'],
+    head:['姓名','学号','班级','专业','毕业年份','就业状态','就业单位','岗位/方向','就业地点','薪酬区间','是否签约','更新日期','备注'],
+    field:['name','student_number','class_name','major_name','graduation_year','employment_status','employer','job_type','location','salary_range','signed','updated_at','note'] },
+  policy: { norm:normPolicy, label:'政策智库', key:['title'], bool:['starred'],
+    head:['标题','分类','发布单位','发布日期','文号','关键词','摘要','链接','收藏','备注'],
+    field:['title','category','issuer','pub_date','doc_no','keywords','summary','url','starred','note'] },
+  material: { norm:normMaterial, label:'工作素材', key:['title'],
+    head:['标题','分类','来源','标签','内容','备注'],
+    field:['title','category','source','tags','content','note'] },
+  comp: { norm:normComp, label:'科创竞赛', key:['name'],
+    head:['赛事名称','类别','主办单位','截止日期','参赛学生','获奖情况','备注'],
+    field:['name','category','organizer','deadline','members','award','note'] },
+  tpl: { norm:normTpl, label:'模板库', key:['title'],
+    head:['标题','类型','适用场景','模板正文','备注'],
+    field:['title','type','scene','content','note'] },
+};
+function impCoerce(cfg, o) {
+  Object.keys(cfg.cast || {}).forEach(f => { if (o[f]) o[f] = REV[cfg.cast[f]](o[f]); });
+  (cfg.bool || []).forEach(f => { if (f in o) o[f] = REV.bool(o[f]); });
+  (cfg.num || []).forEach(f => {
+    if (!(f in o)) return;
+    const v = String(o[f]).replace(/[^\d.\-]/g, '');
+    o[f] = v === '' ? '' : Number(v);
+  });
+}
+/* 下载空白模板：表头 + 一行示例，用户填好后原样导回 */
+function importTemplate(coll) {
+  const cfg = IMP[coll]; if (!cfg) return;
+  const sample = (DB[coll] || [])[0];
+  const demo = cfg.field.map((f, i) => {
+    if (sample) {
+      let v = sample[f];
+      if (cfg.cast && cfg.cast[f] === 'duty') v = DUTY_MAP[v] ? DUTY_MAP[v].n : v;
+      if (cfg.cast && cfg.cast[f] === 'prio') v = PRIO_MAP[v] ? PRIO_MAP[v].n : v;
+      if (cfg.cast && cfg.cast[f] === 'status') v = STATUS_TXT[v] || v;
+      if (cfg.cast && cfg.cast[f] === 'repeat') v = NODE_REPEAT[v] || v;
+      if (cfg.cast && cfg.cast[f] === 'honor') v = (HONOR_TYPES.find(x => x.v === v) || {}).n || v;
+      if ((cfg.bool || []).includes(f)) v = v ? '是' : '否';
+      return v == null ? '' : String(v);
+    }
+    return i === 0 ? '示例' + cfg.head[0] : '';
+  });
+  download(`${cfg.label}_导入模板.csv`, toCSV([cfg.head, demo]), 'text/csv');
+  ui.toast('模板已下载，用 Excel 填好后点「导入 CSV」', 'ok', 3000);
+}
+function importCollectionCSV(coll, text) {
+  const cfg = IMP[coll];
+  if (!cfg) { ui.toast('该模块暂不支持 CSV 导入', 'err'); return; }
+  let rows;
+  try { rows = parseCSV(text); } catch (err) { ui.toast('文件解析失败：' + err.message, 'err', 3600); return; }
+  rows = (rows || []).filter(r => r && r.some(c => String(c == null ? '' : c).trim() !== ''));
+  if (rows.length < 2) { ui.toast('文件里没有数据行', 'err'); return; }
+  /* 表头识别：支持中文表头、英文字段名、以及「中文(字段名)」三种写法 */
+  const idx = {};
+  rows[0].forEach((h, i) => {
+    const raw = String(h == null ? '' : h).replace(/^\uFEFF/, '').trim();
+    let f = '';
+    const p = cfg.head.indexOf(raw);
+    if (p >= 0) f = cfg.field[p];
+    else if (cfg.field.includes(raw)) f = raw;
+    else { const m = raw.match(/\(([a-z_]+)\)\s*$/i); if (m && cfg.field.includes(m[1])) f = m[1]; }
+    if (f && !(f in idx)) idx[f] = i;
+  });
+  const cols = Object.keys(idx);
+  const main = cfg.main || cfg.field[0];
+  if (!cols.length || !(main in idx)) {
+    ui.toast(`表头无法识别，请先点「模板」下载模板，或直接把本模块导出的 CSV 填好再导回`, 'err', 4600); return;
+  }
+  const list = DB[coll] = DB[coll] || [];
+  let add = 0, upd = 0, skip = 0;
+  rows.slice(1).forEach(r => {
+    const o = {};
+    cols.forEach(f => { o[f] = String(r[idx[f]] == null ? '' : r[idx[f]]).trim(); });
+    if (!o[main]) { skip++; return; }
+    impCoerce(cfg, o);
+    const usable = cfg.key.filter(k => k in o);
+    const ex = usable.length === cfg.key.length
+      ? list.find(x => cfg.key.every(k => String(x[k] == null ? '' : x[k]) === String(o[k] == null ? '' : o[k])))
+      : null;
+    if (ex) {
+      Object.keys(o).forEach(k => { if (o[k] !== '' && o[k] !== undefined) ex[k] = o[k]; });
+      ex._demo = false; upd++;
+    } else {
+      const n = cfg.norm(o); n._demo = false; list.push(n); add++;
+    }
+  });
+  save(coll); render();
+  ui.toast(`「${cfg.label}」导入完成：新增 ${add} 条，更新 ${upd} 条${skip ? '，跳过空行 ' + skip : ''}`, 'ok', 3400);
+}
+
 function exportJSON() {
   const pkg = { app:'counselor-desk', type:'backup', version: APP_VERSION, exported_at: new Date().toISOString(), data: DB };
   download(`辅导员工作台备份_${today()}.json`, JSON.stringify(pkg, null, 2), 'application/json');
@@ -4366,19 +4557,28 @@ function exportPackage() {
   download(`工作台交换包_${DB.settings.counselor_name || '辅导员'}_${today()}.json`, JSON.stringify(pkg, null, 2), 'application/json');
   ui.toast('交换包已生成，可上传到平台汇总', 'ok', 3000);
 }
+/* 19 个数据集合的中文名，用于导入摘要与结果提示（避免只报 6 类、让人误以为丢数据） */
+const COLL_LABEL = {
+  students:'学生', tasks:'任务', talks:'谈话', stay:'校外住宿', leave:'假期去向', honor:'评优',
+  pleave:'请销假', attend:'考勤', node:'工作节点', warn:'学业预警', help:'学业帮扶', grant:'奖助勤补',
+  focus:'重点档案', psych:'心理摸排', graduate:'毕业生', policy:'政策', material:'素材', comp:'竞赛', tpl:'模板',
+};
 function doImportJSON(text) {
   let pkg; try { pkg = JSON.parse(text); } catch (e) { ui.toast('不是有效的 JSON 文件', 'err'); return; }
+  const src = pkg.data || pkg;
+  const keys = Object.keys(COLL_LABEL);
+  const total = keys.reduce((n, k) => n + (Array.isArray(src[k]) ? src[k].length : 0), 0);
+  const found = keys.filter(k => Array.isArray(src[k]) && src[k].length)
+    .map(k => `${COLL_LABEL[k]} <b>${src[k].length}</b>`);
+  const hasSet = !!(src.settings && typeof src.settings === 'object' && !Array.isArray(src.settings));
   ui.modal({
     title:'导入数据', size:'narrow', sticky:true,
-    body:`<div style="line-height:1.8;font-size:13.5px">
-      检测到：学生 <b>${(pkg.data || pkg).students ? (pkg.data || pkg).students.length : 0}</b> 条，
-      任务 <b>${(pkg.data || pkg).tasks ? (pkg.data || pkg).tasks.length : 0}</b> 条，
-      谈话 <b>${(pkg.data || pkg).talks ? (pkg.data || pkg).talks.length : 0}</b> 条，
-      校外住宿 <b>${(pkg.data || pkg).stay ? (pkg.data || pkg).stay.length : 0}</b> 条，
-      假期去向 <b>${(pkg.data || pkg).leave ? (pkg.data || pkg).leave.length : 0}</b> 条，
-      评优 <b>${(pkg.data || pkg).honor ? (pkg.data || pkg).honor.length : 0}</b> 条。<br><br>
-      <b>合并</b>：保留现有数据，同学号 / 同 ID 的记录被更新（推荐）。<br>
-      <b>覆盖</b>：清空现有数据后完全替换。</div>`,
+    body:`<div style="line-height:1.9;font-size:13.5px">
+      检测到共 <b>${total}</b> 条记录${found.length ? '：' + found.join('、') : '（未识别到业务数据）'}。
+      ${hasSet ? '<br>文件还包含<b>个人设置</b>（辅导员姓名、学院、带班信息等），可一并恢复。' : ''}
+      <br><br>
+      <b>合并</b>：保留现有数据，同学号 / 同 ID 的记录被更新，设置只补空项（推荐）。<br>
+      <b>覆盖</b>：清空现有数据后完全替换，设置也一并还原。</div>`,
     footer:`<button class="btn" data-close>取消</button>
             <button class="btn btn-danger" data-mode="replace">覆盖导入</button>
             <button class="btn btn-primary" data-mode="merge">合并导入</button>`,
@@ -4387,7 +4587,8 @@ function doImportJSON(text) {
         try {
           const r = bridge.applyPackage(pkg, b.dataset.mode);
           close(); render(); paintWho();
-          ui.toast(`导入成功：学生 ${r.students} / 任务 ${r.tasks} / 谈话 ${r.talks} / 走读 ${r.stay} / 去向 ${r.leave} / 评优 ${r.honor}`, 'ok', 3600);
+          const parts = keys.filter(k => r[k]).map(k => `${COLL_LABEL[k]} ${r[k]}`);
+          ui.toast(`导入成功：${parts.length ? parts.join(' / ') : '0 条'}${r.settings ? '，个人设置已恢复' : ''}`, 'ok', 4200);
         } catch (e) { ui.toast('导入失败：' + e.message, 'err', 3600); }
       });
     }
@@ -4541,6 +4742,13 @@ const ACTS = {
   'student-import': () => $('#file-csv').click(),
   'student-export': exportStudentsCSV,
   'student-template': studentTemplate,
+  /* E1 通用 CSV 导入：18 个业务模块共用同一个入口，靠 data-coll 区分 */
+  'gen-import': (id, btn) => {
+    const coll = btn && btn.dataset ? btn.dataset.coll : '';
+    if (!IMP[coll]) { ui.toast('该模块暂不支持 CSV 导入', 'err'); return; }
+    app._impColl = coll; $('#file-gen').click();
+  },
+  'gen-template': (id, btn) => importTemplate(btn && btn.dataset ? btn.dataset.coll : ''),
   'talk-new': () => talkForm(null),
   'talk-new-student': id => { const s = DB.students.find(x => x.id === id); if (s) talkForm(null, { student_name:s.full_name, student_number:s.student_number, duty:(s.focus || []).includes('psych') ? 'psych' : 'daily' }); },
   'talk-new-for': id => { const t = DB.talks.find(x => x.id === id); if (t) talkForm(null, { student_name:t.student_name, student_number:t.student_number, duty:t.duty }); },
@@ -4885,7 +5093,7 @@ document.addEventListener('click', e => {
     app.filters[g][k] = fs.dataset.v; render(); return;
   }
   const btn = e.target.closest('[data-act]');
-  if (btn && ACTS[btn.dataset.act]) { ACTS[btn.dataset.act](btn.dataset.id); }
+  if (btn && ACTS[btn.dataset.act]) { ACTS[btn.dataset.act](btn.dataset.id, btn); }
 });
 document.addEventListener('input', e => {
   const f = e.target.closest('[data-filter]');
@@ -4935,6 +5143,13 @@ $('#file-json').onchange = function () {
 $('#file-csv').onchange = function () {
   const f = this.files[0]; if (!f) return;
   const r = new FileReader(); r.onload = () => { importStudentsCSV(r.result); this.value = ''; }; r.readAsText(f, 'utf-8');
+};
+$('#file-gen').onchange = function () {
+  const f = this.files[0]; if (!f) return;
+  const coll = app._impColl;
+  const r = new FileReader();
+  r.onload = () => { importCollectionCSV(coll, r.result); this.value = ''; };
+  r.readAsText(f, 'utf-8');
 };
 /* 全局搜索框事件 */
 $('#global-search').addEventListener('input', e => {
