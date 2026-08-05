@@ -200,6 +200,8 @@ body{
   -webkit-font-smoothing:antialiased;
   min-height:100vh;
 }
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:var(--user-bg-image,none);background-position:center;background-size:cover;background-repeat:no-repeat;opacity:var(--user-bg-opacity,0);transition:opacity .25s ease}
+body>*{position:relative;z-index:1}
 /* 装饰性背景已移除 — 克制高级感 */
 button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
 button{cursor:pointer;border:none;background:none;padding:0}
@@ -714,6 +716,9 @@ tbody tr:last-child td{border-bottom:none}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important}
 }
+.onboarding{display:grid;grid-template-columns:1.2fr 1fr auto;gap:18px;align-items:center;background:linear-gradient(135deg,var(--accent-soft),var(--signal-soft));border:1px solid var(--accent-line);border-radius:var(--r);padding:18px 20px;margin-bottom:16px;box-shadow:var(--sh-sm)}
+.onboarding h2{margin:3px 0 5px;font-size:20px}.onboarding p{margin:0;color:var(--ink-2);font-size:13px;line-height:1.65}.onboarding-steps{display:flex;flex-direction:column;gap:7px;font-size:12.5px;color:var(--ink-3)}.onboarding-steps span{padding:5px 8px;border-radius:7px;background:rgba(255,255,255,.45)}.onboarding-steps .done{color:var(--ok);text-decoration:line-through}.onboarding-actions{display:flex;flex-direction:column;gap:7px;min-width:122px}.settings-section{border-top:1px solid var(--line-2);padding-top:16px;margin-top:18px}.learning-list{display:grid;gap:12px}.learning-item{border:1px solid var(--line);border-radius:var(--r-sm);padding:15px 16px;background:var(--card-2)}.learning-item-hd{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.learning-item h3{font-size:15px;margin:0 0 4px}.learning-item p{font-size:13.5px;line-height:1.7;color:var(--ink-2);white-space:pre-wrap;margin:10px 0}.learning-progress{height:6px;border-radius:99px;background:var(--line-2);overflow:hidden;margin:10px 0}.learning-progress i{display:block;height:100%;background:var(--signal);border-radius:inherit}
+@media (max-width:900px){.onboarding{grid-template-columns:1fr}.onboarding-actions{flex-direction:row;flex-wrap:wrap}.onboarding-actions .btn{flex:1}.settings-section .grid2{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -821,6 +826,7 @@ tbody tr:last-child td{border-bottom:none}
     <button class="nav-item" data-view="material"><svg class="ic"><use href="#i-link"/></svg>素材收藏</button>
     <button class="nav-item" data-view="comp"><svg class="ic"><use href="#i-trophy"/></svg>科创竞赛</button>
     <button class="nav-item" data-view="tpl"><svg class="ic"><use href="#i-copy"/></svg>模板库</button>
+    <button class="nav-item" data-view="learning"><svg class="ic"><use href="#i-book"/></svg>学习助手</button>
     <div class="nav-group" data-group="数据">数据<svg class="nav-fold-ic" data-fold="数据"><use href="#i-chev"/></svg></div>
     <button class="nav-item" data-view="bridge"><svg class="ic"><use href="#i-link"/></svg>平台联动</button>
     <div class="nav-foot">
@@ -1049,8 +1055,10 @@ const DB = {
   pleave: [], attend: [], node: [],
   warn: [], help: [], grant: [],
   focus: [], psych: [], graduate: [],
-  policy: [], material: [], comp: [], tpl: []
+  policy: [], material: [], comp: [], tpl: [],
+  learning_materials: [], learning_notes: [], learning_sessions: [],
 };
+const DEMO_COLLECTIONS = ['students', 'tasks', 'talks', 'stay', 'leave', 'honor', 'pleave', 'attend', 'node', 'warn', 'help', 'grant', 'focus', 'psych', 'graduate', 'policy', 'material', 'comp', 'tpl', 'learning_materials', 'learning_notes', 'learning_sessions'];
 function save(part) {
   if (!part || part === 'settings') store.write('settings', DB.settings);
   if (!part || part === 'students') store.write('students', DB.students);
@@ -1072,6 +1080,9 @@ function save(part) {
   if (!part || part === 'material') store.write('material', DB.material);
   if (!part || part === 'comp')     store.write('comp', DB.comp);
   if (!part || part === 'tpl')      store.write('tpl', DB.tpl);
+  if (!part || part === 'learning_materials') store.write('learning_materials', DB.learning_materials);
+  if (!part || part === 'learning_notes') store.write('learning_notes', DB.learning_notes);
+  if (!part || part === 'learning_sessions') store.write('learning_sessions', DB.learning_sessions);
   if (!part || part === 'custom')   store.write('custom', DB.custom);
 }
 
@@ -1222,7 +1233,7 @@ const hooks = {
 
 /* ===================== 7. 平台联动桥 bridge ===================== */
 const bridge = {
-  PACKAGE_VERSION: 5,
+  PACKAGE_VERSION: 6,
   buildPackage(scope) {
     scope = scope || {};
     const inRange = d => (!scope.from || d >= scope.from) && (!scope.to || d <= scope.to);
@@ -1256,6 +1267,9 @@ const bridge = {
       material: scope.material === false ? [] : DB.material,
       comp: scope.comp === false ? [] : DB.comp,
       tpl: scope.tpl === false ? [] : DB.tpl,
+      learning_materials: scope.learning_materials === false ? [] : DB.learning_materials,
+      learning_notes: scope.learning_notes === false ? [] : DB.learning_notes,
+      learning_sessions: scope.learning_sessions === false ? [] : DB.learning_sessions,
       custom: DB.custom,
       stats: this.stats(scope),
     };
@@ -1332,11 +1346,14 @@ const bridge = {
     const MA = Array.isArray(src.material) ? src.material : [];
     const CO = Array.isArray(src.comp) ? src.comp : [];
     const TP = Array.isArray(src.tpl) ? src.tpl : [];
+    const LM = Array.isArray(src.learning_materials) ? src.learning_materials : [];
+    const LN = Array.isArray(src.learning_notes) ? src.learning_notes : [];
+    const LS = Array.isArray(src.learning_sessions) ? src.learning_sessions : [];
     /* 备份文件里会带上 settings（辅导员姓名、学院、带班信息、隐私锁等），换电脑恢复时不能丢 */
     const SET = (src.settings && typeof src.settings === 'object' && !Array.isArray(src.settings)) ? src.settings : null;
     if (!S.length && !T.length && !K.length && !ST.length && !LV.length && !HO.length && !PL.length && !AT.length && !NO.length
       && !WA.length && !HP.length && !GR.length && !FO.length && !PS.length && !GD.length
-      && !PO.length && !MA.length && !CO.length && !TP.length && !SET) throw new Error('文件中没有可导入的数据');
+      && !PO.length && !MA.length && !CO.length && !TP.length && !LM.length && !LN.length && !LS.length && !SET) throw new Error('文件中没有可导入的数据');
 
     if (mode === 'replace') {
       DB.students = S.map(normStudent); DB.tasks = T.map(normTask); DB.talks = K.map(normTalk);
@@ -1345,6 +1362,7 @@ const bridge = {
       DB.warn = WA.map(normWarn); DB.help = HP.map(normHelp); DB.grant = GR.map(normGrant);
       DB.focus = FO.map(normFocus); DB.psych = PS.map(normPsych); DB.graduate = GD.map(normGraduate);
       DB.policy = PO.map(normPolicy); DB.material = MA.map(normMaterial); DB.comp = CO.map(normComp); DB.tpl = TP.map(normTpl);
+      DB.learning_materials = LM.map(normLearningMaterial); DB.learning_notes = LN.map(normLearningNote); DB.learning_sessions = LS.map(normLearningSession);
       if (src.custom) DB.custom = src.custom;
     } else {
       const sKey = x => x.student_number || x.id;
@@ -1374,6 +1392,9 @@ const bridge = {
       DB.material = merge(DB.material, MA, normMaterial);
       DB.comp = merge(DB.comp, CO, normComp);
       DB.tpl = merge(DB.tpl, TP, normTpl);
+      DB.learning_materials = merge(DB.learning_materials, LM, normLearningMaterial);
+      DB.learning_notes = merge(DB.learning_notes, LN, normLearningNote);
+      DB.learning_sessions = merge(DB.learning_sessions, LS, normLearningSession);
     }
     if (isPkg && src.counselor && !DB.settings.counselor_name) {
       DB.settings.counselor_name = src.counselor.name || '';
@@ -1395,7 +1416,8 @@ const bridge = {
     return { students:S.length, tasks:T.length, talks:K.length, stay:ST.length, leave:LV.length, honor:HO.length,
       pleave:PL.length, attend:AT.length, node:NO.length, warn:WA.length, help:HP.length, grant:GR.length,
       focus:FO.length, psych:PS.length, graduate:GD.length,
-      policy:PO.length, material:MA.length, comp:CO.length, tpl:TP.length, settings:setRestored };
+      policy:PO.length, material:MA.length, comp:CO.length, tpl:TP.length,
+      learning_materials:LM.length, learning_notes:LN.length, learning_sessions:LS.length, settings:setRestored };
   },
   get baseUrl() { return (DB.settings.platform_url || '').replace(/\/$/, ''); },
   get enabled() { return !!this.baseUrl && !!DB.settings.platform_api_on; },
@@ -1780,7 +1802,36 @@ function normTpl(x) {
   };
 }
 
-const APP_VERSION = '3.8.0';
+function normLearningMaterial(x) {
+  x = x || {};
+  return {
+    id: x.id || uid(), title: String(x.title || '').trim(), type: x.type || '资料',
+    source: x.source || '', url: x.url || '', content: x.content || '', tags: x.tags || '',
+    status: x.status || '未开始', progress: Math.max(0, Math.min(100, Number(x.progress) || 0)),
+    summary: x.summary || '', key_points: x.key_points || '', questions: x.questions || '',
+    last_read_at: x.last_read_at || '', created_at: x.created_at || new Date().toISOString(),
+    updated_at: x.updated_at || new Date().toISOString(), _demo: !!x._demo,
+  };
+}
+function normLearningNote(x) {
+  x = x || {};
+  return {
+    id: x.id || uid(), material_id: x.material_id || '', title: String(x.title || '').trim(),
+    content: x.content || '', tags: x.tags || '', anchor: x.anchor || '',
+    created_at: x.created_at || new Date().toISOString(), updated_at: x.updated_at || new Date().toISOString(),
+    _demo: !!x._demo,
+  };
+}
+function normLearningSession(x) {
+  x = x || {};
+  return {
+    id: x.id || uid(), date: x.date || today(), duration: Number(x.duration) || 0,
+    goal: x.goal || '', reflection: x.reflection || '', material_id: x.material_id || '',
+    created_at: x.created_at || new Date().toISOString(), _demo: !!x._demo,
+  };
+}
+
+const APP_VERSION = '3.9.0';
 
 /* ===================== 9. 示例数据（首次打开可见效果） ===================== */
 function seedDemo() {
@@ -1790,6 +1841,9 @@ function seedDemo() {
     navFold: {}, pinned: [],
     classes: '24机器人1班,24机器人2班', platform_url: '', platform_api_on: false,
     seeded: true, backup_notified_at: '',
+    onboarding: { version: 1, completed: false, skipped: false, currentStep: 0, checklist: {} },
+    ui: { preset: 'blueprint', accent: '', background: { dataUrl: '', opacity: 0.16 }, density: 'comfortable', homeWidgets: { order: [], hidden: [] } },
+    security: { enabled: false, pass_hash: '', timeout_minutes: 30, last_unlock: 0 },
   };
   DB.students = [
     { student_number:'2024010101', full_name:'张明', gender:'男', class_name:'24机器人1班', major_name:'机器人工程', grade:'2024级', college_name:'示例学院', counselor_name:'示例老师', enrollment_status:'在读', politics:'共青团员', phone:'138****0001', dorm:'3号楼412', focus:['study'], focus_level:'L2', crisis_level:'', crisis_way:'', crisis_relieved:false, note:'高数、C语言连续两次预警，已联系任课老师。' },
@@ -2051,8 +2105,48 @@ function seedDemo() {
       content:'姓名 / 学号 / 班级 / 请假起止 / 事由 / 去向 / 联系方式 / 辅导员意见 / 学院意见。', note:'示例。' },
   ].map(x => normTpl(Object.assign({ _demo:true }, x)));
 
+  DB.learning_materials = [normLearningMaterial({ _demo:true, title:'辅导员工作台快速入门', type:'使用指南', source:'内置', tags:'入门,工作流', content:'先完成个人设置，再导入学生名单，最后从今日概览处理任务和回访提醒。', status:'进行中', progress:35, summary:'完成设置、导入学生、查看今日待办是最短上手路径。', key_points:'1. 设置个人信息\n2. 导入学生名单\n3. 完成第一次备份' })];
+  DB.learning_notes = [normLearningNote({ _demo:true, material_id: DB.learning_materials[0].id, title:'我的入门笔记', content:'先用示例数据熟悉页面，再清理示例数据录入真实记录。', tags:'入门' })];
+  DB.learning_sessions = [];
+
   DB.custom = {};
   save();
+}
+function cloneData(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+function demoRowKey(row) {
+  const copy = cloneData(row);
+  delete copy.id;
+  delete copy.created_at;
+  delete copy.updated_at;
+  return JSON.stringify(copy);
+}
+function restoreDemo() {
+  const current = { settings: cloneData(DB.settings), custom: cloneData(DB.custom) };
+  DEMO_COLLECTIONS.forEach(collection => { current[collection] = cloneData(DB[collection] || []); });
+
+  seedDemo();
+  const demo = { settings: cloneData(DB.settings), custom: cloneData(DB.custom) };
+  DEMO_COLLECTIONS.forEach(collection => { demo[collection] = cloneData(DB[collection] || []); });
+
+  DB.settings = Object.assign({}, demo.settings, current.settings, { seeded: true });
+  DEMO_COLLECTIONS.forEach(collection => {
+    const preserved = current[collection] || [];
+    const seen = new Set(preserved.map(demoRowKey));
+    const additions = (demo[collection] || []).filter(row => {
+      const key = demoRowKey(row);
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+    DB[collection] = preserved.concat(additions);
+  });
+  DB.custom = current.custom || {};
+  save();
+  render();
+  paintWho();
+  ui.toast('示例数据已恢复，原有记录未覆盖', 'ok');
 }
 
 /* ===================== 10. 今日待办聚合 ===================== */
@@ -2247,6 +2341,7 @@ const app = {
     help:{ q:'', type:'' },
     grant:{ q:'', kind:'' },
     policy:{ q:'', cat:'' }, material:{ q:'', cat:'' }, comp:{ q:'', cat:'' }, tpl:{ q:'', type:'' },
+    learning:{ q:'', status:'' },
     focus:{ q:'', category:'' },
     psych:{ q:'', level:'' },
     graduate:{ q:'', status:'' },
@@ -2353,6 +2448,57 @@ function hasDemo() {
 }
 
 /* ---------- 11.3 今日概览 ---------- */
+const onboarding = {
+  complete() { ensureV39Settings(); DB.settings.onboarding.completed = true; DB.settings.onboarding.skipped = false; save('settings'); render(); },
+  skip() { ensureV39Settings(); DB.settings.onboarding.skipped = true; save('settings'); render(); },
+  reset() { ensureV39Settings(); DB.settings.onboarding = { version:1, completed:false, skipped:false, currentStep:0, checklist:{} }; save('settings'); render(); },
+  visible() { ensureV39Settings(); return !DB.settings.onboarding.completed && !DB.settings.onboarding.skipped; },
+};
+function renderOnboarding() {
+  if (!onboarding.visible()) return '';
+  const s = DB.settings, checks = s.onboarding.checklist || {};
+  const done = [!!s.counselor_name, DB.students.length > 0, DB.tasks.length > 0, !!s.backup_notified_at].filter(Boolean).length;
+  return `<div class="onboarding" data-onboarding>
+    <div class="onboarding-copy"><div class="tiny">第一次使用 · ${done}/4</div><h2>用 5 分钟搭好你的工作台</h2><p>先设置个人信息，再导入学生名单，最后从今日概览开始处理任务。你可以随时跳过，之后在设置里重新打开。</p></div>
+    <div class="onboarding-steps"><span class="${s.counselor_name ? 'done' : ''}">1. 设置个人信息</span><span class="${DB.students.length ? 'done' : ''}">2. 导入学生名单</span><span class="${DB.tasks.length ? 'done' : ''}">3. 处理今日任务</span><span class="${s.backup_notified_at ? 'done' : ''}">4. 完成第一次备份</span></div>
+    <div class="onboarding-actions"><button class="btn btn-primary btn-sm" data-act="onboarding-settings">开始设置</button><button class="btn btn-sm" data-act="onboarding-complete">我已熟悉，关闭</button><button class="btn btn-ghost btn-sm" data-act="onboarding-skip">暂时跳过</button></div>
+  </div>`;
+}
+function learningSummary(m) {
+  if (!m) return '';
+  if (m.summary) return m.summary;
+  const text = String(m.content || '').replace(/\s+/g, ' ').trim();
+  if (!text) return '暂无正文，先补充资料内容后再生成摘要。';
+  const parts = text.split(/[。！？.!?]/).map(x => x.trim()).filter(Boolean).slice(0, 3);
+  return parts.length ? parts.map((x, i) => `${i + 1}. ${x}`).join('\n') : text.slice(0, 180);
+}
+function viewLearning() {
+  const q = (app.filters.learning && app.filters.learning.q || '').toLowerCase();
+  const status = app.filters.learning && app.filters.learning.status || '';
+  const list = DB.learning_materials.filter(m => (!q || (m.title + m.source + m.tags + m.content).toLowerCase().includes(q)) && (!status || m.status === status));
+  const active = DB.learning_materials.filter(m => m.status !== '已完成').length;
+  return `<div class="card">
+    <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-book"/></svg>个人学习助手</h2><span class="sp"></span><button class="btn btn-sm" data-act="learning-export">导出学习包</button><button class="btn btn-primary btn-sm" data-act="learning-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增资料</button></div>
+    <div class="card-bd"><div class="kpis"><div class="kpi brand"><div class="kpi-l">资料总数</div><div class="kpi-v" data-num="${DB.learning_materials.length}">0</div></div><div class="kpi warn"><div class="kpi-l">进行中</div><div class="kpi-v" data-num="${active}">0</div></div><div class="kpi ok"><div class="kpi-l">笔记数</div><div class="kpi-v" data-num="${DB.learning_notes.length}">0</div></div></div>
+      <div class="toolbar"><div class="search"><svg class="ic ic-sm"><use href="#i-search"/></svg><input class="inp" placeholder="搜索资料、来源、标签、正文" data-filter="learning.q" value="${esc(q)}"></div><select class="inp" style="width:auto;min-width:120px" data-filter="learning.status"><option value="">全部状态</option><option value="未开始"${status === '未开始' ? ' selected' : ''}>未开始</option><option value="进行中"${status === '进行中' ? ' selected' : ''}>进行中</option><option value="已完成"${status === '已完成' ? ' selected' : ''}>已完成</option></select></div>
+      ${list.length ? `<div class="learning-list">${list.map(m => `<article class="learning-item"><div class="learning-item-hd"><div><h3>${esc(m.title)}</h3><div class="tiny">${esc(m.type)} · ${esc(m.source || '本地资料')} · ${esc(m.status)}</div></div><span class="tag tag-blue">${m.progress}%</span></div><div class="learning-progress"><i style="width:${m.progress}%"></i></div><p>${esc(m.summary || learningSummary(m).split('\n')[0])}</p><div class="mcard-acts"><button class="btn btn-sm" data-act="learning-summary" data-id="${m.id}">生成摘要</button><button class="btn btn-sm" data-act="learning-note-new" data-id="${m.id}">记笔记</button><button class="btn btn-sm" data-act="learning-edit" data-id="${m.id}">编辑</button><button class="btn btn-sm btn-danger" data-act="learning-del" data-id="${m.id}">删除</button></div></article>`).join('')}</div>` : emptyBox('还没有学习资料', '<button class="btn btn-primary btn-sm" data-act="learning-new">新增第一份资料</button>')}
+    </div></div>`;
+}
+function learningForm(item) {
+  const isNew = !item;
+  ui.form({ title:isNew ? '新增学习资料' : '编辑学习资料', size:'wide', data:item || { type:'资料', status:'未开始', progress:0 }, fields:[
+    { key:'title', label:'资料标题', required:true, span:2 }, { key:'type', label:'资料类型' }, { key:'source', label:'来源' },
+    { key:'tags', label:'标签', span:2, ph:'多个标签用逗号分隔' }, { key:'url', label:'链接', span:2 },
+    { key:'status', label:'学习状态', type:'select', options:['未开始','进行中','已完成'] }, { key:'progress', label:'进度（0–100）', type:'number' },
+    { key:'content', label:'正文 / 要点', type:'textarea', rows:6, span:2 }, { key:'summary', label:'摘要', type:'textarea', rows:3, span:2 },
+  ], onSave(v) { if (isNew) DB.learning_materials.push(normLearningMaterial(v)); else Object.assign(item, normLearningMaterial(Object.assign({}, item, v))); save('learning_materials'); render(); ui.toast(isNew ? '资料已添加' : '资料已保存', 'ok'); }});
+}
+function learningNoteForm(materialId) {
+  ui.form({ title:'记录学习笔记', size:'wide', data:{ material_id:materialId, title:'', content:'', tags:'', anchor:'' }, fields:[
+    { key:'title', label:'笔记标题', required:true, span:2 }, { key:'anchor', label:'对应章节 / 段落' }, { key:'tags', label:'标签' },
+    { key:'content', label:'笔记内容', type:'textarea', rows:7, span:2 },
+  ], onSave(v) { DB.learning_notes.push(normLearningNote(Object.assign(v, { material_id:materialId }))); save('learning_notes'); render(); ui.toast('笔记已保存', 'ok'); }});
+}
 function viewHome() {
   const todo = buildTodo();
   const overdue = todo.filter(t => t.level === 'd').length;
@@ -2389,7 +2535,7 @@ function viewHome() {
         <button class="btn btn-sm" data-act="clear-demo">清空示例数据</button></div>` : '';
   const banner = backupBanner + demoBanner;
 
-  return `${banner}
+  return `${renderOnboarding()}${banner}
   <div class="today">
     <div class="today-hd">
       <h2><svg class="ic" style="color:var(--accent)"><use href="#i-sun"/></svg>今天要处理</h2>
@@ -4623,9 +4769,30 @@ function openSettings() {
       { key:'org_code', label:'组织代码', hint:'与服务端平台保持一致' },
       { key:'platform_url', label:'平台地址（选填）' },
     ],
+    extra: `<div class="settings-section"><div class="sub-hd"><svg class="ic ic-sm"><use href="#i-sun"/></svg>界面个性化</div><div class="grid2"><div class="form-row"><label class="lab">配色方案</label><select class="inp" id="settings-preset">${Object.entries(THEME_PRESETS).map(([k,p]) => `<option value="${k}">${p.label}</option>`).join('')}</select></div><div class="form-row"><label class="lab">背景透明度 <span id="settings-opacity-value" class="tiny"></span></label><input class="inp" id="settings-opacity" type="range" min="0" max="0.35" step="0.01"></div></div><div class="form-row"><label class="lab">背景图片</label><input class="inp" id="settings-background" type="file" accept="image/*"><div class="hint">图片只保存在本机，建议使用小于 2MB 的图片；透明度最高 35%。</div></div><button class="btn btn-sm" type="button" data-theme-reset>恢复默认外观</button><button class="btn btn-sm" type="button" data-onboarding-reset style="margin-left:8px">重新查看首次引导</button></div><div class="settings-section"><div class="sub-hd"><svg class="ic ic-sm"><use href="#i-lock"/></svg>登录锁与敏感操作</div><div class="hint" style="margin-bottom:8px">这是界面访问锁，不是数据库加密。浏览器存储中的数据仍可能被技术手段读取。</div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-sm" type="button" data-security-set>设置 / 修改密码</button><button class="btn btn-sm" type="button" data-security-lock>立即上锁</button><button class="btn btn-sm btn-danger" type="button" data-security-disable>关闭登录锁</button></div></div>`,
     extraBtn: `<button class="btn btn-danger btn-sm" data-clear style="margin-right:auto">清空全部数据</button>`,
     onOpen(mask, close) {
+      ensureV39Settings();
+      const preset = $('#settings-preset', mask); const opacity = $('#settings-opacity', mask); const opacityValue = $('#settings-opacity-value', mask);
+      preset.value = DB.settings.ui.preset || 'blueprint'; opacity.value = String(DB.settings.ui.background.opacity || 0.16); opacityValue.textContent = Math.round(Number(opacity.value) * 100) + '%';
+      preset.onchange = () => theme.applyPreset(preset.value, true);
+      opacity.oninput = () => { opacityValue.textContent = Math.round(Number(opacity.value) * 100) + '%'; theme.applyBackground(Object.assign({}, DB.settings.ui.background, { opacity:Number(opacity.value) }), true); };
+      $('#settings-background', mask).onchange = e => { const f = e.target.files && e.target.files[0]; if (!f) return; if (f.size > 2 * 1024 * 1024) { ui.toast('背景图片请控制在 2MB 以内', 'warn'); return; } const r = new FileReader(); r.onload = () => theme.applyBackground(Object.assign({}, DB.settings.ui.background, { dataUrl:r.result }), true); r.readAsDataURL(f); };
+      $('[data-theme-reset]', mask).onclick = () => { theme.reset(true); preset.value = 'blueprint'; opacity.value = '0.16'; opacityValue.textContent = '16%'; };
+      $('[data-onboarding-reset]', mask).onclick = () => { onboarding.reset(); close(); ui.toast('首次引导已重新开启', 'ok'); };
+      $('[data-security-set]', mask).onclick = () => { close(); ui.modal({ title:'设置登录锁', size:'narrow', sticky:true, body:'<p class="muted" style="margin-top:0">设置 4–12 位数字密码，用于进入工作台和敏感操作二次验证。</p><input class="inp" id="security-new-pass" type="password" inputmode="numeric" maxlength="12" placeholder="新密码"><input class="inp" id="security-new-pass2" type="password" inputmode="numeric" maxlength="12" placeholder="再次输入" style="margin-top:8px">', footer:'<button class="btn" data-close>取消</button><button class="btn btn-primary" data-security-save>启用保护</button>', onOpen(m, c) { $('[data-security-save]', m).onclick = () => { const a = $('#security-new-pass', m).value, b = $('#security-new-pass2', m).value; if (a !== b) return ui.toast('两次密码不一致', 'warn'); try { security.configure(a); c(); render(); ui.toast('登录锁已启用', 'ok'); } catch (e) { ui.toast(e.message, 'warn'); } }; } }); };
+      $('[data-security-lock]', mask).onclick = () => { security.lock(); close(); render(); ui.toast('已上锁', 'ok'); };
+      $('[data-security-disable]', mask).onclick = () => security.require('关闭登录锁', () => { security.disable(); ui.toast('登录锁已关闭', 'ok'); });
       $('[data-clear]', mask).onclick = () => { close(); clearAll(); };
+      const restoreButton = document.createElement('button');
+      restoreButton.type = 'button';
+      restoreButton.className = 'btn btn-sm';
+      restoreButton.setAttribute('data-restore-demo', '');
+      restoreButton.style.marginRight = '8px';
+      restoreButton.textContent = '\u6062\u590d\u793a\u4f8b\u6570\u636e';
+      restoreButton.onclick = () => { close(); restoreDemo(); };
+      const clearButton = $('[data-clear]', mask);
+      clearButton.parentNode.insertBefore(restoreButton, clearButton);
     },
     onSave(v) { Object.assign(DB.settings, v); save('settings'); ui.toast('设置已保存', 'ok'); render(); paintWho(); }
   });
@@ -5064,6 +5231,21 @@ function importTemplate(coll) {
   download(`${cfg.label}_导入模板.csv`, toCSV([cfg.head, demo]), 'text/csv');
   ui.toast('模板已下载，用 Excel 填好后点「导入 CSV」', 'ok', 3000);
 }
+function genericHeaderKey(value) { return String(value || '').toLowerCase().replace(/[\s_\-（）()\[\]【】]/g, ''); }
+function genericHeaderToField(raw, cfg) {
+  const clean = String(raw == null ? '' : raw).replace(/^\uFEFF/, '').trim();
+  const p = cfg.head.indexOf(clean); if (p >= 0) return cfg.field[p];
+  if (cfg.field.includes(clean)) return clean;
+  const m = clean.match(/\(([a-z_]+)\)\s*$/i); if (m && cfg.field.includes(m[1])) return m[1];
+  const key = genericHeaderKey(clean);
+  for (let i = 0; i < cfg.head.length; i++) {
+    const h = genericHeaderKey(cfg.head[i]);
+    if (h && (key === h || key.includes(h) || h.includes(key))) return cfg.field[i];
+  }
+  const common = {姓名:'name',学生姓名:'name',标题:'title',名称:'name',内容:'content',正文:'content',分类:'category',类型:'type',来源:'source',备注:'note',标签:'tags',日期:'date',状态:'status',学号:'student_number'};
+  const hit = Object.keys(common).find(k => key.includes(genericHeaderKey(k)));
+  return hit && cfg.field.includes(common[hit]) ? common[hit] : '';
+}
 function importCollectionCSV(coll, text) {
   const cfg = IMP[coll];
   if (!cfg) { ui.toast('该模块暂不支持 CSV 导入', 'err'); return; }
@@ -5074,12 +5256,7 @@ function importCollectionCSV(coll, text) {
   /* 表头识别：支持中文表头、英文字段名、以及「中文(字段名)」三种写法 */
   const idx = {};
   rows[0].forEach((h, i) => {
-    const raw = String(h == null ? '' : h).replace(/^\uFEFF/, '').trim();
-    let f = '';
-    const p = cfg.head.indexOf(raw);
-    if (p >= 0) f = cfg.field[p];
-    else if (cfg.field.includes(raw)) f = raw;
-    else { const m = raw.match(/\(([a-z_]+)\)\s*$/i); if (m && cfg.field.includes(m[1])) f = m[1]; }
+    const f = genericHeaderToField(h, cfg);
     if (f && !(f in idx)) idx[f] = i;
   });
   const cols = Object.keys(idx);
@@ -5087,6 +5264,7 @@ function importCollectionCSV(coll, text) {
   if (!cols.length || !(main in idx)) {
     ui.toast(`表头无法识别，请先点「模板」下载模板，或直接把本模块导出的 CSV 填好再导回`, 'err', 4600); return;
   }
+  const before = JSON.parse(JSON.stringify(DB[coll] || []));
   const list = DB[coll] = DB[coll] || [];
   let add = 0, upd = 0, skip = 0;
   rows.slice(1).forEach(r => {
@@ -5106,8 +5284,43 @@ function importCollectionCSV(coll, text) {
     }
   });
   save(coll); render();
+  if (typeof importer !== 'undefined') { importer._history.push({ id:uid(), coll, before, at:new Date().toISOString(), preview:importer.previewCSV(text, coll) }); if (importer._history.length > 10) importer._history.shift(); }
   ui.toast(`「${cfg.label}」导入完成：新增 ${add} 条，更新 ${upd} 条${skip ? '，跳过空行 ' + skip : ''}`, 'ok', 3400);
 }
+
+const importer = {
+  _history: [],
+  previewCSV(text, coll) {
+    const rows = parseCSV(String(text || ''));
+    const headers = rows[0] || [];
+    const target = coll || Object.keys(IMP).map(k => {
+      const cfg = IMP[k];
+      const score = headers.reduce((n, h) => n + (genericHeaderToField(h, cfg) ? 1 : 0), 0);
+      return { k, score };
+    }).sort((a, b) => b.score - a.score)[0].k || 'material';
+    const cfg = IMP[target] || IMP.material;
+    const mapped = headers.map(h => genericHeaderToField(h, cfg));
+    const rowsOut = rows.slice(1).filter(r => r.some(v => String(v || '').trim() !== '')).map(r => {
+      const out = {}; mapped.forEach((f, i) => { if (f) out[f] = String(r[i] == null ? '' : r[i]).trim(); }); return out;
+    });
+    const main = cfg.main || cfg.field[0];
+    return { coll:target, label:cfg.label, headers, mapped, rows:rowsOut, total:rowsOut.length, valid:rowsOut.filter(r => !!r[main]).length, skipped:rowsOut.filter(r => !r[main]).length };
+  },
+  commitCSV(coll, text) {
+    const preview = this.previewCSV(text, coll);
+    if (!preview.valid) return Object.assign({}, preview, { runId:'' });
+    const before = this._history.length;
+    importCollectionCSV(coll, text);
+    const run = this._history.length > before ? this._history[this._history.length - 1] : null;
+    return Object.assign({}, preview, { runId: run ? run.id : '' });
+  },
+  undo(runId) {
+    const i = this._history.findIndex(x => x.id === runId);
+    if (i < 0) return false;
+    const run = this._history[i]; DB[run.coll] = run.before; save(run.coll); render(); this._history.splice(i, 1); return true;
+  },
+  getHistory() { return this._history.slice(); },
+};
 
 function exportJSON() {
   const pkg = { app:'counselor-desk', type:'backup', version: APP_VERSION, exported_at: new Date().toISOString(), data: DB };
@@ -5126,6 +5339,7 @@ const COLL_LABEL = {
   students:'学生', tasks:'任务', talks:'谈话', stay:'校外住宿', leave:'假期去向', honor:'评优',
   pleave:'请销假', attend:'考勤', node:'工作节点', warn:'学业预警', help:'学业帮扶', grant:'奖助勤补',
   focus:'重点档案', psych:'心理摸排', graduate:'毕业生', policy:'政策', material:'素材', comp:'竞赛', tpl:'模板',
+  learning_materials:'学习资料', learning_notes:'学习笔记', learning_sessions:'学习记录',
 };
 function doImportJSON(text) {
   let pkg; try { pkg = JSON.parse(text); } catch (e) { ui.toast('不是有效的 JSON 文件', 'err'); return; }
@@ -5159,17 +5373,18 @@ function doImportJSON(text) {
   });
 }
 function clearAll() {
-  ui.confirm('清空全部数据',
+  security.require('清空全部数据', () => ui.confirm('清空全部数据',
     '将删除本机所有学生、任务和谈话记录，<b style="color:var(--danger)">此操作不可恢复</b>。<br><br>建议先导出一份 JSON 备份。确定继续吗？',
     () => {
       ui.confirm('再次确认', '真的要清空吗？这是最后一次确认。', () => {
         DB.students = []; DB.tasks = []; DB.talks = []; DB.stay = []; DB.leave = []; DB.honor = []; DB.pleave = []; DB.attend = []; DB.node = [];
         DB.warn = []; DB.help = []; DB.grant = []; DB.focus = []; DB.psych = []; DB.graduate = [];
-        DB.policy = []; DB.material = []; DB.comp = []; DB.tpl = []; DB.custom = {};
+        DB.policy = []; DB.material = []; DB.comp = []; DB.tpl = [];
+        DB.learning_materials = []; DB.learning_notes = []; DB.learning_sessions = []; DB.custom = {};
         DB.settings.seeded = true; save();
         render(); ui.toast('已清空全部数据', 'ok');
       }, true);
-    }, true);
+    }, true));
 }
 
 /* ---------- 14. 路由与事件 ---------- */
@@ -5179,11 +5394,15 @@ const VIEWS = {
   pleave:viewPleave, attend:viewAttend, node:viewNode,
   warn:viewWarn, help:viewHelp, grant:viewGrant,
   focus:viewFocus, psych:viewPsych, graduate:viewGraduate,
-  policy:viewPolicy, material:viewMaterial, comp:viewComp, tpl:viewTpl,
+  policy:viewPolicy, material:viewMaterial, comp:viewComp, tpl:viewTpl, learning:viewLearning,
 };
 function render() {
   const fn = VIEWS[app.view] || (customModules[app.view] && customModules[app.view].render) || viewHome;
   const main = $('#main');
+  if (security.isLocked()) {
+    main.innerHTML = `<div class="card security-lock-screen"><div class="card-bd" style="max-width:420px;margin:0 auto;text-align:center;padding:48px 24px"><div class="brand-mark" style="margin:0 auto 16px"><svg class="ic ic-lg"><use href="#i-lock"/></svg></div><h2 style="margin:0 0 8px">工作台已上锁</h2><p class="muted">请输入保护密码后继续使用。密码锁只限制界面访问，不等同于数据加密。</p><input class="inp" id="security-unlock-pass" type="password" inputmode="numeric" maxlength="12" placeholder="输入保护密码" style="text-align:center;letter-spacing:4px;margin:12px 0"><button class="btn btn-primary btn-block" data-act="security-unlock">解锁工作台</button></div></div>`;
+    $$('.nav-item').forEach(b => b.classList.remove('on')); $$('.tab').forEach(b => b.classList.remove('on')); return;
+  }
   main.innerHTML = fn();
   $$('.nav-item').forEach(b => b.classList.toggle('on', b.dataset.view === app.view));
   $$('.tab').forEach(b => b.classList.toggle('on', b.dataset.view === app.view));
@@ -5244,6 +5463,99 @@ function applyTheme(t, persist) {
   DB.settings.theme = t;
   if (persist) save('settings');
 }
+
+const THEME_PRESETS = {
+  blueprint: { label:'工程蓝图', theme:'light', accent:'#0b3a82', signal:'#0bb4c4', bg:'#eef2f8' },
+  ocean: { label:'海洋青', theme:'light', accent:'#075985', signal:'#0891b2', bg:'#edf7fa' },
+  forest: { label:'森林绿', theme:'light', accent:'#166534', signal:'#0f766e', bg:'#eef7f0' },
+  sand: { label:'暖沙', theme:'light', accent:'#92400e', signal:'#b45309', bg:'#faf5ed' },
+  midnight: { label:'深色蓝图', theme:'dark', accent:'#4d7fd6', signal:'#2dd0e0', bg:'#0c1322' },
+};
+function ensureV39Settings() {
+  DB.settings = DB.settings || {};
+  DB.settings.onboarding = Object.assign({ version:1, completed:false, skipped:false, currentStep:0, checklist:{} }, DB.settings.onboarding || {});
+  DB.settings.ui = Object.assign({ preset:'blueprint', accent:'', background:{ dataUrl:'', opacity:0.16 }, density:'comfortable', homeWidgets:{ order:[], hidden:[] } }, DB.settings.ui || {});
+  DB.settings.ui.background = Object.assign({ dataUrl:'', opacity:0.16 }, DB.settings.ui.background || {});
+  DB.settings.security = Object.assign({ enabled:false, pass_hash:'', timeout_minutes:30, last_unlock:0 }, DB.settings.security || {});
+  DB.settings.security.timeout_minutes = Number(DB.settings.security.timeout_minutes) || 30;
+}
+function hashText(text) {
+  let h1 = 2166136261, h2 = 16777619;
+  String(text || '').split('').forEach(ch => { h1 ^= ch.charCodeAt(0); h1 = Math.imul(h1, 16777619); h2 ^= h1; h2 = Math.imul(h2, 2246822519); });
+  return (h1 >>> 0).toString(16).padStart(8, '0') + (h2 >>> 0).toString(16).padStart(8, '0');
+}
+const theme = {
+  applyPreset(name, persist) {
+    ensureV39Settings();
+    const p = THEME_PRESETS[name] || THEME_PRESETS.blueprint;
+    const root = document.documentElement;
+    root.style.setProperty('--accent', p.accent); root.style.setProperty('--signal', p.signal); root.style.setProperty('--bg', p.bg);
+    applyTheme(p.theme, false);
+    DB.settings.ui.preset = Object.keys(THEME_PRESETS).includes(name) ? name : 'blueprint';
+    if (persist !== false) save('settings');
+    this.applyBackground(DB.settings.ui.background, false);
+  },
+  applyBackground(background, persist) {
+    ensureV39Settings();
+    const b = Object.assign({ dataUrl:'', opacity:0.16 }, background || {});
+    const root = document.documentElement;
+    root.style.setProperty('--user-bg-opacity', String(Math.max(0, Math.min(.35, Number(b.opacity) || 0))));
+    root.style.setProperty('--user-bg-image', b.dataUrl ? `url("${String(b.dataUrl).replace(/"/g, '%22')}")` : 'none');
+    DB.settings.ui.background = { dataUrl: b.dataUrl || '', opacity: Math.max(0, Math.min(.35, Number(b.opacity) || 0)) };
+    if (persist !== false) save('settings');
+  },
+  reset(persist) { this.applyPreset('blueprint', false); this.applyBackground({ dataUrl:'', opacity:0.16 }, false); if (persist !== false) save('settings'); },
+};
+const security = {
+  _unlocked: false,
+  _timer: null,
+  _arm() {
+    clearTimeout(this._timer);
+    if (!this.isEnabled() || !this._unlocked) return;
+    const timeout = Math.max(1, Number(DB.settings.security.timeout_minutes) || 30) * 60000;
+    this._timer = setTimeout(() => {
+      this._unlocked = false;
+      this._timer = null;
+      render();
+      ui.toast('已因闲置超时自动上锁', 'warn', 3200);
+    }, timeout);
+  },
+  touch() {
+    if (!this.isEnabled() || !this._unlocked) return;
+    DB.settings.security.last_unlock = Date.now();
+    this._arm();
+  },
+  configure(pass) {
+    ensureV39Settings();
+    if (!/^\d{4,12}$/.test(String(pass || ''))) throw new Error('密码需为 4–12 位数字');
+    DB.settings.security = { enabled:true, pass_hash:hashText(pass), timeout_minutes:DB.settings.security.timeout_minutes || 30, last_unlock:Date.now() };
+    this._unlocked = true; this._arm(); save('settings'); return true;
+  },
+  disable() { ensureV39Settings(); DB.settings.security = { enabled:false, pass_hash:'', timeout_minutes:30, last_unlock:0 }; this._unlocked = false; clearTimeout(this._timer); this._timer = null; save('settings'); },
+  lock() { this._unlocked = false; clearTimeout(this._timer); this._timer = null; },
+  isEnabled() { ensureV39Settings(); return !!DB.settings.security.enabled && !!DB.settings.security.pass_hash; },
+  isLocked() {
+    if (!this.isEnabled()) return false;
+    const timeout = (Number(DB.settings.security.timeout_minutes) || 30) * 60000;
+    if (this._unlocked && Date.now() - (DB.settings.security.last_unlock || 0) > timeout) this.lock();
+    return !this._unlocked;
+  },
+  unlock(pass) {
+    ensureV39Settings();
+    const ok = hashText(pass) === DB.settings.security.pass_hash;
+    if (ok) { this._unlocked = true; DB.settings.security.last_unlock = Date.now(); this._arm(); save('settings'); }
+    return ok;
+  },
+  require(action, onAllowed) {
+    if (!this.isLocked()) { if (onAllowed) onAllowed(); return true; }
+    ui.modal({ title:'需要二次验证', size:'narrow', sticky:true, body:`<p class="muted" style="margin-top:0">操作“${esc(action || '敏感操作')}”需要验证保护密码。</p><input class="inp" id="security-pass" type="password" inputmode="numeric" maxlength="12" placeholder="输入 4–12 位数字密码">`, footer:'<button class="btn" data-close>取消</button><button class="btn btn-primary" data-security-ok>验证并继续</button>', onOpen(mask, close) {
+      $('[data-security-ok]', mask).onclick = () => { if (security.unlock($('#security-pass', mask).value)) { close(); if (onAllowed) onAllowed(); } else ui.toast('密码错误', 'err'); };
+    }});
+    return false;
+  },
+};
+document.addEventListener('pointerdown', () => security.touch(), { passive:true });
+document.addEventListener('keydown', () => security.touch(), { passive:true });
 function closeDrawer() {
   const nav = $('#sidenav'); if (nav) nav.classList.remove('open');
   const sc = $('#scrim'); if (sc) sc.classList.remove('open');
@@ -5254,6 +5566,10 @@ function openDrawer() {
 }
 
 const ACTS = {
+  'onboarding-settings': () => openSettings(),
+  'onboarding-complete': () => onboarding.complete(),
+  'onboarding-skip': () => onboarding.skip(),
+  'security-unlock': () => { const pass = ($('#security-unlock-pass') || {}).value || ''; if (security.unlock(pass)) { render(); ui.toast('已解锁工作台', 'ok'); } else ui.toast('密码错误', 'err'); },
   'toggle-theme': () => {
     const cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
     const next = cur === 'dark' ? 'light' : 'dark';
@@ -5315,8 +5631,8 @@ const ACTS = {
   'student-view': id => { const s = DB.students.find(x => x.id === id); if (s) openStudent(s); },
   'student-del': id => {
     const s = DB.students.find(x => x.id === id); if (!s) return;
-    ui.confirm('删除学生', `确定从台账中删除 <b>${esc(s.full_name)}</b> 吗？相关谈话记录不会被删除。`, () => {
-      DB.students = DB.students.filter(x => x.id !== id); save('students'); render(); ui.toast('已删除', 'ok'); }, true);
+    security.require('删除学生', () => ui.confirm('删除学生', `确定从台账中删除 <b>${esc(s.full_name)}</b> 吗？相关谈话记录不会被删除。`, () => {
+      DB.students = DB.students.filter(x => x.id !== id); save('students'); render(); ui.toast('已删除', 'ok'); }, true));
   },
   'student-import': () => $('#file-csv').click(),
   'student-export': exportStudentsCSV,
@@ -5496,11 +5812,17 @@ const ACTS = {
       .concat(DB.tpl.map(s => [s.title, s.type, s.scene, s.content, s.note]));
     download(`通知流程表单模板_${today()}.csv`, toCSV(rows), 'text/csv'); ui.toast('已导出','ok');
   },
+  'learning-new': () => learningForm(null),
+  'learning-edit': id => learningForm(DB.learning_materials.find(m => m.id === id)),
+  'learning-del': id => security.require('删除学习资料', () => ui.confirm('删除学习资料', '确定删除这份学习资料吗？关联笔记会保留。', () => { DB.learning_materials = DB.learning_materials.filter(m => m.id !== id); save('learning_materials'); render(); ui.toast('已删除','ok'); }, true)),
+  'learning-note-new': id => learningNoteForm(id),
+  'learning-summary': id => { const m = DB.learning_materials.find(x => x.id === id); if (!m) return; m.summary = learningSummary(m); m.key_points = m.summary; m.updated_at = new Date().toISOString(); save('learning_materials'); render(); ui.toast('已生成本地摘要', 'ok'); },
+  'learning-export': () => { download(`个人学习助手_${today()}.json`, JSON.stringify({ materials:DB.learning_materials, notes:DB.learning_notes, sessions:DB.learning_sessions }, null, 2), 'application/json'); ui.toast('学习包已导出', 'ok'); },
 
   /* ---------- 重点学生档案（隐私保护锁） ---------- */
   'focus-new': () => focusForm(null),
   'focus-edit': id => focusForm(DB.focus.find(s => s.id === id)),
-  'focus-del': id => ui.confirm('删除档案', '确定删除这条重点学生档案吗？', () => { DB.focus = DB.focus.filter(s => s.id !== id); save('focus'); render(); ui.toast('已删除','ok'); }, true),
+  'focus-del': id => security.require('删除重点学生档案', () => ui.confirm('删除档案', '确定删除这条重点学生档案吗？', () => { DB.focus = DB.focus.filter(s => s.id !== id); save('focus'); render(); ui.toast('已删除','ok'); }, true)),
   'focus-export': () => {
     const rows = [['姓名','学号','班级','关注类别','关注级别','关注原因','干预措施','跟进记录','负责老师','管理状态','更新日期','备注']]
       .concat(DB.focus.map(s => [s.name, s.student_number, s.class_name, s.category, s.level, s.reason, s.measures, s.follow_up, s.owner, s.status, s.updated_at, s.note]));
@@ -5526,7 +5848,7 @@ const ACTS = {
   /* ---------- 心理摸排台账 ---------- */
   'psych-new': () => psychForm(null),
   'psych-edit': id => psychForm(DB.psych.find(s => s.id === id)),
-  'psych-del': id => ui.confirm('删除记录', '确定删除这条心理摸排记录吗？', () => { DB.psych = DB.psych.filter(s => s.id !== id); save('psych'); render(); ui.toast('已删除','ok'); }, true),
+  'psych-del': id => security.require('删除心理摸排记录', () => ui.confirm('删除记录', '确定删除这条心理摸排记录吗？', () => { DB.psych = DB.psych.filter(s => s.id !== id); save('psych'); render(); ui.toast('已删除','ok'); }, true)),
   'psych-export': () => {
     const rows = [['姓名','学号','班级','摸排日期','使用量表','得分','评估结果','关注事项','干预建议','处理人','状态','备注']]
       .concat(DB.psych.map(s => [s.name, s.student_number, s.class_name, s.screen_date, s.scale, s.score, s.level, s.concern, s.suggestion, s.handler, s.status, s.note]));
@@ -5559,7 +5881,8 @@ const ACTS = {
       + DB.pleave.filter(x => x._demo).length + DB.attend.filter(x => x._demo).length + DB.node.filter(x => x._demo).length
       + DB.warn.filter(x => x._demo).length + DB.help.filter(x => x._demo).length + DB.grant.filter(x => x._demo).length
       + DB.focus.filter(x => x._demo).length + DB.psych.filter(x => x._demo).length + DB.graduate.filter(x => x._demo).length
-      + DB.policy.filter(x => x._demo).length + DB.material.filter(x => x._demo).length + DB.comp.filter(x => x._demo).length + DB.tpl.filter(x => x._demo).length;
+      + DB.policy.filter(x => x._demo).length + DB.material.filter(x => x._demo).length + DB.comp.filter(x => x._demo).length + DB.tpl.filter(x => x._demo).length
+      + DB.learning_materials.filter(x => x._demo).length + DB.learning_notes.filter(x => x._demo).length + DB.learning_sessions.filter(x => x._demo).length;
     if (!n) { ui.toast('示例数据已经清理干净了', 'ok'); return; }
     ui.confirm('清空示例数据',
       `将删除 <b>${n}</b> 条系统预置的示例记录（示例老师、张明、李思颖等），<b>你自己录入的数据不受影响</b>。确定清理吗？`,
@@ -5583,6 +5906,9 @@ const ACTS = {
         DB.material = DB.material.filter(x => !x._demo);
         DB.comp = DB.comp.filter(x => !x._demo);
         DB.tpl = DB.tpl.filter(x => !x._demo);
+        DB.learning_materials = DB.learning_materials.filter(x => !x._demo);
+        DB.learning_notes = DB.learning_notes.filter(x => !x._demo);
+        DB.learning_sessions = DB.learning_sessions.filter(x => !x._demo);
         if (DB.settings.counselor_name === '示例老师') { DB.settings.counselor_name = ''; DB.settings.college_name = ''; }
         save(); render(); paintWho(); ui.toast(`已清理 ${n} 条示例数据`, 'ok');
       }, true);
@@ -5727,7 +6053,18 @@ $('#file-gen').onchange = function () {
   const f = this.files[0]; if (!f) return;
   const coll = app._impColl;
   const r = new FileReader();
-  r.onload = () => { importCollectionCSV(coll, r.result); this.value = ''; };
+  r.onload = () => {
+    try {
+      const p = importer.previewCSV(r.result, coll);
+      if (!p.valid) {
+        ui.toast(`未识别到${p.label}的有效主字段，请检查表头或先下载模板（共 ${p.total} 行）`, 'err', 4600);
+      } else {
+        importer.commitCSV(coll, r.result);
+        ui.toast(`已识别 ${p.mapped.filter(Boolean).length} 个字段，${p.valid} 行可导入${p.skipped ? `，跳过 ${p.skipped} 行` : ''}`, 'ok', 3000);
+      }
+    } catch (e) { ui.toast('导入预览失败：' + e.message, 'err', 3600); }
+    this.value = '';
+  };
   r.readAsText(f, 'utf-8');
 };
 /* 全局搜索框事件 */
@@ -5785,6 +6122,7 @@ function collectData() {
     attend: DB.attend, node: DB.node, warn: DB.warn, help: DB.help,
     grant: DB.grant, focus: DB.focus, psych: DB.psych, graduate: DB.graduate,
     policy: DB.policy, material: DB.material, comp: DB.comp, tpl: DB.tpl,
+    learning_materials: DB.learning_materials, learning_notes: DB.learning_notes, learning_sessions: DB.learning_sessions,
     custom: DB.custom,
   };
 }
@@ -5810,6 +6148,9 @@ function applyEmbedded() {
   DB.material = (e.material || []).map(normMaterial);
   DB.comp = (e.comp || []).map(normComp);
   DB.tpl = (e.tpl || []).map(normTpl);
+  DB.learning_materials = (e.learning_materials || []).map(normLearningMaterial);
+  DB.learning_notes = (e.learning_notes || []).map(normLearningNote);
+  DB.learning_sessions = (e.learning_sessions || []).map(normLearningSession);
   DB.custom = e.custom || {};
   save();
 }
@@ -5929,10 +6270,16 @@ function boot() {
     DB.material = (store.read('material', []) || []).map(normMaterial);
     DB.comp = (store.read('comp', []) || []).map(normComp);
     DB.tpl = (store.read('tpl', []) || []).map(normTpl);
+    DB.learning_materials = (store.read('learning_materials', []) || []).map(normLearningMaterial);
+    DB.learning_notes = (store.read('learning_notes', []) || []).map(normLearningNote);
+    DB.learning_sessions = (store.read('learning_sessions', []) || []).map(normLearningSession);
     DB.custom = store.read('custom', {}) || {};
   }
+  ensureV39Settings();
   paintWho();
   applyTheme(DB.settings.theme || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'), false);
+  theme.applyPreset(DB.settings.ui.preset || 'blueprint', false);
+  theme.applyBackground(DB.settings.ui.background, false);
   injectNavExtras(); applyFold(); renderPinned(); updatePinStates(); bindNavSearch();
   render();
   console.log('%c辅导员工作台 ' + APP_VERSION, 'color:#3b82f6;font-weight:700');
@@ -5941,7 +6288,7 @@ function boot() {
 /* ---------- 17. 对外暴露 ---------- */
 window.CWB = {
   version: APP_VERSION,
-  db: DB, store, schema, ui, hooks, bridge, modules,
+  db: DB, store, schema, ui, hooks, bridge, modules, onboarding, theme, security, importer,
   consts: { DUTIES, FOCUS, LEVELS, PRIOS, SOURCES, TALK_WAYS, CRISIS_LEVELS, CRISIS_WAYS, STU_TYPES, HONOR_TYPES, MORAL_LEVELS, POLITICS,
     PLEAVE_TYPES, ATTEND_TYPES, NODE_REPEAT, WARN_TYPES, WARN_LEVELS, HELP_TYPES, GRANT_KINDS,
     FOCUS_CATEGORIES, FOCUS_LEVELS, FOCUS_STATUS, PSYCH_SCALES, PSYCH_LEVELS, GRAD_YEARS, EMPLOY_STATUS, SALARY_RANGES,
@@ -5953,7 +6300,7 @@ window.CWB = {
   /* v3.8 学生大表导入 - 顶层便捷访问 */
   STU_SYNONYMS,
   stuHeaderToField, stuNum, stuNormalizeRow, csvTextToObjects, xlsxRowsToObjects, loadSheetJS, importStudentsFile,
-  save, render, go,
+  save, render, go, restoreDemo,
   norm: {
     student:normStudent, task:normTask, talk:normTalk, stay:normStay, leave:normLeave, honor:normHonor,
     pleave:normPleave, attend:normAttend, node:normNode, warn:normWarn, help:normHelp, grant:normGrant,
@@ -5962,6 +6309,7 @@ window.CWB = {
     normStudent, normTask, normTalk, normStay, normLeave, normHonor,
     normPleave, normAttend, normNode, normWarn, normHelp, normGrant,
     normFocus, normPsych, normGraduate, normPolicy, normMaterial, normComp, normTpl,
+    learningMaterial:normLearningMaterial, learningNote:normLearningNote, learningSession:normLearningSession,
   },
 };
 

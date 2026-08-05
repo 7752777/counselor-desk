@@ -12,13 +12,13 @@
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/version-3.8.0-0b3a82?style=flat-square&logo=github&logoColor=white)
+![Version](https://img.shields.io/badge/version-3.9.0-0b3a82?style=flat-square&logo=github&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-12a06b?style=flat-square)
 ![Platform](https://img.shields.io/badge/platform-Web%20%7C%20Mobile-0bb4c4?style=flat-square)
 ![Tech](https://img.shields.io/badge/stack-HTML%20%2B%20CSS%20%2B%20JS-amber?style=flat-square)
 ![Size](https://img.shields.io/badge/size-~360KB-e0a020?style=flat-square)
 ![Offline](https://img.shields.io/badge/works-100%25%20Offline-2a3852?style=flat-square)
-![Tests](https://img.shields.io/badge/tests-4%20suites%20PASS-12a06b?style=flat-square&logo=checkmarx&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-6%20suites%20PASS-12a06b?style=flat-square&logo=checkmarx&logoColor=white)
 ![Build](https://img.shields.io/badge/build-no%20build%20step-6b7280?style=flat-square)
 ![Deps](https://img.shields.io/badge/dependencies-zero-6b7280?style=flat-square)
 ![CI](https://img.shields.io/github/actions/workflow/status/7752777/counselor-desk/tests.yml?style=flat-square&logo=github-actions&logoColor=white&label=CI)
@@ -70,8 +70,8 @@
 
 | 🎨 **视觉** | 📦 **数据** | 🔌 **联动** | 🛡️ **隐私** |
 | :---: | :---: | :---: | :---: |
-| 设计令牌系统 | 19 个业务集合 | 交换包 v5 | localStorage 本机存储 |
-| 双主题（浅 / 深） | 23 个字段同义词 | JSON 备份恢复 | 重点档案 4 位密码锁 |
+| 设计令牌系统 | 22 个数据集合 | 交换包 v6 | localStorage 本机存储 |
+| 五套配色 + 背景图 | 23 个字段同义词 | JSON 备份恢复 | 启动锁 + 敏感操作验证 |
 | 24px 工程蓝图网格 | 缺值零溢出 | `CWB.bridge` API | 零外传、零后端 |
 | WCAG AA 无障碍 | xls/xlsx/csv 三合一 | 字段命名对齐 | 可携带 / 可换设备 |
 
@@ -86,14 +86,18 @@
 
 ### 数据
 
-- **19 个业务集合**：学生 / 任务 / 谈话 / 走读 / 去向 / 评优 / 请销假 / 考勤 / 工作节点 / 学业预警 / 帮扶 / 奖助 / 重点档案 / 心理摸排 / 就业 / 政策智库 / 素材 / 竞赛 / 模板
+- **22 个数据集合**：19 个业务集合 + 学习资料 / 学习笔记 / 学习记录
 - **学生大表 xls/xlsx 直传**：从学校信息化门户导出的文件直接拖入，CDN 动态加载 SheetJS，**23 个常见列名同义词模糊匹配**，缺值零溢出，重复学号合并去重
+- **首次使用引导**：设置个人信息、导入学生、处理今日任务和首次备份按清单完成，可随时跳过和恢复
+- **界面个性化**：五套配色预设、本地背景图、透明度调节、默认外观恢复
+- **个人学习助手**：资料进度、笔记、本地摘要和学习包导出，内容不自动上传第三方
+- **通用导入预览**：字段模糊匹配、导入快照、结果统计和最近导入撤销
 - **CSV 闭环**：18 个业务模块支持"模板 → 导出 → 改 → 导回"，导出与导入使用同一套表头
 - **JSON 备份恢复**：一键导出全量数据（含个人设置），换电脑后一键还原
 
 ### 联动
 
-- **交换包 v5**：覆盖全部 19 个业务集合 + 个人设置，字段命名与重型平台对齐
+- **交换包 v6**：覆盖业务集合、个人设置和学习资料，兼容 v1–v5
 - **API 预留**：`CWB.bridge.request()` / `pullTasks()` / `pushSummary()` 已留好接口
 - **未来**：工作台已具备 API 直连能力，只需在重型平台侧开通即可
 
@@ -102,7 +106,7 @@
 - **零后端**：所有数据在浏览器 `localStorage`，命名空间 `cwb_v1_`
 - **零外传**：不上传任何服务器，断网可用
 - **可携带**：U 盘、邮件附件、手机互传都行
-- **重点档案 4 位密码锁**：心理/经济/学业等敏感信息本地加密
+- **登录锁与敏感操作保护**：启动锁、手动上锁、删除/清空等操作二次验证；这是界面访问控制，不等同于数据加密
 
 ---
 
@@ -165,7 +169,7 @@ start index.html       # Windows
 
 ```javascript
 // 在浏览器控制台试试
-CWB.version                              // "3.8.0"
+CWB.version                              // "3.9.0"
 CWB.db.students                          // 学生数组
 CWB.db.stay                              // 走读数组
 CWB.db.leave                             // 去向数组
@@ -195,9 +199,9 @@ CWB.modules.register({                   // 注册自定义模块
 | `CWB.schema` | 实体字段定义（可加本地字段） |
 | `CWB.ui` | 弹窗 / 表单 / 提示组件 |
 | `CWB.hooks` | 事件钩子（`store:write` / `view:render` / `module:register`） |
-| `CWB.bridge` | 联动桥（交换包 v5、API 预留） |
+| `CWB.bridge` | 联动桥（交换包 v6、API 预留） |
 | `CWB.modules.register(def)` | **注册自定义模块**，自动插入导航 |
-| `CWB.norm` | 数据规范化函数（19 个） |
+| `CWB.norm` | 数据规范化函数（含学习助手） |
 
 详见 [**《二次开发指南》**](./docs/二次开发指南.md)。
 
@@ -218,18 +222,21 @@ counselor-desk/
 │   ├── logo.svg                  # 项目 Logo
 │   └── screenshots/              # 截图
 ├── docs/                         # 开发者文档
-│   ├── 使用指南.md                # 各模块怎么用（v3.8.0）
+│   ├── 辅导员工作台使用手册.md    # v3.9 首次使用与日常操作手册
+│   ├── 使用指南.md                # 各模块怎么用（v3.9.0）
 │   ├── 二次开发指南.md             # window.CWB 扩展点详解 + 示例
-│   └── 数据格式与联动约定.md        # 字段、交换包 v5、CSV、接口约定
+│   └── 数据格式与联动约定.md        # 字段、交换包 v6、CSV、接口约定
 ├── package.json                  # 测试脚本与开发依赖
 ├── pnpm-lock.yaml                # 测试依赖锁定文件
 ├── scripts/                      # 语法与公开发布检查
 ├── .github/workflows/            # 测试、Lint、Pages 发布
-├── tests/                        # 本地测试（需 jsdom，4 套全 PASS）
+├── tests/                        # 本地测试（需 jsdom，6 套全 PASS）
 │   ├── regression.js             # 回归测试：22 视图渲染 + Phase A/B/C 关键特性
 │   ├── import-loop.js            # 导入/导出闭环：18 模块 CSV 往返 + JSON 备份恢复
 │   ├── crud-smoke.js             # 全模块增删改冒烟
-│   └── student-import.js         # v3.8 学生大表导入：列名匹配 / 缺值容错 / 合并契约
+│   ├── student-import.js         # 学生大表导入：列名匹配 / 缺值容错 / 合并契约
+│   ├── demo-recovery.js          # 示例数据清理与恢复
+│   └── v39-features.js           # v3.9 引导 / 外观 / 安全 / 学习助手 / 导入预览
 └── .gitignore
 ```
 
@@ -237,11 +244,11 @@ counselor-desk/
 
 ## 🧪 测试
 
-四套本地测试，全部 PASS ✅
+六套本地测试，全部 PASS ✅
 
 ```bash
 pnpm install --frozen-lockfile
-pnpm test                         # 四套测试
+pnpm test                         # 六套测试
 pnpm run lint                     # 内联 JavaScript 语法检查
 pnpm run check:public             # 公开发布面检查
 ```

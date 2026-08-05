@@ -1,5 +1,5 @@
 /**
- * 辅导员工作台 · v3.8 学生大表导入测试
+ * 辅导员工作台 · v3.9 学生大表导入测试
  * 纯本地、零依赖（仅 jsdom）。用法：
  *   node tests/student-import.js
  * 覆盖：列名模糊匹配（synonym）/ 缺省值容错 / 重复合并 / 非法行跳过。
@@ -263,7 +263,7 @@ const bad = (msg, e) => { fail++; console.log('  ✗ ' + msg + (e ? ('\n      ' 
   }
 
   console.log('=== 9. APP_VERSION 与 UI 风格 ===');
-  if (cwb.version === '3.8.0') ok('APP_VERSION = 3.8.0');
+  if (cwb.version === '3.9.0') ok('APP_VERSION = 3.9.0');
   else bad('APP_VERSION 错误：' + cwb.version);
 
   const brandSub = $1('#brand-sub');
