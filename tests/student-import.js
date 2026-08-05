@@ -17,7 +17,7 @@ const bad = (msg, e) => { fail++; console.log('  ✗ ' + msg + (e ? ('\n      ' 
 (async () => {
   const errors = [];
   const vc = new VirtualConsole();
-  const IGNORE = /scrollTo|Not implemented/i;
+  const IGNORE = /scrollTo|Not implemented|Could not load|getaddrinfo/i;
   vc.on('jsdomError', e => { if (IGNORE.test(e.message)) return; errors.push('jsdomError: ' + (e.detail && e.detail.stack || e.message)); });
   vc.on('error', (...a) => { const s = a.join(' '); if (IGNORE.test(s)) return; errors.push('console.error: ' + s); });
   vc.on('log', (...a) => { /* console.log from page */ });
@@ -133,7 +133,7 @@ const bad = (msg, e) => { fail++; console.log('  ✗ ' + msg + (e ? ('\n      ' 
     else bad('基础字段丢失: ' + JSON.stringify(norm));
     if (norm.phone === '' && norm.email === '' && norm.dorm === '') ok('所有未传字段空字符串容错');
     else bad('容错失败: ' + JSON.stringify(norm));
-    if (norm.enrollment_status === '在读') ok('学籍状态默认「在读」');
+    if (norm.enrollment_status === '待确认') ok('学籍状态默认「待确认」');
     else bad('学籍状态默认错误: ' + norm.enrollment_status);
     // created_at 由上游 normStudent 在写库时注入；stuNormalizeRow 只做字段归一
     if (!('created_at' in norm)) ok('stuNormalizeRow 纯归一（不预写 created_at，由 normStudent 注入）');
@@ -145,7 +145,7 @@ const bad = (msg, e) => { fail++; console.log('  ✗ ' + msg + (e ? ('\n      ' 
   // 全空对象也必须能处理
   try {
     const empty = stuNormalizeRow({});
-    if (empty.full_name === '' && empty.student_number === '' && empty.enrollment_status === '在读') ok('空对象也能正常容错');
+    if (empty.full_name === '' && empty.student_number === '' && empty.enrollment_status === '待确认') ok('空对象也能正常容错');
     else bad('空对象容错异常: ' + JSON.stringify(empty));
   } catch (e) {
     bad('空对象抛错: ' + e.message);
@@ -267,8 +267,8 @@ const bad = (msg, e) => { fail++; console.log('  ✗ ' + msg + (e ? ('\n      ' 
   else bad('APP_VERSION 错误：' + cwb.version);
 
   const brandSub = $1('#brand-sub');
-  if (brandSub && brandSub.textContent.includes('工程版')) ok('品牌副标已改为「低空学院 · 工程版」');
-  else bad('品牌副标未改：' + (brandSub && brandSub.textContent));
+  if (brandSub && brandSub.textContent.includes('开源版') && !brandSub.textContent.includes('低空学院')) ok('品牌副标适用于全国高校开源场景');
+  else bad('品牌副标仍带有单一学院限定：' + (brandSub && brandSub.textContent));
 
   // KPI 字号检查（读取计算样式）
   const kpi = $1('.kpi');

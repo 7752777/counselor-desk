@@ -41,7 +41,7 @@ const SPEC = [
 (async () => {
   const errors = [];
   const vc = new VirtualConsole();
-  const IGNORE = /scrollTo|Not implemented/i;
+  const IGNORE = /scrollTo|Not implemented|Could not load|getaddrinfo/i;
   vc.on('jsdomError', e => { if (IGNORE.test(e.message)) return; errors.push('jsdomError: ' + (e.detail && e.detail.stack || e.message)); });
   vc.on('error', (...a) => { const s = a.join(' '); if (IGNORE.test(s)) return; errors.push('console.error: ' + s); });
 

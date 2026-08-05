@@ -3,12 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="辅导员本地工作台 · 单文件离线运行 · 数据仅存本机">
+<meta name="description" content="辅导员本地工作台 · 离线运行 · 数据仅存本机">
+<meta name="application-name" content="辅导员工作台">
+<meta name="theme-color" content="#0b3a82">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%230b3a82'/%3E%3Cpath d='M13 18c8-3 14-1 19 4 5-5 11-7 19-4v29c-8-2-14 0-19 5-5-5-11-7-19-5z' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3Cpath d='M32 22v30' stroke='%230bb4c4' stroke-width='3'/%3E%3Ccircle cx='22' cy='29' r='4' fill='%230bb4c4'/%3E%3Cpath d='M17 40c1-5 9-5 10 0' fill='none' stroke='%230bb4c4' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='m39 34 4 4 7-9' fill='none' stroke='%23e0a020' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<script defer src="vendor/xlsx.full.min.js" data-offline-xlsx></script>
 <title>辅导员工作台</title>
 <style>
 /* ============================================================
-   辅导员工作台 Counselor Desk  v3.2
-   单文件 / 零依赖 / 数据仅存本机 localStorage
+   辅导员工作台 Counselor Desk  v3.9
+   源码入口 / 发布包单文件 / 数据仅存本机 localStorage
    设计：克制高级感 — 航空蓝调 · 纯色面 · 极细边框 · 柔和阴影
    ============================================================ */
 :root{
@@ -32,7 +36,7 @@
   --track-tight: -0.01em;
   --track-wide: 0.04em;
 
-  /* ===== 主色：深空航蓝 + 信号青（低空学院·工程科技风） ===== */
+  /* ===== 主色：深空航蓝 + 信号青（高校学生工作 · 可靠开源工具） ===== */
   --accent: #0b3a82;          /* 深空航蓝 — 主品牌色 */
   --accent-hover: #0a328f;
   --accent-active: #082a78;
@@ -130,7 +134,7 @@
   --navy-border: var(--chrome-border);
 }
 
-/* ===== 深色模式：深空蓝调（v3.8 工程蓝图暗色版） ===== */
+/* ===== 深色模式：深空蓝调（v3.9 工程蓝图暗色版） ===== */
 [data-theme="dark"]{
   --bg: #0c1322;
   --bg-sunken: #080d18;
@@ -187,7 +191,7 @@
   --grad-signal: linear-gradient(135deg,#2dd0e0,#4d7fd6);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;padding:0}
+html,body{margin:0;padding:0;overflow-x:hidden}
 body{
   font-family:var(--font-sans);
   background-color:var(--bg);
@@ -467,7 +471,7 @@ tbody tr:last-child td{border-bottom:none}
 .tag-cyan{background:#ecfeff;color:#0e7490}
 .tag-line{background:var(--line-2);color:var(--ink-3)}
 
-/* ---------- KPI（v3.8 工程感：左 3px 侧条 + 顶发丝线 + 标签字号放大） ---------- */
+/* ---------- KPI（v3.9 工程感：左 3px 侧条 + 顶发丝线 + 标签字号放大） ---------- */
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
 .kpi{
   background:var(--card);border:1px solid var(--line);
@@ -718,6 +722,7 @@ tbody tr:last-child td{border-bottom:none}
 }
 .onboarding{display:grid;grid-template-columns:1.2fr 1fr auto;gap:18px;align-items:center;background:linear-gradient(135deg,var(--accent-soft),var(--signal-soft));border:1px solid var(--accent-line);border-radius:var(--r);padding:18px 20px;margin-bottom:16px;box-shadow:var(--sh-sm)}
 .onboarding h2{margin:3px 0 5px;font-size:20px}.onboarding p{margin:0;color:var(--ink-2);font-size:13px;line-height:1.65}.onboarding-steps{display:flex;flex-direction:column;gap:7px;font-size:12.5px;color:var(--ink-3)}.onboarding-steps span{padding:5px 8px;border-radius:7px;background:rgba(255,255,255,.45)}.onboarding-steps .done{color:var(--ok);text-decoration:line-through}.onboarding-actions{display:flex;flex-direction:column;gap:7px;min-width:122px}.settings-section{border-top:1px solid var(--line-2);padding-top:16px;margin-top:18px}.learning-list{display:grid;gap:12px}.learning-item{border:1px solid var(--line);border-radius:var(--r-sm);padding:15px 16px;background:var(--card-2)}.learning-item-hd{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.learning-item h3{font-size:15px;margin:0 0 4px}.learning-item p{font-size:13.5px;line-height:1.7;color:var(--ink-2);white-space:pre-wrap;margin:10px 0}.learning-progress{height:6px;border-radius:99px;background:var(--line-2);overflow:hidden;margin:10px 0}.learning-progress i{display:block;height:100%;background:var(--signal);border-radius:inherit}
+.import-summary{display:grid;grid-template-columns:repeat(5,minmax(80px,1fr));gap:8px;margin-bottom:14px}.import-stat{padding:10px;border:1px solid var(--line);border-radius:9px;background:var(--card-2)}.import-stat b{display:block;font-size:19px;margin-top:3px}.import-map-grid{display:grid;grid-template-columns:minmax(130px,1fr) minmax(160px,1fr);gap:7px;align-items:center}.import-table-wrap{max-height:300px;overflow:auto;border:1px solid var(--line);border-radius:9px}.import-table-wrap table{margin:0}.import-issue{color:var(--danger);font-size:12px}.import-sensitive{border-left:3px solid var(--warn);background:var(--warn-bg);padding:10px 12px;border-radius:7px;margin:12px 0}@media(max-width:700px){.import-summary{grid-template-columns:repeat(2,1fr)}.import-map-grid{grid-template-columns:1fr}.modal.wide{width:calc(100vw - 16px)}}
 @media (max-width:900px){.onboarding{grid-template-columns:1fr}.onboarding-actions{flex-direction:row;flex-wrap:wrap}.onboarding-actions .btn{flex:1}.settings-section .grid2{grid-template-columns:1fr}}
 </style>
 </head>
@@ -775,7 +780,7 @@ tbody tr:last-child td{border-bottom:none}
     <span class="brand-mark"><svg class="ic ic-lg"><use href="#i-logo"/></svg></span>
     <span>辅导员工作台</span>
   </div>
-  <span class="brand-sub" id="brand-sub" style="color:var(--signal);background:var(--signal-soft);border-color:var(--signal-line)">低空学院 · 工程版</span>
+  <span class="brand-sub" id="brand-sub" style="color:var(--signal);background:var(--signal-soft);border-color:var(--signal-line)">高校学生工作 · 开源版</span>
   <span class="topbar-sp"></span>
   <div class="topbar-search-wrap">
     <div class="topbar-search">
@@ -854,12 +859,12 @@ tbody tr:last-child td{border-bottom:none}
 <div id="toast-root"></div>
 <input type="file" id="file-json" accept=".json,application/json" style="display:none">
 <input type="file" id="file-csv" accept=".csv,.txt,.xls,.xlsx" style="display:none">
-<input type="file" id="file-gen" accept=".csv,.txt" style="display:none">
+<input type="file" id="file-gen" accept=".csv,.txt,.xls,.xlsx" style="display:none">
 
 <script>
 /* ============================================================================
- * 辅导员工作台 Counselor Desk v2.1.0
- * 单文件 · 零依赖 · 数据仅存本机 localStorage
+ * 辅导员工作台 Counselor Desk v3.9.0
+ * 发布包单文件 · 源码离线依赖随仓库提供 · 数据仅存本机 localStorage
  * 模块划分依据：教育部令第 43 号《普通高等学校辅导员队伍建设规定》第五条
  * 专项模块参考本院真实工作台账（心理危机预警库 / 校外住宿 / 假期去向 / 青春榜样）
  * ----------------------------------------------------------------------------
@@ -1000,13 +1005,19 @@ function download(filename, content, mime) {
   a.href = url; a.download = filename; document.body.appendChild(a); a.click();
   setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 200);
 }
-function toCSV(rows) {
+function csvSafeCell(value) {
+  const s = value == null ? '' : String(value);
+  return /^[=+\-@]/.test(s) ? "'" + s : s;
+}
+function rowsToCSV(rows, protectFormula) {
   const cell = v => {
-    const s = v == null ? '' : String(v);
+    const raw = v == null ? '' : String(v);
+    const s = protectFormula === false ? raw : csvSafeCell(raw);
     return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
   };
   return '\ufeff' + rows.map(r => r.map(cell).join(',')).join('\r\n');
 }
+function toCSV(rows) { return rowsToCSV(rows, true); }
 function parseCSV(text) {
   if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
   const rows = []; let row = [], cur = '', q = false;
@@ -1027,13 +1038,26 @@ function pinyinInitial(name) { return (name || '?').trim().slice(0, 1); }
 
 /* ===================== 3. 数据层 store ===================== */
 const NS = 'cwb_v1_';
+function compactRecord(record) {
+  const out = {};
+  Object.entries(record || {}).forEach(([key, value]) => {
+    if (value === '' || value === null || value === undefined || value === false) return;
+    if (Array.isArray(value) && value.length === 0) return;
+    out[key] = value;
+  });
+  return out;
+}
+function compactCollection(records) { return (records || []).map(compactRecord); }
 const store = {
   read(key, fallback) {
     try { const raw = localStorage.getItem(NS + key); return raw ? JSON.parse(raw) : fallback; }
     catch (e) { console.warn('[CWB] 读取失败', key, e); return fallback; }
   },
   write(key, val) {
-    try { localStorage.setItem(NS + key, JSON.stringify(val)); hooks.emit('store:write', { key, val }); return true; }
+    try {
+      const stored = key === 'students' ? compactCollection(val) : val;
+      localStorage.setItem(NS + key, JSON.stringify(stored)); hooks.emit('store:write', { key, val }); return true;
+    }
     catch (e) {
       ui.toast(e && e.name === 'QuotaExceededError'
         ? '本地存储空间已满，请先导出备份并清理旧数据' : '保存失败：' + e.message, 'err');
@@ -1046,6 +1070,30 @@ const store = {
     let n = 0;
     this.keys().forEach(k => { n += (localStorage.getItem(NS + k) || '').length * 2; });
     return n;
+  },
+  estimateBytes(key, val) { return JSON.stringify(key === 'students' ? compactCollection(val) : val).length * 2; }
+};
+const storage = {
+  estimatedCapacity: 5 * 1024 * 1024,
+  capabilities() {
+    let local = false;
+    try { const key = NS + 'capability_probe'; localStorage.setItem(key, '1'); localStorage.removeItem(key); local = true; } catch (_) {}
+    return {
+      localStorage:local,
+      fileReader:typeof FileReader !== 'undefined',
+      textDecoder:typeof TextDecoder !== 'undefined',
+      offlineExcel:typeof XLSX !== 'undefined' || !!document.querySelector('[data-offline-xlsx]'),
+    };
+  },
+  health(capacityBytes) {
+    const capacity = Math.max(1, Number(capacityBytes) || this.estimatedCapacity);
+    const used = store.bytes();
+    const ratio = used / capacity;
+    return { used, capacity, ratio, level:ratio >= .85 ? 'critical' : ratio >= .70 ? 'warn' : 'ok' };
+  },
+  canWriteLarge(extraBytes) {
+    const h = this.health();
+    return h.level !== 'critical' && h.used + Math.max(0, Number(extraBytes) || 0) < h.capacity * .85;
   }
 };
 
@@ -1101,6 +1149,16 @@ const schema = {
     politics:      { label:'政治面貌', local:true },
     phone:         { label:'联系电话', local:true },
     dorm:          { label:'宿舍', local:true },
+    birthday:      { label:'出生日期', local:true, sensitive:true },
+    hometown:      { label:'籍贯', local:true },
+    home_addr:     { label:'家庭地址', local:true, sensitive:true },
+    parent_name:   { label:'家长姓名', local:true, sensitive:true },
+    parent_phone:  { label:'家长电话', local:true, sensitive:true },
+    edu_years:     { label:'学制', local:true },
+    nation:        { label:'民族', local:true },
+    id_card:       { label:'身份证号', local:true, sensitive:true },
+    email:         { label:'邮箱', local:true },
+    qq:            { label:'QQ', local:true },
     focus:         { label:'关注类型', local:true, type:'array' },
     focus_level:   { label:'关注等级', local:true },
     crisis_level:  { label:'危机预警级别', local:true },
@@ -1465,10 +1523,20 @@ function normStudent(x) {
     grade: x.grade || '',
     college_name: x.college_name || '',
     counselor_name: x.counselor_name || '',
-    enrollment_status: x.enrollment_status || '在读',
+    enrollment_status: x.enrollment_status || '待确认',
     politics: x.politics || '',
     phone: x.phone || '',
     dorm: x.dorm || '',
+    birthday: x.birthday || '',
+    hometown: x.hometown || '',
+    home_addr: x.home_addr || '',
+    parent_name: x.parent_name || '',
+    parent_phone: x.parent_phone || '',
+    edu_years: x.edu_years == null ? '' : x.edu_years,
+    nation: x.nation || '',
+    id_card: x.id_card || '',
+    email: x.email || '',
+    qq: x.qq || '',
     focus: Array.isArray(x.focus) ? x.focus : (x.focus ? String(x.focus).split(/[、,，\s]+/).filter(Boolean) : []),
     focus_level: x.focus_level || '',
     crisis_level: x.crisis_level || '',
@@ -1673,7 +1741,7 @@ function normGrant(x) {
     name: String(x.name || '').trim(),
     class_name: x.class_name || '',
     kind: x.kind || '助学金',
-    amount: x.amount || '',
+    amount: (x.amount === '' || x.amount == null || !isFinite(Number(x.amount))) ? '' : Number(x.amount),
     batch: x.batch || '',
     status: x.status || '待发放',
     note: x.note || '',
@@ -2457,11 +2525,13 @@ const onboarding = {
 function renderOnboarding() {
   if (!onboarding.visible()) return '';
   const s = DB.settings, checks = s.onboarding.checklist || {};
-  const done = [!!s.counselor_name, DB.students.length > 0, DB.tasks.length > 0, !!s.backup_notified_at].filter(Boolean).length;
+  const hasRealProfile = !!s.counselor_name && s.counselor_name !== '示例老师';
+  const hasRealStudents = DB.students.some(x => !x._demo);
+  const done = [hasRealProfile, hasRealStudents, !!s.backup_notified_at].filter(Boolean).length;
   return `<div class="onboarding" data-onboarding>
-    <div class="onboarding-copy"><div class="tiny">第一次使用 · ${done}/4</div><h2>用 5 分钟搭好你的工作台</h2><p>先设置个人信息，再导入学生名单，最后从今日概览开始处理任务。你可以随时跳过，之后在设置里重新打开。</p></div>
-    <div class="onboarding-steps"><span class="${s.counselor_name ? 'done' : ''}">1. 设置个人信息</span><span class="${DB.students.length ? 'done' : ''}">2. 导入学生名单</span><span class="${DB.tasks.length ? 'done' : ''}">3. 处理今日任务</span><span class="${s.backup_notified_at ? 'done' : ''}">4. 完成第一次备份</span></div>
-    <div class="onboarding-actions"><button class="btn btn-primary btn-sm" data-act="onboarding-settings">开始设置</button><button class="btn btn-sm" data-act="onboarding-complete">我已熟悉，关闭</button><button class="btn btn-ghost btn-sm" data-act="onboarding-skip">暂时跳过</button></div>
+    <div class="onboarding-copy"><div class="tiny">第一次使用 · ${done}/3</div><h2>选择最适合你的开始方式</h2><p>可以先体验示例，也可以正式建立学生台账；已有备份的老师可直接恢复。正式初始化进度会保存在本机。</p></div>
+    <div class="onboarding-steps"><span class="${hasRealProfile ? 'done' : ''}">1. 设置个人信息</span><span class="${hasRealStudents ? 'done' : ''}">2. 导入真实学生名单</span><span class="${s.backup_notified_at ? 'done' : ''}">3. 完成首次备份</span></div>
+    <div class="onboarding-actions"><button class="btn btn-primary btn-sm" data-act="onboarding-init">正式初始化</button><button class="btn btn-sm" data-act="onboarding-demo">体验示例</button><button class="btn btn-sm" data-act="onboarding-restore">从备份恢复</button><button class="btn btn-ghost btn-sm" data-act="onboarding-skip">暂时跳过</button></div>
   </div>`;
 }
 function learningSummary(m) {
@@ -2799,6 +2869,7 @@ function viewStudents() {
       <span class="sp"></span>
       <button class="btn btn-sm" data-act="student-import"><svg class="ic ic-sm"><use href="#i-up"/></svg>导入 CSV</button>
       <button class="btn btn-sm" data-act="student-export"><svg class="ic ic-sm"><use href="#i-down"/></svg>导出 CSV</button>
+      <button class="btn btn-sm" data-act="student-export-sensitive"><svg class="ic ic-sm"><use href="#i-lock"/></svg>敏感导出</button>
       <button class="btn btn-primary btn-sm" data-act="student-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增学生</button>
     </div>
     <div class="toolbar">
@@ -4109,6 +4180,12 @@ function buildSummary(R) {
 /* ---------- 11.11 平台联动 ---------- */
 function viewBridge() {
   const s = DB.settings;
+  const health = storage.health();
+  const capabilities = storage.capabilities();
+  const healthLabel = health.level === 'critical' ? '空间紧张' : health.level === 'warn' ? '建议备份' : '状态良好';
+  const healthClass = health.level === 'critical' ? 'banner-warn' : 'banner-info';
+  const importHistory = (store.read('import_history', []) || []).slice().reverse();
+  const importLabels = { students:'学生名单', tasks:'工作任务', talks:'谈心谈话', stay:'校外住宿', leave:'假期去向', honor:'评优榜样', pleave:'请销假', attend:'考勤台账', node:'工作节点', warn:'学业预警', help:'学业帮扶', grant:'奖助勤补', focus:'重点学生档案', psych:'心理摸排', graduate:'毕业生档案', policy:'政策智库', material:'工作素材', comp:'科创竞赛', tpl:'模板库' };
   const fields = Object.keys(schema.student).map(k => {
     const f = schema.student[k];
     return `<tr><td><code style="font-size:12.5px;color:var(--accent-dark)">${k}</code></td><td>${esc(f.label)}</td>
@@ -4120,6 +4197,9 @@ function viewBridge() {
     <div class="card-bd">
       <div class="banner banner-info" style="margin-bottom:16px"><svg class="ic ic-sm"><use href="#i-inbox"/></svg>
         <span class="sp">你的数据都<b>保存在本机浏览器</b>里，关闭网页也不会丢，更不会上传到任何服务器。<b>换电脑、重装系统或换浏览器前，请先把数据带走</b>。</span></div>
+      <div class="banner ${healthClass}" style="margin-bottom:16px"><svg class="ic ic-sm"><use href="#i-shield"/></svg>
+        <span class="sp"><b>本地存储健康：${healthLabel}</b> · 已使用约 ${(health.used / 1024).toFixed(1)} KB（按浏览器常见 5MB 容量估算为 ${Math.min(100, Math.round(health.ratio * 100))}%）。${health.level === 'critical' ? '已暂停大图片和大批量导入，请立即导出备份并清理空间。' : health.level === 'warn' ? '建议现在导出一份完整备份。' : '可以正常使用。'}</span></div>
+      <div class="tiny" style="margin-bottom:14px">浏览器能力：本地存储 ${capabilities.localStorage ? '✓' : '✕'} · 文件读取 ${capabilities.fileReader ? '✓' : '✕'} · 多编码 CSV ${capabilities.textDecoder ? '✓' : '✕'} · 离线 Excel ${capabilities.offlineExcel ? '✓' : '✕'}</div>
       <div class="grid2">
         <div class="form-row"><label class="lab" style="display:block;margin-bottom:5px">辅导员姓名</label>
           <input class="inp" data-set="counselor_name" value="${esc(s.counselor_name || '')}" placeholder="如 王老师"></div>
@@ -4134,6 +4214,11 @@ function viewBridge() {
       </div>
       <div class="hint" style="margin-top:12px">① <b>便携工作台</b>：生成一个自带数据的 HTML 文件，双击就能用，最适合用 U 盘随身携带。② <b>完整备份</b>：导出一个 .json 文件，以后可随时导入恢复。两种方式不冲突，建议都留一份。</div>
     </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd"><h2><svg class="ic"><use href="#i-clock"/></svg>最近导入与撤销</h2><span class="sp"></span><span class="tiny">成功导入后保留最近 3 次快照</span></div>
+    <div class="card-bd">${importHistory.length ? importHistory.map(run => `<div class="todo-row"><div class="todo-main"><div class="todo-t">${esc(importLabels[run.coll] || run.coll)}</div><div class="todo-m">${esc(new Date(run.at).toLocaleString('zh-CN'))} · 新增 ${Number(run.summary && run.summary.add || 0)} · 更新 ${Number(run.summary && run.summary.update || 0)}</div></div><button class="btn btn-sm btn-danger" data-act="import-undo" data-id="${esc(run.id)}">撤销此次导入</button></div>`).join('') : '<div class="empty">暂无可撤销的导入记录</div>'}</div>
   </div>
 
   <div class="card">
@@ -4769,7 +4854,7 @@ function openSettings() {
       { key:'org_code', label:'组织代码', hint:'与服务端平台保持一致' },
       { key:'platform_url', label:'平台地址（选填）' },
     ],
-    extra: `<div class="settings-section"><div class="sub-hd"><svg class="ic ic-sm"><use href="#i-sun"/></svg>界面个性化</div><div class="grid2"><div class="form-row"><label class="lab">配色方案</label><select class="inp" id="settings-preset">${Object.entries(THEME_PRESETS).map(([k,p]) => `<option value="${k}">${p.label}</option>`).join('')}</select></div><div class="form-row"><label class="lab">背景透明度 <span id="settings-opacity-value" class="tiny"></span></label><input class="inp" id="settings-opacity" type="range" min="0" max="0.35" step="0.01"></div></div><div class="form-row"><label class="lab">背景图片</label><input class="inp" id="settings-background" type="file" accept="image/*"><div class="hint">图片只保存在本机，建议使用小于 2MB 的图片；透明度最高 35%。</div></div><button class="btn btn-sm" type="button" data-theme-reset>恢复默认外观</button><button class="btn btn-sm" type="button" data-onboarding-reset style="margin-left:8px">重新查看首次引导</button></div><div class="settings-section"><div class="sub-hd"><svg class="ic ic-sm"><use href="#i-lock"/></svg>登录锁与敏感操作</div><div class="hint" style="margin-bottom:8px">这是界面访问锁，不是数据库加密。浏览器存储中的数据仍可能被技术手段读取。</div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-sm" type="button" data-security-set>设置 / 修改密码</button><button class="btn btn-sm" type="button" data-security-lock>立即上锁</button><button class="btn btn-sm btn-danger" type="button" data-security-disable>关闭登录锁</button></div></div>`,
+    extra: `<div class="settings-section"><div class="sub-hd"><svg class="ic ic-sm"><use href="#i-sun"/></svg>界面个性化</div><div class="grid2"><div class="form-row"><label class="lab">配色方案</label><select class="inp" id="settings-preset">${Object.entries(THEME_PRESETS).map(([k,p]) => `<option value="${k}">${p.label}</option>`).join('')}</select></div><div class="form-row"><label class="lab">背景透明度 <span id="settings-opacity-value" class="tiny"></span></label><input class="inp" id="settings-opacity" type="range" min="0" max="0.35" step="0.01"></div></div><div class="form-row"><label class="lab">背景图片</label><input class="inp" id="settings-background" type="file" accept="image/*"><div class="hint">支持最大 4MB 的 JPG、PNG、WebP 等图片；过大的图片会在本机自动压缩后保存，透明度最高 35%。</div></div><button class="btn btn-sm" type="button" data-theme-reset>恢复默认外观</button><button class="btn btn-sm" type="button" data-onboarding-reset style="margin-left:8px">重新查看首次引导</button></div><div class="settings-section"><div class="sub-hd"><svg class="ic ic-sm"><use href="#i-lock"/></svg>登录锁与敏感操作</div><div class="hint" style="margin-bottom:8px">这是界面访问锁，不是数据库加密。浏览器存储中的数据仍可能被技术手段读取。</div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-sm" type="button" data-security-set>设置 / 修改密码</button><button class="btn btn-sm" type="button" data-security-lock>立即上锁</button><button class="btn btn-sm btn-danger" type="button" data-security-disable>关闭登录锁</button></div></div>`,
     extraBtn: `<button class="btn btn-danger btn-sm" data-clear style="margin-right:auto">清空全部数据</button>`,
     onOpen(mask, close) {
       ensureV39Settings();
@@ -4777,7 +4862,16 @@ function openSettings() {
       preset.value = DB.settings.ui.preset || 'blueprint'; opacity.value = String(DB.settings.ui.background.opacity || 0.16); opacityValue.textContent = Math.round(Number(opacity.value) * 100) + '%';
       preset.onchange = () => theme.applyPreset(preset.value, true);
       opacity.oninput = () => { opacityValue.textContent = Math.round(Number(opacity.value) * 100) + '%'; theme.applyBackground(Object.assign({}, DB.settings.ui.background, { opacity:Number(opacity.value) }), true); };
-      $('#settings-background', mask).onchange = e => { const f = e.target.files && e.target.files[0]; if (!f) return; if (f.size > 2 * 1024 * 1024) { ui.toast('背景图片请控制在 2MB 以内', 'warn'); return; } const r = new FileReader(); r.onload = () => theme.applyBackground(Object.assign({}, DB.settings.ui.background, { dataUrl:r.result }), true); r.readAsDataURL(f); };
+      $('#settings-background', mask).onchange = async e => {
+        const f = e.target.files && e.target.files[0]; if (!f) return;
+        try {
+          ui.toast('正在处理背景图片…', 'ok', 1200);
+          const prepared = await theme.prepareBackgroundFile(f);
+          const saved = theme.applyBackground(Object.assign({}, DB.settings.ui.background, { dataUrl:prepared.dataUrl }), true);
+          if (saved !== false) ui.toast(prepared.compressed ? '背景图片已压缩并应用' : '背景图片已应用', 'ok', 3000);
+        } catch (err) { ui.toast(err.message || '背景图片处理失败', 'warn', 4200); }
+        e.target.value = '';
+      };
       $('[data-theme-reset]', mask).onclick = () => { theme.reset(true); preset.value = 'blueprint'; opacity.value = '0.16'; opacityValue.textContent = '16%'; };
       $('[data-onboarding-reset]', mask).onclick = () => { onboarding.reset(); close(); ui.toast('首次引导已重新开启', 'ok'); };
       $('[data-security-set]', mask).onclick = () => { close(); ui.modal({ title:'设置登录锁', size:'narrow', sticky:true, body:'<p class="muted" style="margin-top:0">设置 4–12 位数字密码，用于进入工作台和敏感操作二次验证。</p><input class="inp" id="security-new-pass" type="password" inputmode="numeric" maxlength="12" placeholder="新密码"><input class="inp" id="security-new-pass2" type="password" inputmode="numeric" maxlength="12" placeholder="再次输入" style="margin-top:8px">', footer:'<button class="btn" data-close>取消</button><button class="btn btn-primary" data-security-save>启用保护</button>', onOpen(m, c) { $('[data-security-save]', m).onclick = () => { const a = $('#security-new-pass', m).value, b = $('#security-new-pass2', m).value; if (a !== b) return ui.toast('两次密码不一致', 'warn'); try { security.configure(a); c(); render(); ui.toast('登录锁已启用', 'ok'); } catch (e) { ui.toast(e.message, 'warn'); } }; } }); };
@@ -4805,54 +4899,34 @@ const CSV_MAP = {
   '手机号':'phone','宿舍':'dorm','备注':'note','学生当前状态':'enrollment_status','学籍状态':'enrollment_status',
   '政治面貌':'politics','关注等级':'focus_level','关注类型':'focus',
 };
-function exportStudentsCSV() {
-  const cols = ['student_number','full_name','gender','class_name','major_name','grade','college_name','counselor_name','enrollment_status','politics','phone','dorm','focus_level','focus','note'];
+function exportStudentsCSV(includeSensitive) {
+  const base = ['student_number','full_name','gender','class_name','major_name','grade','college_name','counselor_name','enrollment_status','politics','phone','dorm'];
+  const sensitive = Object.keys(schema.student).filter(field => schema.student[field].sensitive);
+  const cols = base.concat(includeSensitive ? sensitive : []).concat(['focus_level','focus','note']).filter((field, index, list) => list.indexOf(field) === index);
   const head = cols.map(c => schema.student[c].label + '(' + c + ')');
   const rows = [head].concat(DB.students.map(s => cols.map(c => c === 'focus' ? (s.focus || []).map(f => FOCUS_MAP[f] ? FOCUS_MAP[f].n : f).join('、') : s[c])));
-  download(`学生台账_${today()}.csv`, toCSV(rows), 'text/csv');
+  download(`学生台账${includeSensitive ? '_含敏感字段' : ''}_${today()}.csv`, toCSV(rows), 'text/csv');
   ui.toast('已导出 ' + DB.students.length + ' 名学生', 'ok');
 }
 function studentTemplate() {
-  const cols = ['student_number','full_name','gender','class_name','major_name','grade','college_name','counselor_name','phone','dorm'];
-  const rows = [cols.map(c => schema.student[c].label + '(' + c + ')'),
-    ['2024010101','张三','男','24机器人1班','机器人工程','2024级','示例学院', DB.settings.counselor_name || '某老师','13800000000','3号楼412']];
+  const columns = studentTemplateColumns();
+  const sample = { student_number:'2024010101', full_name:'张三', gender:'男', class_name:'24机器人1班', major_name:'机器人工程', grade:'2024级', college_name:'示例学院', counselor_name:DB.settings.counselor_name || '某老师', phone:'13800000000', dorm:'3号楼412' };
+  const rows = [columns.map(column => column.header), columns.map(column => sample[column.field] || '')];
   download('学生名单导入模板.csv', toCSV(rows), 'text/csv');
-  ui.toast('模板已下载，用 Excel 填好后再导入', 'ok');
+  ui.toast('模板已下载；标记“敏感”的列请按本校规定谨慎填写', 'ok');
 }
-function importStudentsCSV(text) {
-  const rows = parseCSV(text);
-  if (rows.length < 2) { ui.toast('文件里没有数据行', 'err'); return; }
-  const head = rows[0].map(h => {
-    const raw = String(h).trim();
-    const m = raw.match(/\(([a-z_]+)\)\s*$/i);
-    if (m) return m[1];
-    if (CSV_MAP[raw]) return CSV_MAP[raw];
-    return raw.toLowerCase().replace(/\s/g, '_');
-  });
-  if (!head.includes('full_name') && !head.includes('student_number')) {
-    ui.toast('未识别到「姓名」或「学号」列，请用模板格式', 'err', 3600); return;
-  }
-  let add = 0, upd = 0;
-  rows.slice(1).forEach(r => {
-    const o = {}; head.forEach((h, i) => { o[h] = (r[i] || '').trim(); });
-    if (!o.student_number && !o.full_name) return;
-    if (o.focus) o.focus = String(o.focus).split(/[、,，\s]+/).filter(Boolean)
-      .map(n => { const hit = FOCUS.find(f => f.n === n || f.k === n); return hit ? hit.k : null; }).filter(Boolean);
-    const ex = DB.students.find(s => s.student_number && s.student_number === o.student_number);
-    if (ex) { Object.keys(o).forEach(k => { if (o[k] !== '') ex[k] = o[k]; }); upd++; }
-    else { DB.students.push(normStudent(o)); add++; }
-  });
-  save('students'); render();
-  ui.toast(`导入完成：新增 ${add} 人，更新 ${upd} 人`, 'ok', 3200);
+function studentTemplateColumns() {
+  return Object.entries(schema.student).filter(([field]) => !['focus','focus_level','crisis_level','crisis_way','crisis_relieved'].includes(field)).map(([field, meta]) => ({
+    field, sensitive:!!meta.sensitive, header:`${meta.label}${meta.sensitive ? '【敏感】' : ''}(${field})`,
+  }));
 }
-
-/* ==================== v3.8 学生大表导入（xls/xlsx/csv 三合一 + 列名同义词 + 容错 + 预览合并） ====================
+/* ==================== v3.9 学生大表导入（xls/xlsx/csv 三合一 + 列名同义词 + 安全预览） ====================
    设计目标：
-   1) 支持学校信息化门户 .xls / .xlsx 直传，缺省零依赖（CDN 动态加载 SheetJS）；
+   1) 支持学校信息化门户 .xls / .xlsx 直传，发布包内置 SheetJS，完全离线解析；
    2) 表头模糊匹配常见列名（学号/姓名/班级/专业/学院/手机/宿舍/性别/民族/政治面貌/出生日期/籍贯/家庭住址/家长/学制/邮箱/QQ）；
-   3) 所有字段缺值回退到 ''，数字/日期缺值不抛错；
-   4) 以「学号」为主键去重，重复时按列合并（新值补齐、空值不覆盖）；
-   5) 导入前预览（识别 N 条、跳过 M 条无学号/姓名、合并 U 条）。 */
+   3) 字段缺值保留为空，非法值保留原文并在预览报告中提示；
+   4) 以「学号」为主键去重，冲突记录必须由用户明确选择；
+   5) 导入前预览，确认后快照并整批原子写入。 */
 
 /* 列名同义词表：用户列名 → 内部字段 (顺序：先匹配更长更具体的) */
 const STU_SYNONYMS = [
@@ -4940,19 +5014,10 @@ function stuNum(v, fallback) {
   return isFinite(n) ? n : (fallback == null ? '' : fallback);
 }
 
-/* SheetJS 动态加载（一次性，CDN 失败提示「请改用 CSV」） */
-let _sheetJsLoading = null;
+/* SheetJS 随仓库和发布文件提供，不在运行时访问公共 CDN。 */
 function loadSheetJS() {
   if (typeof XLSX !== 'undefined') return Promise.resolve();
-  if (_sheetJsLoading) return _sheetJsLoading;
-  _sheetJsLoading = new Promise((resolve, reject) => {
-    const s = document.createElement('script');
-    s.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
-    s.onload = () => { try { localStorage.setItem('cwb_v1_sheetjs_ok', '1'); } catch (e) {} resolve(); };
-    s.onerror = () => { _sheetJsLoading = null; reject(new Error('SheetJS 加载失败')); };
-    document.head.appendChild(s);
-  });
-  return _sheetJsLoading;
+  return Promise.reject(new Error('离线 Excel 解析器未加载，请确认 vendor/xlsx.full.min.js 与工作台位于同一文件夹'));
 }
 
 /* 把 SheetJS 的 array-of-arrays 转成 [{...row}, ...]，自动识别表头/无表头 */
@@ -4980,7 +5045,8 @@ function xlsxRowsToObjects(workbook, opts) {
       return o;
     });
   } else {
-    // 无表头：按学号/姓名/性别/班级/专业/年级/学院/辅导员/手机/宿舍 的固定列序兜底
+    // 无表头默认停止，避免把任意表格按固定位置误写；仅显式 opt-in 时兼容旧行为。
+    if (!opts.allowHeaderless) return [];
     const defHead = ['student_number','full_name','gender','class_name','major_name','grade','college_name','counselor_name','phone','dorm'];
     return aoa.map(row => {
       const o = {}; defHead.forEach((h, i) => { o[h] = (row[i] == null ? '' : String(row[i]).trim()); });
@@ -4990,12 +5056,14 @@ function xlsxRowsToObjects(workbook, opts) {
 }
 
 /* 解析 .csv / .txt 文本 → rows-of-objects（沿用 parseCSV + 同义词） */
-function csvTextToObjects(text) {
+function csvTextToObjects(text, opts) {
+  opts = opts || {};
   const rows = parseCSV(text);
   if (rows.length < 2) return [];
   const head = rows[0].map(c => String(c == null ? '' : c).trim()).map(stuHeaderToField);
   if (!head.includes('full_name') && !head.includes('student_number')) {
-    // 没识别到关键字段，可能首行不是表头
+    // 默认停止，避免把错误文件按固定列序误写；仅显式 opt-in 时兼容旧无表头文件。
+    if (!opts.allowHeaderless) return [];
     const defHead = ['student_number','full_name','gender','class_name','major_name','grade','college_name','counselor_name','phone','dorm'];
     return rows.map(row => {
       const o = {}; defHead.forEach((h, i) => { o[h] = (row[i] == null ? '' : String(row[i]).trim()); });
@@ -5019,7 +5087,7 @@ function stuNormalizeRow(o) {
     grade: o.grade ? String(o.grade).trim() : '',
     college_name: o.college_name ? String(o.college_name).trim() : '',
     counselor_name: o.counselor_name ? String(o.counselor_name).trim() : '',
-    enrollment_status: o.enrollment_status ? String(o.enrollment_status).trim() : '在读',
+    enrollment_status: o.enrollment_status ? String(o.enrollment_status).trim() : '待确认',
     politics: o.politics ? String(o.politics).trim() : '',
     phone: o.phone ? String(o.phone).trim() : '',
     dorm: o.dorm ? String(o.dorm).trim() : '',
@@ -5040,70 +5108,14 @@ function stuNormalizeRow(o) {
 
 /* 主入口：识别扩展名 → 解析 → 预览 → 用户确认 → 合并写入 */
 async function importStudentsFile(file) {
-  const name = (file.name || '').toLowerCase();
-  const ext = name.includes('.') ? name.split('.').pop() : '';
-  const isExcel = ext === 'xls' || ext === 'xlsx' || /xls/i.test(file.type);
-
   ui.toast('正在解析文件…', 'ok', 1200);
-
-  let raw = [];
   try {
-    if (isExcel) {
-      await loadSheetJS();
-      const buf = await file.arrayBuffer();
-      const wb = XLSX.read(buf, { type: 'array', cellDates: true });
-      raw = xlsxRowsToObjects(wb);
-    } else {
-      const text = await file.text();
-      raw = csvTextToObjects(text);
-    }
+    const preview = await importer.previewFile(file, 'students', { encoding:'auto' });
+    if (!preview.total) return ui.toast('文件里没有可识别的数据行', 'err', 3200);
+    openImportPreview(preview, { file, options:{ encoding:'auto' } });
   } catch (e) {
-    if (isExcel) {
-      ui.toast('xls/xlsx 解析失败：' + (e.message || e) + '。离线时请用 CSV 导入。', 'err', 4800);
-    } else {
-      ui.toast('文件解析失败：' + (e.message || e), 'err', 4000);
-    }
-    return;
+    ui.toast('文件解析失败：' + (e.message || e), 'err', 4800);
   }
-
-  if (!raw.length) { ui.toast('文件里没有可识别的数据行', 'err', 3200); return; }
-
-  const norm = raw.map(stuNormalizeRow);
-  const valid = norm.filter(r => r.student_number || r.full_name);
-  const skipped = norm.length - valid.length;
-  const dupSet = new Set();
-  const unique = [];
-  valid.forEach(r => {
-    const k = r.student_number || ('@' + r.full_name);
-    if (dupSet.has(k)) return;
-    dupSet.add(k);
-    unique.push(r);
-  });
-
-  // 跟现有库比对
-  const existByNo = new Map();
-  DB.students.forEach(s => { if (s.student_number) existByNo.set(s.student_number, s); });
-  let add = 0, upd = 0, err = 0;
-  unique.forEach(r => {
-    if (!r.student_number && !r.full_name) { err++; return; }
-    if (r.student_number && existByNo.has(r.student_number)) {
-      const ex = existByNo.get(r.student_number);
-      Object.keys(r).forEach(k => { if (r[k] !== '' && r[k] != null) ex[k] = r[k]; });
-      upd++;
-    } else {
-      const fresh = normStudent(r);
-      DB.students.push(fresh);
-      if (r.student_number) existByNo.set(r.student_number, fresh);
-      add++;
-    }
-  });
-
-  save('students'); render();
-  const dup = valid.length - unique.length;
-  const tail = [];
-  if (skipped) tail.push('跳过 ' + skipped + ' 条（无学号/姓名）');
-  if (dup) tail.push('文件内重复 ' + dup + ' 条（已合并）');
-  ui.toast(`导入完成：新增 ${add}，更新 ${upd}` + (tail.length ? '（' + tail.join('，') + '）' : ''), 'ok', 3600);
 }
 
 /* 兼容旧入口（避免遗漏脚本路径） */
@@ -5202,11 +5214,12 @@ const IMP = {
     head:['标题','类型','适用场景','模板正文','备注'],
     field:['title','type','scene','content','note'] },
 };
-function impCoerce(cfg, o) {
-  Object.keys(cfg.cast || {}).forEach(f => { if (o[f]) o[f] = REV[cfg.cast[f]](o[f]); });
-  (cfg.bool || []).forEach(f => { if (f in o) o[f] = REV.bool(o[f]); });
+function impCoerce(cfg, o, blockedFields) {
+  const blocked = blockedFields || new Set();
+  Object.keys(cfg.cast || {}).forEach(f => { if (o[f] && !blocked.has(f)) o[f] = REV[cfg.cast[f]](o[f]); });
+  (cfg.bool || []).forEach(f => { if (f in o && !blocked.has(f)) o[f] = REV.bool(o[f]); });
   (cfg.num || []).forEach(f => {
-    if (!(f in o)) return;
+    if (!(f in o) || blocked.has(f)) return;
     const v = String(o[f]).replace(/[^\d.\-]/g, '');
     o[f] = v === '' ? '' : Number(v);
   });
@@ -5215,21 +5228,34 @@ function impCoerce(cfg, o) {
 function importTemplate(coll) {
   const cfg = IMP[coll]; if (!cfg) return;
   const sample = (DB[coll] || [])[0];
-  const demo = cfg.field.map((f, i) => {
+  const fields = ['record_id'].concat(cfg.field);
+  const heads = fields.map(field => field === 'record_id' ? '记录编号(record_id)' : `${IMPORT_SCHEMAS[coll].fields[field].label}(${field})`);
+  const demo = fields.map((f, i) => {
+    if (f === 'record_id') return '';
     if (sample) {
-      let v = sample[f];
-      if (cfg.cast && cfg.cast[f] === 'duty') v = DUTY_MAP[v] ? DUTY_MAP[v].n : v;
-      if (cfg.cast && cfg.cast[f] === 'prio') v = PRIO_MAP[v] ? PRIO_MAP[v].n : v;
-      if (cfg.cast && cfg.cast[f] === 'status') v = STATUS_TXT[v] || v;
-      if (cfg.cast && cfg.cast[f] === 'repeat') v = NODE_REPEAT[v] || v;
-      if (cfg.cast && cfg.cast[f] === 'honor') v = (HONOR_TYPES.find(x => x.v === v) || {}).n || v;
-      if ((cfg.bool || []).includes(f)) v = v ? '是' : '否';
-      return v == null ? '' : String(v);
+      return importDisplayValue(cfg, f, sample[f]);
     }
-    return i === 0 ? '示例' + cfg.head[0] : '';
+    return i === 1 ? '示例' + cfg.head[0] : '';
   });
-  download(`${cfg.label}_导入模板.csv`, toCSV([cfg.head, demo]), 'text/csv');
+  download(`${cfg.label}_导入模板.csv`, toCSV([heads, demo]), 'text/csv');
   ui.toast('模板已下载，用 Excel 填好后点「导入 CSV」', 'ok', 3000);
+}
+function importDisplayValue(cfg, field, value) {
+  let v = value;
+  if (cfg.cast && cfg.cast[field] === 'duty') v = DUTY_MAP[v] ? DUTY_MAP[v].n : v;
+  if (cfg.cast && cfg.cast[field] === 'prio') v = PRIO_MAP[v] ? PRIO_MAP[v].n : v;
+  if (cfg.cast && cfg.cast[field] === 'status') v = STATUS_TXT[v] || v;
+  if (cfg.cast && cfg.cast[field] === 'repeat') v = NODE_REPEAT[v] || v;
+  if (cfg.cast && cfg.cast[field] === 'honor') v = (HONOR_TYPES.find(x => x.v === v) || {}).n || v;
+  if ((cfg.bool || []).includes(field)) v = v ? '是' : '否';
+  return v == null ? '' : String(v);
+}
+function exportCollectionCSV(coll) {
+  const cfg = IMP[coll]; if (!cfg) return;
+  const fields = ['record_id'].concat(cfg.field);
+  const heads = fields.map(field => field === 'record_id' ? '记录编号(record_id)' : `${IMPORT_SCHEMAS[coll].fields[field].label}(${field})`);
+  const rows = [heads].concat((DB[coll] || []).map(item => fields.map(field => field === 'record_id' ? item.id : importDisplayValue(cfg, field, item[field]))));
+  download(`${cfg.label}_${today()}.csv`, toCSV(rows), 'text/csv'); ui.toast(`已导出 ${DB[coll].length} 条记录`, 'ok');
 }
 function genericHeaderKey(value) { return String(value || '').toLowerCase().replace(/[\s_\-（）()\[\]【】]/g, ''); }
 function genericHeaderToField(raw, cfg) {
@@ -5246,81 +5272,423 @@ function genericHeaderToField(raw, cfg) {
   const hit = Object.keys(common).find(k => key.includes(genericHeaderKey(k)));
   return hit && cfg.field.includes(common[hit]) ? common[hit] : '';
 }
-function importCollectionCSV(coll, text) {
-  const cfg = IMP[coll];
-  if (!cfg) { ui.toast('该模块暂不支持 CSV 导入', 'err'); return; }
-  let rows;
-  try { rows = parseCSV(text); } catch (err) { ui.toast('文件解析失败：' + err.message, 'err', 3600); return; }
-  rows = (rows || []).filter(r => r && r.some(c => String(c == null ? '' : c).trim() !== ''));
-  if (rows.length < 2) { ui.toast('文件里没有数据行', 'err'); return; }
-  /* 表头识别：支持中文表头、英文字段名、以及「中文(字段名)」三种写法 */
-  const idx = {};
-  rows[0].forEach((h, i) => {
-    const f = genericHeaderToField(h, cfg);
-    if (f && !(f in idx)) idx[f] = i;
+const IMPORT_SCHEMAS = Object.fromEntries(Object.entries(IMP).map(([collection, cfg]) => {
+  const fields = { record_id:{ label:'记录编号', aliases:['record_id','记录编号'], type:'text', required:false, sensitive:false } };
+  cfg.field.forEach((field, i) => {
+    fields[field] = {
+      label:cfg.head[i], aliases:[cfg.head[i], field],
+      type:(cfg.bool || []).includes(field) ? 'boolean' : (cfg.num || []).includes(field) ? 'number' : 'text',
+      required:field === (cfg.main || cfg.field[0]), sensitive:/id_card|home_addr|parent_phone|phone|concern|reason|follow_up/.test(field),
+      validator:value => importValidation(field, value),
+    };
   });
-  const cols = Object.keys(idx);
-  const main = cfg.main || cfg.field[0];
-  if (!cols.length || !(main in idx)) {
-    ui.toast(`表头无法识别，请先点「模板」下载模板，或直接把本模块导出的 CSV 填好再导回`, 'err', 4600); return;
+  return [collection, { collection, label:cfg.label, fields, mergeKey:cfg.key.slice(), norm:cfg.norm }];
+}));
+const STUDENT_IMPORT_SCHEMA = {
+  collection:'students', label:'学生名单', mergeKey:['student_number'],
+  fields:Object.fromEntries(Object.entries(schema.student).map(([field, meta]) => [field, {
+    label:meta.label, aliases:(STU_SYNONYMS.find(x => x.field === field) || { keys:[] }).keys.concat(field),
+    type:field === 'edu_years' ? 'number' : field === 'birthday' ? 'date' : 'text',
+    required:field === 'student_number' || field === 'full_name', sensitive:!!meta.sensitive,
+  }]))
+};
+function cloneData(value) { return JSON.parse(JSON.stringify(value)); }
+function emptyImportSummary() { return { ready:0, add:0, update:0, pending:0, invalid:0, conflict:0, skipped:0 }; }
+function isValidISODate(value) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value || ''));
+  if (!match) return false;
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  return date.getUTCFullYear() === year && date.getUTCMonth() === month - 1 && date.getUTCDate() === day;
+}
+function importValidation(field, value) {
+  const v = String(value == null ? '' : value).trim();
+  if (!v) return '';
+  if (field === 'student_number' && /^[-+]?\d+(?:\.\d+)?e[-+]?\d+$/i.test(v)) return '学号不得使用科学计数法，请在表格中将该列设为文本后重新导出';
+  if (field === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return '邮箱格式不正确';
+  if ((field === 'phone' || field === 'parent_phone') && !/^[+\d][\d*\s-]{5,19}$/.test(v)) return '电话号码格式不正确';
+  if (field === 'id_card' && !/^(\d{15}|\d{17}[\dXx])$/.test(v)) return '身份证号格式不正确';
+  if (field === 'birthday' && !isValidISODate(v)) return '日期请使用有效的 YYYY-MM-DD';
+  if (field === 'edu_years' && (!/^\d+(\.\d+)?$/.test(v) || Number(v) < 1 || Number(v) > 10)) return '学制应为 1–10 年';
+  if (field === 'gender' && !['男','女','未知','未说明'].includes(v)) return '性别值无法识别';
+  if (field === 'enrollment_status' && !ENROLL_STATUS.concat('待确认').includes(v)) return '学籍状态值无法识别';
+  return '';
+}
+function moduleImportValidation(cfg, field, value) {
+  const v = String(value == null ? '' : value).trim();
+  if (!v) return '';
+  if (v.length > 10000) return '内容超过 10000 字符';
+  const cast = cfg.cast && cfg.cast[field];
+  const enumOk = {
+    duty:() => DUTIES.some(item => item.k === v || item.n === v || item.s === v),
+    prio:() => PRIOS.some(item => item.k === v || item.n === v),
+    status:() => Object.keys(STATUS_TXT).some(key => key === v || STATUS_TXT[key] === v),
+    repeat:() => Object.keys(NODE_REPEAT).some(key => key === v || NODE_REPEAT[key] === v),
+    honor:() => HONOR_TYPES.some(item => item.v === v || item.n === v),
+  };
+  if (cast && enumOk[cast] && !enumOk[cast]()) return '枚举值无法识别';
+  if ((cfg.bool || []).includes(field) && !/^(是|否|已销假|未销假|已解决|未解决|已完成|未完成|已收藏|未收藏|true|false|0|1|y|n|yes|no)$/i.test(v)) return '布尔值请填写是/否';
+  if ((cfg.num || []).includes(field) && !Number.isFinite(Number(v.replace(/,/g, '')))) return '数字格式不正确';
+  if (/^(date|due|start|end|leave_date|return_date|follow_date|assess_date|graduation_date|created_at)$/.test(field)) {
+    if (!isValidISODate(v)) return '日期请使用有效的 YYYY-MM-DD';
   }
-  const before = JSON.parse(JSON.stringify(DB[coll] || []));
-  const list = DB[coll] = DB[coll] || [];
-  let add = 0, upd = 0, skip = 0;
-  rows.slice(1).forEach(r => {
-    const o = {};
-    cols.forEach(f => { o[f] = String(r[idx[f]] == null ? '' : r[idx[f]]).trim(); });
-    if (!o[main]) { skip++; return; }
-    impCoerce(cfg, o);
-    const usable = cfg.key.filter(k => k in o);
-    const ex = usable.length === cfg.key.length
-      ? list.find(x => cfg.key.every(k => String(x[k] == null ? '' : x[k]) === String(o[k] == null ? '' : o[k])))
-      : null;
-    if (ex) {
-      Object.keys(o).forEach(k => { if (o[k] !== '' && o[k] !== undefined) ex[k] = o[k]; });
-      ex._demo = false; upd++;
-    } else {
-      const n = cfg.norm(o); n._demo = false; list.push(n); add++;
-    }
+  return importValidation(field, v);
+}
+function genericImportHeaderToField(raw, cfg) {
+  const clean = String(raw == null ? '' : raw).replace(/^\uFEFF/, '').trim();
+  const key = genericHeaderKey(clean);
+  if (key === 'recordid' || key === '记录编号' || /\(record_id\)\s*$/i.test(clean)) return 'record_id';
+  return genericHeaderToField(clean, cfg);
+}
+function importTarget(headers, requested) {
+  if (requested === 'students') return 'students';
+  if (requested && IMP[requested]) return requested;
+  return Object.keys(IMP).map(k => ({ k, score:headers.reduce((n, h) => n + (genericHeaderToField(h, IMP[k]) ? 1 : 0), 0) }))
+    .sort((a, b) => b.score - a.score)[0].k || 'material';
+}
+function importMappedRows(text, collection, options) {
+  const opts = options || {};
+  let parsed = parseCSV(String(text || '')).filter(r => r.some(v => String(v == null ? '' : v).trim() !== ''));
+  if (opts.headerRow && opts.headerRow > 1) parsed = parsed.slice(opts.headerRow - 1);
+  const headers = parsed[0] || [];
+  const target = importTarget(headers, collection);
+  const manual = opts.mapping || {};
+  const mapped = headers.map((h, index) => {
+    if (Array.isArray(opts.mappingByIndex) && index < opts.mappingByIndex.length) return opts.mappingByIndex[index] || '';
+    if (Object.prototype.hasOwnProperty.call(manual, h)) return manual[h] || '';
+    return target === 'students' ? stuHeaderToField(h) : genericImportHeaderToField(h, IMP[target]);
   });
-  save(coll); render();
-  if (typeof importer !== 'undefined') { importer._history.push({ id:uid(), coll, before, at:new Date().toISOString(), preview:importer.previewCSV(text, coll) }); if (importer._history.length > 10) importer._history.shift(); }
-  ui.toast(`「${cfg.label}」导入完成：新增 ${add} 条，更新 ${upd} 条${skip ? '，跳过空行 ' + skip : ''}`, 'ok', 3400);
+  const known = target === 'students' ? STUDENT_IMPORT_SCHEMA.fields : IMPORT_SCHEMAS[target].fields;
+  const unknownColumns = headers.filter((h, i) => !mapped[i] || !known[mapped[i]]);
+  const duplicateColumns = Array.from(new Set(mapped.filter((field, index) => field && mapped.indexOf(field) !== index)));
+  const rows = parsed.slice(1).map((source, index) => {
+    const value = {};
+    mapped.forEach((field, i) => { if (field && known[field] && !(field in value)) value[field] = String(source[i] == null ? '' : source[i]).trim(); });
+    return { rowNumber:index + 2, value, status:'ready', errors:[], action:'add' };
+  });
+  return { headers, mapped, rows, target, unknownColumns, duplicateColumns };
+}
+function previewImportText(text, collection, meta) {
+  const parsed = importMappedRows(text, collection, meta);
+  const target = parsed.target;
+  const cfg = target === 'students' ? null : IMP[target];
+  const schemaDef = target === 'students' ? STUDENT_IMPORT_SCHEMA : IMPORT_SCHEMAS[target];
+  const summary = emptyImportSummary();
+  const existing = DB[target] || [];
+  const sensitive = new Set();
+
+  parsed.rows.forEach(row => {
+    const blockedFields = new Set();
+    if (parsed.duplicateColumns.length) row.errors.push(`重复映射字段：${parsed.duplicateColumns.map(field => schemaDef.fields[field].label).join('、')}`);
+    if (target !== 'students') Object.entries(row.value).forEach(([field, value]) => {
+      const error = moduleImportValidation(cfg, field, value);
+      if (error) { blockedFields.add(field); row.errors.push(`${schemaDef.fields[field].label}：${error}`); }
+    });
+    if (target === 'students') row.value = stuNormalizeRow(row.value);
+    else impCoerce(cfg, row.value, blockedFields);
+    Object.entries(row.value).forEach(([field, value]) => {
+      if (value !== '' && schemaDef.fields[field] && schemaDef.fields[field].sensitive) sensitive.add(field);
+      const error = target === 'students' ? importValidation(field, value) : '';
+      if (error) row.errors.push(`${schemaDef.fields[field].label}：${error}`);
+    });
+    if (target === 'students') {
+      if (!row.value.student_number || !row.value.full_name) {
+        row.status = 'pending'; row.action = 'skip';
+        row.errors.push(!row.value.student_number ? '缺少学号' : '缺少姓名');
+      } else {
+        const hit = existing.find(item => String(item.student_number) === row.value.student_number);
+        row.action = hit ? 'update' : 'add'; row.existingId = hit ? hit.id : '';
+      }
+    } else {
+      const main = cfg.main || cfg.field[0];
+      if (!row.value[main]) { row.status = 'invalid'; row.action = 'skip'; row.errors.push(`缺少${schemaDef.fields[main].label}`); }
+      else if (row.value.record_id) {
+        const hit = existing.find(item => String(item.id) === String(row.value.record_id));
+        if (hit) { row.action = 'update'; row.existingId = hit.id; }
+        else { row.status = 'invalid'; row.action = 'skip'; row.errors.push('记录编号不存在'); }
+      } else {
+        const matches = existing.filter(item => cfg.key.every(key => row.value[key] !== undefined && String(item[key] == null ? '' : item[key]) === String(row.value[key])));
+        if (matches.length) { row.status = 'conflict'; row.action = 'skip'; row.matchIds = matches.map(item => item.id); row.errors.push('可能与现有记录重复，请明确选择新增或更新'); }
+      }
+    }
+    if (row.errors.length && row.status === 'ready') { row.status = 'invalid'; row.action = 'skip'; }
+  });
+
+  if (target === 'students') {
+    const groups = new Map();
+    parsed.rows.filter(row => row.value.student_number).forEach(row => {
+      const list = groups.get(row.value.student_number) || []; list.push(row); groups.set(row.value.student_number, list);
+    });
+    groups.forEach(group => {
+      if (group.length < 2) return;
+      const fingerprints = new Set(group.map(row => JSON.stringify(row.value)));
+      if (fingerprints.size === 1) {
+        group.slice(1).forEach(row => { row.status = 'skipped'; row.action = 'skip'; row.errors = ['与文件内上一条记录完全相同']; });
+      } else {
+        group.forEach(row => { row.status = 'conflict'; row.action = 'skip'; row.errors = ['同一学号在文件中存在不同内容']; });
+      }
+    });
+  }
+
+  parsed.rows.forEach(row => {
+    if (row.status === 'ready') { summary.ready++; summary[row.action]++; }
+    else summary[row.status]++;
+  });
+  const preview = {
+    id:uid(), coll:target, collection:target, label:schemaDef.label,
+    source:Object.assign({ kind:'csv', name:'', encoding:'utf-8', sheet:'', headerRow:1 }, meta || {}),
+    headers:parsed.headers, mapped:parsed.mapped, mappings:parsed.mapped,
+    unknownColumns:parsed.unknownColumns, duplicateColumns:parsed.duplicateColumns, sensitiveFields:Array.from(sensitive), rows:parsed.rows,
+    total:parsed.rows.length, valid:summary.ready, skipped:summary.pending + summary.invalid + summary.conflict + summary.skipped,
+    summary,
+  };
+  Object.defineProperty(preview, '_rawText', { value:String(text || ''), enumerable:false });
+  return preview;
+}
+function recountImportPreview(preview) {
+  const summary = emptyImportSummary();
+  preview.rows.forEach(row => {
+    if (row.status === 'ready') { summary.ready++; summary[row.action]++; }
+    else summary[row.status]++;
+  });
+  preview.summary = summary; preview.valid = summary.ready;
+  preview.skipped = summary.pending + summary.invalid + summary.conflict + summary.skipped;
+  return preview;
+}
+function previewWithSavedPreset(text, coll, options) {
+  const opts = Object.assign({}, options || {});
+  let preview = previewImportText(text, coll, opts);
+  if (opts.mapping || opts.mappingByIndex) return preview;
+  ensureV39Settings();
+  const presets = ((DB.settings.import_mapping_presets || {})[preview.coll] || []).slice().reverse();
+  const ranked = presets.map(item => ({ item, score:Object.keys(item.mapping || {}).filter(header => preview.headers.includes(header)).length }))
+    .sort((a, b) => b.score - a.score);
+  if (ranked[0] && ranked[0].score > 0) {
+    preview = previewImportText(text, coll, Object.assign({}, opts, { mapping:ranked[0].item.mapping }));
+    preview.source.mappingPreset = ranked[0].item.name;
+  }
+  return preview;
+}
+function importCollectionCSV(coll, text) {
+  const preview = importer.previewCSV(text, coll);
+  return importer.commitPreview(preview.id, { skipInvalid:true, conflictPolicy:'skip' });
 }
 
 const importer = {
-  _history: [],
-  previewCSV(text, coll) {
-    const rows = parseCSV(String(text || ''));
-    const headers = rows[0] || [];
-    const target = coll || Object.keys(IMP).map(k => {
-      const cfg = IMP[k];
-      const score = headers.reduce((n, h) => n + (genericHeaderToField(h, cfg) ? 1 : 0), 0);
-      return { k, score };
-    }).sort((a, b) => b.score - a.score)[0].k || 'material';
-    const cfg = IMP[target] || IMP.material;
-    const mapped = headers.map(h => genericHeaderToField(h, cfg));
-    const rowsOut = rows.slice(1).filter(r => r.some(v => String(v || '').trim() !== '')).map(r => {
-      const out = {}; mapped.forEach((f, i) => { if (f) out[f] = String(r[i] == null ? '' : r[i]).trim(); }); return out;
+  _previews:new Map(),
+  previewCSV(text, coll, options) {
+    const preview = previewWithSavedPreset(text, coll, options);
+    this._previews.set(preview.id, preview);
+    return preview;
+  },
+  decodeCSVBytes(bytes, requestedEncoding) {
+    const input = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes || []);
+    const requested = (requestedEncoding || 'auto').toLowerCase();
+    const decode = encoding => new TextDecoder(encoding, { fatal:encoding === 'utf-8' }).decode(input).replace(/^\uFEFF/, '');
+    if (requested !== 'auto') return { text:decode(requested), encoding:requested };
+    try { return { text:decode('utf-8'), encoding:'utf-8' }; }
+    catch (e) { return { text:new TextDecoder('gb18030').decode(input), encoding:'gb18030' }; }
+  },
+  detectHeaderRow(rows, coll) {
+    const target = coll || 'students';
+    let best = { headerRow:1, score:0 };
+    (rows || []).slice(0, 20).forEach((row, index) => {
+      const fields = (row || []).map(cell => target === 'students' ? stuHeaderToField(cell) : genericHeaderToField(cell, IMP[target])).filter(Boolean);
+      const known = target === 'students' ? STUDENT_IMPORT_SCHEMA.fields : IMPORT_SCHEMAS[target].fields;
+      const score = new Set(fields.filter(field => known[field])).size;
+      if (score > best.score) best = { headerRow:index + 1, score };
     });
-    const main = cfg.main || cfg.field[0];
-    return { coll:target, label:cfg.label, headers, mapped, rows:rowsOut, total:rowsOut.length, valid:rowsOut.filter(r => !!r[main]).length, skipped:rowsOut.filter(r => !r[main]).length };
+    return best;
+  },
+  async previewFile(file, coll, options) {
+    const opts = options || {};
+    const name = String(file && file.name || '');
+    const isExcel = /\.xlsx?$/i.test(name) || /spreadsheet|excel/i.test(String(file && file.type || ''));
+    const buffer = typeof file.arrayBuffer === 'function' ? await file.arrayBuffer() : await new Promise((resolve, reject) => {
+      const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = () => reject(reader.error || new Error('文件读取失败')); reader.readAsArrayBuffer(file);
+    });
+    if (!isExcel) {
+      const decoded = this.decodeCSVBytes(new Uint8Array(buffer), opts.encoding || 'auto');
+      const preview = previewWithSavedPreset(decoded.text, coll, Object.assign({}, opts, { kind:'csv', name, encoding:decoded.encoding }));
+      this._previews.set(preview.id, preview); return preview;
+    }
+    await loadSheetJS();
+    const workbook = XLSX.read(buffer, { type:'array', cellDates:false, raw:false });
+    let sheetName = opts.sheetName && workbook.Sheets[opts.sheetName] ? opts.sheetName : '';
+    let aoa;
+    let detected;
+    if (sheetName) {
+      aoa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header:1, defval:'', raw:false });
+      detected = opts.headerRow ? { headerRow:opts.headerRow, score:0 } : this.detectHeaderRow(aoa, coll);
+    } else {
+      let bestSheet = null;
+      workbook.SheetNames.forEach(candidateName => {
+        const candidateRows = XLSX.utils.sheet_to_json(workbook.Sheets[candidateName], { header:1, defval:'', raw:false });
+        const candidateHeader = this.detectHeaderRow(candidateRows, coll);
+        if (!bestSheet || candidateHeader.score > bestSheet.detected.score) {
+          bestSheet = { name:candidateName, rows:candidateRows, detected:candidateHeader };
+        }
+      });
+      sheetName = bestSheet ? bestSheet.name : workbook.SheetNames[0];
+      aoa = bestSheet ? bestSheet.rows : [];
+      detected = opts.headerRow ? { headerRow:opts.headerRow, score:0 } : (bestSheet ? bestSheet.detected : { headerRow:1, score:0 });
+    }
+    const preview = previewWithSavedPreset(rowsToCSV(aoa, false), coll, Object.assign({}, opts, { kind:'excel', name, sheet:sheetName, headerRow:detected.headerRow, encoding:'binary' }));
+    preview.sheets = workbook.SheetNames.slice();
+    this._previews.set(preview.id, preview); return preview;
+  },
+  saveMappingPreset(coll, name, mapping) {
+    ensureV39Settings();
+    DB.settings.import_mapping_presets = DB.settings.import_mapping_presets || {};
+    const list = DB.settings.import_mapping_presets[coll] || [];
+    const next = list.filter(item => item.name !== name).concat({ name:String(name || '未命名预设'), mapping:cloneData(mapping || {}) }).slice(-10);
+    DB.settings.import_mapping_presets[coll] = next; save('settings'); return next[next.length - 1];
+  },
+  getMappingPresets(coll) { ensureV39Settings(); return cloneData((DB.settings.import_mapping_presets || {})[coll] || []); },
+  resolveRow(previewId, rowNumber, decision) {
+    const preview = this._previews.get(previewId);
+    if (!preview) return false;
+    const row = preview.rows.find(item => item.rowNumber === Number(rowNumber));
+    if (!row) return false;
+    if (decision === 'skip') {
+      row.status = 'skipped'; row.action = 'skip'; row.errors = ['用户选择跳过'];
+    } else if (decision === 'use' && preview.coll === 'students' && row.value.student_number) {
+      const same = preview.rows.filter(item => item.value.student_number === row.value.student_number);
+      same.forEach(item => { item.status = 'skipped'; item.action = 'skip'; item.errors = ['同学号冲突中未采用']; });
+      const hit = (DB.students || []).find(item => String(item.student_number) === row.value.student_number);
+      row.status = 'ready'; row.action = hit ? 'update' : 'add'; row.existingId = hit ? hit.id : ''; row.errors = [];
+    } else if (decision === 'add' && preview.coll !== 'students') {
+      row.status = 'ready'; row.action = 'add'; row.errors = [];
+    } else if (decision === 'update' && preview.coll !== 'students' && row.matchIds && row.matchIds.length === 1) {
+      row.status = 'ready'; row.action = 'update'; row.existingId = row.matchIds[0]; row.errors = [];
+    } else return false;
+    recountImportPreview(preview); return true;
+  },
+  reportCSV(previewOrRun) {
+    const preview = previewOrRun && previewOrRun.rows ? previewOrRun : this._previews.get(previewOrRun && previewOrRun.id || previewOrRun);
+    if (!preview) return toCSV([['行号','状态','处理','问题']]);
+    const rows = [['行号','状态','处理','问题']].concat(preview.rows.map(row => [row.rowNumber,row.status,row.action,(row.errors || []).join('；')]));
+    return toCSV(rows);
   },
   commitCSV(coll, text) {
     const preview = this.previewCSV(text, coll);
-    if (!preview.valid) return Object.assign({}, preview, { runId:'' });
-    const before = this._history.length;
-    importCollectionCSV(coll, text);
-    const run = this._history.length > before ? this._history[this._history.length - 1] : null;
-    return Object.assign({}, preview, { runId: run ? run.id : '' });
+    const result = this.commitPreview(preview.id, { skipInvalid:true, conflictPolicy:'skip', confirmSensitive:true });
+    return Object.assign({}, preview, result, { runId:result.runId || '' });
+  },
+  commitPreview(previewId, options) {
+    const preview = this._previews.get(previewId);
+    const opts = options || {};
+    if (!preview) return { ok:false, runId:'', error:'导入预览已失效，请重新选择文件' };
+    if (preview.sensitiveFields.length && !opts.confirmSensitive) return { ok:false, runId:'', error:'请先确认导入敏感字段' };
+    if ((preview.summary.invalid || preview.summary.pending) && !opts.skipInvalid) return { ok:false, runId:'', error:'仍有错误或待确认记录' };
+    if (preview.summary.conflict && opts.conflictPolicy !== 'skip') return { ok:false, runId:'', error:'仍有未处理的冲突记录' };
+    const before = cloneData(DB[preview.coll] || []);
+    const next = cloneData(before);
+    const studentByNumber = preview.coll === 'students' ? new Map(next.filter(item => item.student_number).map(item => [String(item.student_number), item])) : null;
+    const recordById = preview.coll === 'students' ? null : new Map(next.map(item => [String(item.id), item]));
+    let added = 0, updated = 0;
+    preview.rows.filter(row => row.status === 'ready').forEach(row => {
+      const value = cloneData(row.value); delete value.record_id;
+      let current = null;
+      if (preview.coll === 'students') current = studentByNumber.get(value.student_number);
+      else if (row.existingId) current = recordById.get(String(row.existingId));
+      if (current) {
+        Object.keys(value).forEach(key => { if (value[key] !== '' && value[key] !== undefined) current[key] = value[key]; });
+        current._demo = false; updated++;
+      } else {
+        const normalizer = preview.coll === 'students' ? normStudent : IMP[preview.coll].norm;
+        const fresh = normalizer(value); fresh._demo = false; next.push(fresh);
+        if (studentByNumber && fresh.student_number) studentByNumber.set(String(fresh.student_number), fresh);
+        if (recordById) recordById.set(String(fresh.id), fresh);
+        added++;
+      }
+    });
+    if (!added && !updated) return { ok:false, runId:'', error:'没有可写入的记录' };
+    const run = { id:uid(), coll:preview.coll, before:compactCollection(before), at:new Date().toISOString(), summary:cloneData(preview.summary) };
+    const oldHistory = store.read('import_history', []) || [];
+    const nextHistory = oldHistory.concat(run).slice(-3);
+    if (!storage.canWriteLarge(store.estimateBytes(preview.coll, next) + JSON.stringify(run).length * 2)) return { ok:false, runId:'', error:'本地存储空间不足，请先导出备份' };
+    if (!store.write('import_history', nextHistory)) return { ok:false, runId:'', error:'无法保存导入前快照' };
+    if (!store.write(preview.coll, next)) {
+      store.write('import_history', oldHistory);
+      return { ok:false, runId:'', error:'写入失败，原数据未改变' };
+    }
+    DB[preview.coll] = next;
+    this._previews.delete(previewId);
+    render();
+    return { ok:true, runId:run.id, added, updated, skipped:preview.total - added - updated };
   },
   undo(runId) {
-    const i = this._history.findIndex(x => x.id === runId);
-    if (i < 0) return false;
-    const run = this._history[i]; DB[run.coll] = run.before; save(run.coll); render(); this._history.splice(i, 1); return true;
+    const history = store.read('import_history', []) || [];
+    const index = history.findIndex(run => run.id === runId);
+    if (index < 0) return false;
+    const run = history[index];
+    const normalizer = run.coll === 'students' ? normStudent : IMP[run.coll] && IMP[run.coll].norm;
+    const restored = normalizer ? run.before.map(normalizer) : cloneData(run.before);
+    if (!store.write(run.coll, restored)) return false;
+    DB[run.coll] = restored;
+    history.splice(index, 1); store.write('import_history', history); render(); return true;
   },
-  getHistory() { return this._history.slice(); },
+  getHistory() { return (store.read('import_history', []) || []).slice(); },
 };
+
+function openImportPreview(preview, context) {
+  const ctx = context || {};
+  const schemaDef = preview.coll === 'students' ? STUDENT_IMPORT_SCHEMA : IMPORT_SCHEMAS[preview.coll];
+  const stat = (label, value) => `<div class="import-stat"><span class="tiny">${label}</span><b>${value}</b></div>`;
+  const fieldOptions = header => `<option value="">暂不导入</option>` + Object.entries(schemaDef.fields).map(([field, meta]) => `<option value="${field}"${preview.mapped[preview.headers.indexOf(header)] === field ? ' selected' : ''}>${esc(meta.label)}${meta.sensitive ? ' · 敏感' : ''}</option>`).join('');
+  const rows = preview.rows.slice(0, 80).map(row => `<tr><td>${row.rowNumber}</td><td>${row.value.student_number || row.value.full_name || row.value.title || row.value.name || '—'}</td><td><span class="tag ${row.status === 'ready' ? 'tag-green' : row.status === 'conflict' ? 'tag-amber' : 'tag-red'}">${row.status}</span></td><td class="import-issue">${esc((row.errors || []).join('；'))}${row.status === 'conflict' && preview.coll === 'students' ? `<div><button class="btn btn-sm" data-import-use="${row.rowNumber}">采用此行</button></div>` : row.status === 'conflict' ? `<div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn btn-sm" data-import-decision="add" data-row="${row.rowNumber}">作为新增</button>${row.matchIds && row.matchIds.length === 1 ? `<button class="btn btn-sm" data-import-decision="update" data-row="${row.rowNumber}">更新匹配记录</button>` : ''}</div>` : ''}</td></tr>`).join('');
+  const sensitive = preview.sensitiveFields.length ? `<div class="import-sensitive"><label class="chk"><input type="checkbox" data-sensitive-confirm><span>文件包含敏感字段：${preview.sensitiveFields.map(field => schemaDef.fields[field].label).join('、')}。我已确认有必要在本机保存这些信息。</span></label></div>` : '';
+  const sourceControls = ctx.file ? `<div class="grid3" style="margin-bottom:12px">
+    ${preview.source.kind === 'csv' ? `<div class="form-row"><label class="lab">文本编码</label><select class="inp" data-import-encoding><option value="auto">自动识别</option><option value="utf-8"${preview.source.encoding === 'utf-8' ? ' selected' : ''}>UTF-8</option><option value="gb18030"${preview.source.encoding === 'gb18030' ? ' selected' : ''}>GBK / GB18030</option></select></div>` : ''}
+    ${preview.sheets ? `<div class="form-row"><label class="lab">Excel 工作表</label><select class="inp" data-import-sheet>${preview.sheets.map(name => `<option value="${esc(name)}"${name === preview.source.sheet ? ' selected' : ''}>${esc(name)}</option>`).join('')}</select></div>` : ''}
+    <div class="form-row"><label class="lab">表头所在行</label><input class="inp" type="number" min="1" max="20" value="${preview.source.headerRow || 1}" data-import-header-row></div>
+  </div>` : '';
+  const body = `<div class="tiny" style="margin-bottom:10px">${esc(preview.source.name || '粘贴内容')} · ${esc(preview.source.sheet || 'CSV')} · ${esc(preview.source.encoding || 'utf-8')} · 表头第 ${preview.source.headerRow || 1} 行${preview.source.mappingPreset ? ` · 已套用“${esc(preview.source.mappingPreset)}”` : ''}</div>
+    ${sourceControls}
+    <div class="import-summary">${stat('可提交',preview.summary.ready)}${stat('新增',preview.summary.add)}${stat('更新',preview.summary.update)}${stat('待确认',preview.summary.pending)}${stat('冲突 / 错误',preview.summary.conflict + preview.summary.invalid)}</div>
+    ${preview.unknownColumns.length ? `<div class="banner banner-warn">未识别列将暂不导入：${preview.unknownColumns.map(esc).join('、')}</div>` : ''}
+    ${preview.duplicateColumns && preview.duplicateColumns.length ? `<div class="banner banner-warn">发现重复字段映射：${preview.duplicateColumns.map(field => esc(schemaDef.fields[field].label)).join('、')}。请保留一列或在映射中设为“暂不导入”。</div>` : ''}${sensitive}
+    <details class="adv"><summary>字段映射与文件识别</summary><div class="adv-body"><div class="import-map-grid">${preview.headers.map((header, index) => `<label>${esc(header || `第 ${index + 1} 列`)}</label><select class="inp" data-import-map="${index}">${fieldOptions(header)}</select>`).join('')}</div><div style="display:flex;gap:8px;margin-top:10px"><input class="inp" data-preset-name placeholder="预设名称，如 本校教务表"><button class="btn btn-sm" data-save-preset>保存本校预设</button><button class="btn btn-sm" data-remap>重新预览</button></div></div></details>
+    <div class="import-table-wrap"><table><thead><tr><th>行号</th><th>主数据</th><th>状态</th><th>问题与处理</th></tr></thead><tbody>${rows || '<tr><td colspan="4">没有数据行</td></tr>'}</tbody></table></div>
+    ${preview.rows.length > 80 ? `<div class="hint">当前展示前 80 行，共 ${preview.rows.length} 行；完整问题请下载报告。</div>` : ''}`;
+  const close = ui.modal({ title:`${preview.label} · 导入预览`, size:'wide', sticky:true, body,
+    footer:'<button class="btn" data-import-report>下载检查报告</button><span class="sp"></span><button class="btn" data-close>取消</button><button class="btn btn-primary" data-import-confirm>确认导入</button>',
+    onOpen(mask, mClose) {
+      const confirm = $('[data-import-confirm]', mask);
+      const sensitiveCheck = $('[data-sensitive-confirm]', mask);
+      if (sensitiveCheck) { confirm.disabled = true; sensitiveCheck.onchange = () => { confirm.disabled = !sensitiveCheck.checked; }; }
+      $$('[data-import-use]', mask).forEach(button => { button.onclick = () => { importer.resolveRow(preview.id, button.dataset.importUse, 'use'); mClose(); openImportPreview(preview, ctx); }; });
+      $$('[data-import-decision]', mask).forEach(button => { button.onclick = () => { importer.resolveRow(preview.id, button.dataset.row, button.dataset.importDecision); mClose(); openImportPreview(preview, ctx); }; });
+      $('[data-import-report]', mask).onclick = () => download(`导入检查报告_${today()}.csv`, importer.reportCSV(preview), 'text/csv');
+      $('[data-save-preset]', mask).onclick = () => {
+        const name = $('[data-preset-name]', mask).value.trim(); if (!name) return ui.toast('请先填写预设名称', 'warn');
+        const mapping = {}; $$('[data-import-map]', mask).forEach(select => { if (select.value) mapping[preview.headers[Number(select.dataset.importMap)]] = select.value; });
+        importer.saveMappingPreset(preview.coll, name, mapping); ui.toast('本校字段预设已保存', 'ok');
+      };
+      $('[data-remap]', mask).onclick = async () => {
+        const mapping = {}; const mappingByIndex = [];
+        $$('[data-import-map]', mask).forEach(select => { const index = Number(select.dataset.importMap); mappingByIndex[index] = select.value; if (select.value) mapping[preview.headers[index]] = select.value; });
+        let next;
+        const fileOptions = Object.assign({}, ctx.options || {}, { mapping, mappingByIndex });
+        const encoding = $('[data-import-encoding]', mask); if (encoding) fileOptions.encoding = encoding.value;
+        const sheet = $('[data-import-sheet]', mask); if (sheet) fileOptions.sheetName = sheet.value;
+        const header = $('[data-import-header-row]', mask); if (header) fileOptions.headerRow = Math.max(1, Math.min(20, Number(header.value) || 1));
+        if (ctx.file) next = await importer.previewFile(ctx.file, preview.coll, fileOptions);
+        else next = importer.previewCSV(preview._rawText, preview.coll, { mapping });
+        mClose(); openImportPreview(next, Object.assign({}, ctx, { options:fileOptions }));
+      };
+      confirm.onclick = () => {
+        const result = importer.commitPreview(preview.id, { skipInvalid:true, conflictPolicy:'skip', confirmSensitive:!!(sensitiveCheck && sensitiveCheck.checked) });
+        if (!result.ok) return ui.toast(result.error, 'err', 4000);
+        mClose(); ui.toast(`导入完成：新增 ${result.added}，更新 ${result.updated}，跳过 ${result.skipped}`, 'ok', 4200);
+      };
+    }
+  });
+  return close;
+}
 
 function exportJSON() {
   const pkg = { app:'counselor-desk', type:'backup', version: APP_VERSION, exported_at: new Date().toISOString(), data: DB };
@@ -5484,7 +5852,58 @@ function hashText(text) {
   String(text || '').split('').forEach(ch => { h1 ^= ch.charCodeAt(0); h1 = Math.imul(h1, 16777619); h2 ^= h1; h2 = Math.imul(h2, 2246822519); });
   return (h1 >>> 0).toString(16).padStart(8, '0') + (h2 >>> 0).toString(16).padStart(8, '0');
 }
+function readFileDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ''));
+    reader.onerror = () => reject(new Error('图片读取失败，请换一张图片重试'));
+    reader.readAsDataURL(file);
+  });
+}
+function compressBackgroundDataUrl(dataUrl, maxChars) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onerror = () => reject(new Error('图片格式无法识别，请改用 JPG、PNG 或 WebP'));
+    image.onload = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      if (!ctx) { reject(new Error('当前浏览器不支持图片压缩，请换用新版 Chrome 或 Edge')); return; }
+      let scale = Math.min(1, 1920 / Math.max(image.naturalWidth || image.width, image.naturalHeight || image.height));
+      let quality = .86;
+      let result = '';
+      for (let attempt = 0; attempt < 10; attempt++) {
+        canvas.width = Math.max(1, Math.round((image.naturalWidth || image.width) * scale));
+        canvas.height = Math.max(1, Math.round((image.naturalHeight || image.height) * scale));
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+        result = canvas.toDataURL('image/webp', quality);
+        if (result.length <= maxChars) { resolve(result); return; }
+        if (quality > .54) quality -= .08;
+        else scale *= .82;
+      }
+      reject(new Error('图片压缩后仍然过大，请换一张分辨率较低的图片'));
+    };
+    image.src = dataUrl;
+  });
+}
 const theme = {
+  maxBackgroundBytes: 4 * 1024 * 1024,
+  maxBackgroundStoredChars: 900 * 1024,
+  validateBackgroundFile(file) {
+    const imageType = file && /^image\//i.test(String(file.type || ''));
+    const imageName = file && /\.(?:jpe?g|png|webp|gif|svg|bmp|avif)$/i.test(String(file.name || ''));
+    if (!imageType && !imageName) throw new Error('请选择 JPG、PNG、WebP 等图片文件');
+    if (Number(file.size) > this.maxBackgroundBytes) throw new Error('背景图片请控制在 4MB 以内');
+    return true;
+  },
+  async prepareBackgroundFile(file) {
+    this.validateBackgroundFile(file);
+    if (storage.health().level === 'critical') throw new Error('本地存储空间不足，请先导出备份并清理空间');
+    const raw = await readFileDataUrl(file);
+    if (raw.length <= this.maxBackgroundStoredChars) return { dataUrl:raw, compressed:false };
+    const dataUrl = await compressBackgroundDataUrl(raw, this.maxBackgroundStoredChars);
+    return { dataUrl, compressed:true };
+  },
   applyPreset(name, persist) {
     ensureV39Settings();
     const p = THEME_PRESETS[name] || THEME_PRESETS.blueprint;
@@ -5497,12 +5916,14 @@ const theme = {
   },
   applyBackground(background, persist) {
     ensureV39Settings();
+    const previous = Object.assign({}, DB.settings.ui.background || {});
     const b = Object.assign({ dataUrl:'', opacity:0.16 }, background || {});
     const root = document.documentElement;
     root.style.setProperty('--user-bg-opacity', String(Math.max(0, Math.min(.35, Number(b.opacity) || 0))));
     root.style.setProperty('--user-bg-image', b.dataUrl ? `url("${String(b.dataUrl).replace(/"/g, '%22')}")` : 'none');
     DB.settings.ui.background = { dataUrl: b.dataUrl || '', opacity: Math.max(0, Math.min(.35, Number(b.opacity) || 0)) };
-    if (persist !== false) save('settings');
+    if (persist !== false && !store.write('settings', DB.settings)) { this.applyBackground(previous, false); return false; }
+    return true;
   },
   reset(persist) { this.applyPreset('blueprint', false); this.applyBackground({ dataUrl:'', opacity:0.16 }, false); if (persist !== false) save('settings'); },
 };
@@ -5566,7 +5987,14 @@ function openDrawer() {
 }
 
 const ACTS = {
+  'import-undo': id => security.require('撤销导入', () => ui.confirm('撤销此次导入', '将把对应模块恢复到导入前的完整快照，确定继续吗？', () => {
+    if (importer.undo(id)) ui.toast('已恢复到导入前状态', 'ok');
+    else ui.toast('撤销失败，快照可能已失效', 'err');
+  }, true)),
   'onboarding-settings': () => openSettings(),
+  'onboarding-init': () => { ensureV39Settings(); DB.settings.onboarding.currentStep = 1; save('settings'); openSettings(); },
+  'onboarding-demo': () => { ensureV39Settings(); DB.settings.onboarding.mode = 'demo'; onboarding.skip(); ui.toast('已进入示例体验，可随时在设置中重新初始化', 'ok'); },
+  'onboarding-restore': () => $('#file-json').click(),
   'onboarding-complete': () => onboarding.complete(),
   'onboarding-skip': () => onboarding.skip(),
   'security-unlock': () => { const pass = ($('#security-unlock-pass') || {}).value || ''; if (security.unlock(pass)) { render(); ui.toast('已解锁工作台', 'ok'); } else ui.toast('密码错误', 'err'); },
@@ -5636,6 +6064,7 @@ const ACTS = {
   },
   'student-import': () => $('#file-csv').click(),
   'student-export': exportStudentsCSV,
+  'student-export-sensitive': () => security.require('导出学生敏感字段', () => ui.confirm('确认敏感导出', '导出文件将包含身份证号、家庭地址、家长电话等敏感信息，请确认保存位置安全。', () => exportStudentsCSV(true))),
   'student-template': studentTemplate,
   /* E1 通用 CSV 导入：18 个业务模块共用同一个入口，靠 data-coll 区分 */
   'gen-import': (id, btn) => {
@@ -5929,6 +6358,9 @@ const ACTS = {
   },
 };
 
+const IMPORT_EXPORT_ACTIONS = { tasks:'task-export', talks:'talk-export', stay:'stay-export', leave:'leave-export', honor:'honor-export', pleave:'pleave-export', attend:'attend-export', node:'node-export', warn:'warn-export', help:'help-export', grant:'grant-export', focus:'focus-export', psych:'psych-export', graduate:'graduate-export', policy:'policy-export', material:'material-export', comp:'comp-export', tpl:'tpl-export' };
+Object.entries(IMPORT_EXPORT_ACTIONS).forEach(([coll, action]) => { ACTS[action] = () => exportCollectionCSV(coll); });
+
 /* ---------- 全局搜索 ---------- */
 const GS_VIEWS = [
   { v: 'students', ic: 'i-users', name: '学生台账', fields: s => [s.full_name, s.student_id, s.student_number, s.class_name, s.dorm, s.phone] },
@@ -6052,20 +6484,11 @@ $('#file-csv').onchange = function () {
 $('#file-gen').onchange = function () {
   const f = this.files[0]; if (!f) return;
   const coll = app._impColl;
-  const r = new FileReader();
-  r.onload = () => {
-    try {
-      const p = importer.previewCSV(r.result, coll);
-      if (!p.valid) {
-        ui.toast(`未识别到${p.label}的有效主字段，请检查表头或先下载模板（共 ${p.total} 行）`, 'err', 4600);
-      } else {
-        importer.commitCSV(coll, r.result);
-        ui.toast(`已识别 ${p.mapped.filter(Boolean).length} 个字段，${p.valid} 行可导入${p.skipped ? `，跳过 ${p.skipped} 行` : ''}`, 'ok', 3000);
-      }
-    } catch (e) { ui.toast('导入预览失败：' + e.message, 'err', 3600); }
-    this.value = '';
-  };
-  r.readAsText(f, 'utf-8');
+  importer.previewFile(f, coll, { encoding:'auto' }).then(preview => {
+    if (!preview.total) ui.toast('文件中没有可识别的数据行', 'err', 3600);
+    else openImportPreview(preview, { file:f, options:{ encoding:'auto' } });
+  }).catch(e => ui.toast('导入预览失败：' + e.message, 'err', 4200));
+  this.value = '';
 };
 /* 全局搜索框事件 */
 $('#global-search').addEventListener('input', e => {
@@ -6288,19 +6711,19 @@ function boot() {
 /* ---------- 17. 对外暴露 ---------- */
 window.CWB = {
   version: APP_VERSION,
-  db: DB, store, schema, ui, hooks, bridge, modules, onboarding, theme, security, importer,
+  db: DB, store, storage, schema, importSchemas:IMPORT_SCHEMAS, studentImportSchema:STUDENT_IMPORT_SCHEMA, ui, hooks, bridge, modules, onboarding, theme, security, importer,
   consts: { DUTIES, FOCUS, LEVELS, PRIOS, SOURCES, TALK_WAYS, CRISIS_LEVELS, CRISIS_WAYS, STU_TYPES, HONOR_TYPES, MORAL_LEVELS, POLITICS,
     PLEAVE_TYPES, ATTEND_TYPES, NODE_REPEAT, WARN_TYPES, WARN_LEVELS, HELP_TYPES, GRANT_KINDS,
     FOCUS_CATEGORIES, FOCUS_LEVELS, FOCUS_STATUS, PSYCH_SCALES, PSYCH_LEVELS, GRAD_YEARS, EMPLOY_STATUS, SALARY_RANGES,
     POLICY_CATS, MATERIAL_CATS, COMP_CATS, COMP_AWARDS, TPL_TYPES },
   utils: { esc, uid, today, shiftDay, daysFromToday, cnDate, toCSV, parseCSV, download,
-    /* v3.8 学生大表导入 API */
+    /* v3.9 学生大表导入 API */
     stuHeaderToField, stuNum, stuNormalizeRow, csvTextToObjects, xlsxRowsToObjects, loadSheetJS, importStudentsFile,
   },
-  /* v3.8 学生大表导入 - 顶层便捷访问 */
+  /* v3.9 学生大表导入 - 顶层便捷访问 */
   STU_SYNONYMS,
   stuHeaderToField, stuNum, stuNormalizeRow, csvTextToObjects, xlsxRowsToObjects, loadSheetJS, importStudentsFile,
-  save, render, go, restoreDemo,
+  csvSafeCell, studentTemplateColumns, openImportPreview, save, render, go, restoreDemo,
   norm: {
     student:normStudent, task:normTask, talk:normTalk, stay:normStay, leave:normLeave, honor:normHonor,
     pleave:normPleave, attend:normAttend, node:normNode, warn:normWarn, help:normHelp, grant:normGrant,

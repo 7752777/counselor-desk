@@ -9,18 +9,27 @@
     "node": ">=20"
   },
   "scripts": {
-    "test": "node tests/regression.js && node tests/import-loop.js && node tests/crud-smoke.js && node tests/student-import.js && node tests/demo-recovery.js && node tests/v39-features.js",
+    "test": "node tests/regression.js && node tests/import-loop.js && node tests/crud-smoke.js && node tests/student-import.js && node tests/demo-recovery.js && node tests/v39-features.js && node tests/v39-hardening.js && node tests/import-safety.js && node tests/import-compat.js && node tests/import-ui.js && node tests/import-scale.js",
     "test:regression": "node tests/regression.js",
     "test:import-loop": "node tests/import-loop.js",
     "test:crud-smoke": "node tests/crud-smoke.js",
     "test:student-import": "node tests/student-import.js",
     "test:demo-recovery": "node tests/demo-recovery.js",
     "test:v39": "node tests/v39-features.js",
+    "test:v39-hardening": "node tests/v39-hardening.js",
+    "test:import-safety": "node tests/import-safety.js",
+    "test:import-compat": "node tests/import-compat.js",
+    "test:import-ui": "node tests/import-ui.js",
+    "test:import-scale": "node tests/import-scale.js",
     "test:release": "node tests/release-checks.js",
+    "build:release": "node scripts/build-release.js",
+    "build:package": "node scripts/build-package.js",
+    "samples:generate": "node scripts/generate-import-samples.js",
     "lint": "node scripts/check-inline-js.js",
     "check:public": "node scripts/check-public-surface.js"
   },
   "devDependencies": {
-    "jsdom": "^26.1.0"
+    "jsdom": "^26.1.0",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   }
 }

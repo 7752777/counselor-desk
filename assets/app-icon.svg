@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="辅导员工作台图标">
+  <rect width="64" height="64" rx="15" fill="#0b3a82"/>
+  <path d="M13 18c8-3 14-1 19 4 5-5 11-7 19-4v29c-8-2-14 0-19 5-5-5-11-7-19-5z" fill="none" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M32 22v30" stroke="#0bb4c4" stroke-width="3"/>
+  <circle cx="22" cy="29" r="4" fill="#0bb4c4"/>
+  <path d="M17 40c1-5 9-5 10 0" fill="none" stroke="#0bb4c4" stroke-width="3" stroke-linecap="round"/>
+  <path d="m39 34 4 4 7-9" fill="none" stroke="#e0a020" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

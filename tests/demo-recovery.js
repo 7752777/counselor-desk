@@ -8,7 +8,7 @@ const collections = ['students', 'tasks', 'talks', 'stay', 'leave', 'honor', 'pl
 (async () => {
   const errors = [];
   const virtualConsole = new VirtualConsole();
-  virtualConsole.on('jsdomError', error => errors.push(error.message));
+  virtualConsole.on('jsdomError', error => { if (!/Could not load|getaddrinfo/i.test(error.message)) errors.push(error.message); });
   virtualConsole.on('error', (...args) => errors.push(args.join(' ')));
 
   const dom = await JSDOM.fromFile(file, {

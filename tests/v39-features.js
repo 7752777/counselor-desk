@@ -11,7 +11,7 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 (async () => {
   const errors = [];
   const vc = new VirtualConsole();
-  vc.on('jsdomError', error => { if (!/scrollTo|Not implemented/i.test(error.message)) errors.push(error.message); });
+  vc.on('jsdomError', error => { if (!/scrollTo|Not implemented|Could not load|getaddrinfo/i.test(error.message)) errors.push(error.message); });
   vc.on('error', (...args) => errors.push(args.join(' ')));
   const dom = await JSDOM.fromFile(file, {
     runScripts: 'dangerously', resources: 'usable', url: 'https://c.local/',
@@ -32,6 +32,9 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
   expect('importer preview API exists', !!(w.CWB && w.CWB.importer && typeof w.CWB.importer.previewCSV === 'function'));
   expect('learning collections exist', !!(w.CWB && Array.isArray(w.CWB.db.learning_materials) && Array.isArray(w.CWB.db.learning_notes)));
   expect('learning view is registered', !!d.querySelector('[data-view="learning"]'));
+  const capabilities = w.CWB.storage.capabilities();
+  expect('browser capability health check exists', capabilities && typeof capabilities.localStorage === 'boolean'
+    && typeof capabilities.fileReader === 'boolean' && typeof capabilities.textDecoder === 'boolean');
 
   w.CWB.theme.applyPreset('ocean', false);
   expect('theme preset updates CSS variables', d.documentElement.style.getPropertyValue('--accent') === '#075985');

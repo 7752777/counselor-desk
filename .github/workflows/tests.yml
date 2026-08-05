@@ -9,7 +9,7 @@ on:
 
 jobs:
   test:
-    name: 4-suite test gate
+    name: Complete test gate
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -31,18 +31,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run regression
-        run: pnpm run test:regression
+      - name: Run complete suite
+        run: pnpm test
 
-      - name: Run import-loop
-        run: pnpm run test:import-loop
-
-      - name: Run crud-smoke
-        run: pnpm run test:crud-smoke
-
-      - name: Run student-import
-        run: pnpm run test:student-import
+      - name: Run release checks
+        run: pnpm run test:release
 
       - name: Test summary
         if: success()
-        run: echo "All 4 test suites passed"
+        run: echo "All test suites and release checks passed"

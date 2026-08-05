@@ -13,7 +13,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const errors = [];
   const vc = new VirtualConsole();
   // 丢弃 jsdom 未实现的 window.scrollTo 噪声（已在 go() 的 try-catch 内，真实浏览器无此问题）
-  const IGNORE = /scrollTo|Not implemented/i;
+  const IGNORE = /scrollTo|Not implemented|Could not load|getaddrinfo/i;
   vc.on('jsdomError', e => { if (IGNORE.test(e.message)) return; errors.push('jsdomError: ' + (e.detail && e.detail.stack || e.message)); });
   vc.on('error', (...a) => { const s = a.join(' '); if (IGNORE.test(s)) return; errors.push('console.error: ' + s); });
   // 加载即触发脚本执行，语法错误会在此抛出

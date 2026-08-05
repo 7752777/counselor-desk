@@ -16,6 +16,7 @@
  * 最后再做一次枚举 / 布尔 / 数字往返保真检查 + 全量视图复渲染。
  */
 const { JSDOM, VirtualConsole } = require('jsdom');
+const { TextDecoder, TextEncoder } = require('node:util');
 const path = require('path');
 const fs = require('fs');
 const file = path.join(__dirname, '..', 'index.html');
@@ -89,13 +90,14 @@ function toCSV(rows) {
 (async () => {
   const errors = [];
   const vc = new VirtualConsole();
-  const IGNORE = /scrollTo|Not implemented/i;
+  const IGNORE = /scrollTo|Not implemented|Could not load|getaddrinfo/i;
   vc.on('jsdomError', e => { if (IGNORE.test(e.message)) return; errors.push('jsdomError: ' + (e.detail && e.detail.stack || e.message)); });
   vc.on('error', (...a) => { const s = a.join(' '); if (IGNORE.test(s)) return; errors.push('console.error: ' + s); });
 
   const dom = await JSDOM.fromFile(file, {
     runScripts: 'dangerously', resources: 'usable', url: 'https://c.local/',
     virtualConsole: vc, pretendToBeVisual: true,
+    beforeParse(window) { window.TextDecoder = TextDecoder; window.TextEncoder = TextEncoder; },
   });
   const w = dom.window, d = w.document;
 
@@ -131,7 +133,16 @@ function toCSV(rows) {
     const f = new w.File([text], 'test.csv', { type: 'text/csv' });
     Object.defineProperty(inp, 'files', { value: [f], configurable: true, writable: true });
     inp.dispatchEvent(new w.Event('change', { bubbles: true }));
-    await sleep(120);
+    for (let i = 0; i < 10 && !d.querySelector('#modal-root .modal [data-import-confirm]'); i++) await sleep(50);
+    const modal = [...d.querySelectorAll('#modal-root .modal')].reverse().find(item => item.querySelector('[data-import-confirm]'));
+    if (modal && modal.querySelector('[data-import-confirm]')) {
+      const sensitive = modal.querySelector('[data-sensitive-confirm]');
+      if (sensitive) click(sensitive);
+      click(modal.querySelector('[data-import-confirm]'));
+      await sleep(60);
+      const remaining = d.querySelector('#modal-root .modal');
+      if (remaining) click(remaining.querySelector('[data-close]'));
+    }
   };
 
   /* ---------- 0. 装配自检 ---------- */
@@ -168,7 +179,7 @@ function toCSV(rows) {
     await sleep(30);
     const tplCsv = await grab();
     const tplHead = tplCsv ? parseCSV(tplCsv)[0] : [];
-    ok('「模板」表头与规格一致', tplHead.join('|') === m.head.join('|'));
+    ok('「模板」表头与规格一致', tplHead[0] === '记录编号(record_id)' && tplHead.slice(1).map(x => x.replace(/\([a-z_]+\)$/i, '')).join('|') === m.head.join('|'));
 
     /* 导出 */
     capBlob = null;
@@ -178,7 +189,7 @@ function toCSV(rows) {
     ok('「导出 CSV」产生了内容', !!csv);
     if (!csv) continue;
     const rows = parseCSV(csv);
-    ok('「导出」表头与规格一致', rows[0].join('|') === m.head.join('|'));
+    ok('「导出」表头与规格一致', rows[0][0] === '记录编号(record_id)' && rows[0].slice(1).map(x => x.replace(/\([a-z_]+\)$/i, '')).join('|') === m.head.join('|'));
 
     const before = store(m.coll).length;
     ok(`导出行数 == 库内条数（${rows.length - 1} / ${before}）`, rows.length - 1 === before);
@@ -191,7 +202,10 @@ function toCSV(rows) {
     ok(`原样导回条数不变（${before} → ${afterSame}）`, afterSame === before);
 
     /* 改主键 → 新增 1 条 */
-    const nr = rows[1].slice(); nr[0] = '闭环测试_' + m.coll;
+    const nr = rows[1].slice(); nr[0] = '';
+    // talks starts with a strict date column; change its required student-name field instead.
+    if (m.coll === 'talks') nr[3] = '闭环测试_' + m.coll;
+    else nr[1] = '闭环测试_' + m.coll;
     goView(m.view); await sleep(50);
     click($$(`[data-act="gen-import"][data-coll="${m.coll}"]`)[0]);
     await pickFile('#file-gen', toCSV([rows[0], nr]));
