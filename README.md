@@ -6,13 +6,13 @@
 
 面向全国高校辅导员的本地优先工作台：学生台账、重点关注、谈心谈话、任务节点、导入导出、备份恢复和学习助手集中在一个轻量页面里。
 
-[![Version](https://img.shields.io/badge/version-3.9.0-0b3a82?style=flat-square)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-4.0.0-0b3a82?style=flat-square)](./CHANGELOG.md)
 [![License](https://img.shields.io/badge/license-MIT-12a06b?style=flat-square)](./LICENSE)
 [![Offline](https://img.shields.io/badge/works-offline-0bb4c4?style=flat-square)](./docs/辅导员工作台使用手册.md)
-[![Tests](https://img.shields.io/badge/tests-11%20suites-12a06b?style=flat-square)](./docs/测试报告-v3.9.md)
+[![Tests](https://img.shields.io/badge/tests-v4.0%20gates-12a06b?style=flat-square)](./docs/v4-acceptance-report.md)
 [![CI](https://img.shields.io/github/actions/workflow/status/7752777/counselor-desk/tests.yml?style=flat-square&logo=github-actions&logoColor=white&label=CI)](https://github.com/7752777/counselor-desk/actions)
 
-[在线演示](https://7752777.github.io/counselor-desk/) · [下载源入口](./index.html) · [v3.9 发布包说明](./docs/测试报告-v3.9.md) · [提交问题](https://github.com/7752777/counselor-desk/issues)
+[在线演示](https://7752777.github.io/counselor-desk/) · [网页版入口](./index.html) · [v4.0 验收记录](./docs/v4-acceptance-report.md) · [提交问题](https://github.com/7752777/counselor-desk/issues)
 
 </div>
 
@@ -24,7 +24,7 @@
 
 打开工作台，你可以先看到今天最需要处理的事情：哪些任务已经逾期、哪些重点学生需要回访、哪条心理危机预警还没有解除；完成一次谈话后，可以顺手留下记录；月底需要汇总时，又能直接导出结构化数据或生成工作小结。它不试图替代学校正式业务平台，而是专注于辅导员最频繁、最需要连续记录的日常工作。
 
-这是一个本地运行的静态 Web 应用：不要求账号、不连接服务器，数据默认只保存在当前浏览器的本地存储中。即使在办公室网络不稳定、临时出差或需要脱敏演示时，也能继续使用；需要换电脑时，可以通过 JSON 备份和便携 HTML 把自己的工作带走。
+这是一个本地优先应用：网页版是单 HTML、双击运行的兼容版本，业务数据和附件索引写入 IndexedDB；Windows 版使用 Electron、加密 SQLite 记录仓储和附件保险库。两端都不要求账号、不建设云同步或服务器端学生数据库；换电脑时通过 v7 备份、交换包或便携 HTML 手动迁移。
 
 ### 一线工作场景，打开就能接上
 
@@ -47,7 +47,7 @@
 - 希望在本地、离线、可备份环境中管理个人工作记录的老师；
 - 想为本校字段、台账或流程做二次扩展的高校信息化人员和开发者。
 
-> 重要边界：v3.9 不包含账号体系、云端存储、电脑与手机自动同步或跨设备冲突解决。这些内容保留到 v4.0 进行独立设计。
+> 重要边界：v4.0 仍不包含账号体系、云同步、服务器端学生数据库、自动联网就业抓取或人脸识别。网页版不承诺指定文件夹定时写入；桌面版自动备份在下次启动时补做漏跑任务。
 
 ## v3.9 做了什么
 
@@ -106,7 +106,7 @@
 
 ### 直接使用
 
-1. 下载 [发布版 HTML](./output/辅导员工作台-v3.9.0/辅导员工作台.html)，或下载仓库中的 `index.html`。
+1. 下载 [发布版 HTML](./output/counselor-desk-v4.0.0/辅导员工作台.html)，或下载仓库中的 `index.html`。
 2. 用 Chrome、Edge、Firefox ESR 或 Safari 16+ 打开。
 3. 首次打开选择“体验示例”“正式初始化”或“从备份恢复”。
 4. 正式使用前先导入学生名单，并在数据中心导出第一份 JSON 备份。
@@ -123,7 +123,7 @@ pnpm run build:package
 生成目录：
 
 ```text
-output/辅导员工作台-v3.9.0/
+output/counselor-desk-v4.0.0/
 ├── 辅导员工作台.html       # 可直接双击的单文件发布版
 ├── 使用手册.md
 ├── 字段字典与数据约定.md
@@ -165,23 +165,23 @@ CWB.importer.getHistory();
 
 ## 隐私与数据安全
 
-- 数据默认写入浏览器 `localStorage`，不会自动上传到服务器。
-- 启动锁、手动上锁、敏感导出、重点档案、学生删除和清空数据均有二次验证边界。
-- 这是一层本地操作保护，不等同于端到端加密或学校正式信息安全系统。
+- 网页端业务数据和附件索引写入 IndexedDB；桌面端记录和附件使用本地加密仓储，不会自动上传到服务器。
+- 启动锁、手动上锁、敏感导出、重点档案、学生删除、批量删除和清空数据均有二次验证边界。
+- 桌面端数据密钥由 Windows `safeStorage` 保护；备份口令无法找回，仍需配合设备账户、磁盘和学校安全制度。
 - 请勿把真实身份证号、家庭住址、家长电话上传到公共 Issue、截图、演示站或未经授权的电脑。
 - 更换电脑、重装系统或更换浏览器前，请先导出完整 JSON 备份，并在新环境恢复后抽查学生数与敏感字段。
 
 ## 测试与质量门槛
 
-当前 v3.9.0 候选构建已通过：
+当前 v4.0.0 候选构建已通过：
 
-- 11 组自动化测试；
-- 23 个页面渲染检查；
+- v3.9 回归与 v4.0 数据底座、迁移、附件、备份、Electron 和业务测试；
+- 29 个页面渲染检查；
 - 18 个模块导入/导出及增删改闭环；
-- 0、1、100、1,000、5,000 行学生导入压力场景；
+- 0、1、100、5,000、10,000 行及 100 列学生导入压力场景；
 - 重复学号、同名学生、前导零、科学计数法、非法日期、乱码、敏感字段和公式文本场景；
 - 真实 Chromium 浏览器 1366×768、390×844、320×568 验收；
-- 内联 JavaScript、公开接口、发布包完整性和生产依赖安全审计。
+- 内联 JavaScript、公开接口、发布包完整性和生产依赖安全审计；正式代码签名和 99.7% 运营指标仍由发布门禁单独校验。
 
 复现：
 
@@ -193,7 +193,7 @@ pnpm run test:release
 pnpm audit --prod
 ```
 
-完整结果见 [v3.9 测试报告](./docs/测试报告-v3.9.md)。Edge、Firefox ESR、Safari 16+、WPS 和 LibreOffice 的公开发布前人工冒烟清单也已写入使用手册。
+完整结果见 [v4.0 验收记录](./docs/v4-acceptance-report.md)。Edge、Firefox、移动尺寸、键盘导航、对比度和长文本检查也已纳入 v4.0 清单。
 
 ## 开发与扩展
 
@@ -218,6 +218,10 @@ CWB.modules.register({
 - [辅导员工作台使用手册](./docs/辅导员工作台使用手册.md)
 - [数据格式与联动约定](./docs/数据格式与联动约定.md)
 - [二次开发指南](./docs/二次开发指南.md)
+- [迁移与备份说明](./docs/v4-migration-and-backup.md)
+- [隐私说明](./docs/v4-privacy.md)
+- [党建规则版本说明](./docs/v4-party-rules.md)
+- [签名发布流程](./docs/v4-release-signing.md)
 - [v3.9 迭代记录](./docs/迭代记录/2026-08-v3.9.md)
 - [v3.9 全国高校兼容性加固计划](./docs/迭代记录/2026-08-v3.9-全国高校兼容性加固计划.md)
 
@@ -226,7 +230,9 @@ CWB.modules.register({
 ```text
 counselor-desk/
 ├── index.html                         # 源码入口
-├── vendor/xlsx.full.min.js            # 开发环境离线 Excel 解析器
+├── desktop/                           # Electron 主进程、预加载和 SQLite 仓储
+├── src/core/                          # 共享导入、仓储、备份和业务规则核心
+├── vendor/                            # 离线 Excel、ZIP、Argon2id、ECharts 资源
 ├── assets/                            # Logo、图标、Banner、公开截图
 ├── samples/import-compat/             # 脱敏兼容样表
 ├── scripts/                           # 测试、发布和样表生成脚本
@@ -238,7 +244,8 @@ counselor-desk/
 ## 版本路线
 
 - **v3.9**：稳定性、全国高校表格兼容、首次使用、安全锁、导入原子性、撤销、备份和本地学习助手。
-- **v4.0**：再设计账号体系、电脑与手机数据同步、PWA/移动端数据携带、跨设备冲突预览和云端数据治理。
+- **v4.0**：双形态本地优先底座、IndexedDB/SQLite、加密附件与备份、分段导入、照片/班团/党建/文件库/就业资源和验收门禁。
+- **后续版本**：只在另立项目并完成隐私评估后考虑账号、云同步或人脸识别；当前不承诺这些能力。
 
 ## 贡献、问题与许可证
 
