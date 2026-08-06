@@ -1,0 +1,33 @@
+const assert = require('node:assert/strict');
+const path = require('node:path');
+const { JSDOM, VirtualConsole } = require('jsdom');
+
+(async () => {
+  const dom = await JSDOM.fromFile(path.join(__dirname, '..', 'output', 'v4-preview.html'), { runScripts:'dangerously', resources:'usable', url:'https://c.local/', virtualConsole:new VirtualConsole(), pretendToBeVisual:true });
+  await new Promise(resolve => setTimeout(resolve, 500));
+  const validate = dom.window.CWB_V4.validatePartyTransition;
+  assert.equal(typeof validate, 'function');
+  const steps = dom.window.CWB_V4.partyChecklist('2026-05-11');
+  const result = validate({ birth_date:'2010-01-01', application_at:'2026-01-01', steps }, steps[0], '2026-01-02');
+  assert.equal(result.ok, false);
+  assert.ok(result.errors.some(error => /十八|18/.test(error)));
+  const missing = validate({ birth_date:'2000-01-01', application_at:'2026-01-01', steps }, steps[1], '2026-03-01');
+  assert.equal(missing.ok, false);
+  assert.ok(missing.errors.length);
+  const missingBirth = validate({ application_at:'2026-01-01', steps }, steps[0], '2026-01-02');
+  assert.equal(missingBirth.ok, false);
+  assert.ok(missingBirth.errors.some(error => /出生日期/.test(error)));
+  const custom = dom.window.CWB_V4.partyChecklist('2026-05-11', [{ key:'school-review', label:'学校附加材料复核' }]);
+  assert.equal(custom.length, steps.length + 1);
+  assert.equal(custom.at(-1).required, false);
+  assert.equal(custom.at(-1).custom, true);
+  const completeSteps = steps.map(step => ({ ...step, status:'done' }));
+  const shortEducation = validate({ birth_date:'2000-01-01', activist_at:'2025-01-01', steps:completeSteps }, steps.find(step => step.key === 'education_review'), '2025-12-01');
+  assert.ok(shortEducation.errors.some(error => /一年/.test(error)));
+  const shortPublicity = validate({ birth_date:'2000-01-01', publicity_start:'2026-01-05', publicity_end:'2026-01-07', steps:completeSteps }, steps.find(step => step.key === 'development_publicity'), '2026-01-08');
+  assert.ok(shortPublicity.errors.some(error => /五个工作日/.test(error)));
+  const shortProbation = validate({ birth_date:'2000-01-01', probation_at:'2026-01-01', steps:completeSteps }, steps.find(step => step.key === 'regularization'), '2026-06-01');
+  assert.ok(shortProbation.errors.some(error => /预备期/.test(error)));
+  dom.window.close();
+  console.log('PASS v40-party-rules');
+})().catch(error => { console.error(error.stack || error.message); process.exit(1); });

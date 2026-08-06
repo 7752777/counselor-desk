@@ -8,11 +8,16 @@
 <meta name="theme-color" content="#0b3a82">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%230b3a82'/%3E%3Cpath d='M13 18c8-3 14-1 19 4 5-5 11-7 19-4v29c-8-2-14 0-19 5-5-5-11-7-19-5z' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3Cpath d='M32 22v30' stroke='%230bb4c4' stroke-width='3'/%3E%3Ccircle cx='22' cy='29' r='4' fill='%230bb4c4'/%3E%3Cpath d='M17 40c1-5 9-5 10 0' fill='none' stroke='%230bb4c4' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='m39 34 4 4 7-9' fill='none' stroke='%23e0a020' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <script defer src="vendor/xlsx.full.min.js" data-offline-xlsx></script>
+<script defer src="vendor/argon2-bundled.min.js" data-offline-argon2></script>
+<script defer src="vendor/jszip.min.js" data-offline-jszip></script>
+<script defer src="vendor/echarts.min.js" data-offline-echarts></script>
+<script defer src="src/core/v4-runtime.js" data-v4-runtime></script>
+<script type="text/plain" id="cwb-import-worker-source" data-cwb-import-worker></script>
 <title>辅导员工作台</title>
 <style>
 /* ============================================================
    辅导员工作台 Counselor Desk  v3.9
-   源码入口 / 发布包单文件 / 数据仅存本机 localStorage
+   源码入口 / 发布包单文件 / localStorage compatibility only for web settings and migration; desktop business data uses async repositories
    设计：克制高级感 — 航空蓝调 · 纯色面 · 极细边框 · 柔和阴影
    ============================================================ */
 :root{
@@ -613,6 +618,14 @@ tbody tr:last-child td{border-bottom:none}
   .topbar{padding:0 12px}
   .topbar-search-wrap{display:none}
 }
+@media (max-width:360px){
+  .topbar{padding:0 8px;gap:6px;min-width:0}
+  .brand{min-width:0;max-width:150px;gap:6px;font-size:14px;overflow:hidden}
+  .brand>span:last-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .topbar-acts{gap:4px;flex:0 0 auto}
+  .topbar-acts .btn{padding:0 6px;min-width:32px}
+  .topbar-acts #btn-export,.topbar-acts #btn-import{display:none}
+}
  @media (max-width:400px){ .kpis{grid-template-columns:1fr} }
 
 /* ---------- 打印 ---------- */
@@ -724,6 +737,32 @@ tbody tr:last-child td{border-bottom:none}
 .onboarding h2{margin:3px 0 5px;font-size:20px}.onboarding p{margin:0;color:var(--ink-2);font-size:13px;line-height:1.65}.onboarding-steps{display:flex;flex-direction:column;gap:7px;font-size:12.5px;color:var(--ink-3)}.onboarding-steps span{padding:5px 8px;border-radius:7px;background:rgba(255,255,255,.45)}.onboarding-steps .done{color:var(--ok);text-decoration:line-through}.onboarding-actions{display:flex;flex-direction:column;gap:7px;min-width:122px}.settings-section{border-top:1px solid var(--line-2);padding-top:16px;margin-top:18px}.learning-list{display:grid;gap:12px}.learning-item{border:1px solid var(--line);border-radius:var(--r-sm);padding:15px 16px;background:var(--card-2)}.learning-item-hd{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.learning-item h3{font-size:15px;margin:0 0 4px}.learning-item p{font-size:13.5px;line-height:1.7;color:var(--ink-2);white-space:pre-wrap;margin:10px 0}.learning-progress{height:6px;border-radius:99px;background:var(--line-2);overflow:hidden;margin:10px 0}.learning-progress i{display:block;height:100%;background:var(--signal);border-radius:inherit}
 .import-summary{display:grid;grid-template-columns:repeat(5,minmax(80px,1fr));gap:8px;margin-bottom:14px}.import-stat{padding:10px;border:1px solid var(--line);border-radius:9px;background:var(--card-2)}.import-stat b{display:block;font-size:19px;margin-top:3px}.import-map-grid{display:grid;grid-template-columns:minmax(130px,1fr) minmax(160px,1fr);gap:7px;align-items:center}.import-table-wrap{max-height:300px;overflow:auto;border:1px solid var(--line);border-radius:9px}.import-table-wrap table{margin:0}.import-issue{color:var(--danger);font-size:12px}.import-sensitive{border-left:3px solid var(--warn);background:var(--warn-bg);padding:10px 12px;border-radius:7px;margin:12px 0}@media(max-width:700px){.import-summary{grid-template-columns:repeat(2,1fr)}.import-map-grid{grid-template-columns:1fr}.modal.wide{width:calc(100vw - 16px)}}
 @media (max-width:900px){.onboarding{grid-template-columns:1fr}.onboarding-actions{flex-direction:row;flex-wrap:wrap}.onboarding-actions .btn{flex:1}.settings-section .grid2{grid-template-columns:1fr}}
+/* v4.0 workspace surfaces */
+.v4-head{display:flex;align-items:flex-start;gap:16px;justify-content:space-between;margin-bottom:18px}
+.v4-head h1{margin:0 0 5px;font-size:24px;letter-spacing:-.02em}
+.v4-head p{margin:0;color:var(--ink-3);line-height:1.65}
+.v4-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.v4-toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.v4-photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:12px}
+.v4-photo-card{border:1px solid var(--line);border-radius:14px;background:var(--card);overflow:hidden;transition:transform .2s,box-shadow .2s}
+.v4-photo-card:hover{transform:translateY(-2px);box-shadow:var(--sh-sm)}
+.v4-photo{aspect-ratio:4/3;background:linear-gradient(135deg,var(--accent-soft),var(--signal-soft));display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:30px;font-weight:700;overflow:hidden}
+.v4-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.v4-photo-meta{padding:11px 12px}.v4-photo-meta strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v4-photo-meta small{display:block;color:var(--ink-3);margin-top:4px}
+[data-v4-virtual-list]{content-visibility:auto;contain-intrinsic-size:640px 480px}
+.v4-stat-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.v4-stat{padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--card)}.v4-stat b{display:block;font-size:24px;color:var(--accent);margin-top:3px}
+.v4-list{display:grid;gap:8px}.v4-list-item{display:flex;align-items:center;gap:12px;padding:13px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card)}.v4-list-item .sp{flex:1}
+.v4-progress{height:7px;background:var(--bg-sunken);border-radius:99px;overflow:hidden}.v4-progress i{display:block;height:100%;background:var(--signal);border-radius:99px}
+.v4-heat-grid{display:grid;gap:6px;overflow-x:auto}.v4-heat-cell{min-height:58px;border:1px solid var(--line);border-radius:8px;background:#edf5fb;color:var(--ink);cursor:pointer;font-weight:700}.v4-heat-cell:hover{outline:2px solid var(--accent)}.v4-heat-cell.heat-0{background:#eef3f7;color:var(--ink-3)}.v4-heat-cell.heat-1{background:#d9eff1}.v4-heat-cell.heat-2{background:#b5e1e2}.v4-heat-cell.heat-3{background:#76c9d0}.v4-heat-cell.heat-4{background:#2c9aa8;color:#fff}.v4-heat-cell.heat-5{background:#0f6b82;color:#fff}
+.v4-step{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line-2)}.v4-step:last-child{border-bottom:0}.v4-step-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--line-strong);flex:none;margin-top:2px}.v4-step.done .v4-step-dot{border-color:var(--ok);background:var(--ok)}
+.v4-link{color:var(--accent);text-decoration:none}.v4-link:hover{text-decoration:underline}
+.workspace-tabs{margin:0 0 14px;border-bottom:1px solid var(--line);overflow-x:auto}.workspace-tabs-inner{display:flex;gap:4px;min-width:max-content}.workspace-tab{min-height:34px;padding:0 13px;border-bottom:2px solid transparent;color:var(--ink-3);font-size:13px;font-weight:600}.workspace-tab:hover{color:var(--accent);background:var(--accent-soft)}.workspace-tab.on{color:var(--accent);border-bottom-color:var(--accent)}
+.embedded-actions{justify-content:flex-start;margin-bottom:12px}
+.analysis-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}.analysis-kpis>div{padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--card-2)}.analysis-kpis span{display:block;color:var(--ink-3);font-size:12px}.analysis-kpis b{display:block;color:var(--accent);font-size:22px;line-height:1.2;margin-top:4px}.analysis-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.analysis-panel{border:1px solid var(--line);border-radius:10px;padding:14px;background:var(--card-2)}.analysis-panel h3{margin:0 0 10px;font-size:14px}.analysis-bar,.analysis-heat{display:grid;grid-template-columns:minmax(90px,1fr) 2fr auto;align-items:center;gap:9px;width:100%;min-height:34px;padding:5px 7px;border-radius:7px;text-align:left;color:var(--ink-2)}.analysis-heat{grid-template-columns:1fr auto}.analysis-bar:hover,.analysis-heat:hover{background:var(--accent-soft)}.analysis-bar i{height:8px;border-radius:99px;background:var(--signal);min-width:4px}.analysis-bar b,.analysis-heat b{font-size:12px;color:var(--accent)}.module-config-row{display:flex;align-items:center;gap:8px;padding:7px 0}
+.nav-item{font-size:13px;min-height:36px}.nav-group{font-size:11px;line-height:1.3}.nav-item .ic{width:16px;height:16px}.v4-head h1{font-size:20px}.v4-actions,.v4-toolbar{gap:8px}.v4-stat b{font-size:20px}.v4-photo-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}.v4-photo{aspect-ratio:4/3;min-height:0}.v4-toolbar .inp{min-width:0;max-width:100%}
+@media(max-width:760px){.analysis-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.analysis-grid{grid-template-columns:1fr}.v4-actions .btn,.v4-toolbar .btn{flex:0 1 auto}.workspace-tab{padding:0 10px}}
+@media(max-width:760px){.v4-head{display:block}.v4-actions{justify-content:flex-start;margin-top:12px}.v4-stat-row{grid-template-columns:repeat(2,minmax(0,1fr))}.v4-photo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 </head>
 <body>
@@ -999,6 +1038,12 @@ function downloadSummary(R, label) {
   ui.toast('已导出' + label + '工作小结', 'ok');
 }
 function download(filename, content, mime) {
+  if (window.CWB && window.CWB.audit && typeof window.CWB.audit.log === 'function') {
+    const name = String(filename || '');
+    if (/学生|照片|备份|交换包|党员|班团|就业|文件|导入|档案|心理|重点/.test(name)) {
+      Promise.resolve(window.CWB.audit.log('sensitive_export', { filename:name, mime:mime || 'application/octet-stream' })).catch(() => {});
+    }
+  }
   const blob = new Blob([content], { type: (mime || 'application/octet-stream') + ';charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -1048,6 +1093,14 @@ function compactRecord(record) {
   return out;
 }
 function compactCollection(records) { return (records || []).map(compactRecord); }
+const V4_RECORD_COLLECTIONS = ['students','tasks','talks','stay','leave','honor','pleave','attend','node','warn','help','grant','focus','psych','graduate','policy','material','comp','tpl','learning_materials','learning_notes','learning_sessions'];
+function stampV4Metadata(part) {
+  const now = new Date().toISOString();
+  if (!part || part === 'settings') { DB.settings = DB.settings || {}; DB.settings.schema_version = 7; DB.settings.updated_at = now; DB.settings.id = DB.settings.id || 'settings'; }
+  const keys = !part ? V4_RECORD_COLLECTIONS : V4_RECORD_COLLECTIONS.includes(part) ? [part] : [];
+  keys.forEach(key => (DB[key] || []).forEach(record => { if (!record || typeof record !== 'object') return; record.id = record.id || uid(); record.schema_version = 7; record.created_at = record.created_at || now; record.updated_at = now; }));
+  if (!part || part === 'custom') Object.values(DB.custom || {}).forEach(list => { if (!Array.isArray(list)) return; list.forEach(record => { if (!record || typeof record !== 'object') return; record.id = record.id || uid(); record.schema_version = 7; record.created_at = record.created_at || now; record.updated_at = now; }); });
+}
 const store = {
   read(key, fallback) {
     try { const raw = localStorage.getItem(NS + key); return raw ? JSON.parse(raw) : fallback; }
@@ -1073,6 +1126,8 @@ const store = {
   },
   estimateBytes(key, val) { return JSON.stringify(key === 'students' ? compactCollection(val) : val).length * 2; }
 };
+/* v4.0 compatibility surface: new modules use CWB.repositories/attachments instead. */
+store.compatibilityOnly = true;
 const storage = {
   estimatedCapacity: 5 * 1024 * 1024,
   capabilities() {
@@ -1108,30 +1163,39 @@ const DB = {
 };
 const DEMO_COLLECTIONS = ['students', 'tasks', 'talks', 'stay', 'leave', 'honor', 'pleave', 'attend', 'node', 'warn', 'help', 'grant', 'focus', 'psych', 'graduate', 'policy', 'material', 'comp', 'tpl', 'learning_materials', 'learning_notes', 'learning_sessions'];
 function save(part) {
-  if (!part || part === 'settings') store.write('settings', DB.settings);
-  if (!part || part === 'students') store.write('students', DB.students);
-  if (!part || part === 'tasks')    store.write('tasks', DB.tasks);
-  if (!part || part === 'talks')    store.write('talks', DB.talks);
-  if (!part || part === 'stay')     store.write('stay', DB.stay);
-  if (!part || part === 'leave')    store.write('leave', DB.leave);
-  if (!part || part === 'honor')    store.write('honor', DB.honor);
-  if (!part || part === 'pleave')   store.write('pleave', DB.pleave);
-  if (!part || part === 'attend')   store.write('attend', DB.attend);
-  if (!part || part === 'node')     store.write('node', DB.node);
-  if (!part || part === 'warn')     store.write('warn', DB.warn);
-  if (!part || part === 'help')     store.write('help', DB.help);
-  if (!part || part === 'grant')    store.write('grant', DB.grant);
-  if (!part || part === 'focus')    store.write('focus', DB.focus);
-  if (!part || part === 'psych')    store.write('psych', DB.psych);
-  if (!part || part === 'graduate') store.write('graduate', DB.graduate);
-  if (!part || part === 'policy')   store.write('policy', DB.policy);
-  if (!part || part === 'material') store.write('material', DB.material);
-  if (!part || part === 'comp')     store.write('comp', DB.comp);
-  if (!part || part === 'tpl')      store.write('tpl', DB.tpl);
-  if (!part || part === 'learning_materials') store.write('learning_materials', DB.learning_materials);
-  if (!part || part === 'learning_notes') store.write('learning_notes', DB.learning_notes);
-  if (!part || part === 'learning_sessions') store.write('learning_sessions', DB.learning_sessions);
-  if (!part || part === 'custom')   store.write('custom', DB.custom);
+  stampV4Metadata(part);
+  const desktopBusiness = typeof window !== 'undefined' && !!window.cwbDesktop;
+  const write = (key, value) => { const large = V4_RECORD_COLLECTIONS.includes(key) || key === 'custom' || key === 'import_history'; if (desktopBusiness && key !== 'settings') { hooks.emit('store:write', { key, val:value, compatibilityOnly:true, desktopRepository:true }); return true; } if (window.CWB_V4_IDB_ACTIVE && large) { hooks.emit('store:write', { key, val:value, compatibilityOnly:true }); return true; } return store.write(key, value); };
+  if (!part || part === 'settings') write('settings', DB.settings);
+  if (!part || part === 'students') write('students', DB.students);
+  if (!part || part === 'tasks')    write('tasks', DB.tasks);
+  if (!part || part === 'talks')    write('talks', DB.talks);
+  if (!part || part === 'stay')     write('stay', DB.stay);
+  if (!part || part === 'leave')    write('leave', DB.leave);
+  if (!part || part === 'honor')    write('honor', DB.honor);
+  if (!part || part === 'pleave')   write('pleave', DB.pleave);
+  if (!part || part === 'attend')   write('attend', DB.attend);
+  if (!part || part === 'node')     write('node', DB.node);
+  if (!part || part === 'warn')     write('warn', DB.warn);
+  if (!part || part === 'help')     write('help', DB.help);
+  if (!part || part === 'grant')    write('grant', DB.grant);
+  if (!part || part === 'focus')    write('focus', DB.focus);
+  if (!part || part === 'psych')    write('psych', DB.psych);
+  if (!part || part === 'graduate') write('graduate', DB.graduate);
+  if (!part || part === 'policy')   write('policy', DB.policy);
+  if (!part || part === 'material') write('material', DB.material);
+  if (!part || part === 'comp')     write('comp', DB.comp);
+  if (!part || part === 'tpl')      write('tpl', DB.tpl);
+  if (!part || part === 'learning_materials') write('learning_materials', DB.learning_materials);
+  if (!part || part === 'learning_notes') write('learning_notes', DB.learning_notes);
+  if (!part || part === 'learning_sessions') write('learning_sessions', DB.learning_sessions);
+  if (!part || part === 'custom')   write('custom', DB.custom);
+  if (part === 'custom' && window.CWB && window.CWB.audit && typeof window.CWB.audit.log === 'function') {
+    Promise.resolve(window.CWB.audit.log('custom_collection_save', { collections:['v4_positions','v4_party_cases','v4_files','v4_employment_resources'], at:new Date().toISOString() })).catch(() => {});
+  }
+  if (typeof window !== 'undefined' && typeof window.CWB_V4_SYNC === 'function') {
+    window.CWB_V4_SYNC(part);
+  }
 }
 
 /* ===================== 4. 字段 schema（与服务端平台对齐） ===================== */
@@ -1164,6 +1228,15 @@ const schema = {
     crisis_level:  { label:'危机预警级别', local:true },
     crisis_way:    { label:'危机发现方式', local:true },
     crisis_relieved:{ label:'是否已解除预警', local:true },
+    dorm_building: { label:'楼栋', local:true },
+    dorm_room:     { label:'宿舍号', local:true },
+    academic_score:{ label:'学业成绩', local:true },
+    credits:       { label:'已修学分', local:true },
+    class_rank:    { label:'班级排名', local:true },
+    enrollment_date:{ label:'入学日期', local:true },
+    graduation_date:{ label:'预计毕业日期', local:true },
+    emergency_contact:{ label:'紧急联系人', local:true, sensitive:true },
+    emergency_phone:{ label:'紧急联系电话', local:true, sensitive:true },
     note:          { label:'备注', local:true },
   }
 };
@@ -1171,6 +1244,10 @@ const schema = {
 /* ===================== 5. UI 工具 ===================== */
 const ui = {
   toast(msg, type, ms) {
+    if (type === 'err' && typeof msg === 'string') {
+      const codeMatch = msg.match(/\b(?:[A-Z][A-Z0-9]+_)+[A-Z0-9]+\b/);
+      if (codeMatch && typeof v4ErrorMessage === 'function') msg = msg.replace(codeMatch[0], v4ErrorMessage(codeMatch[0]));
+    }
     const el = document.createElement('div');
     el.className = 'toast' + (type ? ' ' + type : '');
     const icon = type === 'ok' ? 'i-check' : type === 'err' ? 'i-alert' : type === 'warn' ? 'i-alert' : 'i-inbox';
@@ -1291,7 +1368,7 @@ const hooks = {
 
 /* ===================== 7. 平台联动桥 bridge ===================== */
 const bridge = {
-  PACKAGE_VERSION: 6,
+  PACKAGE_VERSION: 7,
   buildPackage(scope) {
     scope = scope || {};
     const inRange = d => (!scope.from || d >= scope.from) && (!scope.to || d <= scope.to);
@@ -1383,6 +1460,12 @@ const bridge = {
   },
   applyPackage(pkg, mode) {
     if (!pkg || typeof pkg !== 'object') throw new Error('文件格式无法识别');
+    const incomingVersion = pkg.package === 'counselor-desk'
+      ? Number(pkg.package_version || 1)
+      : Number((pkg.data && pkg.data.package_version) || pkg.package_version || 1);
+    if (!Number.isFinite(incomingVersion) || incomingVersion > this.PACKAGE_VERSION) throw new Error(`交换包版本 ${incomingVersion || '未知'} 高于当前支持的 v${this.PACKAGE_VERSION}`);
+    /* v4 migration safety: keep a local rollback snapshot before any merge/replace. */
+    try { store.write('v4_migration_rollback', { schema_version:7, created_at:new Date().toISOString(), data:this.buildPackage() }); } catch (_) {}
     const isPkg = pkg.package === 'counselor-desk';
     const src = isPkg ? pkg : (pkg.data || pkg);
     const S = Array.isArray(src.students) ? src.students : [];
@@ -1407,11 +1490,13 @@ const bridge = {
     const LM = Array.isArray(src.learning_materials) ? src.learning_materials : [];
     const LN = Array.isArray(src.learning_notes) ? src.learning_notes : [];
     const LS = Array.isArray(src.learning_sessions) ? src.learning_sessions : [];
+    const CUSTOM = src.custom && typeof src.custom === 'object' && !Array.isArray(src.custom) ? src.custom : null;
     /* 备份文件里会带上 settings（辅导员姓名、学院、带班信息、隐私锁等），换电脑恢复时不能丢 */
     const SET = (src.settings && typeof src.settings === 'object' && !Array.isArray(src.settings)) ? src.settings : null;
     if (!S.length && !T.length && !K.length && !ST.length && !LV.length && !HO.length && !PL.length && !AT.length && !NO.length
       && !WA.length && !HP.length && !GR.length && !FO.length && !PS.length && !GD.length
-      && !PO.length && !MA.length && !CO.length && !TP.length && !LM.length && !LN.length && !LS.length && !SET) throw new Error('文件中没有可导入的数据');
+      && !PO.length && !MA.length && !CO.length && !TP.length && !LM.length && !LN.length && !LS.length && !SET
+      && !CUSTOM) throw new Error('文件中没有可导入的数据');
 
     if (mode === 'replace') {
       DB.students = S.map(normStudent); DB.tasks = T.map(normTask); DB.talks = K.map(normTalk);
@@ -1421,7 +1506,7 @@ const bridge = {
       DB.focus = FO.map(normFocus); DB.psych = PS.map(normPsych); DB.graduate = GD.map(normGraduate);
       DB.policy = PO.map(normPolicy); DB.material = MA.map(normMaterial); DB.comp = CO.map(normComp); DB.tpl = TP.map(normTpl);
       DB.learning_materials = LM.map(normLearningMaterial); DB.learning_notes = LN.map(normLearningNote); DB.learning_sessions = LS.map(normLearningSession);
-      if (src.custom) DB.custom = src.custom;
+      if (CUSTOM) DB.custom = cloneData(CUSTOM);
     } else {
       const sKey = x => x.student_number || x.id;
       const map = new Map(DB.students.map(x => [sKey(x), x]));
@@ -1453,6 +1538,14 @@ const bridge = {
       DB.learning_materials = merge(DB.learning_materials, LM, normLearningMaterial);
       DB.learning_notes = merge(DB.learning_notes, LN, normLearningNote);
       DB.learning_sessions = merge(DB.learning_sessions, LS, normLearningSession);
+      if (CUSTOM) {
+        DB.custom = DB.custom && typeof DB.custom === 'object' && !Array.isArray(DB.custom) ? DB.custom : {};
+        Object.keys(CUSTOM).forEach(key => {
+          const incoming = Array.isArray(CUSTOM[key]) ? CUSTOM[key] : [];
+          const current = Array.isArray(DB.custom[key]) ? DB.custom[key] : [];
+          DB.custom[key] = merge(current, incoming, value => value && value.id ? value : Object.assign({ id:uid() }, value));
+        });
+      }
     }
     if (isPkg && src.counselor && !DB.settings.counselor_name) {
       DB.settings.counselor_name = src.counselor.name || '';
@@ -1513,6 +1606,11 @@ const bridge = {
 /* ===================== 8. 数据规范化 ===================== */
 function normStudent(x) {
   x = x || {};
+  const now = new Date().toISOString();
+  const knownStudentKeys = new Set(['id','student_number','full_name','gender','class_name','major_name','grade','college_name','counselor_name','enrollment_status','politics','phone','dorm','birthday','hometown','home_addr','parent_name','parent_phone','edu_years','nation','id_card','email','qq','dorm_building','dorm_room','academic_score','credits','class_rank','enrollment_date','graduation_date','emergency_contact','emergency_phone','photo_ids','photo_assets','custom_fields','custom_field_meta','focus','focus_level','crisis_level','crisis_way','crisis_relieved','note','created_at','updated_at','schema_version','_demo']);
+  const customFields = Object.assign({}, x.custom_fields && typeof x.custom_fields === 'object' ? x.custom_fields : {});
+  const customFieldMeta = Object.assign({}, x.custom_field_meta && typeof x.custom_field_meta === 'object' ? x.custom_field_meta : {});
+  Object.keys(x).forEach(key => { if (!knownStudentKeys.has(key) && !key.startsWith('_')) { customFields[key] = x[key]; customFieldMeta[key] = customFieldMeta[key] || { type:Array.isArray(x[key]) ? 'array' : typeof x[key], sensitive:/身份证|证件|电话|手机|地址|心理|政治|照片/i.test(key) }; } });
   return {
     id: x.id || uid(),
     student_number: String(x.student_number || '').trim(),
@@ -1537,6 +1635,19 @@ function normStudent(x) {
     id_card: x.id_card || '',
     email: x.email || '',
     qq: x.qq || '',
+    dorm_building: x.dorm_building || '',
+    dorm_room: x.dorm_room || '',
+    academic_score: x.academic_score == null ? '' : x.academic_score,
+    credits: x.credits == null ? '' : x.credits,
+    class_rank: x.class_rank == null ? '' : x.class_rank,
+    enrollment_date: x.enrollment_date || '',
+    graduation_date: x.graduation_date || '',
+    emergency_contact: x.emergency_contact || '',
+    emergency_phone: x.emergency_phone || '',
+    photo_ids: Array.isArray(x.photo_ids) ? x.photo_ids.map(String) : [],
+    photo_assets: Array.isArray(x.photo_assets) ? x.photo_assets : [],
+    custom_fields: customFields,
+    custom_field_meta: customFieldMeta,
     focus: Array.isArray(x.focus) ? x.focus : (x.focus ? String(x.focus).split(/[、,，\s]+/).filter(Boolean) : []),
     focus_level: x.focus_level || '',
     crisis_level: x.crisis_level || '',
@@ -1544,6 +1655,8 @@ function normStudent(x) {
     crisis_relieved: !!x.crisis_relieved,
     note: x.note || '',
     created_at: x.created_at || new Date().toISOString(),
+    updated_at: x.updated_at || now,
+    schema_version: 7,
     _demo: !!x._demo,
   };
 }
@@ -1899,7 +2012,7 @@ function normLearningSession(x) {
   };
 }
 
-const APP_VERSION = '3.9.0';
+const APP_VERSION = '4.0.0';
 
 /* ===================== 9. 示例数据（首次打开可见效果） ===================== */
 function seedDemo() {
@@ -2397,7 +2510,7 @@ const app = {
   bulk: { on: false, sel: new Set() },
   filters: {
     tasks:{ q:'', status:'open', duty:'' },
-    students:{ q:'', cls:'', focus:'' },
+    students:{ q:'', cls:'', focus:'', sort:'focus', mode:'table', tab:'ledger' },
     talks:{ q:'', duty:'' },
     stay:{ q:'', approval:'' },
     leave:{ q:'', delayed:'' },
@@ -2604,8 +2717,12 @@ function viewHome() {
         <span class="sp">当前展示的是<b>示例数据</b>（示例老师、张明、李思颖等），方便你先看效果。要录入自己的真实数据，可点右侧「清空示例数据」；清空后不会影响你之后录入的内容。</span>
         <button class="btn btn-sm" data-act="clear-demo">清空示例数据</button></div>` : '';
   const banner = backupBanner + demoBanner;
+  const pendingPhotos = typeof v4PhotoQueue === 'function' ? v4PhotoQueue().length : 0;
+  const pendingImportJobs = Array.isArray(app.v4 && app.v4.importJobs) ? app.v4.importJobs.filter(job => job && job.status !== 'completed').length : 0;
+  const recentImports = (app.v4 && Array.isArray(app.v4.importHistory)) ? app.v4.importHistory : (store.read('import_history', []) || []);
+  const workflow = `<div class="card"><div class="card-hd"><h2>工作流状态</h2><span class="sp"></span><span class="tiny">集中处理高频事项</span></div><div class="card-bd"><div class="v4-stat-row"><button class="v4-stat" data-view="photos"><span class="tiny">待确认照片</span><b>${pendingPhotos}</b></button><button class="v4-stat" data-view="backup"><span class="tiny">备份状态</span><b>${DB.settings.backup_schedule && DB.settings.backup_schedule.enabled ? '已启用' : '手动'}</b></button><button class="v4-stat" data-view="students"><span class="tiny">最近导入</span><b>${recentImports.length}</b></button><button class="v4-stat" data-act="v4-import-jobs"><span class="tiny">待处理导入</span><b>${pendingImportJobs}</b></button><button class="v4-stat" data-view="party"><span class="tiny">党建待办</span><b>${v4Collection('v4_party_cases').filter(item => (item.steps || []).some(step => step.status !== 'done')).length}</b></button></div></div></div>`;
 
-  return `${renderOnboarding()}${banner}
+  return `${renderOnboarding()}${banner}${workflow}
   <div class="today">
     <div class="today-hd">
       <h2><svg class="ic" style="color:var(--accent)"><use href="#i-sun"/></svg>今天要处理</h2>
@@ -2657,7 +2774,7 @@ function viewHome() {
     <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-chart"/></svg>近半年工作趋势</h2>
       <span class="sp"></span><span class="tiny">谈话次数 vs 新增任务</span></div>
     <div class="card-bd">
-      ${lineChart([
+      <div id="v4-trend-chart" style="height:230px" aria-label="趋势折线图"></div>${lineChart([
         { name: '谈话次数', color: '#2563eb', data: talksSeries },
         { name: '新增任务', color: '#f59e0b', data: tasksSeries },
       ], { labels: monthLabels })}
@@ -2691,7 +2808,7 @@ function homeStudentDonut() {
   return `<div class="card">
     <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-users"/></svg>学生关注结构</h2>
       <span class="sp"></span><span class="tiny">共 ${ss.length} 人 · 危机 ${crisis} · 关注 ${focusOnly}</span></div>
-    <div class="card-bd">${crisis || focusOnly ? donutChart(items, String(crisis + focusOnly), '需关注') : emptyBox('暂无重点关注学生，状态良好。')}</div>
+    <div class="card-bd"><div id="v4-donut-chart" style="height:220px" aria-label="学生关注结构图"></div>${crisis || focusOnly ? donutChart(items, String(crisis + focusOnly), '需关注') : emptyBox('暂无重点关注学生，状态良好。')}</div>
   </div>`;
 }
 function warnDonut() {
@@ -2732,7 +2849,52 @@ function homeInsights() {
         <div class="insight-note">${esc(c.note)}</div>
       </div>`).join('')}
     </div>
-  </div>`;
+  </div>${v4Heatmap()}`;
+}
+function v4Heatmap() {
+  const students = DB.students || [];
+  const groups = [...new Set(students.map(s => s.dorm_building || '未分配楼栋'))].slice(0, 12);
+  const levels = ['重点关注', '学业预警', '谈话记录'];
+  const cells = groups.flatMap(group => levels.map(level => {
+    const count = students.filter(s => (s.dorm_building || '未分配楼栋') === group && (level === '重点关注' ? s.focus_level : level === '学业预警' ? s.crisis_level : DB.talks.some(t => t.student_id === s.id || t.student_number === s.student_number))).length;
+    const intensity = Math.min(5, count);
+    return `<button class="v4-heat-cell heat-${intensity}" data-act="v4-heat-filter" data-heat-building="${esc(group)}" data-heat-level="${esc(level)}" title="${esc(group)} · ${esc(level)}：${count} 人"><span>${count}</span></button>`;
+  })).join('');
+  return `<div class="card"><div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-chart"/></svg>楼栋学情热力</h2><span class="sp"></span><span class="tiny">点击单元格查看学生明细</span></div><div class="card-bd"><div id="v4-heatmap-chart" style="height:210px" aria-label="楼栋学情热力图"></div><div class="v4-heat-grid" data-v4-heat-fallback style="grid-template-columns:repeat(${Math.max(1, groups.length)},minmax(72px,1fr))">${cells || '<span class="muted">暂无学生数据</span>'}</div><div class="tiny" style="margin-top:8px">${groups.map(esc).join(' · ') || '暂无楼栋'}；行维度：重点关注 / 学业预警 / 谈话记录</div></div></div>`;
+}
+function initV4Charts() {
+  if (!window.echarts) return;
+  try { const probe = document.createElement('canvas'); if (!probe.getContext || !probe.getContext('2d')) return; } catch (_) { return; }
+  const trendEl = $('#v4-trend-chart');
+  if (trendEl) {
+    const months = lastMonths(6); const labels = months.map(m => `${parseInt(m.slice(5), 10)}月`); const talks = months.map(m => DB.talks.filter(t => monthOf(t.date) === m).length); const tasks = months.map(m => DB.tasks.filter(t => monthOf((t.created_at || '').slice(0, 10)) === m).length);
+    const trend = window.echarts.init(trendEl); trend.setOption({ animation:false, tooltip:{ trigger:'axis' }, legend:{ data:['谈话次数','新增任务'] }, grid:{ left:36, right:16, top:28, bottom:24 }, xAxis:{ type:'category', data:labels }, yAxis:{ type:'value', minInterval:1 }, series:[{ name:'谈话次数', type:'line', smooth:true, data:talks, itemStyle:{ color:'#2563eb' } }, { name:'新增任务', type:'line', smooth:true, data:tasks, itemStyle:{ color:'#f59e0b' } }] });
+    trend.off('click'); trend.on('click', params => { const month = months[Number(params && params.dataIndex)]; const kind = params && params.seriesName === '谈话次数' ? 'talks' : 'tasks'; if (!month) return; app.v4 = Object.assign({}, app.v4 || {}, { chartDrill:{ kind, month } }); go(kind); ui.toast(`已下钻到 ${month} 的${kind === 'talks' ? '谈话' : '任务'}明细`, 'ok', 1800); });
+  }
+  const donutEl = $('#v4-donut-chart');
+  if (donutEl) {
+    const students = DB.students || []; const crisis = students.filter(s => s.crisis_level && !s.crisis_relieved).length; const focus = students.filter(s => s.focus_level && !(s.crisis_level && !s.crisis_relieved)).length; const normal = Math.max(0, students.length - crisis - focus);
+    const donut = window.echarts.init(donutEl); donut.setOption({ animation:false, tooltip:{ trigger:'item' }, legend:{ bottom:0 }, series:[{ type:'pie', radius:['48%','72%'], avoidLabelOverlap:true, label:{ show:false }, data:[{ name:'心理危机未解除', value:crisis, itemStyle:{ color:'#ef4444' } }, { name:'重点关注', value:focus, itemStyle:{ color:'#f59e0b' } }, { name:'其余在读', value:normal, itemStyle:{ color:'#2563eb' } }] }] });
+    donut.off('click'); donut.on('click', params => { if (params && params.name === '重点关注') { app.filters.students = Object.assign({}, app.filters.students, { focus:'__any' }); go('students'); } if (params && params.name === '心理危机未解除') { app.filters.students = Object.assign({}, app.filters.students, { focus:'__crisis' }); go('students'); } });
+  }
+  const el = $('#v4-heatmap-chart'); if (!el) return;
+  const students = DB.students || []; const groups = [...new Set(students.map(s => s.dorm_building || '未分配楼栋'))].slice(0, 12); const levels = ['重点关注', '学业预警', '谈话记录'];
+  const data = []; groups.forEach((group, x) => levels.forEach((level, y) => { const count = students.filter(s => (s.dorm_building || '未分配楼栋') === group && (level === '重点关注' ? s.focus_level : level === '学业预警' ? s.crisis_level : DB.talks.some(t => t.student_id === s.id || t.student_number === s.student_number))).length; data.push([x, y, count]); }));
+  const chart = window.echarts.init(el); chart.setOption({ animation:false, grid:{left:84,right:12,top:10,bottom:36}, tooltip:{position:'top',formatter:p => `${esc(groups[p.value[0]] || '')} · ${esc(levels[p.value[1]] || '')}：${p.value[2]} 人`}, xAxis:{type:'category',data:groups,axisLabel:{interval:0,rotate:groups.length > 5 ? 28 : 0}}, yAxis:{type:'category',data:levels}, visualMap:{min:0,max:Math.max(1,...data.map(x => x[2])),calculable:false,orient:'horizontal',left:'center',bottom:0,inRange:{color:['#eef3f7','#b5e1e2','#2c9aa8','#0f6b82']}}, series:[{type:'heatmap',data,emphasis:{itemStyle:{shadowBlur:8,shadowColor:'rgba(15,107,130,.35)'}}}] });
+  chart.off('click'); chart.on('click', params => { if (params && params.value) { const level = levels[params.value[1]]; const next = { q:groups[params.value[0]] || '' }; if (level === '重点关注') next.focus = '__any'; if (level === '学业预警') next.focus = '__crisis'; app.filters.students = Object.assign({}, app.filters.students, next); go('students'); } });
+  const fallback = $('[data-v4-heat-fallback]'); if (fallback) fallback.hidden = true;
+}
+function initV4VirtualLists() {
+  if (typeof IntersectionObserver !== 'function') return;
+  document.querySelectorAll('[data-v4-virtual-list]').forEach(root => {
+    if (root.dataset.virtualReady === 'true') return;
+    root.dataset.virtualReady = 'true';
+    const items = root.querySelectorAll('tbody tr, .mcard, .v4-photo-card');
+    const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+      entry.target.style.contentVisibility = entry.isIntersecting ? 'visible' : 'auto';
+    }), { rootMargin:'800px 0px' });
+    items.forEach(item => observer.observe(item));
+  });
 }
 function dutyBars(range) {
   const st = bridge.stats({ from: range.from, to: range.to });
@@ -2747,7 +2909,9 @@ function dutyBars(range) {
 /* ---------- 11.4 工作任务 ---------- */
 function filterTasks() {
   const f = app.filters.tasks;
+  const chartMonth = app.v4 && app.v4.chartDrill && app.v4.chartDrill.kind === 'tasks' ? app.v4.chartDrill.month : '';
   return DB.tasks.filter(t => {
+    if (chartMonth && monthOf((t.created_at || t.due || '').slice(0, 7)) !== chartMonth) return false;
     if (f.status === 'open' && t.status === 'done') return false;
     if (f.status === 'done' && t.status !== 'done') return false;
     if (f.duty && t.duty !== f.duty) return false;
@@ -2851,9 +3015,11 @@ function filterStudents() {
     }
     return true;
   }).sort((a, b) => {
-    const la = a.focus_level || 'Z', lb = b.focus_level || 'Z';
-    if (la !== lb) return la < lb ? -1 : 1;
-    return (a.student_number || '') < (b.student_number || '') ? -1 : 1;
+    const key = f.sort || 'focus';
+    if (key === 'score') return Number(b.score || b.gpa || 0) - Number(a.score || a.gpa || 0);
+    const values = { focus:[a.focus_level || 'Z', b.focus_level || 'Z'], student_number:[a.student_number || '', b.student_number || ''], full_name:[a.full_name || '', b.full_name || ''], class_name:[a.class_name || '', b.class_name || ''], dorm:[a.dorm || '', b.dorm || ''], dorm_building:[a.dorm_building || '', b.dorm_building || ''], origin:[a.origin || a.birthplace || '', b.origin || b.birthplace || ''] };
+    const pair = values[key] || values.focus;
+    return String(pair[0]).localeCompare(String(pair[1]), 'zh-CN');
   });
 }
 function lastTalkOf(s) {
@@ -2861,13 +3027,41 @@ function lastTalkOf(s) {
     .map(x => x.date).sort();
   return t.length ? t[t.length - 1] : '';
 }
+function studentWorkspaceTabs(active) {
+  const current = ['ledger', 'photos', 'analysis'].includes(active) ? active : 'ledger';
+  const labels = { ledger:'学生台账', photos:'照片管理', analysis:'数据分析' };
+  return `<div class="workspace-tabs" role="tablist" aria-label="学生台账功能"><div class="workspace-tabs-inner">${Object.entries(labels).map(([key, label]) => `<button class="workspace-tab${current === key ? ' on' : ''}" role="tab" aria-selected="${current === key}" data-student-tab="${key}">${label}</button>`).join('')}</div></div>`;
+}
+function viewStudentsAnalysis() {
+  const students = DB.students || [];
+  const classes = [...new Set(students.map(s => s.class_name).filter(Boolean))];
+  const buildings = [...new Set(students.map(s => s.dorm_building).filter(Boolean))];
+  const focus = students.filter(s => s.focus_level).length;
+  const crisis = students.filter(s => s.crisis_level && !s.crisis_relieved).length;
+  const normal = Math.max(0, students.length - focus - crisis);
+  const byClass = classes.slice(0, 8).map(name => ({ name, value:students.filter(s => s.class_name === name).length }));
+  const byBuilding = buildings.slice(0, 8).map(name => ({ name, value:students.filter(s => s.dorm_building === name).length }));
+  const chartRows = byClass.map(item => `<button class="analysis-bar" data-v4-analysis-chart="class" data-analysis-value="${esc(item.name)}" title="${esc(item.name)}：${item.value} 人"><span>${esc(item.name)}</span><i style="width:${Math.max(4, Math.round(item.value / Math.max(1, students.length) * 100))}%"></i><b>${item.value}</b></button>`).join('');
+  const heatRows = byBuilding.map(item => `<button class="analysis-heat" data-v4-analysis-chart="building" data-analysis-value="${esc(item.name)}"><span>${esc(item.name)}</span><b>${item.value}</b></button>`).join('');
+  return `${studentWorkspaceTabs('analysis')}<div class="card"><div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-chart"/></svg>学生数据分析</h2><span class="sp"></span><span class="tiny">点击图表单元格下钻到学生明细</span></div><div class="card-bd"><div class="analysis-kpis"><div><span>学生总数</span><b>${students.length}</b></div><div><span>重点关注</span><b>${focus}</b></div><div><span>风险预警</span><b>${crisis}</b></div><div><span>常规学生</span><b>${normal}</b></div></div><div class="analysis-grid"><section class="analysis-panel"><h3>班级分布</h3><div id="students-analysis-class" data-v4-analysis-chart="class" role="img" aria-label="班级分布图">${chartRows || '<span class="empty">暂无班级数据</span>'}</div></section><section class="analysis-panel"><h3>楼栋分布</h3><div id="students-analysis-building" data-v4-analysis-chart="building" role="img" aria-label="楼栋分布图">${heatRows || '<span class="empty">暂无楼栋数据</span>'}</div></section></div><div class="banner banner-info">图表只改变学生台账筛选条件，不会修改数据；如浏览器未加载图表库，仍可使用上方可访问的明细按钮。</div></div></div>`;
+}
+function viewStudentsPhotosEmbedded() {
+  return `${studentWorkspaceTabs('photos')}<div data-parent-view="students">${viewPhotos({ embedded:true })}</div>`;
+}
 function viewStudents() {
   const f = app.filters.students, list = filterStudents();
+  const studentTab = ['ledger', 'photos', 'analysis'].includes(f.tab) ? f.tab : 'ledger';
+  if (studentTab === 'photos') return viewStudentsPhotosEmbedded();
+  if (studentTab === 'analysis') return viewStudentsAnalysis();
+  const studentMode = ['table', 'cards', 'photo'].includes(f.mode) ? f.mode : 'table';
+  const studentLimit = Math.max(100, Number(app.v4 && app.v4.studentLimit) || 300);
+  const renderList = list.slice(0, studentLimit);
   return `
-  <div class="card">
+  ${studentWorkspaceTabs('ledger')}<div class="card">
     <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-users"/></svg>学生台账</h2>
       <span class="sp"></span>
       <button class="btn btn-sm" data-act="student-import"><svg class="ic ic-sm"><use href="#i-up"/></svg>导入 CSV</button>
+      <button class="btn btn-sm" data-act="v4-import-jobs">待处理导入</button>
       <button class="btn btn-sm" data-act="student-export"><svg class="ic ic-sm"><use href="#i-down"/></svg>导出 CSV</button>
       <button class="btn btn-sm" data-act="student-export-sensitive"><svg class="ic ic-sm"><use href="#i-lock"/></svg>敏感导出</button>
       <button class="btn btn-primary btn-sm" data-act="student-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增学生</button>
@@ -2885,12 +3079,12 @@ function viewStudents() {
         <option value="__crisis"${f.focus === '__crisis' ? ' selected' : ''}>仅危机预警</option>
         ${FOCUS.map(x => `<option value="${x.k}"${f.focus === x.k ? ' selected' : ''}>${esc(x.n)}</option>`).join('')}
       </select>
-      <span class="tiny" style="margin-left:auto">共 ${list.length} 人 · 重点关注 ${DB.students.filter(s => s.focus_level).length} 人</span>
+      <button class="btn btn-sm${studentMode === 'table' ? ' btn-primary' : ''}" data-filter-set="students.mode" data-v="table">表格</button><button class="btn btn-sm${studentMode === 'cards' ? ' btn-primary' : ''}" data-filter-set="students.mode" data-v="cards">卡片</button><button class="btn btn-sm${studentMode === 'photo' ? ' btn-primary' : ''}" data-filter-set="students.mode" data-v="photo">照片</button><select class="inp" style="width:auto" data-filter="students.sort"><option value="focus"${(f.sort || 'focus') === 'focus' ? ' selected' : ''}>按关注等级</option><option value="student_number"${f.sort === 'student_number' ? ' selected' : ''}>按学号</option><option value="full_name"${f.sort === 'full_name' ? ' selected' : ''}>按姓名</option><option value="class_name"${f.sort === 'class_name' ? ' selected' : ''}>按班级</option><option value="dorm"${f.sort === 'dorm' ? ' selected' : ''}>按宿舍</option><option value="dorm_building"${f.sort === 'dorm_building' ? ' selected' : ''}>按楼栋</option><option value="origin"${f.sort === 'origin' ? ' selected' : ''}>按生源地</option><option value="score"${f.sort === 'score' ? ' selected' : ''}>按成绩</option></select><span class="tiny" style="margin-left:auto">共 ${list.length} 人 · 当前显示 ${renderList.length} · 重点关注 ${DB.students.filter(s => s.focus_level).length} 人</span>
     </div>
     ${list.length ? `
-    <div class="tw"><table>
+    <div class="tw" data-v4-virtual-list data-student-layout="table" style="${studentMode === 'table' ? '' : 'display:none'}"><table>
       <thead><tr><th>学生</th><th>学号</th><th>班级</th><th>关注等级</th><th>关注类型</th><th>危机预警</th><th>最近谈话</th><th>宿舍</th><th class="td-acts">操作</th></tr></thead>
-      <tbody>${list.map(s => {
+      <tbody>${renderList.map(s => {
         const L = LEVEL_MAP[s.focus_level], lt = lastTalkOf(s);
         const gap = lt ? -daysFromToday(lt) : null;
         const late = L && L.days && (gap === null || gap > L.days);
@@ -2910,7 +3104,7 @@ function viewStudents() {
             <button class="link-btn" data-act="talk-new-student" data-id="${s.id}" style="margin-left:8px">谈话</button>
             <button class="link-btn danger" data-act="student-del" data-id="${s.id}" style="margin-left:8px">删除</button></td>
         </tr>`; }).join('')}</tbody></table></div>
-    <div class="mcards">${list.map(s => {
+    <div class="mcards" data-v4-virtual-list data-student-layout="cards" style="${studentMode === 'cards' ? '' : 'display:none'}">${renderList.map(s => {
       const L = LEVEL_MAP[s.focus_level], lt = lastTalkOf(s), gap = lt ? -daysFromToday(lt) : null;
       const late = L && L.days && (gap === null || gap > L.days);
       return `<div class="mcard"${late ? ' style="background:var(--danger-soft)"' : ''}>
@@ -2923,9 +3117,11 @@ function viewStudents() {
         <div class="mcard-acts">
           <button class="btn btn-sm" data-act="student-view" data-id="${s.id}">档案</button>
           <button class="btn btn-sm btn-primary" data-act="talk-new-student" data-id="${s.id}">记谈话</button>
-        </div></div>`; }).join('')}</div>`
+        </div></div>`; }).join('')}</div>
+    <div class="v4-photo-grid" data-v4-virtual-list data-student-layout="photo" style="${studentMode === 'photo' ? '' : 'display:none'}">${renderList.map(s => { const src = v4PhotoSrc(s); return '<article class="v4-photo-card"><button class="v4-photo" data-act="student-view" data-id="' + esc(s.id) + '">' + (src ? '<img src="' + esc(src) + '" alt="' + esc(s.full_name) + '" loading="lazy">' : esc((s.full_name || '?').slice(0, 1))) + '</button><div class="v4-photo-meta"><strong>' + esc(s.full_name) + '</strong><small>' + esc(s.student_number) + ' · ' + esc(s.class_name) + '</small></div></article>'; }).join('') || '<div class="empty">暂无学生</div>'}</div>`
     : emptyBox('还没有学生数据', `<button class="btn btn-primary btn-sm" data-act="student-import">从 CSV 导入</button>
         <button class="btn btn-sm" data-act="student-new" style="margin-left:8px">手动新增</button>`)}
+    ${list.length > renderList.length ? `<div style="text-align:center;margin:16px 0"><button class="btn" data-act="v4-students-more">鍔犺浇鏇村锛堝凡鏄剧ず ${renderList.length}/${list.length}锛�</button></div>` : ''}
   </div>
   <div class="banner banner-info"><svg class="ic ic-sm"><use href="#i-link"/></svg>
     <span class="sp">CSV 表头与服务端「辅导员工作平台」字段一致（student_number / full_name / class_name …），
@@ -2936,7 +3132,9 @@ function viewStudents() {
 /* ---------- 11.6 谈心谈话 ---------- */
 function filterTalks() {
   const f = app.filters.talks;
+  const chartMonth = app.v4 && app.v4.chartDrill && app.v4.chartDrill.kind === 'talks' ? app.v4.chartDrill.month : '';
   return DB.talks.filter(t => {
+    if (chartMonth && monthOf((t.date || '').slice(0, 7)) !== chartMonth) return false;
     if (f.duty && t.duty !== f.duty) return false;
     if (f.q) {
       const s = (t.student_name + t.summary + t.judge + t.action + t.student_number).toLowerCase();
@@ -3794,6 +3992,7 @@ function filterGraduate() {
   });
 }
 function viewGraduate() {
+  if ((app.graduateTab || 'records') === 'employment') return workspaceTabs('graduate', 'employment', [{ key:'records', label:'就业台账' }, { key:'employment', label:'就业资源' }]) + viewEmployment();
   const f = app.filters.graduate, list = filterGraduate();
   const total = list.length;
   const employed = list.filter(s => s.employment_status !== '待就业' && s.employment_status !== '暂不就业').length;
@@ -4014,6 +4213,7 @@ function tplTypeTag(t) {
   return `<span class="tag ${m[t] || 'tag'}">${esc(t || '通知')}</span>`;
 }
 function viewTpl() {
+  if ((app.tplTab || 'templates') === 'files') return workspaceTabs('tpl', 'files', [{ key:'templates', label:'模板库' }, { key:'files', label:'分类文件库' }]) + viewFiles();
   const f = app.filters.tpl;
   const list = DB.tpl.filter(s => {
     const q = f.q.trim();
@@ -4068,7 +4268,13 @@ function reportRange() {
   if (r.mode === 'custom' && r.from && r.to) return { name:`${r.from} ~ ${r.to}`, from:r.from, to:r.to };
   return termRange();
 }
+function workspaceTabs(parent, active, tabs) {
+  return `<div class="workspace-tabs" role="tablist" aria-label="${esc(parent)}扩展功能"><div class="workspace-tabs-inner">${tabs.map(tab => `<button class="workspace-tab${active === tab.key ? ' on' : ''}" role="tab" aria-selected="${active === tab.key}" data-workspace-parent="${parent}" data-workspace-tab="${tab.key}">${esc(tab.label)}</button>`).join('')}</div></div>`;
+}
 function viewReport() {
+  const reportTab = app.reportTab || 'records';
+  if (reportTab === 'org') return workspaceTabs('report', reportTab, [{ key:'records', label:'工作留痕' }, { key:'org', label:'班团组织' }, { key:'party', label:'党员发展' }]) + viewOrg();
+  if (reportTab === 'party') return workspaceTabs('report', reportTab, [{ key:'records', label:'工作留痕' }, { key:'org', label:'班团组织' }, { key:'party', label:'党员发展' }]) + viewParty();
   const R = reportRange(), st = bridge.stats({ from:R.from, to:R.to });
   const mode = (app.reportRange || {}).mode || 'term';
   const talks = DB.talks.filter(t => t.date >= R.from && t.date <= R.to);
@@ -4179,12 +4385,13 @@ function buildSummary(R) {
 
 /* ---------- 11.11 平台联动 ---------- */
 function viewBridge() {
+  if ((app.bridgeTab || 'status') === 'backup') return workspaceTabs('bridge', 'backup', [{ key:'status', label:'平台联动' }, { key:'backup', label:'备份迁移' }]) + viewBackupV4();
   const s = DB.settings;
   const health = storage.health();
   const capabilities = storage.capabilities();
   const healthLabel = health.level === 'critical' ? '空间紧张' : health.level === 'warn' ? '建议备份' : '状态良好';
   const healthClass = health.level === 'critical' ? 'banner-warn' : 'banner-info';
-  const importHistory = (store.read('import_history', []) || []).slice().reverse();
+  const importHistory = ((app.v4 && Array.isArray(app.v4.importHistory)) ? app.v4.importHistory : (store.read('import_history', []) || [])).slice().reverse();
   const importLabels = { students:'学生名单', tasks:'工作任务', talks:'谈心谈话', stay:'校外住宿', leave:'假期去向', honor:'评优榜样', pleave:'请销假', attend:'考勤台账', node:'工作节点', warn:'学业预警', help:'学业帮扶', grant:'奖助勤补', focus:'重点学生档案', psych:'心理摸排', graduate:'毕业生档案', policy:'政策智库', material:'工作素材', comp:'科创竞赛', tpl:'模板库' };
   const fields = Object.keys(schema.student).map(k => {
     const f = schema.student[k];
@@ -4855,7 +5062,7 @@ function openSettings() {
       { key:'platform_url', label:'平台地址（选填）' },
     ],
     extra: `<div class="settings-section"><div class="sub-hd"><svg class="ic ic-sm"><use href="#i-sun"/></svg>界面个性化</div><div class="grid2"><div class="form-row"><label class="lab">配色方案</label><select class="inp" id="settings-preset">${Object.entries(THEME_PRESETS).map(([k,p]) => `<option value="${k}">${p.label}</option>`).join('')}</select></div><div class="form-row"><label class="lab">背景透明度 <span id="settings-opacity-value" class="tiny"></span></label><input class="inp" id="settings-opacity" type="range" min="0" max="0.35" step="0.01"></div></div><div class="form-row"><label class="lab">背景图片</label><input class="inp" id="settings-background" type="file" accept="image/*"><div class="hint">支持最大 4MB 的 JPG、PNG、WebP 等图片；过大的图片会在本机自动压缩后保存，透明度最高 35%。</div></div><button class="btn btn-sm" type="button" data-theme-reset>恢复默认外观</button><button class="btn btn-sm" type="button" data-onboarding-reset style="margin-left:8px">重新查看首次引导</button></div><div class="settings-section"><div class="sub-hd"><svg class="ic ic-sm"><use href="#i-lock"/></svg>登录锁与敏感操作</div><div class="hint" style="margin-bottom:8px">这是界面访问锁，不是数据库加密。浏览器存储中的数据仍可能被技术手段读取。</div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-sm" type="button" data-security-set>设置 / 修改密码</button><button class="btn btn-sm" type="button" data-security-lock>立即上锁</button><button class="btn btn-sm btn-danger" type="button" data-security-disable>关闭登录锁</button></div></div>`,
-    extraBtn: `<button class="btn btn-danger btn-sm" data-clear style="margin-right:auto">清空全部数据</button>`,
+    extraBtn: `<button class="btn btn-sm" data-act="v4-modules-config" style="margin-right:8px">管理模块入口</button><button class="btn btn-danger btn-sm" data-clear style="margin-right:auto">清空全部数据</button>`,
     onOpen(mask, close) {
       ensureV39Settings();
       const preset = $('#settings-preset', mask); const opacity = $('#settings-opacity', mask); const opacityValue = $('#settings-opacity-value', mask);
@@ -4976,6 +5183,16 @@ const STU_SYNONYMS = [
   { field:'qq', keys:['qq','qq号','qq号码'] },
   // 备注
   { field:'note', keys:['备注','说明','remark','note','notes'] },
+  // v4.0 extended identity/contact/academic/residence fields
+  { field:'dorm_building', keys:['楼栋','宿舍楼','公寓楼','building','dorm building','dorm_building'] },
+  { field:'dorm_room', keys:['房间号','宿舍号','room','room number','dorm room','dorm_room'] },
+  { field:'academic_score', keys:['学业成绩','平均分','绩点','成绩','academic score','gpa','score'] },
+  { field:'credits', keys:['学分','已修学分','credits','credit'] },
+  { field:'class_rank', keys:['班级排名','班排名','class rank','rank'] },
+  { field:'enrollment_date', keys:['入学日期','入学时间','enrollment date','enrolled at'] },
+  { field:'graduation_date', keys:['毕业日期','预计毕业','graduation date','graduation'] },
+  { field:'emergency_contact', keys:['紧急联系人','应急联系人','emergency contact'] },
+  { field:'emergency_phone', keys:['紧急联系电话','应急电话','emergency phone'] },
 ];
 
 /* 将原始表头转为内部字段名（找不到则原样小写） */
@@ -5102,7 +5319,22 @@ function stuNormalizeRow(o) {
     email: o.email ? String(o.email).trim() : '',
     qq: o.qq ? String(o.qq).trim() : '',
     note: o.note ? String(o.note).trim() : '',
+    dorm_building: o.dorm_building ? String(o.dorm_building).trim() : '',
+    dorm_room: o.dorm_room ? String(o.dorm_room).trim() : '',
+    academic_score: o.academic_score != null && o.academic_score !== '' ? stuNum(o.academic_score, '') : '',
+    credits: o.credits != null && o.credits !== '' ? stuNum(o.credits, '') : '',
+    class_rank: o.class_rank != null && o.class_rank !== '' ? stuNum(o.class_rank, '') : '',
+    enrollment_date: o.enrollment_date ? String(o.enrollment_date).trim() : '',
+    graduation_date: o.graduation_date ? String(o.graduation_date).trim() : '',
+    emergency_contact: o.emergency_contact ? String(o.emergency_contact).trim() : '',
+    emergency_phone: o.emergency_phone ? String(o.emergency_phone).trim() : '',
   };
+  const known = new Set(Object.keys(out).concat(['id','created_at','updated_at','schema_version','custom_fields','custom_field_meta']));
+  out.custom_fields = Object.assign({}, o.custom_fields || {});
+  out.custom_field_meta = Object.assign({}, o.custom_field_meta || {});
+  Object.keys(o || {}).forEach(key => {
+    if (!known.has(key) && key && !key.startsWith('_')) { out.custom_fields[key] = o[key]; out.custom_field_meta[key] = out.custom_field_meta[key] || { type:Array.isArray(o[key]) ? 'array' : typeof o[key], sensitive:/身份证|证件|电话|手机|地址|心理|政治|照片/i.test(key) }; }
+  });
   return out;
 }
 
@@ -5222,6 +5454,30 @@ function impCoerce(cfg, o, blockedFields) {
     if (!(f in o) || blocked.has(f)) return;
     const v = String(o[f]).replace(/[^\d.\-]/g, '');
     o[f] = v === '' ? '' : Number(v);
+  });
+}
+let cwbImportWorkerUrl = '';
+let cwbImportWorkerSeq = 0;
+function runImportWorker(buffer, request) {
+  const sourceNode = document.getElementById('cwb-import-worker-source');
+  const source = sourceNode && sourceNode.textContent.trim();
+  if (typeof Worker === 'undefined') return Promise.resolve(null);
+  if (!source) {
+    if (location.protocol === 'file:') cwbImportWorkerUrl = 'src/core/import-worker.js';
+    else return Promise.resolve(null);
+  } else if (!cwbImportWorkerUrl) cwbImportWorkerUrl = URL.createObjectURL(new Blob([source], { type:'text/javascript' }));
+  return new Promise((resolve, reject) => {
+    const worker = new Worker(cwbImportWorkerUrl);
+    const id = `import_${Date.now()}_${++cwbImportWorkerSeq}`;
+    const finish = (callback, value) => { worker.terminate(); callback(value); };
+    worker.onmessage = event => {
+      const value = event.data || {};
+      if (value.id !== id) return;
+      if (value.ok) finish(resolve, value); else finish(reject, new Error(value.error || 'IMPORT_WORKER_FAILED'));
+    };
+    worker.onerror = error => finish(reject, error.error || new Error(error.message || 'IMPORT_WORKER_FAILED'));
+    try { const transferable = buffer.slice(0); worker.postMessage(Object.assign({}, request, { id, buffer:transferable }), [transferable]); }
+    catch (error) { finish(reject, error); }
   });
 }
 /* 下载空白模板：表头 + 一行示例，用户填好后原样导回 */
@@ -5355,20 +5611,32 @@ function importMappedRows(text, collection, options) {
   const headers = parsed[0] || [];
   const target = importTarget(headers, collection);
   const manual = opts.mapping || {};
-  const mapped = headers.map((h, index) => {
+  let mapped = headers.map((h, index) => {
     if (Array.isArray(opts.mappingByIndex) && index < opts.mappingByIndex.length) return opts.mappingByIndex[index] || '';
     if (Object.prototype.hasOwnProperty.call(manual, h)) return manual[h] || '';
     return target === 'students' ? stuHeaderToField(h) : genericImportHeaderToField(h, IMP[target]);
   });
   const known = target === 'students' ? STUDENT_IMPORT_SCHEMA.fields : IMPORT_SCHEMAS[target].fields;
-  const unknownColumns = headers.filter((h, i) => !mapped[i] || !known[mapped[i]]);
+  const customFields = {};
+  if (target === 'students') {
+    mapped = mapped.map((field, index) => {
+      if (field && known[field]) return field;
+      if (field && opts.customFields && opts.customFields[field]) { customFields[field] = cloneData(opts.customFields[field]); return field; }
+      const label = String(headers[index] || `自定义字段${index + 1}`).trim() || `自定义字段${index + 1}`;
+      const base = `custom_${genericHeaderKey(label).replace(/[^\w\u4e00-\u9fff]/g, '').slice(0, 36) || 'field'}_${index + 1}`;
+      customFields[base] = { label, type: 'string', sensitive: /身份证|证件|电话|手机|地址|心理|政治|照片/i.test(label) };
+      return base;
+    });
+  }
+  const unknownColumns = headers.filter((h, i) => !known[mapped[i]]);
   const duplicateColumns = Array.from(new Set(mapped.filter((field, index) => field && mapped.indexOf(field) !== index)));
   const rows = parsed.slice(1).map((source, index) => {
     const value = {};
-    mapped.forEach((field, i) => { if (field && known[field] && !(field in value)) value[field] = String(source[i] == null ? '' : source[i]).trim(); });
+    mapped.forEach((field, i) => { if (field && (known[field] || (target === 'students' && customFields[field])) && !(field in value)) value[field] = String(source[i] == null ? '' : source[i]).trim(); });
+    if (target === 'students' && Object.keys(customFields).length) value.custom_field_meta = cloneData(customFields);
     return { rowNumber:index + 2, value, status:'ready', errors:[], action:'add' };
   });
-  return { headers, mapped, rows, target, unknownColumns, duplicateColumns };
+  return { headers, mapped, rows, target, unknownColumns, duplicateColumns, customFields };
 }
 function previewImportText(text, collection, meta) {
   const parsed = importMappedRows(text, collection, meta);
@@ -5389,9 +5657,10 @@ function previewImportText(text, collection, meta) {
     if (target === 'students') row.value = stuNormalizeRow(row.value);
     else impCoerce(cfg, row.value, blockedFields);
     Object.entries(row.value).forEach(([field, value]) => {
-      if (value !== '' && schemaDef.fields[field] && schemaDef.fields[field].sensitive) sensitive.add(field);
+      const fieldMeta = schemaDef.fields[field] || (parsed.customFields && parsed.customFields[field]);
+      if (value !== '' && fieldMeta && fieldMeta.sensitive) sensitive.add(field);
       const error = target === 'students' ? importValidation(field, value) : '';
-      if (error) row.errors.push(`${schemaDef.fields[field].label}：${error}`);
+      if (error) row.errors.push(`${fieldMeta && fieldMeta.label || field}：${error}`);
     });
     if (target === 'students') {
       if (!row.value.student_number || !row.value.full_name) {
@@ -5440,7 +5709,7 @@ function previewImportText(text, collection, meta) {
     id:uid(), coll:target, collection:target, label:schemaDef.label,
     source:Object.assign({ kind:'csv', name:'', encoding:'utf-8', sheet:'', headerRow:1 }, meta || {}),
     headers:parsed.headers, mapped:parsed.mapped, mappings:parsed.mapped,
-    unknownColumns:parsed.unknownColumns, duplicateColumns:parsed.duplicateColumns, sensitiveFields:Array.from(sensitive), rows:parsed.rows,
+    unknownColumns:parsed.unknownColumns, duplicateColumns:parsed.duplicateColumns, customFields:parsed.customFields || {}, sensitiveFields:Array.from(sensitive), rows:parsed.rows,
     total:parsed.rows.length, valid:summary.ready, skipped:summary.pending + summary.invalid + summary.conflict + summary.skipped,
     summary,
   };
@@ -5474,6 +5743,13 @@ function previewWithSavedPreset(text, coll, options) {
 function importCollectionCSV(coll, text) {
   const preview = importer.previewCSV(text, coll);
   return importer.commitPreview(preview.id, { skipInvalid:true, conflictPolicy:'skip' });
+}
+async function hashImportBuffer(buffer) {
+  try {
+    if (!window.crypto || !window.crypto.subtle) return '';
+    const digest = new Uint8Array(await window.crypto.subtle.digest('SHA-256', buffer));
+    return Array.from(digest, byte => byte.toString(16).padStart(2, '0')).join('');
+  } catch (_) { return ''; }
 }
 
 const importer = {
@@ -5509,9 +5785,22 @@ const importer = {
     const buffer = typeof file.arrayBuffer === 'function' ? await file.arrayBuffer() : await new Promise((resolve, reject) => {
       const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = () => reject(reader.error || new Error('文件读取失败')); reader.readAsArrayBuffer(file);
     });
+    const fileHash = opts.fileHash || await hashImportBuffer(buffer);
+    const workerResult = await runImportWorker(buffer, { kind:isExcel ? 'excel' : 'csv', sheetName:opts.sheetName || '', encoding:opts.encoding || 'auto' }).catch(() => null);
     if (!isExcel) {
+      if (workerResult && typeof workerResult.text === 'string') {
+        const preview = previewWithSavedPreset(workerResult.text, coll, Object.assign({}, opts, { kind:'csv', name, fileHash, encoding:workerResult.encoding || opts.encoding || 'utf-8' }));
+        this._previews.set(preview.id, preview); return preview;
+      }
       const decoded = this.decodeCSVBytes(new Uint8Array(buffer), opts.encoding || 'auto');
-      const preview = previewWithSavedPreset(decoded.text, coll, Object.assign({}, opts, { kind:'csv', name, encoding:decoded.encoding }));
+      const preview = previewWithSavedPreset(decoded.text, coll, Object.assign({}, opts, { kind:'csv', name, fileHash, encoding:decoded.encoding }));
+      this._previews.set(preview.id, preview); return preview;
+    }
+    if (workerResult && Array.isArray(workerResult.rows)) {
+      const sheetName = workerResult.sheetName || opts.sheetName || '';
+      const detected = opts.headerRow ? { headerRow:opts.headerRow, score:0 } : this.detectHeaderRow(workerResult.rows, coll);
+      const preview = previewWithSavedPreset(rowsToCSV(workerResult.rows, false), coll, Object.assign({}, opts, { kind:'excel', name, fileHash, sheet:sheetName, headerRow:detected.headerRow, encoding:'worker' }));
+      preview.sheets = Array.isArray(workerResult.sheetNames) ? workerResult.sheetNames.slice() : [];
       this._previews.set(preview.id, preview); return preview;
     }
     await loadSheetJS();
@@ -5535,7 +5824,7 @@ const importer = {
       aoa = bestSheet ? bestSheet.rows : [];
       detected = opts.headerRow ? { headerRow:opts.headerRow, score:0 } : (bestSheet ? bestSheet.detected : { headerRow:1, score:0 });
     }
-    const preview = previewWithSavedPreset(rowsToCSV(aoa, false), coll, Object.assign({}, opts, { kind:'excel', name, sheet:sheetName, headerRow:detected.headerRow, encoding:'binary' }));
+    const preview = previewWithSavedPreset(rowsToCSV(aoa, false), coll, Object.assign({}, opts, { kind:'excel', name, fileHash, sheet:sheetName, headerRow:detected.headerRow, encoding:'binary' }));
     preview.sheets = workbook.SheetNames.slice();
     this._previews.set(preview.id, preview); return preview;
   },
@@ -5638,9 +5927,15 @@ function openImportPreview(preview, context) {
   const ctx = context || {};
   const schemaDef = preview.coll === 'students' ? STUDENT_IMPORT_SCHEMA : IMPORT_SCHEMAS[preview.coll];
   const stat = (label, value) => `<div class="import-stat"><span class="tiny">${label}</span><b>${value}</b></div>`;
-  const fieldOptions = header => `<option value="">暂不导入</option>` + Object.entries(schemaDef.fields).map(([field, meta]) => `<option value="${field}"${preview.mapped[preview.headers.indexOf(header)] === field ? ' selected' : ''}>${esc(meta.label)}${meta.sensitive ? ' · 敏感' : ''}</option>`).join('');
+  const fieldOptions = header => {
+    const index = preview.headers.indexOf(header);
+    const current = preview.mapped[index] || '';
+    const custom = Object.entries(preview.customFields || {}).map(([field, meta]) => `<option value="${esc(field)}"${current === field ? ' selected' : ''}>自定义 · ${esc(meta.label || field)}${meta.sensitive ? ' · 敏感' : ''}</option>`).join('');
+    return `<option value="">暂不导入</option>` + Object.entries(schemaDef.fields).map(([field, meta]) => `<option value="${field}"${current === field ? ' selected' : ''}>${esc(meta.label)}${meta.sensitive ? ' · 敏感' : ''}</option>`).join('') + custom;
+  };
   const rows = preview.rows.slice(0, 80).map(row => `<tr><td>${row.rowNumber}</td><td>${row.value.student_number || row.value.full_name || row.value.title || row.value.name || '—'}</td><td><span class="tag ${row.status === 'ready' ? 'tag-green' : row.status === 'conflict' ? 'tag-amber' : 'tag-red'}">${row.status}</span></td><td class="import-issue">${esc((row.errors || []).join('；'))}${row.status === 'conflict' && preview.coll === 'students' ? `<div><button class="btn btn-sm" data-import-use="${row.rowNumber}">采用此行</button></div>` : row.status === 'conflict' ? `<div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn btn-sm" data-import-decision="add" data-row="${row.rowNumber}">作为新增</button>${row.matchIds && row.matchIds.length === 1 ? `<button class="btn btn-sm" data-import-decision="update" data-row="${row.rowNumber}">更新匹配记录</button>` : ''}</div>` : ''}</td></tr>`).join('');
-  const sensitive = preview.sensitiveFields.length ? `<div class="import-sensitive"><label class="chk"><input type="checkbox" data-sensitive-confirm><span>文件包含敏感字段：${preview.sensitiveFields.map(field => schemaDef.fields[field].label).join('、')}。我已确认有必要在本机保存这些信息。</span></label></div>` : '';
+  const fieldLabel = field => (schemaDef.fields[field] || (preview.customFields && preview.customFields[field]) || { label:field }).label || field;
+  const sensitive = preview.sensitiveFields.length ? `<div class="import-sensitive"><label class="chk"><input type="checkbox" data-sensitive-confirm><span>文件包含敏感字段：${preview.sensitiveFields.map(fieldLabel).map(esc).join('、')}。我已确认有必要在本机保存这些信息。</span></label></div>` : '';
   const sourceControls = ctx.file ? `<div class="grid3" style="margin-bottom:12px">
     ${preview.source.kind === 'csv' ? `<div class="form-row"><label class="lab">文本编码</label><select class="inp" data-import-encoding><option value="auto">自动识别</option><option value="utf-8"${preview.source.encoding === 'utf-8' ? ' selected' : ''}>UTF-8</option><option value="gb18030"${preview.source.encoding === 'gb18030' ? ' selected' : ''}>GBK / GB18030</option></select></div>` : ''}
     ${preview.sheets ? `<div class="form-row"><label class="lab">Excel 工作表</label><select class="inp" data-import-sheet>${preview.sheets.map(name => `<option value="${esc(name)}"${name === preview.source.sheet ? ' selected' : ''}>${esc(name)}</option>`).join('')}</select></div>` : ''}
@@ -5649,8 +5944,9 @@ function openImportPreview(preview, context) {
   const body = `<div class="tiny" style="margin-bottom:10px">${esc(preview.source.name || '粘贴内容')} · ${esc(preview.source.sheet || 'CSV')} · ${esc(preview.source.encoding || 'utf-8')} · 表头第 ${preview.source.headerRow || 1} 行${preview.source.mappingPreset ? ` · 已套用“${esc(preview.source.mappingPreset)}”` : ''}</div>
     ${sourceControls}
     <div class="import-summary">${stat('可提交',preview.summary.ready)}${stat('新增',preview.summary.add)}${stat('更新',preview.summary.update)}${stat('待确认',preview.summary.pending)}${stat('冲突 / 错误',preview.summary.conflict + preview.summary.invalid)}</div>
-    ${preview.unknownColumns.length ? `<div class="banner banner-warn">未识别列将暂不导入：${preview.unknownColumns.map(esc).join('、')}</div>` : ''}
-    ${preview.duplicateColumns && preview.duplicateColumns.length ? `<div class="banner banner-warn">发现重复字段映射：${preview.duplicateColumns.map(field => esc(schemaDef.fields[field].label)).join('、')}。请保留一列或在映射中设为“暂不导入”。</div>` : ''}${sensitive}
+    <div class="import-progress" style="display:none;margin:12px 0" data-import-progress><div class="tiny" data-import-progress-label>等待导入</div><div class="v4-progress" style="margin-top:6px"><i data-import-progress-bar style="width:0%"></i></div><button class="btn btn-sm btn-danger" type="button" data-import-cancel style="margin-top:8px">取消当前导入</button></div>
+    ${preview.unknownColumns.length ? `<div class="banner banner-info">未识别列已按自定义字段保留：${preview.unknownColumns.map(esc).join('、')}；如无需导入，可在字段映射中选择“暂不导入”。</div>` : ''}
+    ${preview.duplicateColumns && preview.duplicateColumns.length ? `<div class="banner banner-warn">发现重复字段映射：${preview.duplicateColumns.map(fieldLabel).map(esc).join('、')}。请保留一列或在映射中设为“暂不导入”。</div>` : ''}${sensitive}
     <details class="adv"><summary>字段映射与文件识别</summary><div class="adv-body"><div class="import-map-grid">${preview.headers.map((header, index) => `<label>${esc(header || `第 ${index + 1} 列`)}</label><select class="inp" data-import-map="${index}">${fieldOptions(header)}</select>`).join('')}</div><div style="display:flex;gap:8px;margin-top:10px"><input class="inp" data-preset-name placeholder="预设名称，如 本校教务表"><button class="btn btn-sm" data-save-preset>保存本校预设</button><button class="btn btn-sm" data-remap>重新预览</button></div></div></details>
     <div class="import-table-wrap"><table><thead><tr><th>行号</th><th>主数据</th><th>状态</th><th>问题与处理</th></tr></thead><tbody>${rows || '<tr><td colspan="4">没有数据行</td></tr>'}</tbody></table></div>
     ${preview.rows.length > 80 ? `<div class="hint">当前展示前 80 行，共 ${preview.rows.length} 行；完整问题请下载报告。</div>` : ''}`;
@@ -5672,7 +5968,7 @@ function openImportPreview(preview, context) {
         const mapping = {}; const mappingByIndex = [];
         $$('[data-import-map]', mask).forEach(select => { const index = Number(select.dataset.importMap); mappingByIndex[index] = select.value; if (select.value) mapping[preview.headers[index]] = select.value; });
         let next;
-        const fileOptions = Object.assign({}, ctx.options || {}, { mapping, mappingByIndex });
+        const fileOptions = Object.assign({}, ctx.options || {}, { mapping, mappingByIndex, customFields:preview.customFields || {} });
         const encoding = $('[data-import-encoding]', mask); if (encoding) fileOptions.encoding = encoding.value;
         const sheet = $('[data-import-sheet]', mask); if (sheet) fileOptions.sheetName = sheet.value;
         const header = $('[data-import-header-row]', mask); if (header) fileOptions.headerRow = Math.max(1, Math.min(20, Number(header.value) || 1));
@@ -5680,9 +5976,20 @@ function openImportPreview(preview, context) {
         else next = importer.previewCSV(preview._rawText, preview.coll, { mapping });
         mClose(); openImportPreview(next, Object.assign({}, ctx, { options:fileOptions }));
       };
-      confirm.onclick = () => {
-        const result = importer.commitPreview(preview.id, { skipInvalid:true, conflictPolicy:'skip', confirmSensitive:!!(sensitiveCheck && sensitiveCheck.checked) });
-        if (!result.ok) return ui.toast(result.error, 'err', 4000);
+       let activeRunId = '';
+       const cancelButton = $('[data-import-cancel]', mask);
+       if (cancelButton) cancelButton.onclick = () => { if (!activeRunId || !importer.cancel(activeRunId)) return ui.toast('当前没有可取消的导入任务', 'warn'); cancelButton.disabled = true; confirm.disabled = true; ui.toast('已请求取消，正在保存断点…', 'warn', 2600); };
+       confirm.onclick = async () => {
+        const commit = importer.commitPreviewAsync;
+        if (typeof commit !== 'function') return ui.toast('分段导入引擎尚未就绪，请刷新页面后重试', 'err', 4200);
+        confirm.disabled = true;
+        const result = await commit.call(importer, preview.id, { skipInvalid:true, conflictPolicy:'skip', confirmSensitive:!!(sensitiveCheck && sensitiveCheck.checked), onStart(id){ activeRunId = id; }, onProgress(progress){
+          const progressPanel = $('[data-import-progress]', mask); if (progressPanel) progressPanel.style.display = 'block';
+          const label = $('[data-import-progress-label]', mask); const bar = $('[data-import-progress-bar]', mask);
+          if (label) label.textContent = progress.status === 'completed' ? '导入完成' : (progress.status === 'cancelled' ? `导入已取消，断点 ${progress.processed}/${progress.total}` : `正在导入 ${progress.processed}/${progress.total}`);
+          if (bar) bar.style.width = `${progress.total ? Math.round(progress.processed / progress.total * 100) : 0}%`;
+        } });
+        if (!result.ok) { confirm.disabled = false; return ui.toast(result.error, 'err', 4000); }
         mClose(); ui.toast(`导入完成：新增 ${result.added}，更新 ${result.updated}，跳过 ${result.skipped}`, 'ok', 4200);
       };
     }
@@ -5696,9 +6003,11 @@ function exportJSON() {
   DB.settings.backup_notified_at = today(); save('settings');
   ui.toast('备份已导出，建议放到网盘或 U 盘', 'ok', 3000);
 }
-function exportPackage() {
+async function exportPackage() {
   const R = reportRange();
   const pkg = bridge.buildPackage({ from:R.from, to:R.to });
+  pkg.attachments = await collectAttachmentPayload();
+  pkg.attachments_manifest = pkg.attachments.map(item => ({ id:item.id, student_id:item.student_id, name:item.name, mimeType:item.mimeType, size:item.size, content_hash:item.content_hash, thumbnail_id:item.thumbnail_id }));
   download(`工作台交换包_${DB.settings.counselor_name || '辅导员'}_${today()}.json`, JSON.stringify(pkg, null, 2), 'application/json');
   ui.toast('交换包已生成，可上传到平台汇总', 'ok', 3000);
 }
@@ -5729,13 +6038,14 @@ function doImportJSON(text) {
             <button class="btn btn-danger" data-mode="replace">覆盖导入</button>
             <button class="btn btn-primary" data-mode="merge">合并导入</button>`,
     onOpen(mask, close) {
-      $$('[data-mode]', mask).forEach(b => b.onclick = () => {
+      $$('[data-mode]', mask).forEach(b => b.onclick = async () => {
         try {
           const r = bridge.applyPackage(pkg, b.dataset.mode);
+          const attachmentCount = await restoreAttachmentPayload((pkg.data && pkg.data.attachments) || pkg.attachments || []);
           close(); render(); paintWho();
           const parts = keys.filter(k => r[k]).map(k => `${COLL_LABEL[k]} ${r[k]}`);
           ui.toast(`导入成功：${parts.length ? parts.join(' / ') : '0 条'}${r.settings ? '，个人设置已恢复' : ''}`, 'ok', 4200);
-        } catch (e) { ui.toast('导入失败：' + e.message, 'err', 3600); }
+      } catch (e) { ui.toast(v4ErrorMessage(e, '导入失败'), 'err', 4800); }
       });
     }
   });
@@ -5756,6 +6066,139 @@ function clearAll() {
 }
 
 /* ---------- 14. 路由与事件 ---------- */
+function v4Collection(key) {
+  DB.custom = DB.custom || {};
+  if (!Array.isArray(DB.custom[key])) DB.custom[key] = [];
+  return DB.custom[key];
+}
+function v4PhotoSrc(student) {
+  const item = Array.isArray(student.photo_assets) && student.photo_assets[0];
+  return item && (item.data_url || item.dataUrl) || '';
+}
+async function v4PhotoThumbnail(file) {
+  const source = await readFileDataUrl(file);
+  if (!source || typeof Image === 'undefined' || !document.createElement('canvas').getContext) return source;
+  return new Promise(resolve => {
+    const image = new Image();
+    image.onload = () => {
+      const canvas = document.createElement('canvas'); const max = 240;
+      const ratio = Math.min(1, max / Math.max(image.naturalWidth || image.width, image.naturalHeight || image.height));
+      canvas.width = Math.max(1, Math.round((image.naturalWidth || image.width) * ratio)); canvas.height = Math.max(1, Math.round((image.naturalHeight || image.height) * ratio));
+      const ctx = canvas.getContext('2d'); ctx.drawImage(image, 0, 0, canvas.width, canvas.height); resolve(canvas.toDataURL('image/jpeg', 0.78));
+    };
+    image.onerror = () => resolve(source); image.src = source;
+  });
+}
+async function v4ExpandPhotoFiles(files) {
+  const expanded = []; let batchBytes = 0; let entryCount = 0;
+  for (const file of files || []) {
+    if (!/\.zip$/i.test(file.name)) { expanded.push(file); continue; }
+    if (!window.JSZip || typeof window.JSZip.loadAsync !== 'function') throw new Error('ZIP_PARSER_UNAVAILABLE');
+    const zip = await window.JSZip.loadAsync(file, { checkCRC32: true });
+    for (const [entryName, entry] of Object.entries(zip.files)) {
+      if (entry.dir) continue;
+      entryCount++; if (entryCount > 10000) throw new Error('ZIP_ENTRY_LIMIT');
+      const safeName = String(entryName).replace(/\\/g, '/');
+      if (safeName.startsWith('/') || safeName.split('/').includes('..')) throw new Error('ZIP_PATH_TRAVERSAL');
+      if (!/\.(jpe?g|png|webp)$/i.test(safeName)) continue;
+      const blob = await entry.async('blob');
+      const uncompressed = Number(entry._data && entry._data.uncompressedSize || blob.size);
+      const compressed = Number(entry._data && entry._data.compressedSize || 0);
+      if (compressed > 0 && uncompressed / compressed > 100) throw new Error('ZIP_COMPRESSION_RATIO_LIMIT');
+      if (blob.size > 10 * 1024 * 1024) throw new Error('PHOTO_SIZE_LIMIT');
+      batchBytes += blob.size; if (batchBytes > 500 * 1024 * 1024) throw new Error('PHOTO_BATCH_SIZE_LIMIT');
+      const type = /\.png$/i.test(safeName) ? 'image/png' : /\.webp$/i.test(safeName) ? 'image/webp' : 'image/jpeg';
+      expanded.push(new File([blob], safeName, { type }));
+    }
+  }
+  return expanded;
+}
+function v4ErrorMessage(error, fallback) {
+  const code = String(error && error.message || error || '').trim() || 'UNKNOWN_ERROR';
+  const messages = {
+    IMPORT_FILE_CHANGED: '文件内容已变化，正式数据未写入；请重新选择原文件后继续。',
+    IMPORT_SENSITIVE_CONFIRM_REQUIRED: '文件含敏感字段，导入未执行；请确认确有必要在本机保存后重试。',
+    ARGON2_UNAVAILABLE: '当前环境缺少 Argon2id，备份未生成；请使用内置桌面版或更新浏览器后重试。',
+    BACKUP_PASSWORD_TOO_SHORT: '备份口令少于 8 位，备份未生成；请使用至少 8 位口令后重试。',
+    BACKUP_PASSWORD_INVALID: '备份口令不正确，现有数据未改变；请确认口令后重试。',
+    BACKUP_INTEGRITY_FAILED: '备份完整性校验失败，恢复未执行；请重新获取未损坏的 .cwbk 文件。',
+    BACKUP_ATTACHMENT_HASH_FAILED: '备份附件校验失败，恢复已回滚；请使用完整的备份文件重试。',
+    BACKUP_ATTACHMENT_INVALID: '备份附件内容无效，恢复未执行；请重新导出备份后重试。',
+    ZIP_PATH_TRAVERSAL: '压缩包包含不安全路径，照片未导入；请重新打包后重试。',
+    ZIP_COMPRESSION_RATIO_LIMIT: '压缩包疑似异常膨胀，照片未导入；请拆分或重新压缩文件。',
+    ATTACHMENT_BATCH_LIMIT: '附件超过单批次大小限制，未写入正式数据；请拆分文件后重试。',
+    EMPLOYMENT_MANIFEST_SIGNATURE_INVALID: '就业资源签名校验失败，资源未导入；请使用可信来源重新导出清单。',
+  };
+  return messages[code] || `${fallback || '操作未完成'}（${code}），当前数据未改变；请检查输入后重试，若仍失败请保留错误码 ${code}。`;
+}
+function v4Page(title, intro, body, actions) {
+  return `<div class="v4-head"><div><h1>${esc(title)}</h1><p>${esc(intro)}</p></div><div class="v4-actions">${actions || ''}</div></div>${body}`;
+}
+function v4PhotoQueue() {
+  DB.custom = DB.custom && typeof DB.custom === 'object' ? DB.custom : {};
+  DB.custom.v4_photo_queue = Array.isArray(DB.custom.v4_photo_queue) ? DB.custom.v4_photo_queue : [];
+  return DB.custom.v4_photo_queue;
+}
+function viewPhotos(options) {
+  const embedded = !!(options && options.embedded);
+  const state = app.v4 || (app.v4 = { photoQ:'', photoView:'cards' });
+  const q = String(state.photoQ || '').trim().toLowerCase();
+  const all = DB.students || [];
+  const list = all.filter(s => !q || [s.full_name,s.student_number,s.class_name,s.dorm,s.dorm_building].join(' ').toLowerCase().includes(q));
+  const withPhoto = all.filter(s => v4PhotoSrc(s) || (s.photo_ids || []).length).length;
+  const queue = v4PhotoQueue();
+  const cards = list.map(s => { const src = v4PhotoSrc(s); return `<article class="v4-photo-card"><button class="v4-photo" data-act="v4-photo-open" data-student-id="${esc(s.id)}" aria-label="查看${esc(s.full_name || '学生')}原图">${src ? `<img src="${esc(src)}" alt="${esc(s.full_name || '学生')}" loading="lazy">` : esc((s.full_name || '?').slice(0,1))}</button><div class="v4-photo-meta"><strong>${esc(s.full_name || '未命名')}</strong><small>${esc(s.student_number || '无学号')} · ${esc(s.class_name || '未分班')}</small><small>${esc(s.dorm_building || s.dorm || '未登记宿舍')}</small></div></article>`; }).join('');
+  const queueHtml = queue.length ? `<div class="card"><div class="card-hd"><h2>待人工确认照片</h2><span class="sp"></span><span class="tag tag-amber">${queue.length} 张</span></div><div class="card-bd"><div class="v4-list">${queue.map((item, index) => `<div class="v4-list-item"><div><strong>${esc(item.name || '未命名照片')}</strong><div class="tiny">${esc(item.reason || '未匹配')} · ${esc((item.candidates || []).join('、') || '请手动选择学生')}</div></div><span class="sp"></span><button class="btn btn-sm" data-act="v4-photo-review" data-index="${index}">人工归档</button></div>`).join('')}</div></div></div>` : '';
+  const body = `<div class="v4-stat-row"><div class="v4-stat"><span class="tiny">学生总数</span><b>${all.length}</b></div><div class="v4-stat"><span class="tiny">已归档照片</span><b>${withPhoto}</b></div><div class="v4-stat"><span class="tiny">待补采</span><b>${Math.max(0, all.length - withPhoto)}</b></div><div class="v4-stat"><span class="tiny">待确认照片</span><b>${queue.length}</b></div></div>${queueHtml}<div class="card"><div class="card-bd"><div class="v4-toolbar"><input class="inp" style="max-width:300px" data-v4-photo-search value="${esc(state.photoQ || '')}" placeholder="按姓名、学号、班级或宿舍查找"><span class="sp"></span><button class="btn btn-sm${state.photoView === 'table' ? '' : ' btn-primary'}" data-act="v4-view-cards">照片花名册</button><button class="btn btn-sm${state.photoView === 'table' ? ' btn-primary' : ''}" data-act="v4-view-table">数据表格</button></div>${state.photoView === 'table' ? `<div class="tw"><table><thead><tr><th>姓名</th><th>学号</th><th>班级</th><th>宿舍/楼栋</th><th>照片</th></tr></thead><tbody>${list.map(s => `<tr><td>${esc(s.full_name)}</td><td>${esc(s.student_number)}</td><td>${esc(s.class_name)}</td><td>${esc(s.dorm_building || s.dorm)}</td><td>${v4PhotoSrc(s) ? '<span class="tag tag-green">已归档</span>' : '<span class="tag tag-amber">待补采</span>'}</td></tr>`).join('') || '<tr><td colspan="5">暂无结果</td></tr>'}</tbody></table></div>` : `<div class="v4-photo-grid">${cards || '<div class="empty">暂无匹配学生</div>'}</div>`}</div></div>`;
+  const actions = `<div class="v4-actions embedded-actions"><button class="btn btn-primary" data-act="v4-photo-upload">批量导入照片</button><button class="btn" data-act="v4-photo-single">单人补传</button><button class="btn" data-act="student-new">新增学生</button></div>`;
+  return embedded ? `${actions}${body}` : v4Page('\u8bc6\u751f\u901f\u67e5', '照片优先的学生速查与花名册管理；本版本不进行人脸相似匹配。', body, actions);
+}
+function viewOrg() {
+  const positions = v4Collection('v4_positions');
+  const rows = positions.map((p, i) => `<div class="v4-list-item"><svg class="ic"><use href="#i-users"></use></svg><div><strong>${esc(p.name)}</strong><div class="tiny">${esc(p.duty || '未填写职责')} · ${esc(p.scope || '全班')} · ${esc(p.student_number || '待分配任职学生')}</div></div><span class="sp"></span><span class="tag tag-blue">${esc(p.class_name || '未指定班级')}</span><span class="tiny">${esc(p.term || '')}</span><button class="btn btn-sm btn-danger" data-act="v4-org-delete" data-index="${i}">删除</button></div>`).join('');
+  const body = `<div class="card"><div class="card-hd"><h2>岗位与任职关系</h2><span class="sp"></span><span class="tiny">${positions.length} 个自定义岗位</span></div><div class="card-bd"><div class="v4-list">${rows || '<div class="empty">还没有班团岗位，请先新增班长、团支书或本班特色岗位。</div>'}</div></div></div>`;
+  return v4Page('班团组织', '自定义岗位名称、职责和分管范围，支持按班级持续维护任职历史。', body, '<button class="btn" data-act="v4-org-import">批量导入</button><button class="btn" data-act="v4-org-export">导出与冲突报告</button><button class="btn btn-primary" data-act="v4-org-new">新增岗位</button>');
+}
+function viewParty() {
+  const cases = v4Collection('v4_party_cases');
+  const runtime = window.CWB_V4;
+  const rows = cases.map((item, index) => {
+    const steps = item.steps || (runtime ? runtime.partyChecklist(item.rule_version, item.custom_steps) : []);
+    const done = steps.filter(step => step.status === 'done').length;
+    return `<article class="card"><div class="card-hd"><h2>${esc(item.student_name || item.student_number || '未关联学生')}</h2><span class="sp"></span><span class="tag tag-blue">${esc(item.stage || '申请入党')}</span><button class="btn btn-sm" data-act="v4-party-complete" data-index="${index}">完成下一节点</button></div><div class="card-bd"><div class="tiny" style="margin-bottom:8px">规则版本 ${esc(item.rule_version || '2026-05-11')} · ${done}/${steps.length} 节点完成</div><div class="v4-progress"><i style="width:${steps.length ? Math.round(done / steps.length * 100) : 0}%"></i></div><div style="margin-top:10px">${steps.map(step => `<div class="v4-step ${step.status === 'done' ? 'done' : ''}"><span class="v4-step-dot"></span><div><strong>${esc(step.label)}</strong><div class="tiny">${step.status === 'done' ? '已完成' : (step.dueDays ? `时限：${step.dueDays} 天` : '待补材料 / 待办理')}</div></div></div>`).join('')}</div></div></article>`;
+  }).join('');
+  const body = `<div class="banner banner-warn">流程模块只做节点、时限和材料完整性提醒，不代替党组织的政治审查、资格判断或审批结论。</div><div class="v4-list">${rows || '<div class="card"><div class="card-bd empty">还没有党员发展档案。新增档案后将按 2026-05-11 规则版本生成节点清单。</div></div>'}</div>`;
+  return v4Page('党员发展', '按规则版本维护申请、培养、考察、接收预备党员和转正全流程。', body, '<button class="btn btn-primary" data-act="v4-party-new">新增发展档案</button>');
+}
+function viewFiles() {
+  const files = v4Collection('v4_files');
+  const state = app.v4 || (app.v4 = {}); const q = String(state.fileQ || '').toLowerCase(); const category = state.fileCategory || '';
+  const filtered = files.filter(file => (!q || [file.title, file.tags, file.source, file.scene, file.content].join(' ').toLowerCase().includes(q)) && (!category || file.category === category));
+  const rows = filtered.map(file => { const index = files.indexOf(file); return `<div class="v4-list-item"><label class="chk"><input type="checkbox" data-v4-file-select="${index}" aria-label="选择 ${esc(file.title || '文件')}"><span></span></label><svg class="ic"><use href="#i-copy"></use></svg><div><strong>${esc(file.title)}</strong><div class="tiny">${esc(file.directory || '根目录')} · ${esc(file.category || '未分类')} · ${esc(file.tags || '无标签')} · ${esc(file.scene || '通用')}</div></div><span class="sp"></span><span class="tiny">v${Number(file.version || 1)} · ${esc(file.updated_at || '')}</span><button class="btn btn-sm" data-act="v4-file-version" data-index="${index}">新版本</button>${Array.isArray(file.versions) && file.versions.length > 1 ? `<button class="btn btn-sm" data-act="v4-file-rollback" data-index="${index}">版本回退</button>` : ''}<button class="btn btn-sm" data-act="v4-file-download" data-index="${index}">查看</button><button class="btn btn-sm btn-danger" data-act="v4-file-delete" data-index="${index}">删除</button></div>`; }).join('');
+  const body = `<div class="card"><div class="card-hd"><h2>本地文件与模板</h2><span class="sp"></span><span class="tiny">文件随加密备份迁移 · 支持版本回退</span></div><div class="card-bd"><div class="v4-toolbar"><input class="inp" style="max-width:280px" data-v4-file-search value="${esc(state.fileQ || '')}" placeholder="搜索标题、标签、来源或场景"><select class="inp" data-v4-file-category><option value="">全部分类</option>${[...new Set(files.map(file => file.category).filter(Boolean))].map(value => `<option value="${esc(value)}"${value === category ? ' selected' : ''}>${esc(value)}</option>`).join('')}</select><button class="btn btn-sm" data-act="v4-file-export">导出选中</button><button class="btn btn-sm btn-danger" data-act="v4-file-delete-selected">删除选中</button></div><div class="v4-list">${rows || '<div class="empty">还没有文件条目，可先录入请假、住宿异动或学工通知模板。</div>'}</div></div></div>`;
+  return v4Page('分类文件库', '按场景、标签和关键词管理办公审批表、学生事务模板与通知文件。', body, '<button class="btn" data-act="v4-file-upload">上传文件</button><button class="btn btn-primary" data-act="v4-file-new">新增文件条目</button>');
+}
+function viewEmployment() {
+  const resources = v4Collection('v4_employment_resources');
+  if (!resources.length) {
+    resources.push({ id:'career-01', title:'国家大学生就业服务平台', region:'全国', industry:'综合', url:'https://www.ncss.cn/', verified_at:today(), status:'有效' }, { id:'career-02', title:'教育部24365就业服务平台', region:'全国', industry:'综合', url:'https://24365.smartedu.cn/', verified_at:today(), status:'有效' }, { id:'career-03', title:'中国公共招聘网', region:'全国', industry:'综合', url:'https://job.mohrss.gov.cn/', verified_at:today(), status:'有效' });
+    save('custom');
+  }
+  const state = app.v4 || (app.v4 = {}); const q = String(state.employmentQ || '').toLowerCase();
+  const region = state.employmentRegion || ''; const industry = state.employmentIndustry || '';
+  const filtered = resources.filter(r => (!q || [r.title, r.organizer, r.url].join(' ').toLowerCase().includes(q)) && (!region || r.region === region) && (!industry || r.industry === industry));
+  const rows = filtered.map(r => { const index = resources.indexOf(r); return `<div class="v4-list-item"><svg class="ic"><use href="#i-link"></use></svg><div><strong>${esc(r.title)}</strong><div class="tiny">${esc(r.region)} · ${esc(r.industry)} · ${esc(r.organizer || '未记录主办单位')} · 核验于 ${esc(r.verified_at || '未记录')}</div></div><span class="sp"></span><a class="btn btn-sm" href="${esc(r.url)}" target="_blank" rel="noreferrer">打开官网</a><button class="btn btn-sm btn-danger" data-act="v4-employment-delete" data-index="${index}">删除</button></div>`; }).join('');
+  const body = `<div class="banner banner-info">资源目录默认离线可用；动态更新仅接受带签名的资源清单，不会自动上传学生数据或抓取第三方页面。</div><div class="card"><div class="card-bd"><div class="v4-toolbar"><input class="inp" style="max-width:260px" data-v4-employment-search value="${esc(state.employmentQ || '')}" placeholder="搜索资源、主办单位或网址"><select class="inp" data-v4-employment-region><option value="">全部地区</option>${[...new Set(resources.map(r => r.region).filter(Boolean))].map(v => `<option value="${esc(v)}"${v === region ? ' selected' : ''}>${esc(v)}</option>`).join('')}</select><select class="inp" data-v4-employment-industry><option value="">全部行业</option>${[...new Set(resources.map(r => r.industry).filter(Boolean))].map(v => `<option value="${esc(v)}"${v === industry ? ' selected' : ''}>${esc(v)}</option>`).join('')}</select></div><div class="v4-list">${rows || '<div class="empty">暂无匹配资源</div>'}</div></div></div>`;
+  return v4Page('就业资源', '按地区和行业整理官方就业服务入口，供学生自主查询。', body, '<button class="btn" data-act="v4-employment-import">导入签名清单</button><button class="btn" data-act="v4-employment-export">导出签名清单</button><button class="btn btn-primary" data-act="v4-employment-new">新增资源</button>');
+}
+function viewBackupV4() {
+  const schedule = DB.settings.backup_schedule || { frequency:'weekly', enabled:false, folder:'', retain:8, last_run_at:'' };
+  const defaultRetain = schedule.frequency === 'daily' ? 7 : schedule.frequency === 'monthly' ? 12 : 8;
+  const status = schedule.enabled ? `已启用 · ${schedule.frequency} · ${schedule.folder || '待选择文件夹'}` : '尚未启用定时备份';
+  const body = `<div class="card"><div class="card-hd"><h2>本地保险库与备份</h2><span class="sp"></span><span class="tag ${schedule.enabled ? 'tag-green' : 'tag-amber'}">${esc(status)}</span></div><div class="card-bd"><p class="muted" style="margin-top:0">桌面版支持加密保险库存储和指定文件夹备份；网页端仅提供手动加密备份。忘记口令无法恢复。</p><div class="v4-toolbar"><button class="btn btn-primary" data-act="v4-backup-export">生成加密备份</button><button class="btn" data-act="v4-backup-restore">恢复 .cwbk 备份</button><button class="btn" data-act="v4-backup-config">配置每日 / 每周 / 每月</button><button class="btn" data-act="export-json">导出兼容 JSON</button></div><div class="tiny">最近一次备份：${esc(schedule.last_run_at || '暂无记录')} · 保留 ${Number(schedule.retain) || defaultRetain} 份</div></div></div>`;
+  return v4Page('备份与迁移', '所有数据、照片和文件统一通过版本化交换包迁移；自动备份在下次启动时补执行。', body, '<button class="btn" data-act="pkg-export">导出交换包</button>');
+}
+
 const VIEWS = {
   home:viewHome, tasks:viewTasks, students:viewStudents, talks:viewTalks,
   stay:viewStay, leave:viewLeave, honor:viewHonor, report:viewReport, bridge:viewBridge,
@@ -5763,8 +6206,16 @@ const VIEWS = {
   warn:viewWarn, help:viewHelp, grant:viewGrant,
   focus:viewFocus, psych:viewPsych, graduate:viewGraduate,
   policy:viewPolicy, material:viewMaterial, comp:viewComp, tpl:viewTpl, learning:viewLearning,
+  photos:viewPhotos, org:viewOrg, party:viewParty, files:viewFiles, employment:viewEmployment, backup:viewBackupV4,
 };
 function render() {
+  const resolvedView = resolveLegacyV4Route(app.view);
+  if (resolvedView !== app.view) app.view = resolvedView;
+  if (window.cwbDesktop && window.desktopRepositoryReady === false) {
+    const loading = $('#main');
+    if (loading) loading.innerHTML = '<div class="card"><div class="card-bd"><div class="loading-state">正在打开本地数据仓储…</div></div></div>';
+    return;
+  }
   const fn = VIEWS[app.view] || (customModules[app.view] && customModules[app.view].render) || viewHome;
   const main = $('#main');
   if (security.isLocked()) {
@@ -5772,6 +6223,8 @@ function render() {
     $$('.nav-item').forEach(b => b.classList.remove('on')); $$('.tab').forEach(b => b.classList.remove('on')); return;
   }
   main.innerHTML = fn();
+  initV4Charts();
+  initV4VirtualLists();
   $$('.nav-item').forEach(b => b.classList.toggle('on', b.dataset.view === app.view));
   $$('.tab').forEach(b => b.classList.toggle('on', b.dataset.view === app.view));
   updateBadges();
@@ -5800,8 +6253,21 @@ function countUp(el, target) {
   }
   requestAnimationFrame(step);
 }
+function resolveLegacyV4Route(view) {
+  const map = {
+    photos: { view:'students', apply() { app.filters.students.tab = 'photos'; } },
+    org: { view:'report', apply() { app.reportTab = 'org'; } },
+    party: { view:'report', apply() { app.reportTab = 'party'; } },
+    files: { view:'tpl', apply() { app.tplTab = 'files'; } },
+    employment: { view:'graduate', apply() { app.graduateTab = 'employment'; } },
+    backup: { view:'bridge', apply() { app.bridgeTab = 'backup'; } },
+  };
+  const target = map[view];
+  if (target) { target.apply(); return target.view; }
+  return view;
+}
 function go(view) {
-  app.view = view; render();
+  app.view = resolveLegacyV4Route(view); render();
   closeDrawer();
   try { window.scrollTo({ top:0, behavior:'smooth' }); } catch (e) {}
 }
@@ -5842,7 +6308,7 @@ const THEME_PRESETS = {
 function ensureV39Settings() {
   DB.settings = DB.settings || {};
   DB.settings.onboarding = Object.assign({ version:1, completed:false, skipped:false, currentStep:0, checklist:{} }, DB.settings.onboarding || {});
-  DB.settings.ui = Object.assign({ preset:'blueprint', accent:'', background:{ dataUrl:'', opacity:0.16 }, density:'comfortable', homeWidgets:{ order:[], hidden:[] } }, DB.settings.ui || {});
+  DB.settings.ui = Object.assign({ preset:'blueprint', accent:'', background:{ dataUrl:'', opacity:0.16 }, density:'comfortable', hiddenModules:[], homeWidgets:{ order:[], hidden:[] } }, DB.settings.ui || {});
   DB.settings.ui.background = Object.assign({ dataUrl:'', opacity:0.16 }, DB.settings.ui.background || {});
   DB.settings.security = Object.assign({ enabled:false, pass_hash:'', timeout_minutes:30, last_unlock:0 }, DB.settings.security || {});
   DB.settings.security.timeout_minutes = Number(DB.settings.security.timeout_minutes) || 30;
@@ -5987,6 +6453,131 @@ function openDrawer() {
 }
 
 const ACTS = {
+  'v4-heat-filter': (id, btn) => { const building = btn.dataset.heatBuilding || ''; const level = btn.dataset.heatLevel || ''; const next = { q:building }; if (level === '重点关注') next.focus = '__any'; if (level === '学业预警') next.focus = '__crisis'; app.filters.students = Object.assign({}, app.filters.students, next); go('students'); ui.toast(`已跳转到${building}学生明细`, 'ok', 1600); },
+  'v4-modules-config': () => {
+    const protectedViews = new Set(['home', 'students', 'bridge']);
+    const items = $$('#sidenav .nav-item[data-view]').map(item => ({ view:item.dataset.view, label:item.textContent.replace(/钉到常用|取消钉住/g, '').trim() })).filter(item => !protectedViews.has(item.view));
+    const hidden = new Set((DB.settings.ui && DB.settings.ui.hiddenModules) || []);
+    ui.modal({ title:'功能入口个性化', size:'narrow', body:`<p class="muted" style="margin-top:0">勾选后隐藏入口；首页、学生台账、数据中心和设置不可隐藏。功能已按原有板块归位。</p><div class="v4-list">${items.map(item => `<div class="form-row module-config-row"><input type="checkbox" data-module-hide="${esc(item.view)}" ${hidden.has(item.view) ? 'checked' : ''}> <span>${esc(item.label)}</span></div>`).join('')}</div>`, footer:'<button class="btn" data-close>完成</button>', onOpen(mask) { $$('[data-module-hide]', mask).forEach(input => { input.onchange = () => { DB.settings.ui = DB.settings.ui || {}; const next = new Set(DB.settings.ui.hiddenModules || []); if (input.checked) next.add(input.dataset.moduleHide); else next.delete(input.dataset.moduleHide); DB.settings.ui.hiddenModules = [...next]; save('settings'); applyModuleVisibility(); }; }); }});
+  },
+  'v4-students-more': () => { app.v4 = Object.assign({}, app.v4, { studentLimit:(Number(app.v4 && app.v4.studentLimit) || 300) + 300 }); render(); },
+  'v4-view-cards': () => { app.v4 = Object.assign({}, app.v4, { photoView:'cards' }); render(); },
+  'v4-view-table': () => { app.v4 = Object.assign({}, app.v4, { photoView:'table' }); render(); },
+  'v4-photo-open': async (id, btn) => { const student = DB.students.find(item => String(item.id) === String(btn.dataset.studentId)); if (!student) return; const photo = student.photo_assets && student.photo_assets[0]; if (!photo) return ui.toast('该学生尚未归档照片','warn'); let src = photo.data_url || ''; let objectUrl = ''; try { const record = window.CWB.attachments && await window.CWB.attachments.get(photo.id); if (record && record.blob) { objectUrl = URL.createObjectURL(record.blob); src = objectUrl; } else if (window.cwbDesktop && window.cwbDesktop.readAttachment) { const bytes = await window.cwbDesktop.readAttachment(photo.id); objectUrl = URL.createObjectURL(new Blob([bytes], { type:photo.mime_type || 'image/jpeg' })); src = objectUrl; } } catch (_) {} ui.modal({ title:`${student.full_name || '学生'} · 原图`, size:'wide', body:`<div style="text-align:center;background:#111;padding:12px;border-radius:10px"><img src="${esc(src)}" alt="${esc(student.full_name || '学生')}" style="max-width:100%;max-height:70vh;object-fit:contain"></div>`, footer:'<button class="btn" data-close>关闭</button>', onOpen(mask, close){ mask.addEventListener('click', event => { if (event.target.matches('[data-close]')) { if (objectUrl) URL.revokeObjectURL(objectUrl); close(); } }); }}); },
+  'v4-photo-upload': () => {
+    const input = document.createElement('input'); input.type = 'file'; input.multiple = true; input.accept = 'image/jpeg,image/png,image/webp,.zip'; input.webkitdirectory = true;
+    input.onchange = async () => {
+      let files; try { files = await v4ExpandPhotoFiles([...(input.files || [])]); } catch (error) { ui.toast(v4ErrorMessage(error, '照片包无法安全解压'),'err',5200); return; }
+      let matched = 0; let skipped = 0; let totalBytes = 0; const seenHashes = new Set();
+      for (const file of files) {
+        if (!/^image\/(jpeg|png|webp)$/i.test(file.type) || file.size > 10 * 1024 * 1024) { skipped++; continue; }
+        totalBytes += file.size; if (totalBytes > 500 * 1024 * 1024) { skipped += files.length - matched - skipped; break; }
+        const result = window.CWB_V4 && window.CWB_V4.matchPhotoFilename(file.name, DB.students);
+        if (!result || result.status !== 'matched') {
+          const pendingId = `photo_pending_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+          try {
+            const record = window.CWB.attachments && await window.CWB.attachments.add({ id:pendingId, name:file.name, blob:file, mimeType:file.type });
+            v4PhotoQueue().push({ id:`queue_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`, attachment_id:record && record.id || pendingId, name:file.name, reason:result && result.status === 'ambiguous' ? '重名或多匹配' : '无学号/姓名匹配', candidates:(result && result.candidates || []).map(candidate => candidate.student_number || candidate.full_name).filter(Boolean), created_at:new Date().toISOString(), schema_version:7 });
+            save('custom');
+          } catch (_) {}
+          skipped++; continue;
+        }
+        const student = DB.students.find(s => s.id === result.student.id); if (!student) { skipped++; continue; }
+        const contentHash = window.crypto && window.crypto.subtle ? Array.from(new Uint8Array(await window.crypto.subtle.digest('SHA-256', await file.arrayBuffer()))).map(byte => byte.toString(16).padStart(2, '0')).join('') : `${file.name}:${file.size}`;
+        if (seenHashes.has(contentHash) || DB.students.some(item => (item.photo_assets || []).some(photo => photo.content_hash === contentHash))) { skipped++; continue; }
+        seenHashes.add(contentHash);
+        const dataUrl = await v4PhotoThumbnail(file);
+        const photoId = `photo_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+        student.photo_ids = Array.isArray(student.photo_ids) ? student.photo_ids : [];
+        student.photo_assets = Array.isArray(student.photo_assets) ? student.photo_assets : [];
+        student.photo_ids.push(photoId);
+        student.photo_assets = [{ id:photoId, name:file.name, data_url:dataUrl, content_hash:contentHash, mime_type:file.type, size:file.size, created_at:new Date().toISOString() }, ...student.photo_assets].slice(0, 3);
+        if (window.CWB.attachments && window.CWB.attachments.add) await window.CWB.attachments.add({ id:photoId, student_id:student.id, name:file.name, blob:file, mimeType:file.type });
+        if (window.cwbDesktop && window.cwbDesktop.writeAttachment) await window.cwbDesktop.writeAttachment({ id:photoId, mimeType:file.type, bytes:new Uint8Array(await file.arrayBuffer()) });
+        matched++;
+      }
+      if (window.CWB.audit && window.CWB.audit.log) await window.CWB.audit.log('photo_batch_import', { total:files.length, matched, skipped });
+      save('students'); render(); ui.toast(`照片归档完成：匹配 ${matched} 张${skipped ? `，待人工确认 ${skipped} 张` : ''}`, skipped ? 'warn' : 'ok', 3600);
+    };
+    input.click();
+  },
+  'v4-photo-single': () => {
+    const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/jpeg,image/png,image/webp';
+    input.onchange = async () => {
+      const file = input.files && input.files[0]; if (!file) return;
+      const choices = DB.students.map(student => ({ v:student.student_number, n:`${student.full_name || '未命名'} · ${student.student_number || '无学号'}` }));
+      ui.form({ title:'单人补传照片', data:{ student_number:'' }, fields:[{ key:'student_number', label:'归档学生', type:'select', required:true, options:choices }], onSave: async value => {
+        const student = DB.students.find(item => item.student_number === value.student_number); if (!student) return ui.toast('未找到对应学生','warn');
+        const photoId = `photo_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+        const dataUrl = await v4PhotoThumbnail(file);
+        const record = window.CWB.attachments && await window.CWB.attachments.add({ id:photoId, student_id:student.id, name:file.name, blob:file, mimeType:file.type });
+        student.photo_ids = Array.isArray(student.photo_ids) ? student.photo_ids : []; student.photo_assets = Array.isArray(student.photo_assets) ? student.photo_assets : [];
+        student.photo_ids.push(record && record.id || photoId); student.photo_assets = [{ id:record && record.id || photoId, name:file.name, data_url:dataUrl, content_hash:record && record.content_hash || '', mime_type:file.type, size:file.size, created_at:new Date().toISOString() }, ...student.photo_assets].slice(0, 3);
+        if (window.cwbDesktop && window.cwbDesktop.writeAttachment) await window.cwbDesktop.writeAttachment({ id:record && record.id || photoId, mimeType:file.type, bytes:new Uint8Array(await file.arrayBuffer()) });
+        if (window.CWB.audit && window.CWB.audit.log) await window.CWB.audit.log('photo_single_upload', { student_id:student.id, attachment_id:record && record.id || photoId });
+        save('students'); render(); ui.toast('照片已补传并归档','ok');
+      } });
+    }; input.click();
+  },
+  'v4-photo-review': async (id, btn) => {
+    const queue = v4PhotoQueue(); const item = queue[Number(btn.dataset.index)]; if (!item) return;
+    ui.form({ title:`人工确认：${item.name || '照片'}`, data:{ student_number:'' }, fields:[{ key:'student_number', label:'归档学生', type:'select', required:true, options:DB.students.map(student => ({ v:student.student_number, n:`${student.full_name || '未命名'} · ${student.student_number || '无学号'}` })) }], onSave: async value => {
+      const student = DB.students.find(candidate => candidate.student_number === value.student_number); const record = window.CWB.attachments && await window.CWB.attachments.get(item.attachment_id);
+      if (!student || !record) return ui.toast('照片或学生记录不存在','warn');
+      const photoId = record.id; const dataUrl = await v4PhotoThumbnail(record.blob); student.photo_ids = Array.isArray(student.photo_ids) ? student.photo_ids : []; student.photo_assets = Array.isArray(student.photo_assets) ? student.photo_assets : [];
+      student.photo_ids.push(photoId); student.photo_assets = [{ id:photoId, name:record.name, data_url:dataUrl, content_hash:record.content_hash, mime_type:record.mimeType, size:record.size, created_at:new Date().toISOString() }, ...student.photo_assets].slice(0, 3);
+      queue.splice(Number(btn.dataset.index), 1); if (window.CWB.audit && window.CWB.audit.log) await window.CWB.audit.log('photo_manual_review', { student_id:student.id, attachment_id:photoId }); save('custom'); save('students'); render(); ui.toast('照片已人工确认归档','ok');
+    } });
+  },
+  'v4-org-new': () => ui.form({ title:'新增班团岗位 / 任职关系', data:{ name:'', duty:'', class_name:'', scope:'全班', term:'', student_number:'', term_start:'', term_end:'' }, fields:[
+    { key:'name', label:'岗位名称', required:true, ph:'例如：班长、心理委员、就业委员' },
+    { key:'duty', label:'职能描述', required:true, type:'textarea', rows:2 },
+    { key:'class_name', label:'所属班级', list:'v4-class-list' },
+    { key:'scope', label:'分管学生范围', ph:'例如：全班 / 重点学生 / 毕业生' },
+    { key:'term', label:'任期', ph:'例如：2026 春季学期' },
+    { key:'student_number', label:'任职学生学号', ph:'可留空，后续批量导入任职关系' }, { key:'term_start', label:'任期开始', type:'date' }, { key:'term_end', label:'任期结束', type:'date' },
+  ], extra:`<datalist id="v4-class-list">${classList().map(c => `<option value="${esc(c)}">`).join('')}</datalist>`, onSave(v){ const duplicate = v4Collection('v4_positions').some(item => item.name === v.name && item.student_number && item.student_number === v.student_number && (!v.term_end || !item.term_end || v.term_start <= item.term_end)); if (duplicate) return ui.toast('同一学生在重叠任期内不能重复担任同一岗位','warn'); v4Collection('v4_positions').push({ id:`pos_${Date.now()}`, schema_version:7, ...v, created_at:new Date().toISOString(), updated_at:new Date().toISOString() }); save('custom'); render(); ui.toast('班团岗位已保存','ok'); }}),
+  'v4-org-delete': (id, btn) => { const items = v4Collection('v4_positions'); items.splice(Number(btn.dataset.index), 1); save('custom'); render(); },
+  'v4-org-export': () => { const items = v4Collection('v4_positions'); const conflicts = []; items.forEach((a, index) => items.slice(index + 1).forEach(b => { if (a.student_number && a.student_number === b.student_number && a.name === b.name && (!a.term_end || !b.term_start || a.term_end >= b.term_start) && (!b.term_end || !a.term_start || b.term_end >= a.term_start)) conflicts.push({ first:a, second:b }); })); download(`班团任职_${today()}.json`, JSON.stringify({ schema_version:7, positions:items, conflicts, exported_at:new Date().toISOString() }, null, 2), 'application/json'); ui.toast(conflicts.length ? `已导出，发现 ${conflicts.length} 组任期冲突` : '已导出班团任职数据','ok'); },
+  'v4-org-import': () => { const input = document.createElement('input'); input.type = 'file'; input.accept = '.json,.csv,application/json,text/csv'; input.onchange = () => { const file = input.files && input.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = () => { try { const raw = String(reader.result || ''); const parsed = /\.json$/i.test(file.name) ? JSON.parse(raw) : csvTextToObjects(raw); const incoming = Array.isArray(parsed) ? parsed : (parsed.positions || []); const items = v4Collection('v4_positions'); const conflicts = []; incoming.forEach((value, index) => { const record = { id:value.id || `pos_${Date.now()}_${index}`, name:value.name || value.position || '', duty:value.duty || value.description || '', class_name:value.class_name || '', scope:value.scope || '', student_number:value.student_number || value.student_id || '', term:value.term || '', term_start:value.term_start || '', term_end:value.term_end || '', schema_version:7, created_at:value.created_at || new Date().toISOString(), updated_at:new Date().toISOString() }; const clash = items.find(existing => existing.student_number && record.student_number && existing.student_number === record.student_number && existing.name === record.name && (!existing.term_end || !record.term_start || existing.term_end >= record.term_start) && (!record.term_end || !existing.term_start || record.term_end >= existing.term_start)); if (clash) { conflicts.push(record); return; } items.push(record); }); save('custom'); render(); ui.toast(conflicts.length ? `已导入，${conflicts.length} 条因任期冲突进入报告` : `已导入 ${incoming.length} 条任职关系`, conflicts.length ? 'warn' : 'ok'); if (conflicts.length) download(`班团冲突报告_${today()}.json`, JSON.stringify({ conflicts }, null, 2), 'application/json'); } catch (error) { ui.toast(`导入失败：${error.message || '格式错误'}`, 'err'); } }; reader.readAsText(file, 'utf-8'); }; input.click(); },
+  'v4-party-new': () => ui.form({ title:'新增党员发展档案', data:{ student_number:'', stage:'party_applicant', rule_version:'2026-05-11' }, fields:[
+    { key:'student_number', label:'学生', type:'select', required:true, options:DB.students.map(s => ({ v:s.student_number, n:`${s.full_name} · ${s.student_number}` })) },
+    { key:'stage', label:'当前阶段', type:'select', options:[{v:'party_applicant',n:'申请入党'},{v:'activist',n:'积极分子培养'},{v:'development_object',n:'发展对象考察'},{v:'preparatory',n:'接收预备党员'},{v:'probation',n:'预备党员考察与转正'}] },
+    { key:'rule_version', label:'规则版本', required:true },
+  ], onSave(v){ const student = DB.students.find(s => s.student_number === v.student_number); const now = new Date().toISOString(); const item = { id:`party_${Date.now()}`, ...v, student_name:student && student.full_name || '', steps:window.CWB_V4 ? window.CWB_V4.partyChecklist(v.rule_version) : [], materials:{}, audit_log:[{ action:'created', at:now, rule_version:v.rule_version || '2026-05-11' }], created_at:now, updated_at:now, schema_version:7 }; v4Collection('v4_party_cases').push(item); save('custom'); render(); ui.toast('党员发展档案已创建','ok'); }}),
+  'v4-party-complete': (id, btn) => { const item = v4Collection('v4_party_cases')[Number(btn.dataset.index)]; if (!item) return; const step = (item.steps || []).find(s => s.status !== 'done'); if (!step) return ui.toast('该档案节点已全部完成','ok'); const now = new Date().toISOString(); const check = window.CWB_V4 && window.CWB_V4.validatePartyTransition ? window.CWB_V4.validatePartyTransition(item, step, now) : { ok:true, errors:[] }; if (!check.ok) return ui.toast(`暂不能办理：${check.errors.join('；')}`, 'warn', 5200); item.audit_log = Array.isArray(item.audit_log) ? item.audit_log : []; item.audit_log.push({ action:'complete_step', step:step.key, at:now, operator:DB.settings.counselor_name || '本机辅导员', rule_version:item.rule_version || '2026-05-11', material_status:step.material_ids && step.material_ids.length ? 'attached' : 'pending_review', return_reason:'' }); step.status = 'done'; step.completed_at = now; item.updated_at = now; if (window.CWB.audit && window.CWB.audit.log) window.CWB.audit.log('party_step_complete', { case_id:item.id, step:step.key, rule_version:item.rule_version || '2026-05-11' }); save('custom'); render(); ui.toast(`已完成：${step.label}`,'ok'); },
+  'v4-file-upload': () => { const input = document.createElement('input'); input.type = 'file'; input.multiple = true; input.accept = '.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt,.png,.jpg,.jpeg'; input.onchange = async () => { let total = 0; let count = 0; for (const file of [...(input.files || [])]) { if (file.size > 50 * 1024 * 1024 || (total += file.size) > 500 * 1024 * 1024) continue; const id = `attachment_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`; if (window.CWB.attachments && window.CWB.attachments.add) await window.CWB.attachments.add({ id, name:file.name, blob:file, mimeType:file.type }); if (window.cwbDesktop && window.cwbDesktop.writeAttachment) await window.cwbDesktop.writeAttachment({ id, mimeType:file.type, bytes:new Uint8Array(await file.arrayBuffer()) }); v4Collection('v4_files').push({ id:`file_${Date.now()}_${count}`, title:file.name, category:'其他', tags:'上传文件', attachment_id:id, size:file.size, mime_type:file.type, updated_at:today(), schema_version:7 }); count++; } save('custom'); render(); ui.toast(`文件上传完成：${count} 个`,'ok'); }; input.click(); },
+  'v4-file-rollback': (id, btn) => { const item = v4Collection('v4_files')[Number(btn.dataset.index)]; if (!item || !Array.isArray(item.versions) || item.versions.length < 2) return; const choices = item.versions.slice().sort((a, b) => Number(b.version || 0) - Number(a.version || 0)).map(version => `<option value="${Number(version.version)}">v${Number(version.version)} · ${esc(version.name || item.title || '文件')} · ${esc(version.at || '')}</option>`).join(''); ui.modal({ title:'选择文件历史版本', size:'narrow', body:`<p class="muted">回退只切换当前引用，不删除历史附件。回退后仍可再次创建新版本。</p><select class="inp" data-v4-file-rollback-select>${choices}</select>`, footer:'<button class="btn" data-close>取消</button><button class="btn btn-primary" data-v4-file-rollback-go>确认回退</button>', onOpen(mask, close){ $('[data-v4-file-rollback-go]', mask).onclick = async () => { const target = item.versions.find(version => Number(version.version) === Number($('[data-v4-file-rollback-select]', mask).value)); if (!target) return; item.version = Number(target.version || 1); item.attachment_id = target.attachment_id || ''; item.title = target.name || item.title; item.updated_at = new Date().toISOString(); if (window.CWB.audit && window.CWB.audit.log) await window.CWB.audit.log('file_rollback', { file_id:item.id, version:item.version }); save('custom'); close(); render(); ui.toast(`已回退到 v${item.version}`,'ok'); }; }}); },
+  'v4-file-version': (id, btn) => { const item = v4Collection('v4_files')[Number(btn.dataset.index)]; if (!item) return; const input = document.createElement('input'); input.type = 'file'; input.onchange = async () => { const file = input.files && input.files[0]; if (!file) return; const attachmentId = `attachment_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`; if (window.CWB.attachments && window.CWB.attachments.add) await window.CWB.attachments.add({ id:attachmentId, name:file.name, blob:file, mimeType:file.type }); const now = new Date().toISOString(); item.version = Number(item.version || 1) + 1; item.versions = Array.isArray(item.versions) ? item.versions : []; item.versions.push({ version:item.version, at:now, attachment_id:attachmentId, name:file.name, size:file.size }); item.attachment_id = attachmentId; item.title = file.name; item.updated_at = now; if (window.CWB.audit && window.CWB.audit.log) await window.CWB.audit.log('file_version_create', { file_id:item.id, version:item.version, attachment_id:attachmentId }); save('custom'); render(); ui.toast(`已保存 v${item.version} 版本`,'ok'); }; input.click(); },
+  'v4-file-new': () => ui.form({ title:'新增文件条目', data:{ title:'', directory:'根目录', category:'请假审批', tags:'', source:'本校整理', scene:'日常事务', content:'', url:'' }, fields:[
+    { key:'title', label:'文件名称', required:true }, { key:'directory', label:'目录路径', required:true }, { key:'category', label:'分类', type:'select', options:[{v:'请假审批',n:'请假审批'},{v:'住宿异动',n:'住宿异动'},{v:'学工通知',n:'学工通知'},{v:'其他',n:'其他'}] },
+    { key:'tags', label:'关键词标签', ph:'逗号分隔' }, { key:'source', label:'来源' }, { key:'scene', label:'适用场景' }, { key:'content', label:'正文或使用说明', type:'textarea', rows:5 }, { key:'url', label:'本地或官网链接' },
+  ], onSave(v){ const now = new Date().toISOString(); v4Collection('v4_files').push({ id:`file_${Date.now()}`, ...v, version:1, versions:[{ version:1, at:now, content:v.content || '', url:v.url || '' }], created_at:now, updated_at:now, schema_version:7 }); save('custom'); render(); ui.toast('文件条目已保存','ok'); }}),
+  'v4-file-download': async (id, btn) => { const item = v4Collection('v4_files')[Number(btn.dataset.index)]; if (!item) return; if (item.attachment_id) { try { const record = window.CWB.attachments && await window.CWB.attachments.get(item.attachment_id); let blob = record && record.blob; if (!blob && window.cwbDesktop && window.cwbDesktop.readAttachment) blob = new Blob([await window.cwbDesktop.readAttachment(item.attachment_id)], { type:item.mime_type || 'application/octet-stream' }); if (blob) { const url = URL.createObjectURL(blob); const link = document.createElement('a'); link.href = url; link.download = item.title; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); return; } } catch (error) { ui.toast(error.message || '文件读取失败','err'); } } ui.modal({ title:item.title, size:'wide', body:`<div class="tiny">${esc(item.category)} · ${esc(item.tags || '无标签')}</div><pre style="white-space:pre-wrap;line-height:1.7;margin:14px 0 0">${esc(item.content || '该条目暂无正文，请在编辑器中补充文件说明或链接。')}</pre>`, footer:'<button class="btn" data-close>关闭</button>' }); },
+  'v4-file-delete': (id, btn) => { const items = v4Collection('v4_files'); const item = items[Number(btn.dataset.index)]; if (!item) return; ui.confirm('删除文件', `确定删除“${item.title || '未命名文件'}”及其附件吗？`, async () => { if (item.attachment_id) { try { if (window.CWB.attachments && window.CWB.attachments.delete) await window.CWB.attachments.delete(item.attachment_id); if (window.cwbDesktop && window.cwbDesktop.deleteAttachment) await window.cwbDesktop.deleteAttachment(item.attachment_id); } catch (error) { return ui.toast(error.message || '附件删除失败','err'); } } items.splice(Number(btn.dataset.index), 1); if (window.CWB.audit && window.CWB.audit.log) await window.CWB.audit.log('file_delete', { file_id:item.id, title:item.title || '' }); save('custom'); render(); ui.toast('文件已删除','ok'); }, true); },
+  'v4-employment-new': () => ui.form({ title:'新增就业资源', data:{ title:'', region:'全国', industry:'综合', url:'', verified_at:today(), status:'有效' }, fields:[
+    { key:'title', label:'资源名称', required:true }, { key:'region', label:'地域' }, { key:'industry', label:'行业' }, { key:'url', label:'官方网址', required:true, type:'url' }, { key:'verified_at', label:'最后核验日期', type:'date' }, { key:'status', label:'状态', type:'select', options:[{v:'有效',n:'有效'},{v:'待核验',n:'待核验'},{v:'失效',n:'失效'}] },
+  ], onSave(v){ const saveResource = async () => { try { if (window.CWB.employmentResourceProvider) await window.CWB.employmentResourceProvider.add({ id:`career_${Date.now()}`, ...v }); else { v4Collection('v4_employment_resources').push({ id:`career_${Date.now()}`, ...v }); save('custom'); } render(); ui.toast('就业资源已保存','ok'); } catch (error) { ui.toast(error.message || '就业资源保存失败','err'); } }; saveResource(); }}),
+  'v4-employment-delete': (id, btn) => { v4Collection('v4_employment_resources').splice(Number(btn.dataset.index), 1); save('custom'); render(); },
+  'v4-employment-export': async () => { try { const manifest = await window.CWB.employmentResourceProvider.exportManifest(); download(`就业资源签名清单_${today()}.json`, JSON.stringify(manifest, null, 2), 'application/json'); ui.toast('已导出签名资源清单','ok'); } catch (error) { ui.toast(error.message || '导出失败','err'); } },
+  'v4-employment-import': () => { const input = document.createElement('input'); input.type = 'file'; input.accept = '.json,application/json'; input.onchange = () => { const file = input.files && input.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = async () => { try { const count = await window.CWB.employmentResourceProvider.importManifest(JSON.parse(reader.result)); render(); ui.toast(`已导入 ${count} 条签名资源`, 'ok'); } catch (error) { ui.toast(`签名校验失败：${error.message || '清单无效'}`, 'err', 4200); } }; reader.readAsText(file, 'utf-8'); }; input.click(); },
+  'v4-backup-config': () => ui.form({ title:'配置自动备份', data:Object.assign({ frequency:'weekly', enabled:false, folder:'', retain:8, password:'' }, DB.settings.backup_schedule || {}), fields:[
+    { key:'enabled', label:'启用计划', type:'checkbox' }, { key:'frequency', label:'周期', type:'select', options:[{v:'daily',n:'每日'},{v:'weekly',n:'每周'},{v:'monthly',n:'每月'}] }, { key:'folder', label:'目标文件夹', required:true, ph:'桌面版可选择本地文件夹；网页端请手工导出' }, { key:'retain', label:'保留份数', type:'number' }, { key:'password', label:'桌面版备份口令', type:'password', ph:'至少 8 位；不会写入网页数据库' },
+  ], onSave(v){ if (!window.CWB.backup) return; const webOnly = !(window.cwbDesktop && typeof window.cwbDesktop.setBackupSecret === 'function'); window.CWB.backup.configureSchedule(v).then(() => { ui.toast(webOnly && v.enabled ? '网页端仅支持手动加密备份，未启用定时写入' : '备份计划已保存', webOnly && v.enabled ? 'warn' : 'ok'); render(); }).catch(error => ui.toast(v4ErrorMessage(error, '备份计划保存失败'),'err',5200)); }}),
+  'v4-backup-export': () => ui.modal({ title:'生成加密备份', size:'narrow', body:'<p class="muted" style="margin-top:0">备份包含学生台账、照片索引、业务记录、文件目录和设置。请使用至少 8 位口令，忘记后无法恢复。</p><input class="inp" id="v4-backup-pass" type="password" placeholder="备份口令（至少 8 位）">', footer:'<button class="btn" data-close>取消</button><button class="btn btn-primary" data-v4-backup-go>生成并下载</button>', onOpen(mask, close){ $('[data-v4-backup-go]', mask).onclick = async () => { try { const envelope = await window.CWB.backup.export($('#v4-backup-pass', mask).value); download(`辅导员工作台-v7-${today()}.cwbk`, JSON.stringify(envelope), 'application/json'); close(); ui.toast('加密备份已生成','ok',3200); } catch (e) { ui.toast(v4ErrorMessage(e, '备份失败'),'err',5200); } }; }}),
+  'v4-backup-restore': async () => {
+    const loadEnvelope = async () => {
+      if (window.cwbDesktop && typeof window.cwbDesktop.openBackup === 'function') return window.cwbDesktop.openBackup();
+      return new Promise((resolve, reject) => {
+        const input = document.createElement('input'); input.type = 'file'; input.accept = '.cwbk,.json,application/json';
+        input.onchange = () => { const file = input.files && input.files[0]; if (!file) return resolve(null); const reader = new FileReader(); reader.onload = () => { try { resolve(JSON.parse(reader.result)); } catch (error) { reject(error); } }; reader.onerror = () => reject(reader.error || new Error('BACKUP_FILE_READ_FAILED')); reader.readAsText(file, 'utf-8'); }; input.click();
+      });
+    };
+    try {
+      const envelope = await loadEnvelope(); if (!envelope) return;
+      ui.modal({ title:'恢复加密备份', size:'narrow', body:'<p class="muted" style="margin-top:0">恢复前建议先导出当前数据。恢复失败不会覆盖现有数据；口令错误或文件损坏会被拒绝。</p><input class="inp" id="v4-restore-pass" type="password" placeholder="备份口令">', footer:'<button class="btn" data-close>取消</button><button class="btn btn-primary" data-v4-restore-go>验证并恢复</button>', onOpen(mask, close){ $('[data-v4-restore-go]', mask).onclick = async () => { try { await window.CWB.backup.restore(envelope, $('#v4-restore-pass', mask).value, 'merge'); close(); ui.toast('备份已恢复','ok',3200); } catch (e) { ui.toast(e.message || '恢复失败','err'); } }; }});
+    } catch (e) { ui.toast(e.message || '备份文件读取失败','err'); }
+  },
   'import-undo': id => security.require('撤销导入', () => ui.confirm('撤销此次导入', '将把对应模块恢复到导入前的完整快照，确定继续吗？', () => {
     if (importer.undo(id)) ui.toast('已恢复到导入前状态', 'ok');
     else ui.toast('撤销失败，快照可能已失效', 'err');
@@ -6360,6 +6951,72 @@ const ACTS = {
 
 const IMPORT_EXPORT_ACTIONS = { tasks:'task-export', talks:'talk-export', stay:'stay-export', leave:'leave-export', honor:'honor-export', pleave:'pleave-export', attend:'attend-export', node:'node-export', warn:'warn-export', help:'help-export', grant:'grant-export', focus:'focus-export', psych:'psych-export', graduate:'graduate-export', policy:'policy-export', material:'material-export', comp:'comp-export', tpl:'tpl-export' };
 Object.entries(IMPORT_EXPORT_ACTIONS).forEach(([coll, action]) => { ACTS[action] = () => exportCollectionCSV(coll); });
+ACTS['import-undo'] = id => security.require('撤销导入', () => ui.confirm('撤销此次导入', '将把对应模块恢复到导入前的完整快照，确定继续吗？', async () => {
+  const ok = importer.undoAsync ? await importer.undoAsync(id) : importer.undo(id);
+  if (ok) ui.toast('已恢复到导入前状态', 'ok'); else ui.toast('撤销失败，快照可能已失效', 'err');
+}, true));
+ACTS['v4-party-new'] = () => ui.form({ title:'新增党员发展档案', data:{ student_number:'', stage:'party_applicant', rule_version:'2026-05-11', birth_date:'', application_at:'', activist_at:'', publicity_start:'', publicity_end:'', probation_at:'', school_steps:'' }, fields:[
+  { key:'student_number', label:'学生', type:'select', required:true, options:DB.students.map(s => ({ v:s.student_number, n:`${s.full_name} · ${s.student_number}` })) },
+  { key:'stage', label:'当前阶段', type:'select', options:[{v:'party_applicant',n:'申请入党'},{v:'activist',n:'积极分子培养'},{v:'development_object',n:'发展对象考察'},{v:'preparatory',n:'接收预备党员'},{v:'probation',n:'预备党员教育考察与转正'}] },
+  { key:'rule_version', label:'规则版本', required:true },
+  { key:'birth_date', label:'出生日期', type:'date', required:true },
+  { key:'application_at', label:'申请日期', type:'date' },
+  { key:'activist_at', label:'确定积极分子日期', type:'date' },
+  { key:'publicity_start', label:'发展对象公示开始', type:'date' },
+  { key:'publicity_end', label:'发展对象公示结束', type:'date' },
+  { key:'probation_at', label:'接收预备党员日期', type:'date' },
+  { key:'school_steps', label:'本校附加环节（每行一个，可留空）', type:'textarea', rows:3, ph:'例如：学院党委材料复核\n学校自定义谈话记录' },
+], onSave(v){ const student = DB.students.find(s => s.student_number === v.student_number); const now = new Date().toISOString(); const custom_steps = String(v.school_steps || '').split(/\r?\n/).map(label => label.trim()).filter(Boolean).map((label, index) => ({ key:`school_step_${index + 1}`, label })); const item = { id:`party_${Date.now()}`, ...v, birth_date:v.birth_date || student && (student.birthday || student.birth_date) || '', custom_steps, student_name:student && student.full_name || '', steps:window.CWB_V4 ? window.CWB_V4.partyChecklist(v.rule_version, custom_steps) : [], materials:{}, audit_log:[{ action:'created', at:now, rule_version:v.rule_version || '2026-05-11' }], created_at:now, updated_at:now, schema_version:7 }; delete item.school_steps; v4Collection('v4_party_cases').push(item); save('custom'); render(); ui.toast('党员发展档案已创建','ok'); }});
+ACTS['v4-import-jobs'] = async () => {
+  if (!importer || typeof importer.listJobs !== 'function') return ui.toast('导入任务中心暂不可用，请刷新页面后重试', 'err');
+  const jobs = (await importer.listJobs()).filter(job => job && job.status !== 'completed');
+  const jobRows = jobs.map(job => {
+    const processed = Number(job.processed) || 0; const total = Number(job.total) || 0;
+    const pct = total ? Math.min(100, Math.round(processed / total * 100)) : 0;
+    return `<div class="v4-list-item" data-v4-job="${esc(job.id)}"><div style="min-width:0"><strong>${esc(job.collection === 'students' ? '学生名单导入' : job.collection || '数据导入')}</strong><div class="tiny">${esc(job.id)} · ${processed}/${total} · ${esc(job.status || 'pending')} · 文件哈希 ${esc(job.fileHash || '未记录')}</div><div class="v4-progress" style="margin-top:6px"><i style="width:${pct}%"></i></div></div><span class="sp"></span><label class="btn btn-sm">选择原文件恢复<input type="file" data-v4-job-file="${esc(job.id)}" accept=".csv,.xlsx,.xls,text/csv" hidden></label><button class="btn btn-sm btn-danger" data-v4-job-discard="${esc(job.id)}">丢弃任务</button></div>`;
+  }).join('');
+  ui.modal({ title:'待处理导入任务', size:'wide', body:`<div class="banner banner-info">恢复时请选择与原任务完全相同的文件。系统会校验文件哈希、工作表、表头行和映射版本；文件变化会被拒绝，不会污染正式数据。</div><div class="v4-list">${jobRows || '<div class="empty">当前没有待恢复的导入任务</div>'}</div>`, footer:'<button class="btn" data-close>关闭</button>', onOpen(mask, close) {
+    $$('[data-v4-job-file]', mask).forEach(input => { input.onchange = async () => {
+      const jobId = input.dataset.v4JobFile; const file = input.files && input.files[0]; if (!file) return;
+      try {
+        const job = (await importer.listJobs()).find(item => String(item.id) === String(jobId));
+        if (!job || job.collection !== 'students') throw new Error('当前仅支持恢复学生名单导入任务');
+        const preview = await importer.previewFile(file, 'students', { encoding:'auto' });
+        const rows = preview.rows.filter(row => row.status === 'ready').map(row => row.value);
+        if (!rows.length) throw new Error('原文件没有可恢复的有效记录');
+        if (job.fileHash && preview.source && preview.source.fileHash && String(job.fileHash) !== String(preview.source.fileHash)) throw new Error('IMPORT_FILE_CHANGED');
+        input.disabled = true;
+        const result = await importer.resume(jobId, { rows, fileHash:preview.source && preview.source.fileHash, sheetName:preview.source && preview.source.sheet, headerRow:preview.source && preview.source.headerRow, mappingVersion:'v4', chunkSize:500, onProgress:p => ui.toast(p.status === 'completed' ? '导入任务已恢复完成' : `恢复进度 ${p.processed}/${p.total}`, p.status === 'completed' ? 'ok' : 'info', 1200) });
+        if (result.status === 'completed') { close(); ui.toast('导入任务已恢复并提交', 'ok', 3200); render(); }
+        else ui.toast(`任务未完成，当前断点 ${result.checkpoint && result.checkpoint.processed || 0}/${result.checkpoint && result.checkpoint.total || 0}`, 'warn', 3200);
+      } catch (error) { input.disabled = false; ui.toast(`恢复失败：${error.message === 'IMPORT_FILE_CHANGED' ? '文件已变化，请选择原文件' : (error.message || '无法恢复')}`, 'err', 4600); }
+      input.value = '';
+    }; });
+    $$('[data-v4-job-discard]', mask).forEach(button => { button.onclick = () => { const id = button.dataset.v4JobDiscard; ui.confirm('丢弃导入任务', '丢弃后将删除断点和临时区数据，正式学生数据不会受影响。确定继续吗？', async () => { await importer.discardJob(id); close(); ui.toast('导入任务已丢弃', 'ok'); render(); }, true); }; });
+  }});
+};
+ACTS['v4-file-export'] = () => {
+  const files = v4Collection('v4_files');
+  const selected = [...document.querySelectorAll('[data-v4-file-select]:checked')].map(input => files[Number(input.dataset.v4FileSelect)]).filter(Boolean);
+  if (!selected.length) return ui.toast('请先选择要导出的文件条目', 'warn');
+  download(`分类文件库_${today()}.json`, JSON.stringify({ schema_version:7, files:selected, exported_at:new Date().toISOString() }, null, 2), 'application/json');
+};
+ACTS['v4-file-delete-selected'] = () => {
+  const files = v4Collection('v4_files');
+  const indexes = [...document.querySelectorAll('[data-v4-file-select]:checked')].map(input => Number(input.dataset.v4FileSelect)).filter(Number.isInteger).sort((a, b) => b - a);
+  if (!indexes.length) return ui.toast('请先选择要删除的文件条目', 'warn');
+  ui.confirm('批量删除文件', `确定删除选中的 ${indexes.length} 个文件及其附件吗？`, async () => {
+    for (const index of indexes) {
+      const item = files[index];
+      if (!item) continue;
+      if (item.attachment_id && window.CWB.attachments && window.CWB.attachments.delete) await window.CWB.attachments.delete(item.attachment_id).catch(() => {});
+      if (item.attachment_id && window.cwbDesktop && window.cwbDesktop.deleteAttachment) await window.cwbDesktop.deleteAttachment(item.attachment_id).catch(() => {});
+      files.splice(index, 1);
+    }
+    if (window.CWB.audit && window.CWB.audit.log) await window.CWB.audit.log('file_batch_delete', { count:indexes.length });
+    save('custom'); render(); ui.toast('已批量删除文件条目', 'ok');
+  }, true);
+};
 
 /* ---------- 全局搜索 ---------- */
 const GS_VIEWS = [
@@ -6413,6 +7070,28 @@ document.addEventListener('click', e => {
 });
 
 document.addEventListener('click', e => {
+  const external = e.target.closest('a[target="_blank"][href]');
+  if (external && window.cwbDesktop && typeof window.cwbDesktop.openExternal === 'function') { e.preventDefault(); window.cwbDesktop.openExternal(external.href).catch(error => ui.toast(error.message || '外部链接打开失败', 'err')); return; }
+  const workspaceTab = e.target.closest('[data-workspace-parent][data-workspace-tab]');
+  if (workspaceTab) {
+    const parent = workspaceTab.dataset.workspaceParent;
+    const tab = workspaceTab.dataset.workspaceTab;
+    if (parent === 'report') app.reportTab = tab;
+    if (parent === 'tpl') app.tplTab = tab;
+    if (parent === 'graduate') app.graduateTab = tab;
+    if (parent === 'bridge') app.bridgeTab = tab;
+    render(); return;
+  }
+  const studentTab = e.target.closest('[data-student-tab]');
+  if (studentTab) { app.filters.students.tab = studentTab.dataset.studentTab; render(); return; }
+  const analysisCell = e.target.closest('[data-v4-analysis-chart][data-analysis-value]');
+  if (analysisCell) {
+    const key = analysisCell.dataset.v4AnalysisChart === 'class' ? 'cls' : 'q';
+    app.filters.students = Object.assign({}, app.filters.students, { tab:'ledger', [key]:analysisCell.dataset.analysisValue });
+    go('students');
+    ui.toast(`已筛选${analysisCell.dataset.analysisValue}学生明细`, 'ok', 1600);
+    return;
+  }
   const pinEl = e.target.closest('[data-pin]');
   if (pinEl) { e.preventDefault(); e.stopPropagation(); togglePin(pinEl.dataset.pin); return; }
   const foldEl = e.target.closest('[data-fold]');
@@ -6433,6 +7112,12 @@ document.addEventListener('click', e => {
   if (btn && ACTS[btn.dataset.act]) { ACTS[btn.dataset.act](btn.dataset.id, btn); }
 });
 document.addEventListener('input', e => {
+  const v4PhotoSearch = e.target.closest('[data-v4-photo-search]');
+  if (v4PhotoSearch) { app.v4 = Object.assign({}, app.v4, { photoQ:v4PhotoSearch.value }); clearTimeout(app._v4PhotoT); app._v4PhotoT = setTimeout(() => render(), 180); return; }
+  const v4EmploymentSearch = e.target.closest('[data-v4-employment-search]');
+  if (v4EmploymentSearch) { app.v4 = Object.assign({}, app.v4, { employmentQ:v4EmploymentSearch.value }); clearTimeout(app._v4EmploymentT); app._v4EmploymentT = setTimeout(() => render(), 180); return; }
+  const v4FileSearch = e.target.closest('[data-v4-file-search]');
+  if (v4FileSearch) { app.v4 = Object.assign({}, app.v4, { fileQ:v4FileSearch.value }); clearTimeout(app._v4FileT); app._v4FileT = setTimeout(() => render(), 180); return; }
   const f = e.target.closest('[data-filter]');
   if (f && f.tagName !== 'SELECT') {
     const [g, k] = f.dataset.filter.split('.');
@@ -6446,6 +7131,12 @@ document.addEventListener('input', e => {
   }
 });
 document.addEventListener('change', e => {
+  const employmentRegion = e.target.closest('[data-v4-employment-region]');
+  if (employmentRegion) { app.v4 = Object.assign({}, app.v4, { employmentRegion:employmentRegion.value }); render(); return; }
+  const employmentIndustry = e.target.closest('[data-v4-employment-industry]');
+  if (employmentIndustry) { app.v4 = Object.assign({}, app.v4, { employmentIndustry:employmentIndustry.value }); render(); return; }
+  const fileCategory = e.target.closest('[data-v4-file-category]');
+  if (fileCategory) { app.v4 = Object.assign({}, app.v4, { fileCategory:fileCategory.value }); render(); return; }
   const f = e.target.closest('[data-filter]');
   if (f && f.tagName === 'SELECT') { const [g, k] = f.dataset.filter.split('.'); app.filters[g][k] = f.value; render(); return; }
   const s = e.target.closest('[data-set]');
@@ -6549,6 +7240,35 @@ function collectData() {
     custom: DB.custom,
   };
 }
+async function collectAttachmentPayload() {
+  const rows = []; let total = 0;
+  if (!window.CWB || !window.CWB.attachments || typeof window.CWB.attachments.list !== 'function') return rows;
+  for (const item of await window.CWB.attachments.list()) {
+    let blob = item.blob;
+    if (!blob && window.cwbDesktop && window.cwbDesktop.readAttachment) { try { blob = new Blob([await window.cwbDesktop.readAttachment(item.id)], { type:item.mimeType || 'application/octet-stream' }); } catch (_) {} }
+    const row = { id:item.id, student_id:item.student_id || '', name:item.name || '', mimeType:item.mimeType || 'application/octet-stream', size:Number(item.size || 0), content_hash:item.content_hash || '', thumbnail_id:item.thumbnail_id || '' };
+    if (blob && typeof blob.arrayBuffer === 'function') {
+      const bytes = new Uint8Array(await blob.arrayBuffer()); total += bytes.length;
+      if (total > 500 * 1024 * 1024) throw new Error('PORTABLE_ATTACHMENTS_TOO_LARGE');
+      let binary = ''; for (const byte of bytes) binary += String.fromCharCode(byte);
+      row.size = bytes.length; row.data_base64 = btoa(binary);
+    }
+    rows.push(row);
+  }
+  return rows;
+}
+async function restoreAttachmentPayload(rows) {
+  if (!Array.isArray(rows) || !window.CWB || !window.CWB.attachments || typeof window.CWB.attachments.add !== 'function') return 0;
+  let restored = 0; let total = 0;
+  for (const item of rows) {
+    if (!item || !item.id || !item.data_base64) continue;
+    const binary = atob(String(item.data_base64)); const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
+    if (bytes.length > 50 * 1024 * 1024 || (total += bytes.length) > 500 * 1024 * 1024) throw new Error('PORTABLE_ATTACHMENT_TOO_LARGE');
+    await window.CWB.attachments.add({ id:item.id, student_id:item.student_id, name:item.name, mimeType:item.mimeType, blob:new Blob([bytes], { type:item.mimeType || 'application/octet-stream' }), content_hash:item.content_hash || undefined, thumbnail_id:item.thumbnail_id || undefined });
+    restored++;
+  }
+  return restored;
+}
 function applyEmbedded() {
   const e = window.__CWB_EMBED__ || {};
   DB.settings = e.settings || null;
@@ -6575,23 +7295,52 @@ function applyEmbedded() {
   DB.learning_notes = (e.learning_notes || []).map(normLearningNote);
   DB.learning_sessions = (e.learning_sessions || []).map(normLearningSession);
   DB.custom = e.custom || {};
+  window.__CWB_EMBED_ATTACHMENTS__ = Array.isArray(e.attachments) ? e.attachments : [];
   save();
 }
-function exportPortable() {
+async function buildPortableHtml() {
   const data = collectData();
+  data.attachments = await collectAttachmentPayload();
   let js = JSON.stringify(data);
   js = js.replace(/<\/(script)/gi, '<\\/$1');
   const dataScript = '<' + 'script>window.__CWB_EMBED__=' + js + '<' + '/script>';
   let html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
   html = html.replace(/<script>\s*window\.__CWB_EMBED__=[\s\S]*?<\/script>/i, '');
   html = html.replace(/<head>/i, '<head>' + dataScript);
-  const stamp = (DB.settings && DB.settings.counselor_name ? DB.settings.counselor_name + '_' : '') + today();
-  download('辅导员工作台-含数据-' + stamp + '.html', html, 'text/html');
-  ui.toast('已生成便携工作台（数据已内置），请在下载文件夹找到它', 'ok', 4500);
+  return { html, data };
+}
+async function exportPortable() {
+  try {
+    const { html, data } = await buildPortableHtml();
+    const stamp = (DB.settings && DB.settings.counselor_name ? DB.settings.counselor_name + '_' : '') + today();
+    download('辅导员工作台-含数据-' + stamp + '.html', html, 'text/html');
+    ui.toast(`已生成便携工作台（内置 ${data.attachments.length} 个附件）`, 'ok', 4500);
+  } catch (error) {
+    ui.toast(`便携包生成失败：${error.message || '附件过大或读取失败'}；请先减少附件后重试`, 'err', 5200);
+  }
 }
 
 /* ---------- 侧边栏增强：搜索 / 分组折叠 / 钉住常用 ---------- */
+function injectV4Nav() {
+  migrateLegacyV4NavigationSettings();
+  return false;
+}
+function migrateLegacyV4NavigationSettings() {
+  const ui = DB.settings.ui = DB.settings.ui || {};
+  const aliases = { photos:'students', org:'report', party:'report', files:'tpl', employment:'graduate', backup:'bridge' };
+  const hidden = new Set(Array.isArray(ui.hiddenModules) ? ui.hiddenModules : []);
+  const pinned = Array.isArray(DB.settings.pinned) ? DB.settings.pinned : [];
+  Object.entries(aliases).forEach(([legacy, parent]) => {
+    if (hidden.has(legacy)) { hidden.delete(legacy); hidden.add(parent); }
+    const index = pinned.indexOf(legacy); if (index >= 0) pinned[index] = parent;
+  });
+  ui.hiddenModules = [...new Set([...hidden].filter(value => !aliases[value]))];
+  DB.settings.pinned = [...new Set(pinned.map(value => aliases[value] || value))];
+  delete ui.moduleOrder;
+  if (DB.settings.navFold) delete DB.settings.navFold['v4.0'];
+}
 function injectNavExtras() {
+  injectV4Nav();
   $$('#sidenav .nav-item').forEach(it => {
     if (it.querySelector('.nav-pin')) return;
     const v = it.dataset.view;
@@ -6599,6 +7348,15 @@ function injectNavExtras() {
     pin.className = 'nav-pin'; pin.dataset.pin = v; pin.title = '钉到常用 / 取消钉住';
     pin.innerHTML = '<svg class="ic"><use href="#i-pin"/></svg>';
     it.appendChild(pin);
+  });
+  applyModuleVisibility();
+}
+function applyModuleVisibility() {
+  const protectedViews = new Set(['home', 'students', 'bridge']);
+  const hidden = new Set((DB.settings.ui && DB.settings.ui.hiddenModules) || []);
+  $$('#sidenav .nav-item[data-view]').forEach(item => {
+    const view = item.dataset.view;
+    item.hidden = hidden.has(view) && !protectedViews.has(view);
   });
 }
 function applyFold() {
@@ -6709,6 +7467,541 @@ function boot() {
 }
 
 /* ---------- 17. 对外暴露 ---------- */
+function installV4Integration() {
+  const runtime = window.CWB_V4;
+  if (!runtime || !window.CWB) return false;
+  const desktopRuntime = !!(window.cwbDesktop && typeof window.cwbDesktop.repositoryList === 'function');
+  window.desktopRepositoryReady = desktopRuntime ? false : true;
+  const desktopWriteQueues = new Map();
+  const enqueueDesktopWrite = (collection, operation) => {
+    const previous = desktopWriteQueues.get(collection) || Promise.resolve();
+    const next = previous.catch(() => {}).then(operation);
+    desktopWriteQueues.set(collection, next.finally(() => { if (desktopWriteQueues.get(collection) === next) desktopWriteQueues.delete(collection); }));
+    return next;
+  };
+  const collectionKeys = ['students','tasks','talks','stay','leave','honor','pleave','attend','node','warn','help','grant','focus','psych','graduate','policy','material','comp','tpl','learning_materials','learning_notes','learning_sessions'];
+  const repositories = {};
+  const backingRepos = {};
+  const desktopRepository = desktopRuntime ? window.cwbDesktop : null;
+  const repositoryReady = [];
+  const auditRepository = runtime.createRepository('audit_log');
+  const audit = async (action, details) => {
+    const at = new Date().toISOString();
+    try { return await auditRepository.put({ id:`audit_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`, action:String(action), details:cloneData(details || {}), operator:DB.settings.counselor_name || '本机辅导员', operated_at:at, created_at:at, updated_at:at, schema_version:7 }); } catch (_) { return null; }
+  };
+  window.CWB.audit = { log:audit, async list() { return auditRepository.list(); } };
+  const metaRepository = runtime.createRepository('meta');
+  const importHistoryPrefix = 'import_history:';
+  const listImportHistory = async () => (await metaRepository.list()).filter(item => String(item.id || '').startsWith(importHistoryPrefix)).map(item => cloneData(item.run || item)).sort((a, b) => String(b.at || '').localeCompare(String(a.at || '')));
+  const replaceImportHistory = async history => {
+    const existing = (await metaRepository.list()).filter(item => String(item.id || '').startsWith(importHistoryPrefix));
+    for (const item of existing) await metaRepository.delete(item.id);
+    for (const run of (history || []).slice(-3)) await metaRepository.put({ id:`${importHistoryPrefix}${run.id}`, kind:'import_history', run:cloneData(run), schema_version:7, created_at:run.at || new Date().toISOString(), updated_at:new Date().toISOString() });
+  };
+  repositoryReady.push((async () => {
+    const startedAt = new Date().toISOString();
+    try {
+      await metaRepository.put({ id:'migration_v4_latest', schema_version:7, status:'running', started_at:startedAt, updated_at:startedAt });
+      await metaRepository.put({ id:'migration_v4_latest', schema_version:7, status:'completed', started_at:startedAt, completed_at:new Date().toISOString(), updated_at:new Date().toISOString() });
+    } catch (error) {
+      try { await metaRepository.put({ id:'migration_v4_latest', schema_version:7, status:'failed', error:String(error && error.message || error), started_at:startedAt, updated_at:new Date().toISOString() }); } catch (_) {}
+    }
+  })());
+  repositoryReady.push(listImportHistory().then(history => { app.v4 = Object.assign({}, app.v4 || {}, { importHistory:history }); }).catch(() => {}));
+  const BULK_STUDENT_ID = '__cwb_bulk_students__';
+  collectionKeys.forEach(key => {
+    const backing = runtime.createRepository(`records_${key}`);
+    let bulkMode = false;
+    const unpackRows = async rows => {
+      if (key === 'students' && rows.length === 1 && rows[0] && rows[0].id === BULK_STUDENT_ID) {
+        bulkMode = true;
+        if (Array.isArray(rows[0].records)) return rows[0].records;
+        try { return JSON.parse(rows[0].records_json || '[]'); } catch (_) { return []; }
+      }
+      if (key === 'students' && rows.some(row => row && String(row.id).startsWith(BULK_STUDENT_ID + ':'))) {
+        const chunks = rows.filter(row => row && String(row.id).startsWith(BULK_STUDENT_ID + ':')).sort((a, b) => Number(String(a.id).split(':').pop()) - Number(String(b.id).split(':').pop()));
+        bulkMode = true;
+        const decode = async row => {
+          try {
+            if (row.records_json) return JSON.parse(row.records_json || '[]');
+            if (row.records_gzip && typeof DecompressionStream === 'function' && typeof Response === 'function') {
+              const stream = new DecompressionStream('gzip'); const writer = stream.writable.getWriter(); writer.write(row.records_gzip); writer.close();
+              return JSON.parse(await new Response(stream.readable).text());
+            }
+          } catch (_) {}
+          return [];
+        };
+        return (await Promise.all(chunks.map(decode))).flat();
+      }
+      return rows;
+    };
+    backingRepos[key] = backing;
+    repositoryReady.push((async () => {
+      if (desktopRepository) {
+        const remote = await desktopRepository.repositoryList(`records_${key}`);
+        if (!remote || !remote.length) {
+          for (const record of DB[key] || []) await desktopRepository.repositoryPut(`records_${key}`, record);
+        } else if ((!DB[key] || !DB[key].length) && Array.isArray(remote)) {
+          DB[key] = remote;
+        }
+        return;
+      }
+      const existing = await unpackRows(await backing.list());
+      if (!existing.length && Array.isArray(DB[key]) && DB[key].length) {
+        for (const record of DB[key]) await backing.put(record);
+      } else if (existing.length && (!Array.isArray(DB[key]) || !DB[key].length)) {
+        DB[key] = existing;
+      }
+    })().catch(() => {}));
+    repositories[key] = {
+      async list() { const remote = desktopRepository && await desktopRepository.repositoryList(`records_${key}`); if (Array.isArray(remote)) return cloneData(await unpackRows(remote)); const rows = await unpackRows(await backing.list()); return rows.length ? cloneData(rows) : cloneData(DB[key] || []); },
+      async get(id) { const remote = desktopRepository && await desktopRepository.repositoryGet(`records_${key}`, id); if (remote && remote.id !== BULK_STUDENT_ID) return cloneData(remote); const raw = await backing.list(); const rows = await unpackRows(raw); const value = rows.find(item => String(item.id) === String(id)); return value == null ? cloneData((DB[key] || []).find(item => String(item.id) === String(id))) : cloneData(value); },
+      async put(record) {
+        if (!DB[key]) DB[key] = [];
+        const value = key === 'students' ? normStudent(record) : record;
+        const index = DB[key].findIndex(item => String(item.id) === String(value.id));
+        if (index >= 0) DB[key][index] = value; else DB[key].push(value);
+        if (key === 'students' && bulkMode && backing.replaceManyAtomic) await backing.replaceManyAtomic(DB[key]);
+        else if (desktopRepository) await enqueueDesktopWrite(`records_${key}`, () => desktopRepository.repositoryPut(`records_${key}`, value)); else await backing.put(value);
+        if (!window.CWB_V4_IDB_ACTIVE && !desktopRepository) save(key);
+        render(); return cloneData(value);
+      },
+      async putMany(records, options) {
+        if (!Array.isArray(records)) throw new Error('REPOSITORY_RECORDS_INVALID');
+        const values = records.map(record => (options && options.normalized) || key !== 'students' ? record : normStudent(record));
+        if (key === 'students' && options && options.atomic === true) {
+          if (desktopRepository && desktopRepository.repositoryReplaceManyAtomic) await enqueueDesktopWrite(`records_${key}`, () => desktopRepository.repositoryReplaceManyAtomic(`records_${key}`, values));
+          else if (backing.replaceManyAtomic) await backing.replaceManyAtomic(values);
+          bulkMode = true;
+        } else if (desktopRepository && desktopRepository.repositoryPutMany) await enqueueDesktopWrite(`records_${key}`, () => desktopRepository.repositoryPutMany(`records_${key}`, values));
+        else if (desktopRepository) {
+          for (let start = 0; start < values.length; start += 250) await Promise.all(values.slice(start, start + 250).map(value => desktopRepository.repositoryPut(`records_${key}`, value)));
+        } else if (backing.putMany) await backing.putMany(values, { atomic: options && options.atomic !== false });
+        else for (const value of values) await backing.put(value);
+        DB[key] = values;
+        if (!window.CWB_V4_IDB_ACTIVE && !desktopRepository) save(key);
+        if (!(options && options.render === false)) setTimeout(() => { try { render(); } catch (_) {} }, 0);
+        return values;
+      },
+      async delete(id) {
+        const before = DB[key].length; DB[key] = DB[key].filter(item => String(item.id) !== String(id));
+        if (DB[key].length !== before) { if (key === 'students' && bulkMode && backing.replaceManyAtomic) await backing.replaceManyAtomic(DB[key]); else if (desktopRepository) await enqueueDesktopWrite(`records_${key}`, () => desktopRepository.repositoryDelete(`records_${key}`, id)); else await backing.delete(id); if (!window.CWB_V4_IDB_ACTIVE && !desktopRepository) save(key); }
+        return DB[key].length !== before;
+      },
+      async count() { if (bulkMode) return DB[key].length; if (desktopRepository) return Number(await desktopRepository.repositoryCount(`records_${key}`) || 0); const rows = await unpackRows(await backing.list()); return rows.length || (DB[key] || []).length; },
+    };
+  });
+  const customRepositoryKeys = ['v4_positions', 'v4_party_cases', 'v4_files', 'v4_employment_resources'];
+  customRepositoryKeys.forEach(key => {
+    const backing = runtime.createRepository(`records_custom_${key}`);
+    backingRepos[key] = backing;
+    repositoryReady.push((async () => {
+      if (desktopRepository) {
+        const remote = await desktopRepository.repositoryList(`records_custom_${key}`);
+        if (!remote || !remote.length) for (const record of v4Collection(key)) await desktopRepository.repositoryPut(`records_custom_${key}`, record);
+        else if (!v4Collection(key).length) DB.custom[key] = remote;
+      } else if (!(await backing.count()) && v4Collection(key).length) {
+        for (const record of v4Collection(key)) await backing.put(record);
+      }
+    })().catch(() => {}));
+    repositories[key] = {
+      async list() { const remote = desktopRepository && await desktopRepository.repositoryList(`records_custom_${key}`); if (Array.isArray(remote)) return cloneData(remote); const rows = await backing.list(); return rows.length ? cloneData(rows) : cloneData(v4Collection(key)); },
+      async get(id) { const remote = desktopRepository && await desktopRepository.repositoryGet(`records_custom_${key}`, id); if (remote) return cloneData(remote); const value = await backing.get(id); return value == null ? cloneData(v4Collection(key).find(item => String(item.id) === String(id))) : cloneData(value); },
+      async put(record) { const list = v4Collection(key); const index = list.findIndex(item => String(item.id) === String(record.id)); if (index >= 0) list[index] = cloneData(record); else list.push(cloneData(record)); if (desktopRepository) await enqueueDesktopWrite(`records_custom_${key}`, () => desktopRepository.repositoryPut(`records_custom_${key}`, record)); else await backing.put(record); if (!desktopRepository && !window.CWB_V4_IDB_ACTIVE) save('custom'); render(); return cloneData(record); },
+      async delete(id) { const list = v4Collection(key); const next = list.filter(item => String(item.id) !== String(id)); const removed = next.length !== list.length; DB.custom[key] = next; if (removed) { if (desktopRepository) await enqueueDesktopWrite(`records_custom_${key}`, () => desktopRepository.repositoryDelete(`records_custom_${key}`, id)); else await backing.delete(id); if (!desktopRepository && !window.CWB_V4_IDB_ACTIVE) save('custom'); } return removed; },
+      async count() { if (desktopRepository) return Number(await desktopRepository.repositoryCount(`records_custom_${key}`) || 0); const count = await backing.count(); return count || v4Collection(key).length; },
+    };
+  });
+  repositories.organizations = repositories.v4_positions;
+  repositories.party = repositories.v4_party_cases;
+  repositories.files = repositories.v4_files;
+  repositories.employmentResources = repositories.v4_employment_resources;
+  repositories.resources = repositories.v4_employment_resources;
+  repositories.meta = metaRepository;
+  repositories.auditLog = auditRepository;
+  window.CWB.employmentResourceProvider = {
+    async list() { return repositories.employmentResources.list(); },
+    async add(resource) { const value = runtime.validateEmploymentResource(resource); return repositories.employmentResources.put(value); },
+    async remove(id) { return repositories.employmentResources.delete(id); },
+    async importManifest(manifest) {
+      await runtime.verifyEmploymentManifest(manifest);
+      let count = 0; for (const resource of manifest.resources) { await this.add(resource); count++; }
+      if (window.CWB.audit && window.CWB.audit.log) await window.CWB.audit.log('employment_manifest_import', { count, key_id:manifest.key_id, manifest_version:manifest.manifest_version });
+      return count;
+    },
+    async exportManifest() {
+      const manifest = await runtime.createEmploymentManifest(await repositories.employmentResources.list());
+      if (window.CWB.audit && window.CWB.audit.log) await window.CWB.audit.log('employment_manifest_export', { count:manifest.resources.length, key_id:manifest.key_id });
+      return manifest;
+    },
+  };
+  window.CWB_V4_SYNC = function syncV4Storage(part) {
+    const keys = part === 'custom' ? ['v4_positions','v4_party_cases','v4_files','v4_employment_resources'] : (part ? [part] : collectionKeys);
+    for (const key of keys) {
+      const backing = backingRepos[key];
+      if (!backing) continue;
+      const source = key.startsWith('v4_') ? v4Collection(key) : (DB[key] || []);
+      if (desktopRepository) {
+        const collection = `records_${key.startsWith('v4_') ? 'custom_' : ''}${key}`;
+        enqueueDesktopWrite(collection, async () => {
+          if (desktopRepository.repositoryReplaceManyAtomic) return desktopRepository.repositoryReplaceManyAtomic(collection, source);
+          const existing = await desktopRepository.repositoryList(collection);
+          for (const record of existing || []) await desktopRepository.repositoryDelete(collection, record.id);
+          if (desktopRepository.repositoryPutMany) return desktopRepository.repositoryPutMany(collection, source);
+          for (const record of source) await desktopRepository.repositoryPut(collection, record);
+        }).catch(() => {});
+      }
+      else Promise.resolve(backing.clear()).then(() => Promise.all(source.map(record => backing.put(record)))).catch(() => {});
+    }
+  };
+  const importJobs = new Map();
+  const importJobsRepository = runtime.createRepository('import_jobs');
+  const importStagingRepository = runtime.createRepository('v4_import_staging', { dbName:'counselor_desk_v4_imports' });
+  const importCheckpointKey = id => `v4_import_job_${id}`;
+  const readImportCheckpoint = id => { try { return store.read(importCheckpointKey(id), null); } catch (_) { return null; } };
+  const writeImportCheckpoint = (id, checkpoint) => {
+    // v4 checkpoints live in IndexedDB; the localStorage read above is retained only for v3.9 migration.
+    importJobsRepository.put(Object.assign({ id, schema_version:7, updated_at:new Date().toISOString() }, checkpoint)).catch(() => {});
+  };
+  const clearImportCheckpoint = id => {
+    try { store.remove(importCheckpointKey(id)); } catch (_) {}
+    importJobsRepository.delete(id).catch(() => {});
+  };
+  function createImportJob(id, options, checkpoint) {
+    const opts = options || {};
+    const stagingStudents = cloneData(DB.students || []);
+    const stagingReady = opts.collection === 'students'
+      ? importStagingRepository.list().then(rows => rows.filter(row => row.job_id === id).forEach(row => {
+        const value = row.student || row;
+        const index = stagingStudents.findIndex(item => item.student_number && item.student_number === value.student_number);
+        if (index >= 0) stagingStudents[index] = Object.assign({}, stagingStudents[index], value); else stagingStudents.push(value);
+      })).catch(() => {})
+      : Promise.resolve();
+    let stagingByNumber;
+    let controller;
+    controller = runtime.createChunkedImportController({
+      rows: opts.rows || [], checkpoint, chunkSize: opts.chunkSize || 500, fileHash: opts.fileHash, sheetName: opts.sheetName, headerRow: opts.headerRow, mappingVersion: opts.mappingVersion,
+      onProgress(progress) {
+        writeImportCheckpoint(id, controller.getCheckpoint());
+        if (typeof opts.onProgress === 'function') opts.onProgress(progress);
+        hooks.emit('v4:import-progress', progress);
+      },
+      async onChunk(chunk) {
+        await stagingReady;
+        if (typeof opts.onChunk === 'function') return opts.onChunk(chunk);
+        if (opts.collection === 'students') {
+          if (!stagingByNumber) stagingByNumber = new Map(stagingStudents.map(item => [String(item.student_number), item]));
+          const changed = [];
+          chunk.forEach(row => {
+            const value = normStudent(row);
+            const current = value.student_number && stagingByNumber.get(value.student_number);
+            if (current) { Object.assign(current, Object.fromEntries(Object.entries(value).filter(([, v]) => v !== '' && v != null))); changed.push(current); }
+            else { stagingStudents.push(value); if (value.student_number) stagingByNumber.set(value.student_number, value); changed.push(value); }
+          });
+          const stagedRows = changed.map(value => ({ id:`${id}:${value.id}`, job_id:id, student:value }));
+          if (importStagingRepository.putMany) await importStagingRepository.putMany(stagedRows);
+          else await Promise.all(stagedRows.map(value => importStagingRepository.put(value)));
+        }
+      },
+    });
+    const clearStaging = async () => {
+      try {
+        if (importStagingRepository.deleteWherePrefix) await importStagingRepository.deleteWherePrefix(`${id}:`);
+        else { const rows = await importStagingRepository.list(); await Promise.all(rows.filter(row => row.job_id === id).map(row => importStagingRepository.delete(row.id))); }
+      } catch (_) {}
+    };
+    const entry = {
+      controller,
+      options: opts,
+      async commit() {
+        if (repositories.students && repositories.students.putMany) await repositories.students.putMany(stagingStudents, { render:false, normalized:true });
+        else { DB.students = stagingStudents; save('students'); }
+        const refresh = () => { try { render(); } catch (_) {} };
+        if (typeof requestIdleCallback === 'function') requestIdleCallback(refresh, { timeout:1000 });
+        else setTimeout(refresh, 50);
+        await clearStaging();
+      },
+    };
+    importJobs.set(id, entry);
+    return entry;
+  }
+  const importerV4 = {
+    async commitPreviewAsync(previewId, options) {
+      const preview = this._previews && this._previews.get(previewId);
+      const opts = options || {};
+      if (!preview) return { ok:false, runId:'', error:'导入预览已失效，请重新选择文件' };
+      if (preview.coll !== 'students') {
+        const result = this.commitPreview(previewId, opts);
+        if (result && result.ok) {
+          const history = store.read('import_history', []) || [];
+          try { await replaceImportHistory(history); app.v4 = Object.assign({}, app.v4 || {}, { importHistory:history }); } catch (_) {}
+        }
+        return result;
+      }
+      if (preview.sensitiveFields.length && !opts.confirmSensitive) return { ok:false, runId:'', error:'请先确认导入敏感字段' };
+      if ((preview.summary.invalid || preview.summary.pending) && !opts.skipInvalid) return { ok:false, runId:'', error:'仍有错误或待确认记录' };
+      if (preview.summary.conflict && opts.conflictPolicy !== 'skip') return { ok:false, runId:'', error:'仍有未处理的冲突记录' };
+      const readyRows = preview.rows.filter(row => row.status === 'ready').map(row => row.value);
+      if (!readyRows.length) return { ok:false, runId:'', error:'没有可写入的记录' };
+      const before = cloneData(DB.students || []);
+      const oldHistory = await listImportHistory();
+      const historyRecord = { id:uid(), coll:'students', before:compactCollection(before), at:new Date().toISOString(), summary:cloneData(preview.summary) };
+      if (!storage.canWriteLarge(store.estimateBytes('students', before) + JSON.stringify(historyRecord).length * 2)) return { ok:false, runId:'', error:'本地存储空间不足，请先导出备份' };
+      let task;
+      try {
+        task = this.start({
+          collection:'students', rows:readyRows, chunkSize:opts.chunkSize || 500,
+          fileHash:preview.source && preview.source.fileHash, sheetName:preview.source && preview.source.sheet,
+          headerRow:preview.source && preview.source.headerRow, mappingVersion:'v4', onProgress:opts.onProgress,
+        });
+        if (typeof opts.onStart === 'function') opts.onStart(task.id);
+        const result = await task;
+        if (result.status !== 'completed') return { ok:false, runId:'', id:result.id, error:'导入已取消，可在任务中心恢复' };
+        try { const nextHistory = oldHistory.concat(historyRecord).slice(-3); await replaceImportHistory(nextHistory); app.v4 = Object.assign({}, app.v4 || {}, { importHistory:nextHistory }); } catch (_) { return { ok:false, runId:'', error:'导入完成，但无法保存撤销快照' }; }
+        if (window.CWB.audit && window.CWB.audit.log) await window.CWB.audit.log('student_import_commit', { run_id:historyRecord.id, total:preview.total, added:preview.summary.add || 0, updated:preview.summary.update || 0 });
+        this._previews.delete(previewId);
+        return { ok:true, runId:historyRecord.id, id:result.id, added:preview.summary.add || 0, updated:preview.summary.update || 0, skipped:preview.total - readyRows.length };
+      } catch (error) {
+        return { ok:false, runId:'', id:task && task.id || '', error:error.message || '分段导入失败' };
+      }
+    },
+    start(options) {
+      const opts = options || {};
+      const id = `v4_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+      const entry = createImportJob(id, opts, opts.checkpoint || null);
+      const running = entry.controller.run().then(async result => { if (result.status === 'completed') { if (opts.collection === 'students') await entry.commit(); clearImportCheckpoint(id); } return Object.assign(result, { id }); });
+      running.id = id;
+      return running;
+    },
+    resume(id, options) {
+      const jobId = typeof id === 'string' ? id : id && id.id;
+      return (async () => {
+        let entry = importJobs.get(jobId);
+        if (!entry) {
+          const opts = options || {};
+          let checkpoint = readImportCheckpoint(jobId);
+          if (!checkpoint) { try { checkpoint = await importJobsRepository.get(jobId); } catch (_) {} }
+          if (!checkpoint || !Array.isArray(opts.rows)) throw new Error('IMPORT_JOB_NOT_FOUND');
+          if (checkpoint.fileHash && opts.fileHash && String(checkpoint.fileHash) !== String(opts.fileHash)) throw new Error('IMPORT_FILE_CHANGED');
+          entry = createImportJob(jobId, opts, checkpoint);
+        }
+        const result = await entry.controller.resume();
+        if (result.status === 'completed') { await entry.commit(); clearImportCheckpoint(jobId); }
+        return Object.assign(result, { id:jobId });
+      })();
+    },
+    cancel(id) { const entry = importJobs.get(typeof id === 'string' ? id : id && id.id); if (!entry) return false; entry.controller.cancel(); if (window.CWB.audit && window.CWB.audit.log) window.CWB.audit.log('import_cancel', { job_id:typeof id === 'string' ? id : id && id.id }); return true; },
+    onProgress(callback) { return hooks.on('v4:import-progress', callback); },
+    async listJobs() {
+      const merged = new Map();
+      for (const [id, entry] of importJobs.entries()) merged.set(id, Object.assign({ id, collection: entry.options.collection }, entry.controller.getCheckpoint()));
+      try { for (const job of await importJobsRepository.list()) if (!merged.has(job.id)) merged.set(job.id, job); } catch (_) {}
+      return [...merged.values()].sort((a, b) => String(b.updated_at || '').localeCompare(String(a.updated_at || '')));
+    },
+    async getHistoryAsync() { return listImportHistory(); },
+    async undoAsync(runId) {
+      const history = await listImportHistory();
+      const index = history.findIndex(run => run.id === runId);
+      if (index < 0) return false;
+      const run = history[index];
+      const normalizer = run.coll === 'students' ? normStudent : IMP[run.coll] && IMP[run.coll].norm;
+      const restored = normalizer ? run.before.map(normalizer) : cloneData(run.before);
+      const repository = repositories[run.coll];
+      if (repository && repository.putMany) await repository.putMany(restored, { render:false, normalized:run.coll === 'students', atomic:true });
+      else { DB[run.coll] = restored; save(run.coll); }
+      history.splice(index, 1);
+      await replaceImportHistory(history);
+      app.v4 = Object.assign({}, app.v4 || {}, { importHistory:history });
+      render();
+      if (window.CWB.audit && window.CWB.audit.log) await window.CWB.audit.log('import_undo', { run_id:runId, collection:run.coll });
+      return true;
+    },
+    async discardJob(id) {
+      const jobId = typeof id === 'string' ? id : id && id.id;
+      if (!jobId) return false;
+      const entry = importJobs.get(jobId);
+      let existed = Boolean(entry);
+      if (entry) { entry.controller.cancel(); importJobs.delete(jobId); }
+      if (!existed) { try { existed = Boolean(await importJobsRepository.get(jobId)); } catch (_) {} }
+      clearImportCheckpoint(jobId);
+      try {
+        const rows = await importStagingRepository.list();
+        await Promise.all(rows.filter(row => row.job_id === jobId).map(row => importStagingRepository.delete(row.id)));
+      } catch (_) {}
+      return existed;
+    },
+  };
+  const backupV4 = {
+    async export(password, options) {
+      const pkg = bridge.buildPackage((options && options.scope) || {});
+      const attachments = [];
+      if (window.CWB.attachments && typeof window.CWB.attachments.list === 'function') {
+        for (const item of await window.CWB.attachments.list()) {
+          let blob = item.blob;
+          if (!blob && window.cwbDesktop && window.cwbDesktop.readAttachment) { try { blob = new Blob([await window.cwbDesktop.readAttachment(item.id)], { type:item.mimeType || 'application/octet-stream' }); } catch (_) {} }
+          if (blob && typeof blob.arrayBuffer === 'function') {
+            const bytes = new Uint8Array(await blob.arrayBuffer()); let binary = ''; for (const byte of bytes) binary += String.fromCharCode(byte);
+            attachments.push({ id:item.id, student_id:item.student_id, name:item.name, mimeType:item.mimeType, size:bytes.length, content_hash:item.content_hash || '', thumbnail_id:item.thumbnail_id || '', data_base64:btoa(binary) });
+          } else attachments.push({ id:item.id, student_id:item.student_id, name:item.name, mimeType:item.mimeType, size:item.size || 0, content_hash:item.content_hash || '', thumbnail_id:item.thumbnail_id || '' });
+        }
+      }
+      const auditRows = window.CWB.audit && window.CWB.audit.list ? await window.CWB.audit.list() : [];
+      const importJobs = window.CWB.importer && window.CWB.importer.listJobs ? await window.CWB.importer.listJobs() : [];
+      const importHistory = await listImportHistory();
+      const envelope = await runtime.encryptBackup(Object.assign(pkg, { schema_version:7, attachments, audit_log:auditRows, import_jobs:importJobs, import_history:importHistory }), password);
+       if (window.cwbDesktop && typeof window.cwbDesktop.saveBackup === 'function') { const saved = await window.cwbDesktop.saveBackup(envelope, options && options.folder); if (saved && saved.path && options && options.retain && window.cwbDesktop.pruneBackups) await window.cwbDesktop.pruneBackups(options.folder || saved.path.replace(/[\\/][^\\/]+$/, ''), options.retain); }
+       if (window.CWB.audit && window.CWB.audit.log) await window.CWB.audit.log('backup_export', { attachment_count:attachments.length, schema_version:7 });
+      return envelope;
+    },
+    async restore(envelope, password, mode) {
+      let pkg;
+      try { pkg = await runtime.decryptBackup(envelope, password); }
+      catch (error) { if (window.CWB.audit && window.CWB.audit.log) await window.CWB.audit.log('backup_restore_failed', { error:String(error && error.message || error) }); throw error; }
+      if (!pkg || (!pkg.data && !pkg.students)) throw new Error('BACKUP_PAYLOAD_INVALID');
+      const payload = pkg.data || pkg;
+      const attachmentRows = Array.isArray(payload.attachments) ? payload.attachments : [];
+      const stagedAttachments = []; let totalAttachmentBytes = 0;
+      for (const item of attachmentRows) {
+        if (!item || !item.id || !item.data_base64) continue;
+        let binary;
+        try { binary = atob(String(item.data_base64)); } catch (_) { throw new Error('BACKUP_ATTACHMENT_INVALID'); }
+        const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
+        if (bytes.length > 50 * 1024 * 1024) throw new Error('BACKUP_ATTACHMENT_TOO_LARGE');
+        totalAttachmentBytes += bytes.length; if (totalAttachmentBytes > 500 * 1024 * 1024) throw new Error('BACKUP_ATTACHMENTS_TOO_LARGE');
+        if (item.content_hash && window.crypto && window.crypto.subtle) {
+          const digest = Array.from(new Uint8Array(await window.crypto.subtle.digest('SHA-256', bytes))).map(byte => byte.toString(16).padStart(2, '0')).join('');
+          if (digest !== item.content_hash) throw new Error('BACKUP_ATTACHMENT_HASH_FAILED');
+        }
+        stagedAttachments.push({ item, bytes, blob: new Blob([bytes], { type:item.mimeType || 'application/octet-stream' }) });
+      }
+      const before = cloneData(DB);
+      const changedAttachmentIds = [];
+      const priorAttachments = new Map();
+      if (window.CWB.attachments && window.CWB.attachments.get) {
+        for (const { item } of stagedAttachments) {
+          try { const previous = await window.CWB.attachments.get(item.id); if (previous) priorAttachments.set(item.id, previous); } catch (_) {}
+        }
+      }
+      try {
+        const applied = bridge.applyPackage(payload, mode || 'merge');
+        if (Array.isArray(payload.audit_log)) for (const record of payload.audit_log) await auditRepository.put(record);
+        if (Array.isArray(payload.import_jobs)) for (const job of payload.import_jobs) await importJobsRepository.put(job);
+        if (Array.isArray(payload.import_history)) { await replaceImportHistory(payload.import_history); app.v4 = Object.assign({}, app.v4 || {}, { importHistory:payload.import_history }); }
+        for (const { item, bytes, blob } of stagedAttachments) {
+          if (!window.CWB.attachments || !window.CWB.attachments.add) throw new Error('ATTACHMENT_REPOSITORY_UNAVAILABLE');
+           await window.CWB.attachments.add({ id:item.id, student_id:item.student_id, name:item.name, blob, mimeType:item.mimeType, content_hash:item.content_hash || undefined, thumbnail_id:item.thumbnail_id || undefined });
+          changedAttachmentIds.push(item.id);
+          if (window.cwbDesktop && window.cwbDesktop.writeAttachment) await window.cwbDesktop.writeAttachment({ id:item.id, mimeType:item.mimeType, bytes });
+        }
+         if (window.CWB.audit && window.CWB.audit.log) await window.CWB.audit.log('backup_restore', { attachment_count:stagedAttachments.length, mode:mode || 'merge', schema_version:7 });
+         render(); paintWho(); return applied;
+      } catch (error) {
+        Object.keys(before).forEach(key => { DB[key] = before[key]; });
+        Object.keys(DB).forEach(key => { if (key === 'custom') save('custom'); else if (key !== 'settings' && Array.isArray(DB[key])) save(key); });
+        if (before.settings) save('settings');
+        for (const id of changedAttachmentIds) {
+          const previous = priorAttachments.get(id);
+          if (previous && previous.blob) {
+            try { await window.CWB.attachments.add(previous); } catch (_) {}
+            try { if (window.cwbDesktop && window.cwbDesktop.writeAttachment) await window.cwbDesktop.writeAttachment({ id, mimeType:previous.mimeType, bytes:new Uint8Array(await previous.blob.arrayBuffer()) }); } catch (_) {}
+          } else {
+            try { if (window.CWB.attachments && window.CWB.attachments.delete) await window.CWB.attachments.delete(id); } catch (_) {}
+            try { if (window.cwbDesktop && window.cwbDesktop.deleteAttachment) await window.cwbDesktop.deleteAttachment(id); } catch (_) {}
+          }
+        }
+         if (window.CWB.audit && window.CWB.audit.log) await window.CWB.audit.log('backup_restore_failed', { error:String(error && error.message || error) });
+         throw error;
+      }
+    },
+    async configureSchedule(schedule) {
+      const incoming = schedule || {};
+      const frequency = ['daily', 'weekly', 'monthly'].includes(incoming.frequency) ? incoming.frequency : 'weekly';
+      const fallbackRetain = frequency === 'daily' ? 7 : frequency === 'monthly' ? 12 : 8;
+      const requestedRetain = incoming.retain == null ? fallbackRetain : Number(incoming.retain);
+      const value = Object.assign({ frequency, enabled: false, folder: '', retain: Math.max(1, Math.min(100, Number.isFinite(requestedRetain) ? requestedRetain : fallbackRetain)), last_run_at: '' }, incoming, { frequency });
+      value.retain = Math.max(1, Math.min(100, Number.isFinite(Number(value.retain)) ? Number(value.retain) : fallbackRetain));
+      // The web build has no permission to write to a user-selected folder or
+      // keep a background scheduler. Persisting an enabled schedule there
+      // would create a misleading promise and make a later desktop migration
+      // unexpectedly execute an old web-only configuration. Keep web backups
+      // explicitly manual-only; desktop retains the full schedule semantics.
+      const desktopBackupAvailable = !!(window.cwbDesktop && typeof window.cwbDesktop.setBackupSecret === 'function');
+      if (!desktopBackupAvailable) {
+        value.enabled = false;
+        value.folder = '';
+        value.web_manual_only = true;
+      } else {
+        delete value.web_manual_only;
+      }
+      const password = value.password; delete value.password; DB.settings.backup_schedule = value; save('settings');
+      if (window.cwbDesktop && window.cwbDesktop.setBackupSecret && password) await window.cwbDesktop.setBackupSecret(password);
+      return cloneData(value);
+    },
+    async runDueJobs(now) {
+      const schedule = DB.settings.backup_schedule;
+      if (!window.cwbDesktop || typeof window.cwbDesktop.getBackupSecret !== 'function') {
+        return { due: false, reason: 'web_manual_only' };
+      }
+      if (!schedule || !schedule.enabled || !schedule.folder) return { due: false, reason: 'not_configured' };
+      const last = schedule.last_run_at ? new Date(schedule.last_run_at) : null;
+      const current = now ? new Date(now) : new Date();
+      const gap = schedule.frequency === 'daily' ? 86400000 : schedule.frequency === 'monthly' ? 2592000000 : 604800000;
+      if (last && current.getTime() - last.getTime() < gap) return { due: false, reason: 'not_due' };
+      const secret = await window.cwbDesktop.getBackupSecret();
+      if (!secret) return { due: true, reason: 'password_required', scheduled_at: current.toISOString() };
+      const fallbackRetain = schedule.frequency === 'daily' ? 7 : schedule.frequency === 'monthly' ? 12 : 8;
+      const retain = Math.max(1, Math.min(100, Number.isFinite(Number(schedule.retain)) ? Number(schedule.retain) : fallbackRetain));
+      await backupV4.export(secret, { folder:schedule.folder, retain });
+      schedule.last_run_at = current.toISOString(); save('settings');
+      return { due: true, reason: 'completed', scheduled_at: schedule.last_run_at };
+    },
+  };
+  window.CWB.repositories = repositories;
+  window.CWB_V4_IDB_ACTIVE = true;
+  const desktopAttachmentRepository = desktopRepository ? {
+    async get(id) {
+      const value = await desktopRepository.repositoryGet('attachments', id);
+      if (!value) return null;
+      if (window.cwbDesktop && window.cwbDesktop.readAttachment) {
+        try { value.blob = new Blob([await window.cwbDesktop.readAttachment(id)], { type:value.mimeType || 'application/octet-stream' }); } catch (_) {}
+      }
+      return value;
+    },
+    async list() { return desktopRepository.repositoryList('attachments'); },
+    async put(record) {
+      const value = Object.assign({}, record);
+      const blob = value.blob;
+      delete value.blob;
+      if (blob && window.cwbDesktop && window.cwbDesktop.writeAttachment) await window.cwbDesktop.writeAttachment({ id:value.id, mimeType:value.mimeType || blob.type, bytes:new Uint8Array(await blob.arrayBuffer()) });
+      return desktopRepository.repositoryPut('attachments', value);
+    },
+    async delete(id) {
+      const removed = await desktopRepository.repositoryDelete('attachments', id);
+      if (window.cwbDesktop && window.cwbDesktop.deleteAttachment) await window.cwbDesktop.deleteAttachment(id).catch(() => {});
+      return removed;
+    },
+    async count() { return desktopRepository.repositoryCount('attachments'); },
+    async clear() { for (const item of await desktopRepository.repositoryList('attachments')) await this.delete(item.id); },
+  } : null;
+  window.CWB.attachments = runtime.createAttachmentRepository(desktopAttachmentRepository ? { repository:desktopAttachmentRepository } : undefined);
+  if (Array.isArray(window.__CWB_EMBED_ATTACHMENTS__) && window.__CWB_EMBED_ATTACHMENTS__.length) restoreAttachmentPayload(window.__CWB_EMBED_ATTACHMENTS__).catch(() => {});
+  window.CWB.importer = Object.assign(window.CWB.importer, importerV4);
+  window.CWB.backup = backupV4;
+  window.CWB.v4 = { schemaVersion: runtime.schemaVersion, matchPhotoFilename: runtime.matchPhotoFilename, partyChecklist: runtime.partyChecklist };
+  document.documentElement.dataset.v4Ready = 'true';
+  backupV4.runDueJobs().catch(() => {});
+  Promise.all(repositoryReady).then(async () => {
+    try { app.v4 = Object.assign({}, app.v4 || {}, { importJobs:await importerV4.listJobs() }); } catch (_) {}
+    window.desktopRepositoryReady = true;
+    if (typeof render === 'function') render();
+  }).catch(error => {
+    window.desktopRepositoryReady = false;
+    const main = $('#main');
+    if (main) main.innerHTML = `<div class="card"><div class="card-bd"><div class="banner banner-danger">本地数据仓储初始化失败：${esc(error && error.message || '未知错误')}。业务数据未写入，请重启工作台或检查数据目录。</div></div></div>`;
+  });
+  return true;
+}
+
 window.CWB = {
   version: APP_VERSION,
   db: DB, store, storage, schema, importSchemas:IMPORT_SCHEMAS, studentImportSchema:STUDENT_IMPORT_SCHEMA, ui, hooks, bridge, modules, onboarding, theme, security, importer,
@@ -6736,7 +8029,12 @@ window.CWB = {
   },
 };
 
+window.CWB.exportPortable = exportPortable;
+window.CWB.buildPortableHtml = buildPortableHtml;
+window.CWB.exportPackage = exportPackage;
+window.addEventListener('cwb:v4-ready', installV4Integration);
 boot();
+installV4Integration();
 })();
 </script>
 </body>

@@ -1,0 +1,10 @@
+{
+  "name": "counselor-desk-desktop",
+  "productName": "辅导员工作台",
+  "version": "4.0.0",
+  "private": true,
+  "main": "main.cjs",
+  "description": "Windows offline counselor workbench",
+  "author": "Counselor Desk contributors",
+  "license": "MIT"
+}

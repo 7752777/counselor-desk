@@ -5,7 +5,7 @@ const { spawnSync } = require('node:child_process');
 const root = path.resolve(__dirname, '..');
 const target = process.argv[2]
   ? path.resolve(process.argv[2])
-  : path.join(root, 'output', '辅导员工作台-v3.9.0');
+  : path.join(root, 'output', '辅导员工作台-v4.0.0');
 fs.mkdirSync(target, { recursive:true });
 
 const htmlTarget = path.join(target, '辅导员工作台.html');
@@ -16,6 +16,8 @@ if (build.status !== 0) process.exit(build.status || 1);
 
 const copies = [
   ['README.md', 'README.md'],
+  ['docs/decisions/ADR-006-v40-dual-runtime-and-vault.md', 'ADR-006-v40-dual-runtime-and-vault.md'],
+  ['docs/v4-migration-and-backup.md', 'v4-migration-and-backup.md'],
   ['LICENSE', 'LICENSE'],
   ['vendor/xlsx.LICENSE', 'THIRD-PARTY-LICENSE-SheetJS.txt'],
   ['docs/辅导员工作台使用手册.md', '使用手册.md'],

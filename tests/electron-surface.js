@@ -1,0 +1,32 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+
+const main = fs.readFileSync('desktop/main.cjs', 'utf8');
+const sqlite = fs.readFileSync('desktop/sqlite-store.cjs', 'utf8');
+const preload = fs.readFileSync('desktop/preload.cjs', 'utf8');
+const pkg = JSON.parse(fs.readFileSync('desktop/package.json', 'utf8'));
+
+assert.equal(pkg.productName, '辅导员工作台');
+assert.match(main, /contextIsolation:\s*true/);
+assert.match(main, /sandbox:\s*true/);
+assert.match(main, /nodeIntegration:\s*false/);
+assert.match(main, /setWindowOpenHandler/);
+assert.match(main, /will-navigate/);
+assert.doesNotMatch(preload, /contextBridge\.exposeInMainWorld\(['"]require/);
+assert.match(preload, /cwbDesktop/);
+assert.match(preload, /saveBackup/);
+assert.match(preload, /repositoryList/);
+assert.match(preload, /setBackupSecret/);
+assert.match(preload, /pruneBackups/);
+assert.match(sqlite, /node:sqlite/);
+assert.match(main, /desktop:repository-put/);
+assert.match(main, /ALLOWED_COLLECTIONS/);
+assert.match(main, /validateCollection/);
+assert.match(main, /validateCollection\(collection\)/);
+assert.match(main, /validateAttachmentId/);
+assert.match(main, /ATTACHMENT_SIZE_LIMIT/);
+assert.match(main, /desktop:write-attachment/);
+assert.match(main, /encryptBuffer/);
+assert.match(preload, /readAttachment/);
+assert.match(preload, /chooseBackupFolder/);
+console.log('PASS electron-surface');

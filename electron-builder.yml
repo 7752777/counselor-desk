@@ -1,0 +1,27 @@
+appId: cn.counselordesk.workbench
+productName: 辅导员工作台
+artifactName: counselor-desk-${version}-${arch}.${ext}
+directories:
+  output: output/desktop
+  buildResources: assets
+files:
+  - desktop/**
+  - index.html
+  - src/core/v4-runtime.js
+  - src/core/import-worker.js
+  - vendor/xlsx.full.min.js
+  - vendor/argon2-bundled.min.js
+  - vendor/jszip.min.js
+  - vendor/echarts.min.js
+  - THIRD-PARTY-NOTICES.md
+win:
+  target:
+    - nsis
+    - portable
+  requestedExecutionLevel: asInvoker
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+portable:
+  artifactName: counselor-desk-${version}-portable.${ext}

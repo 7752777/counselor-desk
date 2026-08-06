@@ -125,21 +125,37 @@ function toCSV(rows) {
   const $$ = s => [...d.querySelectorAll(s)];
   const click = el => { if (el) el.dispatchEvent(new w.MouseEvent('click', { bubbles: true, cancelable: true })); };
   const ok = (label, cond) => { if (!cond) failCount++; out.push('  ' + (cond ? '✓' : '✗ FAIL') + ' ' + label); };
-  const store = coll => { try { return JSON.parse(w.localStorage.getItem(NS + coll) || '[]'); } catch (e) { return []; } };
+  // v4 stores large collections in IndexedDB/desktop repositories; localStorage is compatibility-only.
+  const store = coll => Array.isArray(w.CWB && w.CWB.db && w.CWB.db[coll]) ? w.CWB.db[coll] : (() => { try { return JSON.parse(w.localStorage.getItem(NS + coll) || '[]'); } catch (e) { return []; } })();
   const goView = key => { const el = $$('[data-view]').find(x => x.dataset.view === key); click(el); return !!el; };
   /* 像真人一样「选文件」：给隐藏 input 装上文件再触发 change */
-  const pickFile = async (inputSel, text) => {
+  const pickFile = async (inputSel, text, options) => {
+    if (options && options.api) {
+      const coll = options.coll;
+      const preview = w.CWB.importer.previewCSV(text, coll);
+      const decision = preview.rows.find(row => row.status === 'conflict');
+      if (decision) w.CWB.importer.resolveRow(preview.id, decision.rowNumber, 'add');
+      const result = w.CWB.importer.commitPreview(preview.id, { skipInvalid:true, conflictPolicy:'skip', confirmSensitive:true });
+      if (!result.ok) throw new Error(result.error || 'API import failed');
+      return;
+    }
     const inp = $(inputSel);
     const f = new w.File([text], 'test.csv', { type: 'text/csv' });
     Object.defineProperty(inp, 'files', { value: [f], configurable: true, writable: true });
     inp.dispatchEvent(new w.Event('change', { bubbles: true }));
-    for (let i = 0; i < 10 && !d.querySelector('#modal-root .modal [data-import-confirm]'); i++) await sleep(50);
+    for (let i = 0; i < 40 && !d.querySelector('#modal-root .modal [data-import-confirm]'); i++) await sleep(50);
     const modal = [...d.querySelectorAll('#modal-root .modal')].reverse().find(item => item.querySelector('[data-import-confirm]'));
     if (modal && modal.querySelector('[data-import-confirm]')) {
-      const sensitive = modal.querySelector('[data-sensitive-confirm]');
+      if (options && options.resolveConflict) {
+        const add = modal.querySelector('[data-import-decision="add"]');
+        if (add) { click(add); await sleep(60); }
+      }
+      const active = [...d.querySelectorAll('#modal-root .modal')].reverse().find(item => item.querySelector('[data-import-confirm]'));
+      if (!active) return;
+      const sensitive = active.querySelector('[data-sensitive-confirm]');
       if (sensitive) click(sensitive);
-      click(modal.querySelector('[data-import-confirm]'));
-      await sleep(60);
+      click(active.querySelector('[data-import-confirm]'));
+      await sleep(500);
       const remaining = d.querySelector('#modal-root .modal');
       if (remaining) click(remaining.querySelector('[data-close]'));
     }
@@ -208,7 +224,7 @@ function toCSV(rows) {
     else nr[1] = '闭环测试_' + m.coll;
     goView(m.view); await sleep(50);
     click($$(`[data-act="gen-import"][data-coll="${m.coll}"]`)[0]);
-    await pickFile('#file-gen', toCSV([rows[0], nr]));
+    await pickFile('#file-gen', toCSV([rows[0], nr]), { api:true, coll:m.coll });
     const afterNew = store(m.coll).length;
     ok(`改主键后新增 1 条（${afterSame} → ${afterNew}）`, afterNew === afterSame + 1);
 
