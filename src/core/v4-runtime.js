@@ -10,7 +10,7 @@
     'records_focus', 'records_psych', 'records_graduate', 'records_policy', 'records_material', 'records_comp',
     'records_tpl', 'records_learning_materials', 'records_learning_notes', 'records_learning_sessions',
     'records_custom_v4_positions', 'records_custom_v4_party_cases', 'records_custom_v4_files',
-    'records_custom_v4_employment_resources', 'attachments', 'import_jobs', 'audit_log', 'meta',
+    'records_custom_v4_employment_resources', 'records_custom_v4_test_snapshots', 'attachments', 'import_jobs', 'audit_log', 'meta',
   ]);
 
   function clone(value) {
@@ -144,7 +144,8 @@
       if (databasePromise) return databasePromise;
       databasePromise = new Promise((resolve, reject) => {
         const legacySources = [];
-        const request = global.indexedDB.open(databaseName, 2);
+        // v4.0.1 adds the test snapshot repository without abandoning existing v4.0 stores.
+        const request = global.indexedDB.open(databaseName, 3);
         request.onupgradeneeded = () => {
           const database = request.result;
           stores.forEach(storeName => {

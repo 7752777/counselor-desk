@@ -766,8 +766,11 @@ tbody tr:last-child td{border-bottom:none}
 .embedded-actions{justify-content:flex-start;margin-bottom:12px}
 .analysis-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}.analysis-kpis>div{padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--card-2)}.analysis-kpis span{display:block;color:var(--ink-3);font-size:12px}.analysis-kpis b{display:block;color:var(--accent);font-size:22px;line-height:1.2;margin-top:4px}.analysis-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.analysis-panel{border:1px solid var(--line);border-radius:10px;padding:14px;background:var(--card-2)}.analysis-panel h3{margin:0 0 10px;font-size:14px}.analysis-bar,.analysis-heat{display:grid;grid-template-columns:minmax(90px,1fr) 2fr auto;align-items:center;gap:9px;width:100%;min-height:34px;padding:5px 7px;border-radius:7px;text-align:left;color:var(--ink-2)}.analysis-heat{grid-template-columns:1fr auto}.analysis-bar:hover,.analysis-heat:hover{background:var(--accent-soft)}.analysis-bar i{height:8px;border-radius:99px;background:var(--signal);min-width:4px}.analysis-bar b,.analysis-heat b{font-size:12px;color:var(--accent)}.module-config-row{display:flex;align-items:center;gap:8px;padding:7px 0}
 .employment-resource-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}.employment-resource-card{padding:15px;border:1px solid var(--line);border-radius:12px;background:var(--card-2);display:flex;flex-direction:column;min-height:190px}.employment-resource-top{display:flex;justify-content:space-between;align-items:center}.employment-resource-icon{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}.employment-resource-card h3{margin:13px 0 6px;font-size:15px;line-height:1.4;color:var(--ink)}.employment-resource-card p{margin:0;color:var(--ink-2);font-size:12px;line-height:1.6}.employment-resource-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;color:var(--ink-3);font-size:11px}.employment-resource-actions{display:flex;gap:7px;margin-top:auto;padding-top:14px}.employment-resource-actions .btn{flex:0 0 auto}
+.chart-panel-body{display:grid;grid-template-columns:1fr;align-items:center;min-height:230px}.chart-panel-body .donut-anim{justify-self:center;justify-content:center;min-height:190px;width:min(100%,520px)}.chart-panel-body .donut-anim svg{width:190px;height:190px}.chart-panel-body .donut-anim .legend{justify-content:flex-start}.report-period-kpi{min-width:0}.report-period-name{font-size:15px;font-weight:700;margin-top:4px;white-space:normal;overflow-wrap:anywhere;line-height:1.35}.learning-kpi-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:16px}.learning-kpi-grid .kpi{min-width:0;display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;align-items:center;gap:5px 12px}.learning-kpi-grid .kpi-l{grid-column:1;white-space:normal;line-height:1.35}.learning-kpi-grid .kpi-v{grid-column:2;grid-row:1 / span 2;margin:0}.learning-kpi-grid .kpi-s{grid-column:1;grid-row:2}.card-hd h2,.v4-list-item strong,.mcard-t{overflow-wrap:anywhere;min-width:0}.v4-list-item{min-width:0}.v4-list-item>div{min-width:0}.policy-resource-card{display:flex;flex-direction:column;gap:8px;padding:15px;border:1px solid var(--line);border-radius:12px;background:var(--card-2)}.policy-resource-card h3{margin:0;font-size:15px;line-height:1.45}.policy-resource-card p{margin:0;color:var(--ink-2);line-height:1.65;font-size:13px}.policy-resource-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:6px}
+.kpi.brand{display:block}
 .nav-item{font-size:13px;min-height:36px}.nav-group{font-size:11px;line-height:1.3}.nav-item .ic{width:16px;height:16px}.v4-head h1{font-size:20px}.v4-actions,.v4-toolbar{gap:8px}.v4-stat b{font-size:20px}.v4-photo-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}.v4-photo{aspect-ratio:4/3;min-height:0}.v4-toolbar .inp{min-width:0;max-width:100%}
 @media(max-width:760px){.analysis-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.analysis-grid{grid-template-columns:1fr}.v4-actions .btn,.v4-toolbar .btn{flex:0 1 auto}.workspace-tab{padding:0 10px}}
+@media(max-width:760px){.chart-panel-body{grid-template-columns:1fr;min-height:0}.chart-panel-body .donut-anim{justify-content:center}.learning-kpi-grid{grid-template-columns:1fr}.learning-kpi-grid .kpi{grid-template-columns:1fr auto}}
 @media(max-width:760px){.v4-toolbar>.inp{width:100%;flex-basis:100%}}
 @media(max-width:760px){.v4-head{display:block}.v4-actions{justify-content:flex-start;margin-top:12px}.v4-stat-row{grid-template-columns:repeat(2,minmax(0,1fr))}.v4-photo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
@@ -1214,6 +1217,7 @@ const schema = {
     class_name:    { label:'班级', platform:true },
     major_name:    { label:'专业', platform:true },
     grade:         { label:'年级', platform:true },
+    student_level: { label:'培养层次', local:true },
     college_name:  { label:'学院', platform:true },
     counselor_name:{ label:'辅导员', platform:true },
     enrollment_status:{ label:'学生当前状态', platform:true },
@@ -1516,7 +1520,7 @@ const bridge = {
       DB.learning_materials = LM.map(normLearningMaterial); DB.learning_notes = LN.map(normLearningNote); DB.learning_sessions = LS.map(normLearningSession);
       if (CUSTOM) DB.custom = cloneData(CUSTOM);
     } else {
-      const sKey = x => x.student_number || x.id;
+      const sKey = x => studentIdentityKey(x) || x.id;
       const map = new Map(DB.students.map(x => [sKey(x), x]));
       S.forEach(x => { const k = sKey(x); map.has(k) ? Object.assign(map.get(k), x) : map.set(k, normStudent(x)); });
       DB.students = Array.from(map.values());
@@ -1612,10 +1616,27 @@ const bridge = {
 };
 
 /* ===================== 8. 数据规范化 ===================== */
+function normalizeStudentLevel(value) {
+  const text = String(value == null ? '' : value).trim().toLowerCase();
+  if (!text) return '';
+  if (/博士|ph\.?d|doctoral/.test(text)) return 'doctoral';
+  if (/研究生|硕士|master|graduate|研/.test(text)) return 'graduate';
+  if (/本科|学士|undergraduate|bachelor/.test(text)) return 'undergraduate';
+  return text;
+}
+function studentLevelLabel(value) {
+  return ({ undergraduate:'本科生', graduate:'研究生', doctoral:'博士研究生' }[normalizeStudentLevel(value)] || String(value || '未标注'));
+}
+function studentIdentityKey(value) {
+  const item = value || {};
+  const number = String(item.student_number || '').trim();
+  const level = normalizeStudentLevel(item.student_level || '');
+  return number ? `${number}::${level || 'unspecified'}` : '';
+}
 function normStudent(x) {
   x = x || {};
   const now = new Date().toISOString();
-  const knownStudentKeys = new Set(['id','student_number','full_name','gender','class_name','major_name','grade','college_name','counselor_name','enrollment_status','politics','phone','dorm','birthday','hometown','origin','home_addr','parent_name','parent_phone','edu_years','nation','id_card','email','qq','dorm_building','dorm_room','academic_score','credits','class_rank','enrollment_date','graduation_date','emergency_contact','emergency_phone','photo_ids','photo_assets','custom_fields','custom_field_meta','focus','focus_level','crisis_level','crisis_way','crisis_relieved','note','created_at','updated_at','schema_version','_demo']);
+  const knownStudentKeys = new Set(['id','student_number','full_name','gender','class_name','major_name','grade','student_level','college_name','counselor_name','enrollment_status','politics','phone','dorm','birthday','hometown','origin','home_addr','parent_name','parent_phone','edu_years','nation','id_card','email','qq','dorm_building','dorm_room','academic_score','credits','class_rank','enrollment_date','graduation_date','emergency_contact','emergency_phone','photo_ids','photo_assets','custom_fields','custom_field_meta','focus','focus_level','crisis_level','crisis_way','crisis_relieved','note','created_at','updated_at','schema_version','_demo']);
   const customFields = Object.assign({}, x.custom_fields && typeof x.custom_fields === 'object' ? x.custom_fields : {});
   const customFieldMeta = Object.assign({}, x.custom_field_meta && typeof x.custom_field_meta === 'object' ? x.custom_field_meta : {});
   Object.keys(x).forEach(key => { if (!knownStudentKeys.has(key) && !key.startsWith('_')) { customFields[key] = x[key]; customFieldMeta[key] = customFieldMeta[key] || { type:Array.isArray(x[key]) ? 'array' : typeof x[key], sensitive:/身份证|证件|电话|手机|地址|心理|政治|照片/i.test(key) }; } });
@@ -1627,6 +1648,7 @@ function normStudent(x) {
     class_name: x.class_name || '',
     major_name: x.major_name || '',
     grade: x.grade || '',
+    student_level: normalizeStudentLevel(x.student_level || x.stu_type || x.program_level || ''),
     college_name: x.college_name || '',
     counselor_name: x.counselor_name || '',
     enrollment_status: x.enrollment_status || '待确认',
@@ -1943,6 +1965,8 @@ function normPolicy(x) {
     keywords: x.keywords || '',
     summary: x.summary || '',
     url: x.url || '',
+    attachment_id: x.attachment_id || '',
+    mime_type: x.mime_type || '',
     starred: !!x.starred,
     note: x.note || '',
     created_at: x.created_at || new Date().toISOString(),
@@ -2249,10 +2273,10 @@ function seedDemo() {
 
   DB.policy = [
     { title:'普通高等学校学生管理规定', category:'学籍管理', issuer:'教育部', pub_date:'2025-03-01', doc_no:'教育部令第41号',
-      keywords:'学籍 处分 申诉', summary:'学生学籍管理、奖惩、申诉的基本规章，是处理违纪与申诉的依据。', url:'',
+      keywords:'学籍 处分 申诉', summary:'学生学籍管理、奖惩、申诉的基本规章，是处理违纪与申诉的依据。', url:'https://www.moe.gov.cn/',
       starred:true, note:'示例：常用依据。' },
     { title:'高等学校辅导员队伍建设规定', category:'思想政治', issuer:'教育部', pub_date:'2024-11-01', doc_no:'教育部令第43号',
-      keywords:'辅导员 职责 配备', summary:'明确辅导员九大工作职责与配备比例，是岗位履职的纲领性文件。', url:'',
+      keywords:'辅导员 职责 配备', summary:'明确辅导员九大工作职责与配备比例，是岗位履职的纲领性文件。', url:'https://www.moe.gov.cn/',
       starred:true, note:'示例。' },
     { title:'家庭经济困难学生认定办法', category:'资助育人', issuer:'学校学生处', pub_date:'2025-09-01', doc_no:'学字〔2025〕12号',
       keywords:'困难认定 资助', summary:'困难等级认定流程与材料清单，资助评议前必读。', url:'',
@@ -2519,7 +2543,7 @@ const app = {
   bulk: { on: false, sel: new Set() },
   filters: {
     tasks:{ q:'', status:'open', duty:'' },
-    students:{ q:'', cls:'', focus:'', field:'', value:'', sort:'focus', sortDir:'asc', mode:'table', tab:'ledger' },
+    students:{ q:'', cls:'', level:'', focus:'', field:'', value:'', sort:'focus', sortDir:'asc', mode:'table', tab:'ledger' },
     talks:{ q:'', duty:'' },
     stay:{ q:'', approval:'' },
     leave:{ q:'', delayed:'' },
@@ -2671,7 +2695,7 @@ function viewLearning() {
   const active = DB.learning_materials.filter(m => m.status !== '已完成').length;
   return `<div class="card">
     <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-book"/></svg>个人学习助手</h2><span class="sp"></span><button class="btn btn-sm" data-act="learning-export">导出学习包</button><button class="btn btn-primary btn-sm" data-act="learning-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增资料</button></div>
-    <div class="card-bd"><div class="kpis"><div class="kpi brand"><div class="kpi-l">资料总数</div><div class="kpi-v" data-num="${DB.learning_materials.length}">0</div></div><div class="kpi warn"><div class="kpi-l">进行中</div><div class="kpi-v" data-num="${active}">0</div></div><div class="kpi ok"><div class="kpi-l">笔记数</div><div class="kpi-v" data-num="${DB.learning_notes.length}">0</div></div></div>
+    <div class="card-bd"><div class="learning-kpi-grid"><div class="kpi brand"><div class="kpi-l">资料总数</div><div class="kpi-v" data-num="${DB.learning_materials.length}">0</div><div class="kpi-s">本地资料</div></div><div class="kpi warn"><div class="kpi-l">进行中</div><div class="kpi-v" data-num="${active}">0</div><div class="kpi-s">待继续学习</div></div><div class="kpi ok"><div class="kpi-l">笔记数</div><div class="kpi-v" data-num="${DB.learning_notes.length}">0</div><div class="kpi-s">可随时导出</div></div></div>
       <div class="toolbar"><div class="search"><svg class="ic ic-sm"><use href="#i-search"/></svg><input class="inp" placeholder="搜索资料、来源、标签、正文" data-filter="learning.q" value="${esc(q)}"></div><select class="inp" style="width:auto;min-width:120px" data-filter="learning.status"><option value="">全部状态</option><option value="未开始"${status === '未开始' ? ' selected' : ''}>未开始</option><option value="进行中"${status === '进行中' ? ' selected' : ''}>进行中</option><option value="已完成"${status === '已完成' ? ' selected' : ''}>已完成</option></select></div>
       ${list.length ? `<div class="learning-list">${list.map(m => `<article class="learning-item"><div class="learning-item-hd"><div><h3>${esc(m.title)}</h3><div class="tiny">${esc(m.type)} · ${esc(m.source || '本地资料')} · ${esc(m.status)}</div></div><span class="tag tag-blue">${m.progress}%</span></div><div class="learning-progress"><i style="width:${m.progress}%"></i></div><p>${esc(m.summary || learningSummary(m).split('\n')[0])}</p><div class="mcard-acts"><button class="btn btn-sm" data-act="learning-summary" data-id="${m.id}">生成摘要</button><button class="btn btn-sm" data-act="learning-note-new" data-id="${m.id}">记笔记</button><button class="btn btn-sm" data-act="learning-edit" data-id="${m.id}">编辑</button><button class="btn btn-sm btn-danger" data-act="learning-del" data-id="${m.id}">删除</button></div></article>`).join('')}</div>` : emptyBox('还没有学习资料', '<button class="btn btn-primary btn-sm" data-act="learning-new">新增第一份资料</button>')}
     </div></div>`;
@@ -3041,6 +3065,7 @@ function filterStudents() {
   const f = app.filters.students;
   return DB.students.filter(s => {
     if (f.cls && s.class_name !== f.cls) return false;
+    if (f.level && normalizeStudentLevel(s.student_level) !== f.level) return false;
     if (f.focus === '__any' && !s.focus_level) return false;
     if (f.focus === '__crisis' && !(s.crisis_level && !s.crisis_relieved)) return false;
     if (f.focus && f.focus !== '__any' && f.focus !== '__crisis' && !(s.focus || []).includes(f.focus)) return false;
@@ -3116,6 +3141,12 @@ function viewStudents() {
         <option value="">全部班级</option>
         ${classList().map(c => `<option value="${esc(c)}"${f.cls === c ? ' selected' : ''}>${esc(c)}</option>`).join('')}
       </select>
+      <select class="inp" style="width:auto;min-width:130px" data-filter="students.level" aria-label="培养层次">
+        <option value="">本科 / 研究生：全部</option>
+        <option value="undergraduate"${f.level === 'undergraduate' ? ' selected' : ''}>本科生</option>
+        <option value="graduate"${f.level === 'graduate' ? ' selected' : ''}>研究生</option>
+        <option value="doctoral"${f.level === 'doctoral' ? ' selected' : ''}>博士研究生</option>
+      </select>
       <select class="inp" style="width:auto;min-width:150px" data-filter="students.focus">
         <option value="">全部学生</option>
         <option value="__any"${f.focus === '__any' ? ' selected' : ''}>仅重点关注</option>
@@ -3144,7 +3175,7 @@ function viewStudents() {
         return `<tr${late ? ' class="row-danger"' : ''}>
           <td><div class="name-cell">${avatarOf(s)}<div>
             <div style="font-weight:600">${esc(s.full_name)}</div>
-            <div class="tiny">${esc(s.gender || '')} ${esc(s.politics || s.major_name || '')}</div></div></div></td>
+            <div class="tiny">${esc(s.gender || '')} ${esc(studentLevelLabel(s.student_level))} · ${esc(s.politics || s.major_name || '')}</div></div></div></td>
           <td class="muted">${esc(s.student_number)}</td>
           <td class="muted">${esc(s.class_name)}</td>
           <td>${L && L.k ? `<span class="tag ${L.c}">${esc(L.n)}</span>` : '<span class="tiny">—</span>'}</td>
@@ -3164,7 +3195,7 @@ function viewStudents() {
         <div class="mcard-hd">${avatarOf(s)}<div class="mcard-t">${esc(s.full_name)}
           <span class="tiny" style="font-weight:400">${esc(s.student_number)}</span></div>
           ${L && L.k ? `<span class="tag ${L.c}">${esc(L.n)}</span>` : ''}</div>
-        <div class="mcard-meta"><span>${esc(s.class_name)}</span>${s.dorm ? `<span>${esc(s.dorm)}</span>` : ''}
+        <div class="mcard-meta"><span>${esc(studentLevelLabel(s.student_level))}</span><span>${esc(s.class_name)}</span>${s.dorm ? `<span>${esc(s.dorm)}</span>` : ''}
           ${focusTags(s)}${crisisTag(s)}
           <span class="${late ? 'tag tag-red' : ''}">${lt ? `最近谈话 ${cnDate(lt)}` : '暂无谈话记录'}</span></div>
         <div class="mcard-acts">
@@ -3722,7 +3753,7 @@ function viewWarn() {
       <div class="kpi warn"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-clock"/></svg>橙色未解除</div><div class="kpi-v" data-num="${orange}">0</div></div>
       <div class="kpi brand"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-book"/></svg>黄色未解除</div><div class="kpi-v" data-num="${yellow}">0</div></div>
     </div>
-    <div class="warn-donut-wrap" style="padding:14px 0 4px">
+    <div class="warn-donut-wrap chart-panel-body" style="padding:14px 0 4px">
       <div class="sub-hd"><svg class="ic ic-sm" style="color:var(--accent)"><use href="#i-chart"/></svg>预警等级分布（未解除）</div>
       ${warnDonut()}
     </div>
@@ -4133,13 +4164,14 @@ function viewPolicy() {
       ${list.length ? `
       <div class="mcards in">
         ${list.map(s => `
-        <div class="mcard">
+        <div class="policy-resource-card">
           <div class="mcard-hd"><div class="mcard-t">${s.starred ? '<svg class="ic ic-sm" style="color:var(--grad-warm)"><use href="#i-book"/></svg> ' : ''}${esc(s.title)}</div><span class="tag tag-blue">${esc(s.category)}</span></div>
           <div class="mcard-meta"><span>${esc(s.issuer || '—')}</span><span>${esc(s.pub_date || '—')}</span><span>${esc(s.doc_no || '—')}</span></div>
           <div class="mcard-abs">${esc(s.summary || '（暂无摘要）')}</div>
           ${s.keywords ? `<div class="mcard-tags">${s.keywords.split(/[,，\s]+/).filter(Boolean).map(k => `<span class="tag tag-line">${esc(k)}</span>`).join('')}</div>` : ''}
-          <div class="mcard-acts">
-            ${s.url ? `<a class="btn btn-sm" href="${esc(s.url)}" target="_blank" rel="noopener">打开链接</a>` : ''}
+          <div class="policy-resource-actions">
+            ${s.url ? `<a class="btn btn-sm" data-policy-open href="${esc(s.url)}" target="_blank" rel="noopener">打开官方网址</a>` : ''}
+            ${s.attachment_id ? `<button class="btn btn-sm" data-act="policy-open-local" data-id="${s.id}">查看本地文件</button>` : ''}
             <button class="btn btn-sm" data-act="policy-star" data-id="${s.id}">${s.starred ? '取消收藏' : '收藏'}</button>
             <button class="btn btn-sm" data-act="policy-edit" data-id="${s.id}">编辑</button>
             <button class="btn btn-sm btn-danger" data-act="policy-del" data-id="${s.id}">删除</button>
@@ -4354,7 +4386,7 @@ function viewReport() {
       <button class="btn btn-sm btn-primary" data-act="rg-apply" style="align-self:flex-end">应用</button></div>` : ''}
     <div class="card-bd">
       <div class="kpis" style="margin-bottom:0">
-        <div class="kpi brand"><div class="kpi-l">统计区间</div><div style="font-size:15px;font-weight:700;margin-top:4px">${esc(R.name)}</div>
+        <div class="kpi brand report-period-kpi"><div class="kpi-l">统计区间</div><div class="report-period-name">${esc(R.name)}</div>
           <div class="kpi-s">${R.from} ~ ${R.to}</div></div>
         <div class="kpi"><div class="kpi-l">任务完成</div><div class="kpi-v" data-num="${st.task_done}">${st.task_done}<span style="font-size:15px;color:var(--ink-4)">/${st.task_total}</span></div>
           <div class="kpi-s">完成率 ${rate}%</div></div>
@@ -4373,7 +4405,7 @@ function viewReport() {
 
   <div class="card">
     <div class="card-hd"><h2>谈话方式构成</h2></div>
-    <div class="card-bd">${donutChart(wayItems, String(talks.length), '次谈话')}</div>
+    <div class="card-bd chart-panel-body">${donutChart(wayItems, String(talks.length), '次谈话')}</div>
   </div>
 
   <div class="card">
@@ -5202,6 +5234,8 @@ const STU_SYNONYMS = [
   { field:'major_name', keys:['专业','专业名称','所学专业','major','major name','specialty'] },
   // 年级
   { field:'grade', keys:['年级','入学年级','当前年级','grade','grade year','admission year'] },
+  // 培养层次：用于区分同年级本科生与研究生
+  { field:'student_level', keys:['培养层次','学生层次','学历层次','学位层次','本科生','本科','研究生','硕士研究生','博士研究生','student level','program level','degree level'] },
   // 学院
   { field:'college_name', keys:['学院','所在学院','院系','二级学院','college','school','department'] },
   // 辅导员
@@ -5359,6 +5393,7 @@ function stuNormalizeRow(o) {
     class_name: o.class_name ? String(o.class_name).trim() : '',
     major_name: o.major_name ? String(o.major_name).trim() : '',
     grade: o.grade ? String(o.grade).trim() : '',
+    student_level: normalizeStudentLevel(o.student_level || ''),
     college_name: o.college_name ? String(o.college_name).trim() : '',
     counselor_name: o.counselor_name ? String(o.counselor_name).trim() : '',
     enrollment_status: o.enrollment_status ? String(o.enrollment_status).trim() : '待确认',
@@ -5418,17 +5453,18 @@ function importStudentsCSVText(text) {
   const skipped = norm.length - valid.length;
   let add = 0, upd = 0;
   const existByNo = new Map();
-  DB.students.forEach(s => { if (s.student_number) existByNo.set(s.student_number, s); });
+  DB.students.forEach(s => { const key = studentIdentityKey(s); if (key) existByNo.set(key, s); });
   valid.forEach(r => {
     if (!r.student_number && !r.full_name) return;
-    if (r.student_number && existByNo.has(r.student_number)) {
-      const ex = existByNo.get(r.student_number);
+    const identity = studentIdentityKey(r);
+    if (identity && existByNo.has(identity)) {
+      const ex = existByNo.get(identity);
       Object.keys(r).forEach(k => { if (r[k] !== '' && r[k] != null) ex[k] = r[k]; });
       upd++;
     } else {
       const fresh = normStudent(r);
       DB.students.push(fresh);
-      if (r.student_number) existByNo.set(r.student_number, fresh);
+      if (identity) existByNo.set(identity, fresh);
       add++;
     }
   });
@@ -5599,7 +5635,7 @@ const IMPORT_SCHEMAS = Object.fromEntries(Object.entries(IMP).map(([collection, 
   return [collection, { collection, label:cfg.label, fields, mergeKey:cfg.key.slice(), norm:cfg.norm }];
 }));
 const STUDENT_IMPORT_SCHEMA = {
-  collection:'students', label:'学生名单', mergeKey:['student_number'],
+  collection:'students', label:'学生名单', mergeKey:['student_number','student_level'],
   fields:Object.fromEntries(Object.entries(schema.student).map(([field, meta]) => [field, {
     label:meta.label, aliases:(STU_SYNONYMS.find(x => x.field === field) || { keys:[] }).keys.concat(field),
     type:field === 'edu_years' ? 'number' : field === 'birthday' ? 'date' : 'text',
@@ -5738,7 +5774,7 @@ function previewImportText(text, collection, meta) {
         row.status = 'pending'; row.action = 'skip';
         row.errors.push(!row.value.student_number ? '缺少学号' : '缺少姓名');
       } else {
-        const hit = existing.find(item => String(item.student_number) === row.value.student_number);
+        const hit = existing.find(item => studentIdentityKey(item) === studentIdentityKey(row.value));
         row.action = hit ? 'update' : 'add'; row.existingId = hit ? hit.id : '';
       }
     } else {
@@ -5759,7 +5795,7 @@ function previewImportText(text, collection, meta) {
   if (target === 'students') {
     const groups = new Map();
     parsed.rows.filter(row => row.value.student_number).forEach(row => {
-      const list = groups.get(row.value.student_number) || []; list.push(row); groups.set(row.value.student_number, list);
+      const list = groups.get(studentIdentityKey(row.value)) || []; list.push(row); groups.set(studentIdentityKey(row.value), list);
     });
     groups.forEach(group => {
       if (group.length < 2) return;
@@ -5915,9 +5951,9 @@ const importer = {
     if (decision === 'skip') {
       row.status = 'skipped'; row.action = 'skip'; row.errors = ['用户选择跳过'];
     } else if (decision === 'use' && preview.coll === 'students' && row.value.student_number) {
-      const same = preview.rows.filter(item => item.value.student_number === row.value.student_number);
+      const same = preview.rows.filter(item => studentIdentityKey(item.value) === studentIdentityKey(row.value));
       same.forEach(item => { item.status = 'skipped'; item.action = 'skip'; item.errors = ['同学号冲突中未采用']; });
-      const hit = (DB.students || []).find(item => String(item.student_number) === row.value.student_number);
+      const hit = (DB.students || []).find(item => studentIdentityKey(item) === studentIdentityKey(row.value));
       row.status = 'ready'; row.action = hit ? 'update' : 'add'; row.existingId = hit ? hit.id : ''; row.errors = [];
     } else if (decision === 'add' && preview.coll !== 'students') {
       row.status = 'ready'; row.action = 'add'; row.errors = [];
@@ -5946,13 +5982,13 @@ const importer = {
     if (preview.summary.conflict && opts.conflictPolicy !== 'skip') return { ok:false, runId:'', error:'仍有未处理的冲突记录' };
     const before = cloneData(DB[preview.coll] || []);
     const next = cloneData(before);
-    const studentByNumber = preview.coll === 'students' ? new Map(next.filter(item => item.student_number).map(item => [String(item.student_number), item])) : null;
+    const studentByNumber = preview.coll === 'students' ? new Map(next.filter(item => item.student_number).map(item => [studentIdentityKey(item), item])) : null;
     const recordById = preview.coll === 'students' ? null : new Map(next.map(item => [String(item.id), item]));
     let added = 0, updated = 0;
     preview.rows.filter(row => row.status === 'ready').forEach(row => {
       const value = cloneData(row.value); delete value.record_id;
       let current = null;
-      if (preview.coll === 'students') current = studentByNumber.get(value.student_number);
+      if (preview.coll === 'students') current = studentByNumber.get(studentIdentityKey(value));
       else if (row.existingId) current = recordById.get(String(row.existingId));
       if (current) {
         Object.keys(value).forEach(key => { if (value[key] !== '' && value[key] !== undefined) current[key] = value[key]; });
@@ -5960,7 +5996,7 @@ const importer = {
       } else {
         const normalizer = preview.coll === 'students' ? normStudent : IMP[preview.coll].norm;
         const fresh = normalizer(value); fresh._demo = false; next.push(fresh);
-        if (studentByNumber && fresh.student_number) studentByNumber.set(String(fresh.student_number), fresh);
+        if (studentByNumber && fresh.student_number) studentByNumber.set(studentIdentityKey(fresh), fresh);
         if (recordById) recordById.set(String(fresh.id), fresh);
         added++;
       }
@@ -6282,7 +6318,10 @@ function viewBackupV4() {
   const schedule = DB.settings.backup_schedule || { frequency:'weekly', enabled:false, folder:'', retain:8, last_run_at:'' };
   const defaultRetain = schedule.frequency === 'daily' ? 7 : schedule.frequency === 'monthly' ? 12 : 8;
   const status = schedule.enabled ? `已启用 · ${schedule.frequency} · ${schedule.folder || '待选择文件夹'}` : '尚未启用定时备份';
-  const body = `<div class="card"><div class="card-hd"><h2>本地保险库与备份</h2><span class="sp"></span><span class="tag ${schedule.enabled ? 'tag-green' : 'tag-amber'}">${esc(status)}</span></div><div class="card-bd"><p class="muted" style="margin-top:0">桌面版支持加密保险库存储和指定文件夹备份；网页端仅提供手动加密备份。忘记口令无法恢复。</p><div class="v4-toolbar"><button class="btn btn-primary" data-act="v4-backup-export">生成加密备份</button><button class="btn" data-act="v4-backup-restore">恢复 .cwbk 备份</button><button class="btn" data-act="v4-backup-config">配置每日 / 每周 / 每月</button><button class="btn" data-act="export-json">导出兼容 JSON</button></div><div class="tiny">最近一次备份：${esc(schedule.last_run_at || '暂无记录')} · 保留 ${Number(schedule.retain) || defaultRetain} 份</div></div></div>`;
+  const body = `<div class="card"><div class="card-hd"><h2>本地保险库与备份</h2><span class="sp"></span><span class="tag ${schedule.enabled ? 'tag-green' : 'tag-amber'}">${esc(status)}</span></div><div class="card-bd"><p class="muted" style="margin-top:0">桌面版支持加密保险库存储和指定文件夹备份；网页端仅提供手动加密备份。忘记口令无法恢复。</p><div class="v4-toolbar"><button class="btn btn-primary" data-act="v4-backup-export">生成加密备份</button><button class="btn" data-act="v4-backup-restore">恢复 .cwbk 备份</button><button class="btn" data-act="v4-backup-config">配置每日 / 每周 / 每月</button><button class="btn" data-act="export-json">导出兼容 JSON</button></div><div class="tiny">最近一次备份：${esc(schedule.last_run_at || '暂无记录')} · 保留 ${Number(schedule.retain) || defaultRetain} 份</div></div></div>
+  <div class="card"><div class="card-hd"><h2>手机协同（文件交换）</h2></div><div class="card-bd"><div class="banner banner-info">当前版本不连接云端，也没有账号服务。手机与桌面端通过工作包手动往返：桌面导出 → 手机网页导入并修改 → 手机导出 → 桌面选择合并或覆盖。不是实时同步，但数据始终由你掌握。</div><div class="v4-toolbar"><button class="btn btn-primary" data-act="v4-phone-export">导出手机工作包</button><button class="btn" data-act="v4-phone-import">导入手机回传包</button></div></div></div>
+  <div class="card"><div class="card-hd"><h2>测试数据快照</h2><span class="sp"></span><span class="tiny">先保存样例 A，再清空并测试样例 B；恢复不会依赖原始 Excel 文件。</span></div><div class="card-bd"><div class="v4-toolbar"><button class="btn btn-primary" data-act="v4-snapshot-create">保存当前为快照</button><button class="btn btn-danger" data-act="v4-snapshot-clear">清空当前工作区</button><select class="inp" data-v4-snapshot-select><option value="">选择要恢复的快照</option></select><button class="btn" data-act="v4-snapshot-restore">恢复选中快照</button></div><div class="tiny" data-v4-snapshot-status>快照列表加载中…</div></div></div>`;
+  setTimeout(refreshSnapshotSelector, 0);
   return v4Page('备份与迁移', '所有数据、照片和文件统一通过版本化交换包迁移；自动备份在下次启动时补执行。', body, '<button class="btn" data-act="pkg-export">导出交换包</button>');
 }
 
@@ -6928,6 +6967,7 @@ const ACTS = {
   'policy-edit': id => policyForm(DB.policy.find(s => s.id === id)),
   'policy-del': id => ui.confirm('删除条目', '确定删除这条政策条目吗？', () => { DB.policy = DB.policy.filter(s => s.id !== id); save('policy'); render(); ui.toast('已删除','ok'); }, true),
   'policy-star': id => { const s = DB.policy.find(x => x.id === id); if (!s) return; s.starred = !s.starred; save('policy'); render(); ui.toast(s.starred ? '已收藏' : '已取消收藏','ok'); },
+  'policy-open-local': async id => { const item = DB.policy.find(x => x.id === id); if (!item || !item.attachment_id) return ui.toast('该政策没有本地文件','warn'); try { const record = window.CWB.attachments && await window.CWB.attachments.get(item.attachment_id); let blob = record && record.blob; if (!blob && window.cwbDesktop && window.cwbDesktop.readAttachment) blob = new Blob([await window.cwbDesktop.readAttachment(item.attachment_id)], { type:item.mime_type || 'application/octet-stream' }); if (!blob) throw new Error('本地附件不可用'); const url = URL.createObjectURL(blob); window.open(url, '_blank', 'noopener'); setTimeout(() => URL.revokeObjectURL(url), 60000); } catch (error) { ui.toast(`本地文件打开失败：${error.message || '附件不存在'}`,'err'); } },
   'policy-export': () => {
     const rows = [['标题','分类','发布单位','发布日期','文号','关键词','摘要','链接','收藏','备注']]
       .concat(DB.policy.map(s => [s.title, s.category, s.issuer, s.pub_date, s.doc_no, s.keywords, s.summary, s.url, s.starred ? '是' : '否', s.note]));
@@ -7014,6 +7054,11 @@ const ACTS = {
   'export-portable': exportPortable,
   'import-json': () => $('#file-json').click(),
   'pkg-export': exportPackage,
+  'v4-phone-export': async () => { try { const pkg = await sync.createPhonePackage(); download(`手机工作包-v7-${today()}.json`, JSON.stringify(pkg, null, 2), 'application/json'); ui.toast('手机工作包已导出；请在手机网页端导入并修改后再导出回传包','ok',4200); } catch (error) { ui.toast(`手机工作包导出失败：${error.message || '请重试'}`,'err',4200); } },
+  'v4-phone-import': () => { const input = document.createElement('input'); input.type='file'; input.accept='.json,application/json'; input.onchange = () => { const file = input.files && input.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = () => { let pkg; try { pkg = JSON.parse(String(reader.result || '')); } catch (_) { return ui.toast('回传包不是有效 JSON 文件','err'); } ui.modal({ title:'导入手机回传包', size:'narrow', body:'<p class="muted">请选择处理方式。合并会保留本机其他记录；覆盖会先替换当前工作区。建议先导出当前备份。</p>', footer:'<button class="btn" data-close>取消</button><button class="btn btn-danger" data-phone-mode="replace">覆盖</button><button class="btn btn-primary" data-phone-mode="merge">合并</button>', onOpen(mask, close){ $$('[data-phone-mode]', mask).forEach(button => button.onclick = async () => { try { await sync.applyPhonePackage(pkg, button.dataset.phoneMode); close(); ui.toast('手机回传包已应用','ok'); } catch (error) { ui.toast(`回传包导入失败：${error.message || '格式或版本不兼容'}`,'err',4200); } }); } }); }; reader.readAsText(file, 'utf-8'); }; input.click(); },
+  'v4-snapshot-create': async () => { const name = window.prompt('给当前测试数据快照起个名字，例如：样例 A 原始状态', `样例快照 ${today()}`); if (!name) return; try { const record = await testData.createSnapshot(name); render(); await refreshSnapshotSelector(); ui.toast(`已保存快照：${record.name}`,'ok'); } catch (error) { ui.toast(`快照保存失败：${error.message || '请重试'}`,'err'); } },
+  'v4-snapshot-clear': () => ui.confirm('清空当前工作区', '这会清空学生、业务台账、文件目录和附件，但不会删除已保存的测试快照。建议先导出当前备份。确定继续吗？', async () => { try { await testData.clearWorkspace({ includeSettings:false }); render(); await refreshSnapshotSelector(); ui.toast('当前工作区已清空，可导入样例 B','ok'); } catch (error) { ui.toast(`清空失败：${error.message || '请重试'}`,'err'); } }, true),
+  'v4-snapshot-restore': async () => { const id = $('[data-v4-snapshot-select]') && $('[data-v4-snapshot-select]').value; if (!id) return ui.toast('请先选择一个快照','warn'); ui.confirm('恢复测试快照', '恢复会覆盖当前工作区；如需保留现在的数据，请先导出备份。确定恢复吗？', async () => { try { await testData.restoreSnapshot(id); render(); await refreshSnapshotSelector(); ui.toast('测试快照已恢复','ok'); } catch (error) { ui.toast(`快照恢复失败：${error.message || '请重试'}`,'err'); } }, true); },
   'pkg-pull': async () => {
     try { const n = await bridge.pullTasks(); render(); ui.toast(n ? `已拉取 ${n} 条平台任务` : '没有新任务', 'ok'); }
     catch (e) { ui.toast('拉取失败：' + e.message, 'err', 3600); }
@@ -7394,6 +7439,87 @@ async function restoreAttachmentPayload(rows) {
   }
   return restored;
 }
+const WORKSPACE_COLLECTION_KEYS = ['students','tasks','talks','stay','leave','honor','pleave','attend','node','warn','help','grant','focus','psych','graduate','policy','material','comp','tpl','learning_materials','learning_notes','learning_sessions'];
+async function testSnapshotList() {
+  const repo = window.CWB && window.CWB.repositories && window.CWB.repositories.testSnapshots;
+  if (repo && typeof repo.list === 'function') return repo.list();
+  return cloneData((DB.custom && DB.custom.v4_test_snapshots) || []);
+}
+const testData = {
+  async listSnapshots() { return testSnapshotList(); },
+  async createSnapshot(name) {
+    const now = new Date().toISOString();
+    const record = { id:`test_snapshot_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`, name:String(name || `测试快照 ${today()}`).trim(), created_at:now, updated_at:now, schema_version:7, payload:cloneData(bridge.buildPackage()), attachments:await collectAttachmentPayload(), counts:{ students:DB.students.length, records:WORKSPACE_COLLECTION_KEYS.reduce((n, key) => n + ((DB[key] || []).length), 0) } };
+    const repo = window.CWB && window.CWB.repositories && window.CWB.repositories.testSnapshots;
+    if (repo && typeof repo.put === 'function') await repo.put(record);
+    else { DB.custom = DB.custom || {}; DB.custom.v4_test_snapshots = (DB.custom.v4_test_snapshots || []).filter(item => item.id !== record.id).concat(record); if (!window.CWB_V4_IDB_ACTIVE) save('custom'); }
+    if (window.CWB && window.CWB.audit && window.CWB.audit.log) await window.CWB.audit.log('test_snapshot_create', { id:record.id, name:record.name, counts:record.counts });
+    return cloneData(record);
+  },
+  async clearWorkspace(options) {
+    const opts = options || {};
+    for (const key of WORKSPACE_COLLECTION_KEYS) {
+      DB[key] = [];
+      const repo = window.CWB && window.CWB.repositories && window.CWB.repositories[key];
+      if (repo && typeof repo.putMany === 'function') await repo.putMany([], { atomic:true, render:false });
+      else if (!window.CWB_V4_IDB_ACTIVE) save(key);
+    }
+    const customKeys = ['v4_positions','v4_party_cases','v4_files','v4_employment_resources'];
+    DB.custom = DB.custom || {};
+    for (const key of customKeys) {
+      DB.custom[key] = [];
+      const repo = window.CWB && window.CWB.repositories && window.CWB.repositories[key];
+      if (repo && typeof repo.putMany === 'function') await repo.putMany([], { atomic:true, render:false });
+    }
+    if (window.CWB && window.CWB.attachments && typeof window.CWB.attachments.clear === 'function') await window.CWB.attachments.clear();
+    if (!window.CWB_V4_IDB_ACTIVE) save('custom');
+    if (opts.includeSettings) { DB.settings = {}; if (!window.CWB_V4_IDB_ACTIVE) save('settings'); }
+    if (window.CWB && window.CWB.audit && window.CWB.audit.log) await window.CWB.audit.log('test_workspace_clear', { includeSettings:!!opts.includeSettings });
+    render();
+    return true;
+  },
+  async restoreSnapshot(id, options) {
+    const snapshots = await testSnapshotList();
+    const record = snapshots.find(item => String(item.id) === String(id));
+    if (!record || !record.payload) throw new Error('TEST_SNAPSHOT_NOT_FOUND');
+    bridge.applyPackage(record.payload, 'replace');
+    await restoreAttachmentPayload(record.attachments || []);
+    if (typeof window.CWB_V4_SYNC === 'function') { window.CWB_V4_SYNC(); window.CWB_V4_SYNC('custom'); }
+    if (window.CWB && window.CWB.audit && window.CWB.audit.log) await window.CWB.audit.log('test_snapshot_restore', { id:record.id, name:record.name });
+    render();
+    return cloneData(record);
+  },
+  async deleteSnapshot(id) {
+    const repo = window.CWB && window.CWB.repositories && window.CWB.repositories.testSnapshots;
+    if (repo && typeof repo.delete === 'function') return repo.delete(id);
+    DB.custom = DB.custom || {}; DB.custom.v4_test_snapshots = (DB.custom.v4_test_snapshots || []).filter(item => String(item.id) !== String(id)); if (!window.CWB_V4_IDB_ACTIVE) save('custom'); return true;
+  },
+};
+const sync = {
+  async createPhonePackage() {
+    const pkg = bridge.buildPackage();
+    pkg.type = 'phone_exchange'; pkg.sync_mode = 'manual_file_exchange'; pkg.sync_note = '手机端与桌面端通过文件交换，不是实时云同步；导回前请先备份并选择合并或覆盖。';
+    pkg.attachments = await collectAttachmentPayload();
+    return pkg;
+  },
+  async applyPhonePackage(pkg, mode) {
+    if (!pkg || (pkg.type !== 'phone_exchange' && pkg.package !== 'counselor-desk')) throw new Error('PHONE_PACKAGE_INVALID');
+    const applied = bridge.applyPackage(pkg, mode || 'merge');
+    await restoreAttachmentPayload(pkg.attachments || []);
+    if (typeof window.CWB_V4_SYNC === 'function') { window.CWB_V4_SYNC(); window.CWB_V4_SYNC('custom'); }
+    if (window.CWB && window.CWB.audit && window.CWB.audit.log) await window.CWB.audit.log('phone_package_apply', { mode:mode || 'merge' });
+    render();
+    return applied;
+  },
+};
+async function refreshSnapshotSelector() {
+  const select = $('[data-v4-snapshot-select]'); if (!select) return;
+  try {
+    const rows = await testData.listSnapshots();
+    select.innerHTML = '<option value="">选择要恢复的快照</option>' + rows.sort((a, b) => String(b.created_at || '').localeCompare(String(a.created_at || ''))).map(item => `<option value="${esc(item.id)}">${esc(item.name || item.id)} · ${esc(item.created_at || '')} · ${Number(item.counts && item.counts.students || 0)} 名学生</option>`).join('');
+    const status = $('[data-v4-snapshot-status]'); if (status) status.textContent = rows.length ? `已有 ${rows.length} 个快照；恢复前建议先导出当前备份。` : '还没有快照，建议先保存样例 A 原始状态。';
+  } catch (error) { const status = $('[data-v4-snapshot-status]'); if (status) status.textContent = `快照读取失败：${error.message || '请重试'}`; }
+}
 function applyEmbedded() {
   const e = window.__CWB_EMBED__ || {};
   DB.settings = e.settings || null;
@@ -7716,7 +7842,7 @@ function installV4Integration() {
       async count() { if (bulkMode) return DB[key].length; if (desktopRepository) return Number(await desktopRepository.repositoryCount(`records_${key}`) || 0); const rows = await unpackRows(await backing.list()); return rows.length || (DB[key] || []).length; },
     };
   });
-  const customRepositoryKeys = ['v4_positions', 'v4_party_cases', 'v4_files', 'v4_employment_resources'];
+  const customRepositoryKeys = ['v4_positions', 'v4_party_cases', 'v4_files', 'v4_employment_resources', 'v4_test_snapshots'];
   customRepositoryKeys.forEach(key => {
     const backing = runtime.createRepository(`records_custom_${key}`);
     backingRepos[key] = backing;
@@ -7733,6 +7859,8 @@ function installV4Integration() {
       async list() { const remote = desktopRepository && await desktopRepository.repositoryList(`records_custom_${key}`); if (Array.isArray(remote)) return cloneData(remote); const rows = await backing.list(); return rows.length ? cloneData(rows) : cloneData(v4Collection(key)); },
       async get(id) { const remote = desktopRepository && await desktopRepository.repositoryGet(`records_custom_${key}`, id); if (remote) return cloneData(remote); const value = await backing.get(id); return value == null ? cloneData(v4Collection(key).find(item => String(item.id) === String(id))) : cloneData(value); },
       async put(record) { const list = v4Collection(key); const index = list.findIndex(item => String(item.id) === String(record.id)); if (index >= 0) list[index] = cloneData(record); else list.push(cloneData(record)); if (desktopRepository) await enqueueDesktopWrite(`records_custom_${key}`, () => desktopRepository.repositoryPut(`records_custom_${key}`, record)); else await backing.put(record); if (!desktopRepository && !window.CWB_V4_IDB_ACTIVE) save('custom'); render(); return cloneData(record); },
+      async putMany(records, options) { const values = Array.isArray(records) ? records.map(cloneData) : []; DB.custom[key] = values; if (desktopRepository && desktopRepository.repositoryReplaceManyAtomic) await enqueueDesktopWrite(`records_custom_${key}`, () => desktopRepository.repositoryReplaceManyAtomic(`records_custom_${key}`, values)); else if (desktopRepository && desktopRepository.repositoryPutMany) await enqueueDesktopWrite(`records_custom_${key}`, () => desktopRepository.repositoryPutMany(`records_custom_${key}`, values)); else if (backing.replaceManyAtomic) await backing.replaceManyAtomic(values); else { for (const item of await backing.list()) await backing.delete(item.id); for (const item of values) await backing.put(item); } if (!desktopRepository && !window.CWB_V4_IDB_ACTIVE) save('custom'); if (!(options && options.render === false)) render(); return values; },
+      async clear() { return this.putMany([], { atomic:true, render:false }); },
       async delete(id) { const list = v4Collection(key); const next = list.filter(item => String(item.id) !== String(id)); const removed = next.length !== list.length; DB.custom[key] = next; if (removed) { if (desktopRepository) await enqueueDesktopWrite(`records_custom_${key}`, () => desktopRepository.repositoryDelete(`records_custom_${key}`, id)); else await backing.delete(id); if (!desktopRepository && !window.CWB_V4_IDB_ACTIVE) save('custom'); } return removed; },
       async count() { if (desktopRepository) return Number(await desktopRepository.repositoryCount(`records_custom_${key}`) || 0); const count = await backing.count(); return count || v4Collection(key).length; },
     };
@@ -7742,6 +7870,7 @@ function installV4Integration() {
   repositories.files = repositories.v4_files;
   repositories.employmentResources = repositories.v4_employment_resources;
   repositories.resources = repositories.v4_employment_resources;
+  repositories.testSnapshots = repositories.v4_test_snapshots;
   repositories.meta = metaRepository;
   repositories.auditLog = auditRepository;
   window.CWB.employmentResourceProvider = {
@@ -7761,7 +7890,7 @@ function installV4Integration() {
     },
   };
   window.CWB_V4_SYNC = function syncV4Storage(part) {
-    const keys = part === 'custom' ? ['v4_positions','v4_party_cases','v4_files','v4_employment_resources'] : (part ? [part] : collectionKeys);
+    const keys = part === 'custom' ? ['v4_positions','v4_party_cases','v4_files','v4_employment_resources','v4_test_snapshots'] : (part ? [part] : collectionKeys);
     for (const key of keys) {
       const backing = backingRepos[key];
       if (!backing) continue;
@@ -7798,7 +7927,7 @@ function installV4Integration() {
     const stagingReady = opts.collection === 'students'
       ? importStagingRepository.list().then(rows => rows.filter(row => row.job_id === id).forEach(row => {
         const value = row.student || row;
-        const index = stagingStudents.findIndex(item => item.student_number && item.student_number === value.student_number);
+        const index = stagingStudents.findIndex(item => item.student_number && studentIdentityKey(item) === studentIdentityKey(value));
         if (index >= 0) stagingStudents[index] = Object.assign({}, stagingStudents[index], value); else stagingStudents.push(value);
       })).catch(() => {})
       : Promise.resolve();
@@ -7815,13 +7944,13 @@ function installV4Integration() {
         await stagingReady;
         if (typeof opts.onChunk === 'function') return opts.onChunk(chunk);
         if (opts.collection === 'students') {
-          if (!stagingByNumber) stagingByNumber = new Map(stagingStudents.map(item => [String(item.student_number), item]));
+          if (!stagingByNumber) stagingByNumber = new Map(stagingStudents.map(item => [studentIdentityKey(item), item]));
           const changed = [];
           chunk.forEach(row => {
             const value = normStudent(row);
-            const current = value.student_number && stagingByNumber.get(value.student_number);
+            const current = value.student_number && stagingByNumber.get(studentIdentityKey(value));
             if (current) { Object.assign(current, Object.fromEntries(Object.entries(value).filter(([, v]) => v !== '' && v != null))); changed.push(current); }
-            else { stagingStudents.push(value); if (value.student_number) stagingByNumber.set(value.student_number, value); changed.push(value); }
+            else { stagingStudents.push(value); if (value.student_number) stagingByNumber.set(studentIdentityKey(value), value); changed.push(value); }
           });
           const stagedRows = changed.map(value => ({ id:`${id}:${value.id}`, job_id:id, student:value }));
           if (importStagingRepository.putMany) await importStagingRepository.putMany(stagedRows);
@@ -8129,12 +8258,12 @@ function installV4Integration() {
 
 window.CWB = {
   version: APP_VERSION,
-  db: DB, store, storage, schema, importSchemas:IMPORT_SCHEMAS, studentImportSchema:STUDENT_IMPORT_SCHEMA, ui, hooks, bridge, modules, onboarding, theme, security, importer,
+  db: DB, store, storage, schema, importSchemas:IMPORT_SCHEMAS, studentImportSchema:STUDENT_IMPORT_SCHEMA, ui, hooks, bridge, modules, onboarding, theme, security, importer, testData, sync,
   consts: { DUTIES, FOCUS, LEVELS, PRIOS, SOURCES, TALK_WAYS, CRISIS_LEVELS, CRISIS_WAYS, STU_TYPES, HONOR_TYPES, MORAL_LEVELS, POLITICS,
     PLEAVE_TYPES, ATTEND_TYPES, NODE_REPEAT, WARN_TYPES, WARN_LEVELS, HELP_TYPES, GRANT_KINDS,
     FOCUS_CATEGORIES, FOCUS_LEVELS, FOCUS_STATUS, PSYCH_SCALES, PSYCH_LEVELS, GRAD_YEARS, EMPLOY_STATUS, SALARY_RANGES,
     POLICY_CATS, MATERIAL_CATS, COMP_CATS, COMP_AWARDS, TPL_TYPES },
-  utils: { esc, uid, today, shiftDay, daysFromToday, cnDate, toCSV, parseCSV, download,
+  utils: { esc, uid, today, shiftDay, daysFromToday, cnDate, toCSV, parseCSV, download, normalizeStudentLevel, studentLevelLabel, studentIdentityKey,
     /* v3.9 学生大表导入 API */
     stuHeaderToField, stuNum, stuNormalizeRow, csvTextToObjects, xlsxRowsToObjects, loadSheetJS, importStudentsFile,
   },
