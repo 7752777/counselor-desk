@@ -755,7 +755,7 @@ tbody tr:last-child td{border-bottom:none}
 .student-filter-help{display:flex;align-items:center;gap:8px;flex-wrap:wrap;width:100%;padding:8px 10px;border:1px dashed var(--line-strong);border-radius:8px;background:var(--card-2);color:var(--ink-3);font-size:12px}
 .v4-photo-meta{padding:11px 12px}.v4-photo-meta strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v4-photo-meta small{display:block;color:var(--ink-3);margin-top:4px}
 [data-v4-virtual-list]{content-visibility:auto;contain-intrinsic-size:640px 480px}
-.v4-stat-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.v4-stat-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}.vault-status{display:block;margin-top:8px;overflow-wrap:anywhere}.vault-status.ok{color:var(--ok)}.vault-status.warn{color:var(--warn)}.graduate-kpis{align-items:stretch}.graduate-kpis .kpi{min-height:108px;display:grid;grid-template-rows:minmax(22px,auto) 1fr minmax(18px,auto);align-content:stretch}.graduate-kpis .kpi-l{min-height:22px;margin-bottom:0}.graduate-kpis .kpi-v{align-self:center}.graduate-kpis .kpi-s{min-height:18px;margin-top:0}
 .v4-stat{padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--card)}.v4-stat b{display:block;font-size:24px;color:var(--accent);margin-top:3px}
 .v4-list{display:grid;gap:8px}.v4-list-item{display:flex;align-items:center;gap:12px;padding:13px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card)}.v4-list-item .sp{flex:1}
 .v4-progress{height:7px;background:var(--bg-sunken);border-radius:99px;overflow:hidden}.v4-progress i{display:block;height:100%;background:var(--signal);border-radius:99px}
@@ -4107,7 +4107,7 @@ function viewGraduate() {
       <button class="btn btn-sm" data-workspace-parent="graduate" data-workspace-tab="employment"><svg class="ic ic-sm"><use href="#i-link"/></svg>就业资源</button>
       <button class="btn btn-primary btn-sm" data-act="graduate-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增毕业生</button>
     </div>
-    <div class="kpis">
+    <div class="kpis graduate-kpis">
       <div class="kpi ok"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-check"/></svg>就业率</div><div class="kpi-v" data-num="${rate}">0</div><div class="kpi-s">%</div></div>
       <div class="kpi brand"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-grad"/></svg>升学/出国</div><div class="kpi-v" data-num="${upCount}">0</div></div>
       <div class="kpi"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-shield"/></svg>公务员录用</div><div class="kpi-v" data-num="${civilCount}">0</div></div>
@@ -4321,7 +4321,7 @@ function viewTpl() {
     return true;
   });
   const cnt = t => DB.tpl.filter(s => s.type === t).length;
-  return `
+  return workspaceTabs('tpl', 'templates', [{ key:'templates', label:'模板库' }, { key:'files', label:'分类文件库' }]) + `
   <div class="card">
     <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-copy"/></svg>通知·流程·表单模板库</h2>
       <span class="sp"></span>
@@ -6300,14 +6300,38 @@ function viewParty() {
   const body = `<div class="banner banner-warn">流程模块只做节点、时限和材料完整性提醒，不代替党组织的政治审查、资格判断或审批结论。</div><div class="v4-list">${rows || '<div class="card"><div class="card-bd empty">还没有党员发展档案。新增档案后将按 2026-05-11 规则版本生成节点清单。</div></div>'}</div>`;
   return v4Page('党员发展', '按规则版本维护申请、培养、考察、接收预备党员和转正全流程。', body, '<button class="btn btn-primary" data-act="v4-party-new">新增发展档案</button>');
 }
+async function refreshFileVaultStatus() {
+  const target = $('[data-v4-vault-root]');
+  if (!target) return;
+  if (window.cwbDesktop && typeof window.cwbDesktop.getVaultStatus === 'function') {
+    try {
+      const status = await window.cwbDesktop.getVaultStatus();
+      target.textContent = status && status.available
+        ? `桌面版已启用加密附件保险库：${status.root || '本机用户数据目录'}`
+        : '桌面版保险库不可用，请检查系统凭据保护；网页端文件保存在本机浏览器数据中';
+      target.className = status && status.available ? 'tiny vault-status ok' : 'tiny vault-status warn';
+      return;
+    } catch (_) {}
+  }
+  target.textContent = '网页端文件保存在本机浏览器数据中；桌面版会自动归档到加密附件保险库';
+  target.className = 'tiny vault-status';
+}
 function viewFiles() {
   const files = v4Collection('v4_files');
+  files.forEach(file => {
+    if (!Array.isArray(file.versions) || !file.versions.length) {
+      const at = file.created_at || file.updated_at || new Date().toISOString();
+      file.version = Number(file.version || 1);
+      file.versions = [{ version:file.version, at, attachment_id:file.attachment_id || '', name:file.title || file.original_name || '文件', size:Number(file.size || 0) }];
+    }
+  });
   const state = app.v4 || (app.v4 = {}); const q = String(state.fileQ || '').toLowerCase(); const category = state.fileCategory || '';
   const filtered = files.filter(file => (!q || [file.title, file.tags, file.source, file.scene, file.content].join(' ').toLowerCase().includes(q)) && (!category || file.category === category));
   const rows = filtered.map(file => { const index = files.indexOf(file); return `<div class="v4-list-item"><label class="chk"><input type="checkbox" data-v4-file-select="${index}" aria-label="选择 ${esc(file.title || '文件')}"><span></span></label><svg class="ic"><use href="#i-copy"></use></svg><div><strong>${esc(file.title)}</strong><div class="tiny">${esc(file.directory || '根目录')} · ${esc(file.category || '未分类')} · ${esc(file.tags || '无标签')} · ${esc(file.scene || '通用')}</div></div><span class="sp"></span><span class="tiny">v${Number(file.version || 1)} · ${esc(file.updated_at || '')}</span><button class="btn btn-sm" data-act="v4-file-version" data-index="${index}">新版本</button>${Array.isArray(file.versions) && file.versions.length > 1 ? `<button class="btn btn-sm" data-act="v4-file-rollback" data-index="${index}">版本回退</button>` : ''}<button class="btn btn-sm" data-act="v4-file-download" data-index="${index}">查看</button><button class="btn btn-sm btn-danger" data-act="v4-file-delete" data-index="${index}">删除</button></div>`; }).join('');
   const categories = [...new Set(V4_FILE_CATEGORIES.concat(files.map(file => file.category).filter(Boolean)))];
-  const body = `<div class="banner banner-info"><strong>个人资料平台：</strong>上传表单、政策文件、讲话稿或安全提示后，系统会按文件名自动分类并规范显示名称；原文件和版本会纳入本地附件保险库与备份。</div><div class="card"><div class="card-hd"><h2>本地文件与模板</h2><span class="sp"></span><span class="tiny">表单模板、政策文件和工作资料统一管理 · 支持版本回退</span></div><div class="card-bd"><div class="v4-toolbar"><input class="inp" style="max-width:280px" data-v4-file-search value="${esc(state.fileQ || '')}" placeholder="搜索标题、标签、来源或场景"><select class="inp" data-v4-file-category><option value="">全部分类</option>${categories.map(value => `<option value="${esc(value)}"${value === category ? ' selected' : ''}>${esc(value)}</option>`).join('')}</select><button class="btn btn-sm" data-act="v4-file-export">导出选中</button><button class="btn btn-sm btn-danger" data-act="v4-file-delete-selected">删除选中</button></div><div class="v4-list">${rows || '<div class="empty">还没有文件条目。可以先上传假期去向表、德育考核表、政策文件或讲话稿。</div>'}</div></div></div>`;
-  return v4Page('分类文件库', '按场景、标签和关键词管理办公审批表、学生事务模板与通知文件。', body, '<button class="btn" data-act="v4-file-upload">上传文件</button><button class="btn btn-primary" data-act="v4-file-new">新增文件条目</button>');
+  const body = `<div class="banner banner-info"><strong>个人资料平台：</strong>上传假期去向表、德育考核表、政策文件、讲话稿或安全提示后，系统会按文件名自动分类、规范命名并保留原文件；桌面版会同步写入加密附件保险库，纳入整机迁移和备份。<div data-v4-vault-root class="tiny vault-status">正在检查本地归档位置…</div></div><div class="card"><div class="card-hd"><h2>本地文件与模板</h2><span class="sp"></span><span class="tiny">表单模板、政策文件和工作资料统一管理 · 支持搜索、下载、新版本和版本回退</span></div><div class="card-bd"><div class="v4-toolbar"><input class="inp" style="max-width:280px" data-v4-file-search value="${esc(state.fileQ || '')}" placeholder="搜索标题、标签、来源或场景"><select class="inp" data-v4-file-category><option value="">全部分类</option>${categories.map(value => `<option value="${esc(value)}"${value === category ? ' selected' : ''}>${esc(value)}</option>`).join('')}</select><button class="btn btn-sm" data-act="v4-file-export">导出选中</button><button class="btn btn-sm btn-danger" data-act="v4-file-delete-selected">删除选中</button></div><div class="v4-list">${rows || '<div class="empty">还没有文件条目。可以先上传假期去向表、德育考核表、政策文件或讲话稿。</div>'}</div></div></div>`;
+  setTimeout(refreshFileVaultStatus, 0);
+  return v4Page('分类文件库', '按场景、标签和关键词管理办公审批表、学生事务模板与通知文件。', body, '<button class="btn" data-act="v4-file-upload">上传表单或资料</button><button class="btn btn-primary" data-act="v4-file-new">新建文件条目</button>');
 }
 function viewEmployment() {
   const resources = v4Collection('v4_employment_resources');
@@ -6727,8 +6751,8 @@ const ACTS = {
   'v4-file-upload': () => { const input = document.createElement('input'); input.type = 'file'; input.multiple = true; input.accept = '.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt,.png,.jpg,.jpeg'; input.onchange = async () => { let total = 0; let count = 0; for (const file of [...(input.files || [])]) { if (file.size > 50 * 1024 * 1024 || (total += file.size) > 500 * 1024 * 1024) continue; const id = `attachment_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`; const category = v4ClassifyFile(file.name); if (window.CWB.attachments && window.CWB.attachments.add) await window.CWB.attachments.add({ id, name:file.name, blob:file, mimeType:file.type }); if (window.cwbDesktop && window.cwbDesktop.writeAttachment) await window.cwbDesktop.writeAttachment({ id, mimeType:file.type, bytes:new Uint8Array(await file.arrayBuffer()) }); v4Collection('v4_files').push({ id:`file_${Date.now()}_${count}`, title:v4NormalizeFileTitle(file.name, category), original_name:file.name, category, tags:'本地上传', source:'本机文件', scene:category === '表单模板' ? '学校统一口径表单' : '个人资料库', attachment_id:id, size:file.size, mime_type:file.type, updated_at:today(), schema_version:7 }); count++; } save('custom'); render(); ui.toast(`文件上传完成：${count} 个，已自动分类命名`,'ok'); }; input.click(); },
   'v4-file-rollback': (id, btn) => { const item = v4Collection('v4_files')[Number(btn.dataset.index)]; if (!item || !Array.isArray(item.versions) || item.versions.length < 2) return; const choices = item.versions.slice().sort((a, b) => Number(b.version || 0) - Number(a.version || 0)).map(version => `<option value="${Number(version.version)}">v${Number(version.version)} · ${esc(version.name || item.title || '文件')} · ${esc(version.at || '')}</option>`).join(''); ui.modal({ title:'选择文件历史版本', size:'narrow', body:`<p class="muted">回退只切换当前引用，不删除历史附件。回退后仍可再次创建新版本。</p><select class="inp" data-v4-file-rollback-select>${choices}</select>`, footer:'<button class="btn" data-close>取消</button><button class="btn btn-primary" data-v4-file-rollback-go>确认回退</button>', onOpen(mask, close){ $('[data-v4-file-rollback-go]', mask).onclick = async () => { const target = item.versions.find(version => Number(version.version) === Number($('[data-v4-file-rollback-select]', mask).value)); if (!target) return; item.version = Number(target.version || 1); item.attachment_id = target.attachment_id || ''; item.title = target.name || item.title; item.updated_at = new Date().toISOString(); if (window.CWB.audit && window.CWB.audit.log) await window.CWB.audit.log('file_rollback', { file_id:item.id, version:item.version }); save('custom'); close(); render(); ui.toast(`已回退到 v${item.version}`,'ok'); }; }}); },
   'v4-file-version': (id, btn) => { const item = v4Collection('v4_files')[Number(btn.dataset.index)]; if (!item) return; const input = document.createElement('input'); input.type = 'file'; input.onchange = async () => { const file = input.files && input.files[0]; if (!file) return; const attachmentId = `attachment_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`; if (window.CWB.attachments && window.CWB.attachments.add) await window.CWB.attachments.add({ id:attachmentId, name:file.name, blob:file, mimeType:file.type }); const now = new Date().toISOString(); item.version = Number(item.version || 1) + 1; item.versions = Array.isArray(item.versions) ? item.versions : []; item.versions.push({ version:item.version, at:now, attachment_id:attachmentId, name:file.name, size:file.size }); item.attachment_id = attachmentId; item.title = file.name; item.updated_at = now; if (window.CWB.audit && window.CWB.audit.log) await window.CWB.audit.log('file_version_create', { file_id:item.id, version:item.version, attachment_id:attachmentId }); save('custom'); render(); ui.toast(`已保存 v${item.version} 版本`,'ok'); }; input.click(); },
-  'v4-file-new': () => ui.form({ title:'新增文件条目', data:{ title:'', directory:'根目录', category:'请假审批', tags:'', source:'本校整理', scene:'日常事务', content:'', url:'' }, fields:[
-    { key:'title', label:'文件名称', required:true }, { key:'directory', label:'目录路径', required:true }, { key:'category', label:'分类', type:'select', options:[{v:'请假审批',n:'请假审批'},{v:'住宿异动',n:'住宿异动'},{v:'学工通知',n:'学工通知'},{v:'其他',n:'其他'}] },
+  'v4-file-new': () => ui.form({ title:'新增文件条目', data:{ title:'', directory:'根目录', category:'表单模板', tags:'', source:'本校整理', scene:'日常事务', content:'', url:'' }, fields:[
+    { key:'title', label:'文件名称', required:true }, { key:'directory', label:'目录路径', required:true }, { key:'category', label:'分类', type:'select', options:V4_FILE_CATEGORIES.map(value => ({ v:value, n:value })) },
     { key:'tags', label:'关键词标签', ph:'逗号分隔' }, { key:'source', label:'来源' }, { key:'scene', label:'适用场景' }, { key:'content', label:'正文或使用说明', type:'textarea', rows:5 }, { key:'url', label:'本地或官网链接' },
   ], onSave(v){ const now = new Date().toISOString(); v4Collection('v4_files').push({ id:`file_${Date.now()}`, ...v, version:1, versions:[{ version:1, at:now, content:v.content || '', url:v.url || '' }], created_at:now, updated_at:now, schema_version:7 }); save('custom'); render(); ui.toast('文件条目已保存','ok'); }}),
   'v4-file-download': async (id, btn) => { const item = v4Collection('v4_files')[Number(btn.dataset.index)]; if (!item) return; if (item.attachment_id) { try { const record = window.CWB.attachments && await window.CWB.attachments.get(item.attachment_id); let blob = record && record.blob; if (!blob && window.cwbDesktop && window.cwbDesktop.readAttachment) blob = new Blob([await window.cwbDesktop.readAttachment(item.attachment_id)], { type:item.mime_type || 'application/octet-stream' }); if (blob) { const url = URL.createObjectURL(blob); const link = document.createElement('a'); link.href = url; link.download = item.title; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); return; } } catch (error) { ui.toast(error.message || '文件读取失败','err'); } } ui.modal({ title:item.title, size:'wide', body:`<div class="tiny">${esc(item.category)} · ${esc(item.tags || '无标签')}</div><pre style="white-space:pre-wrap;line-height:1.7;margin:14px 0 0">${esc(item.content || '该条目暂无正文，请在编辑器中补充文件说明或链接。')}</pre>`, footer:'<button class="btn" data-close>关闭</button>' }); },

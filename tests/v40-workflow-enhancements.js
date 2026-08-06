@@ -41,10 +41,20 @@ virtualConsole.on('jsdomError', error => { if (!/window\.scrollTo|Could not load
 
   CWB.go('graduate');
   await new Promise(resolve => setTimeout(resolve, 40));
+  assert.ok(document.querySelector('.graduate-kpis'), 'graduate KPI cards should share a stable layout');
   assert.ok(document.querySelector('[data-workspace-parent="graduate"][data-workspace-tab="employment"]'), 'graduate page should expose employment resources tab');
   document.querySelector('[data-workspace-parent="graduate"][data-workspace-tab="employment"]')?.click();
   await new Promise(resolve => setTimeout(resolve, 40));
   assert.ok(document.querySelectorAll('[data-employment-resource]').length >= 5, 'employment resources should be visible from graduate page');
+
+  CWB.go('tpl');
+  await new Promise(resolve => setTimeout(resolve, 40));
+  assert.ok(document.querySelector('[data-workspace-parent="tpl"][data-workspace-tab="files"]'), 'template workspace should expose the classified file library tab');
+  document.querySelector('[data-workspace-parent="tpl"][data-workspace-tab="files"]')?.click();
+  await new Promise(resolve => setTimeout(resolve, 40));
+  assert.ok(document.querySelector('[data-act="v4-file-upload"]'), 'classified file library should expose upload action');
+  assert.ok(document.querySelector('[data-v4-vault-root]'), 'classified file library should show local archive status');
+  assert.match(document.querySelector('[data-v4-file-category]')?.textContent || '', /表单模板|政策文件|讲话稿/);
 
   CWB.go('backup');
   await new Promise(resolve => setTimeout(resolve, 40));
