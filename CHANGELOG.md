@@ -1,5 +1,13 @@
 # 更新日志 · CHANGELOG
 
+## [Unreleased] - 开源首页与发布体验优化
+
+### Changed
+
+- 重做 GitHub README 首页：增加 v4.0 Hero、功能导览、界面预览、版本历史、安装入口和开源边界说明。
+- 新增 `assets/hero-v4.png`，用于仓库首页的欢迎视觉；不包含真实学生信息、人物身份或第三方品牌。
+- 补充 Windows 代码签名说明，明确区分“本机测试包”和“正式公开安装包”。
+
 ## [Unreleased] - v4.0 工作区归位与桌面链路加固
 
 ### Changed
