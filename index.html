@@ -455,6 +455,7 @@ tbody tr:last-child td{border-bottom:none}
 .name-cell{display:flex;align-items:center;gap:10px}
 .avatar{width:32px;height:32px;border-radius:50%;background:var(--accent-soft);color:var(--accent-dark);
   display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;flex:0 0 32px}
+.avatar-photo{overflow:hidden;padding:0;background:var(--card-2)}.avatar-photo img{width:100%;height:100%;object-fit:cover;display:block}
 .avatar.f{background:#ecfeff;color:#0891b2}
 .link-btn{color:var(--accent);font-weight:600;font-size:12.5px}
 .link-btn:hover{text-decoration:underline}
@@ -743,11 +744,15 @@ tbody tr:last-child td{border-bottom:none}
 .v4-head p{margin:0;color:var(--ink-3);line-height:1.65}
 .v4-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 .v4-toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.v4-toolbar>.inp{width:auto;flex:0 1 220px}
 .v4-photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:12px}
 .v4-photo-card{border:1px solid var(--line);border-radius:14px;background:var(--card);overflow:hidden;transition:transform .2s,box-shadow .2s}
 .v4-photo-card:hover{transform:translateY(-2px);box-shadow:var(--sh-sm)}
 .v4-photo{aspect-ratio:4/3;background:linear-gradient(135deg,var(--accent-soft),var(--signal-soft));display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:30px;font-weight:700;overflow:hidden}
 .v4-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.v4-photo-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;color:var(--accent);font-size:13px;background:linear-gradient(145deg,#edf7fb,#dceff4)}
+.v4-photo-placeholder .ic{width:30px;height:30px;opacity:.82}.v4-photo-placeholder small{font-size:11px;color:var(--ink-3)}
+.student-filter-help{display:flex;align-items:center;gap:8px;flex-wrap:wrap;width:100%;padding:8px 10px;border:1px dashed var(--line-strong);border-radius:8px;background:var(--card-2);color:var(--ink-3);font-size:12px}
 .v4-photo-meta{padding:11px 12px}.v4-photo-meta strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v4-photo-meta small{display:block;color:var(--ink-3);margin-top:4px}
 [data-v4-virtual-list]{content-visibility:auto;contain-intrinsic-size:640px 480px}
 .v4-stat-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}
@@ -760,8 +765,10 @@ tbody tr:last-child td{border-bottom:none}
 .workspace-tabs{margin:0 0 14px;border-bottom:1px solid var(--line);overflow-x:auto}.workspace-tabs-inner{display:flex;gap:4px;min-width:max-content}.workspace-tab{min-height:34px;padding:0 13px;border-bottom:2px solid transparent;color:var(--ink-3);font-size:13px;font-weight:600}.workspace-tab:hover{color:var(--accent);background:var(--accent-soft)}.workspace-tab.on{color:var(--accent);border-bottom-color:var(--accent)}
 .embedded-actions{justify-content:flex-start;margin-bottom:12px}
 .analysis-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}.analysis-kpis>div{padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--card-2)}.analysis-kpis span{display:block;color:var(--ink-3);font-size:12px}.analysis-kpis b{display:block;color:var(--accent);font-size:22px;line-height:1.2;margin-top:4px}.analysis-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.analysis-panel{border:1px solid var(--line);border-radius:10px;padding:14px;background:var(--card-2)}.analysis-panel h3{margin:0 0 10px;font-size:14px}.analysis-bar,.analysis-heat{display:grid;grid-template-columns:minmax(90px,1fr) 2fr auto;align-items:center;gap:9px;width:100%;min-height:34px;padding:5px 7px;border-radius:7px;text-align:left;color:var(--ink-2)}.analysis-heat{grid-template-columns:1fr auto}.analysis-bar:hover,.analysis-heat:hover{background:var(--accent-soft)}.analysis-bar i{height:8px;border-radius:99px;background:var(--signal);min-width:4px}.analysis-bar b,.analysis-heat b{font-size:12px;color:var(--accent)}.module-config-row{display:flex;align-items:center;gap:8px;padding:7px 0}
+.employment-resource-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}.employment-resource-card{padding:15px;border:1px solid var(--line);border-radius:12px;background:var(--card-2);display:flex;flex-direction:column;min-height:190px}.employment-resource-top{display:flex;justify-content:space-between;align-items:center}.employment-resource-icon{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}.employment-resource-card h3{margin:13px 0 6px;font-size:15px;line-height:1.4;color:var(--ink)}.employment-resource-card p{margin:0;color:var(--ink-2);font-size:12px;line-height:1.6}.employment-resource-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;color:var(--ink-3);font-size:11px}.employment-resource-actions{display:flex;gap:7px;margin-top:auto;padding-top:14px}.employment-resource-actions .btn{flex:0 0 auto}
 .nav-item{font-size:13px;min-height:36px}.nav-group{font-size:11px;line-height:1.3}.nav-item .ic{width:16px;height:16px}.v4-head h1{font-size:20px}.v4-actions,.v4-toolbar{gap:8px}.v4-stat b{font-size:20px}.v4-photo-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}.v4-photo{aspect-ratio:4/3;min-height:0}.v4-toolbar .inp{min-width:0;max-width:100%}
 @media(max-width:760px){.analysis-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.analysis-grid{grid-template-columns:1fr}.v4-actions .btn,.v4-toolbar .btn{flex:0 1 auto}.workspace-tab{padding:0 10px}}
+@media(max-width:760px){.v4-toolbar>.inp{width:100%;flex-basis:100%}}
 @media(max-width:760px){.v4-head{display:block}.v4-actions{justify-content:flex-start;margin-top:12px}.v4-stat-row{grid-template-columns:repeat(2,minmax(0,1fr))}.v4-photo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 </head>
@@ -979,7 +986,7 @@ const PRIO_MAP = Object.fromEntries(PRIOS.map(p => [p.k, p]));
 const SOURCES = ['学校下发','学院安排','平台下发','自主计划','学生诉求'];
 const TALK_WAYS = ['面谈','电话','线上','家访','集体'];
 const STATUS_TXT = { todo:'待办', doing:'进行中', done:'已完成' };
-const ENROLL_STATUS = ['在读','休学','复学','退学','毕业','结业'];
+const ENROLL_STATUS = ['在读','在籍在校','在籍','在校','休学','复学','退学','毕业','结业'];
 
 /* ===================== 2. 工具函数 ===================== */
 const $  = (s, r) => (r || document).querySelector(s);
@@ -1215,6 +1222,7 @@ const schema = {
     dorm:          { label:'宿舍', local:true },
     birthday:      { label:'出生日期', local:true, sensitive:true },
     hometown:      { label:'籍贯', local:true },
+    origin:        { label:'生源地', local:true },
     home_addr:     { label:'家庭地址', local:true, sensitive:true },
     parent_name:   { label:'家长姓名', local:true, sensitive:true },
     parent_phone:  { label:'家长电话', local:true, sensitive:true },
@@ -1607,7 +1615,7 @@ const bridge = {
 function normStudent(x) {
   x = x || {};
   const now = new Date().toISOString();
-  const knownStudentKeys = new Set(['id','student_number','full_name','gender','class_name','major_name','grade','college_name','counselor_name','enrollment_status','politics','phone','dorm','birthday','hometown','home_addr','parent_name','parent_phone','edu_years','nation','id_card','email','qq','dorm_building','dorm_room','academic_score','credits','class_rank','enrollment_date','graduation_date','emergency_contact','emergency_phone','photo_ids','photo_assets','custom_fields','custom_field_meta','focus','focus_level','crisis_level','crisis_way','crisis_relieved','note','created_at','updated_at','schema_version','_demo']);
+  const knownStudentKeys = new Set(['id','student_number','full_name','gender','class_name','major_name','grade','college_name','counselor_name','enrollment_status','politics','phone','dorm','birthday','hometown','origin','home_addr','parent_name','parent_phone','edu_years','nation','id_card','email','qq','dorm_building','dorm_room','academic_score','credits','class_rank','enrollment_date','graduation_date','emergency_contact','emergency_phone','photo_ids','photo_assets','custom_fields','custom_field_meta','focus','focus_level','crisis_level','crisis_way','crisis_relieved','note','created_at','updated_at','schema_version','_demo']);
   const customFields = Object.assign({}, x.custom_fields && typeof x.custom_fields === 'object' ? x.custom_fields : {});
   const customFieldMeta = Object.assign({}, x.custom_field_meta && typeof x.custom_field_meta === 'object' ? x.custom_field_meta : {});
   Object.keys(x).forEach(key => { if (!knownStudentKeys.has(key) && !key.startsWith('_')) { customFields[key] = x[key]; customFieldMeta[key] = customFieldMeta[key] || { type:Array.isArray(x[key]) ? 'array' : typeof x[key], sensitive:/身份证|证件|电话|手机|地址|心理|政治|照片/i.test(key) }; } });
@@ -1627,6 +1635,7 @@ function normStudent(x) {
     dorm: x.dorm || '',
     birthday: x.birthday || '',
     hometown: x.hometown || '',
+    origin: x.origin || '',
     home_addr: x.home_addr || '',
     parent_name: x.parent_name || '',
     parent_phone: x.parent_phone || '',
@@ -2510,7 +2519,7 @@ const app = {
   bulk: { on: false, sel: new Set() },
   filters: {
     tasks:{ q:'', status:'open', duty:'' },
-    students:{ q:'', cls:'', focus:'', sort:'focus', mode:'table', tab:'ledger' },
+    students:{ q:'', cls:'', focus:'', field:'', value:'', sort:'focus', sortDir:'asc', mode:'table', tab:'ledger' },
     talks:{ q:'', duty:'' },
     stay:{ q:'', approval:'' },
     leave:{ q:'', delayed:'' },
@@ -2611,8 +2620,8 @@ function lastMonth() { const d = new Date(); const dt = new Date(d.getFullYear()
 
 /* ---------- 11.2 通用片段 ---------- */
 const dutyTag = k => { const d = DUTY_MAP[k]; return d ? `<span class="tag tag-duty"><span class="dot" style="background:${d.c}"></span>${esc(d.s)}</span>` : ''; };
-const avatarOf = s => `<span class="avatar${s.gender === '女' ? ' f' : ''}">${esc(pinyinInitial(s.full_name))}</span>`;
-const avatarBig = s => `<span class="avatar${s.gender === '女' ? ' f' : ''}" style="width:48px;height:48px;flex:0 0 48px;font-size:18px">${esc(pinyinInitial(s.full_name))}</span>`;
+const avatarOf = s => { const src = v4PhotoSrc(s); return src ? `<span class="avatar avatar-photo"><img src="${esc(src)}" alt="${esc(s.full_name || '学生')}" loading="lazy"></span>` : `<span class="avatar${s.gender === '女' ? ' f' : ''}">${esc(pinyinInitial(s.full_name))}</span>`; };
+const avatarBig = s => { const src = v4PhotoSrc(s); return src ? `<span class="avatar avatar-photo" style="width:48px;height:48px;flex:0 0 48px"><img src="${esc(src)}" alt="${esc(s.full_name || '学生')}" loading="lazy"></span>` : `<span class="avatar${s.gender === '女' ? ' f' : ''}" style="width:48px;height:48px;flex:0 0 48px;font-size:18px">${esc(pinyinInitial(s.full_name))}</span>`; };
 const focusTags = s => (s.focus || []).map(f => FOCUS_MAP[f] ? `<span class="tag ${FOCUS_MAP[f].c}">${esc(FOCUS_MAP[f].n)}</span>` : '').join('');
 function crisisTag(s) {
   if (!s.crisis_level) return '';
@@ -3002,6 +3011,32 @@ function viewTasks() {
 function classList() {
   return Array.from(new Set(DB.students.map(s => s.class_name).filter(Boolean))).sort();
 }
+const STUDENT_FIELD_ALIASES = Object.freeze({
+  origin: ['origin', 'hometown', 'birthplace', 'source_place'],
+  score: ['score', 'academic_score', 'gpa'],
+});
+function studentFieldValue(student, field) {
+  const item = student || {};
+  const key = String(field || '').trim();
+  if (!key) return '';
+  const aliases = STUDENT_FIELD_ALIASES[key] || [key];
+  for (const alias of aliases) {
+    if (item[alias] !== undefined && item[alias] !== null && item[alias] !== '') return item[alias];
+    if (item.custom_fields && item.custom_fields[alias] !== undefined && item.custom_fields[alias] !== null && item.custom_fields[alias] !== '') return item.custom_fields[alias];
+  }
+  return '';
+}
+function studentFieldOptions() {
+  const standard = [{ key:'origin', label:'生源地' }, { key:'score', label:'成绩' }].concat(Object.entries(schema.student).map(([key, meta]) => ({ key, label:meta.label })));
+  const seen = new Set(standard.map(item => item.key));
+  const custom = [];
+  (DB.students || []).forEach(student => Object.keys(student.custom_fields || {}).forEach(key => {
+    if (seen.has(key)) return;
+    seen.add(key);
+    custom.push({ key, label:(student.custom_field_meta && student.custom_field_meta[key] && student.custom_field_meta[key].label) || key, custom:true });
+  }));
+  return standard.concat(custom.sort((a, b) => a.label.localeCompare(b.label, 'zh-CN')));
+}
 function filterStudents() {
   const f = app.filters.students;
   return DB.students.filter(s => {
@@ -3010,16 +3045,21 @@ function filterStudents() {
     if (f.focus === '__crisis' && !(s.crisis_level && !s.crisis_relieved)) return false;
     if (f.focus && f.focus !== '__any' && f.focus !== '__crisis' && !(s.focus || []).includes(f.focus)) return false;
     if (f.q) {
-      const t = (s.full_name + s.student_number + s.class_name + s.dorm + s.note + s.phone + s.politics).toLowerCase();
+      const custom = Object.values(s.custom_fields || {}).join(' ');
+      const t = [s.full_name, s.student_number, s.class_name, s.dorm, s.note, s.phone, s.politics, s.hometown, s.origin, custom].join(' ').toLowerCase();
       if (!t.includes(f.q.toLowerCase())) return false;
+    }
+    if (f.field && f.value) {
+      const value = String(studentFieldValue(s, f.field)).toLowerCase();
+      if (!value.includes(String(f.value).trim().toLowerCase())) return false;
     }
     return true;
   }).sort((a, b) => {
     const key = f.sort || 'focus';
-    if (key === 'score') return Number(b.score || b.gpa || 0) - Number(a.score || a.gpa || 0);
-    const values = { focus:[a.focus_level || 'Z', b.focus_level || 'Z'], student_number:[a.student_number || '', b.student_number || ''], full_name:[a.full_name || '', b.full_name || ''], class_name:[a.class_name || '', b.class_name || ''], dorm:[a.dorm || '', b.dorm || ''], dorm_building:[a.dorm_building || '', b.dorm_building || ''], origin:[a.origin || a.birthplace || '', b.origin || b.birthplace || ''] };
-    const pair = values[key] || values.focus;
-    return String(pair[0]).localeCompare(String(pair[1]), 'zh-CN');
+    const av = studentFieldValue(a, key); const bv = studentFieldValue(b, key);
+    const numeric = key === 'score' || ['academic_score', 'credits', 'class_rank', 'edu_years'].includes(key);
+    const result = numeric ? Number(av || 0) - Number(bv || 0) : String(av || (key === 'focus' ? 'Z' : '')).localeCompare(String(bv || (key === 'focus' ? 'Z' : '')), 'zh-CN', { numeric:true, sensitivity:'base' });
+    return f.sortDir === 'desc' ? -result : result;
   });
 }
 function lastTalkOf(s) {
@@ -3056,6 +3096,9 @@ function viewStudents() {
   const studentMode = ['table', 'cards', 'photo'].includes(f.mode) ? f.mode : 'table';
   const studentLimit = Math.max(100, Number(app.v4 && app.v4.studentLimit) || 300);
   const renderList = list.slice(0, studentLimit);
+  const studentFields = studentFieldOptions();
+  const studentFieldSelect = studentFields.map(item => `<option value="${esc(item.key)}"${f.field === item.key ? ' selected' : ''}>${esc(item.label)}${item.custom ? ' · 自定义' : ''}</option>`).join('');
+  const studentSortSelect = [{ key:'focus', label:'关注等级' }].concat(studentFields.filter(item => item.key !== 'focus')).map(item => `<option value="${esc(item.key)}"${(f.sort || 'focus') === item.key ? ' selected' : ''}>按${esc(item.label)}</option>`).join('');
   return `
   ${studentWorkspaceTabs('ledger')}<div class="card">
     <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-users"/></svg>学生台账</h2>
@@ -3079,8 +3122,18 @@ function viewStudents() {
         <option value="__crisis"${f.focus === '__crisis' ? ' selected' : ''}>仅危机预警</option>
         ${FOCUS.map(x => `<option value="${x.k}"${f.focus === x.k ? ' selected' : ''}>${esc(x.n)}</option>`).join('')}
       </select>
-      <button class="btn btn-sm${studentMode === 'table' ? ' btn-primary' : ''}" data-filter-set="students.mode" data-v="table">表格</button><button class="btn btn-sm${studentMode === 'cards' ? ' btn-primary' : ''}" data-filter-set="students.mode" data-v="cards">卡片</button><button class="btn btn-sm${studentMode === 'photo' ? ' btn-primary' : ''}" data-filter-set="students.mode" data-v="photo">照片</button><select class="inp" style="width:auto" data-filter="students.sort"><option value="focus"${(f.sort || 'focus') === 'focus' ? ' selected' : ''}>按关注等级</option><option value="student_number"${f.sort === 'student_number' ? ' selected' : ''}>按学号</option><option value="full_name"${f.sort === 'full_name' ? ' selected' : ''}>按姓名</option><option value="class_name"${f.sort === 'class_name' ? ' selected' : ''}>按班级</option><option value="dorm"${f.sort === 'dorm' ? ' selected' : ''}>按宿舍</option><option value="dorm_building"${f.sort === 'dorm_building' ? ' selected' : ''}>按楼栋</option><option value="origin"${f.sort === 'origin' ? ' selected' : ''}>按生源地</option><option value="score"${f.sort === 'score' ? ' selected' : ''}>按成绩</option></select><span class="tiny" style="margin-left:auto">共 ${list.length} 人 · 当前显示 ${renderList.length} · 重点关注 ${DB.students.filter(s => s.focus_level).length} 人</span>
+      <select class="inp" style="width:auto;min-width:150px" data-filter="students.field" data-student-field-filter>
+        <option value="">选择字段筛选</option>${studentFieldSelect}
+      </select>
+      <input class="inp" style="width:180px" data-filter="students.value" placeholder="输入字段值，如新疆" value="${esc(f.value || '')}">
+      <button class="btn btn-sm" data-act="students-clear-field-filter">清除筛选</button>
+      <select class="inp" style="width:auto;min-width:150px" data-filter="students.sort">
+        ${studentSortSelect}
+      </select>
+      <button class="btn btn-sm" data-act="students-sort-dir" data-student-sort-dir title="切换排序方向">${f.sortDir === 'desc' ? '降序 ↓' : '升序 ↑'}</button>
+      <button class="btn btn-sm${studentMode === 'table' ? ' btn-primary' : ''}" data-filter-set="students.mode" data-v="table">表格</button><button class="btn btn-sm${studentMode === 'cards' ? ' btn-primary' : ''}" data-filter-set="students.mode" data-v="cards">卡片</button><button class="btn btn-sm${studentMode === 'photo' ? ' btn-primary' : ''}" data-filter-set="students.mode" data-v="photo">照片</button><span class="tiny" style="margin-left:auto">共 ${list.length} 人 · 当前显示 ${renderList.length} · 重点关注 ${DB.students.filter(s => s.focus_level).length} 人</span>
     </div>
+    <div class="student-filter-help"><strong>灵活筛选：</strong><span>先选字段，再输入关键词；未知列也会保留为自定义字段。排序支持升序 / 降序。</span><span class="sp"></span><span class="tiny">导入 Excel / CSV 后可在预览中调整映射</span></div>
     ${list.length ? `
     <div class="tw" data-v4-virtual-list data-student-layout="table" style="${studentMode === 'table' ? '' : 'display:none'}"><table>
       <thead><tr><th>学生</th><th>学号</th><th>班级</th><th>关注等级</th><th>关注类型</th><th>危机预警</th><th>最近谈话</th><th>宿舍</th><th class="td-acts">操作</th></tr></thead>
@@ -3118,7 +3171,7 @@ function viewStudents() {
           <button class="btn btn-sm" data-act="student-view" data-id="${s.id}">档案</button>
           <button class="btn btn-sm btn-primary" data-act="talk-new-student" data-id="${s.id}">记谈话</button>
         </div></div>`; }).join('')}</div>
-    <div class="v4-photo-grid" data-v4-virtual-list data-student-layout="photo" style="${studentMode === 'photo' ? '' : 'display:none'}">${renderList.map(s => { const src = v4PhotoSrc(s); return '<article class="v4-photo-card"><button class="v4-photo" data-act="student-view" data-id="' + esc(s.id) + '">' + (src ? '<img src="' + esc(src) + '" alt="' + esc(s.full_name) + '" loading="lazy">' : esc((s.full_name || '?').slice(0, 1))) + '</button><div class="v4-photo-meta"><strong>' + esc(s.full_name) + '</strong><small>' + esc(s.student_number) + ' · ' + esc(s.class_name) + '</small></div></article>'; }).join('') || '<div class="empty">暂无学生</div>'}</div>`
+    <div class="v4-photo-grid" data-v4-virtual-list data-student-layout="photo" style="${studentMode === 'photo' ? '' : 'display:none'}">${renderList.map(s => `<article class="v4-photo-card">${v4PhotoSlot(s)}<div class="v4-photo-meta"><strong>${esc(s.full_name)}</strong><small>${esc(s.student_number)} · ${esc(s.class_name)}</small>${!v4PhotoSrc(s) ? '<small class="tag tag-amber">待补采</small>' : '<small class="tag tag-green">已归档</small>'}</div></article>`).join('') || '<div class="empty">暂无学生</div>'}</div>`
     : emptyBox('还没有学生数据', `<button class="btn btn-primary btn-sm" data-act="student-import">从 CSV 导入</button>
         <button class="btn btn-sm" data-act="student-new" style="margin-left:8px">手动新增</button>`)}
     ${list.length > renderList.length ? `<div style="text-align:center;margin:16px 0"><button class="btn" data-act="v4-students-more">鍔犺浇鏇村锛堝凡鏄剧ず ${renderList.length}/${list.length}锛�</button></div>` : ''}
@@ -5144,7 +5197,7 @@ const STU_SYNONYMS = [
   // 性别
   { field:'gender', keys:['性别','sex','gender','男/女'] },
   // 班级（行政班）
-  { field:'class_name', keys:['班级','行政班','教学班','所在班级','class','class name','admission class'] },
+  { field:'class_name', keys:['班级','班级名称','行政班','教学班','所在班级','class','class name','admission class'] },
   // 专业
   { field:'major_name', keys:['专业','专业名称','所学专业','major','major name','specialty'] },
   // 年级
@@ -5154,17 +5207,18 @@ const STU_SYNONYMS = [
   // 辅导员
   { field:'counselor_name', keys:['辅导员','辅导员姓名','班主任','counselor','counselor name','advisor'] },
   // 学籍状态
-  { field:'enrollment_status', keys:['学籍状态','在读状态','学习状态','status','enrollment status'] },
+  { field:'enrollment_status', keys:['学籍状态','在读状态','学习状态','在校状态','status','enrollment status'] },
   // 政治面貌
   { field:'politics', keys:['政治面貌','面貌','political status','politics','political'] },
   // 手机
-  { field:'phone', keys:['手机','手机号','联系电话','本人电话','本人手机号','phone','mobile','mobile phone','tel'] },
+  { field:'phone', keys:['手机','手机号','联系电话','本人电话','本人手机号','本人移动电话','移动电话','本人联系方式','phone','mobile','mobile phone','tel'] },
   // 宿舍
   { field:'dorm', keys:['宿舍','宿舍号','寝室','dorm','dormitory','room'] },
   // 出生日期
   { field:'birthday', keys:['出生日期','生日','出生年月','birthday','birth','date of birth','dob'] },
   // 籍贯
   { field:'hometown', keys:['籍贯','出生地','家庭所在地','hometown','native place'] },
+  { field:'origin', keys:['生源地','生源','来源地','生源省份','origin','source place','birthplace'] },
   // 家庭住址
   { field:'home_addr', keys:['家庭住址','家庭地址','家庭详细地址','家庭通讯地址','address','home address'] },
   // 家长
@@ -5176,15 +5230,15 @@ const STU_SYNONYMS = [
   // 民族
   { field:'nation', keys:['民族','nation','nationality','ethnic'] },
   // 身份证
-  { field:'id_card', keys:['身份证号','身份证','证件号','id card','idcard','id no'] },
+  { field:'id_card', keys:['身份证号','身份证号码','身份证件号码','身份证','证件号','id card','idcard','id no'] },
   // 邮箱
-  { field:'email', keys:['邮箱','电子邮箱','email','e-mail','mail'] },
+  { field:'email', keys:['邮箱','电子邮箱','电子邮件','email','e-mail','mail'] },
   // QQ
   { field:'qq', keys:['qq','qq号','qq号码'] },
   // 备注
   { field:'note', keys:['备注','说明','remark','note','notes'] },
   // v4.0 extended identity/contact/academic/residence fields
-  { field:'dorm_building', keys:['楼栋','宿舍楼','公寓楼','building','dorm building','dorm_building'] },
+  { field:'dorm_building', keys:['楼栋','楼栋号','宿舍楼','公寓楼','building','dorm building','dorm_building'] },
   { field:'dorm_room', keys:['房间号','宿舍号','room','room number','dorm room','dorm_room'] },
   { field:'academic_score', keys:['学业成绩','平均分','绩点','成绩','academic score','gpa','score'] },
   { field:'credits', keys:['学分','已修学分','credits','credit'] },
@@ -5199,6 +5253,9 @@ const STU_SYNONYMS = [
 function stuHeaderToField(raw) {
   const t = String(raw == null ? '' : raw).trim();
   if (!t) return '';
+  // A source column describing the document type is not the sensitive ID number.
+  // Keep it as a custom field instead of letting the broad “身份证” alias win.
+  if (/身份证件?类型|证件类型/i.test(t)) return t.toLowerCase().replace(/\s+/g, '_');
   // 形如 "姓名(full_name)" 优先取括号
   const m = t.match(/\(([a-z_]+)\)\s*$/i);
   if (m) return m[1].toLowerCase();
@@ -5310,6 +5367,7 @@ function stuNormalizeRow(o) {
     dorm: o.dorm ? String(o.dorm).trim() : '',
     birthday: o.birthday ? String(o.birthday).trim() : '',
     hometown: o.hometown ? String(o.hometown).trim() : '',
+    origin: o.origin ? String(o.origin).trim() : '',
     home_addr: o.home_addr ? String(o.home_addr).trim() : '',
     parent_name: o.parent_name ? String(o.parent_name).trim() : '',
     parent_phone: o.parent_phone ? String(o.parent_phone).trim() : '',
@@ -5619,8 +5677,21 @@ function importMappedRows(text, collection, options) {
   const known = target === 'students' ? STUDENT_IMPORT_SCHEMA.fields : IMPORT_SCHEMAS[target].fields;
   const customFields = {};
   if (target === 'students') {
+    const assignedHeaders = {};
     mapped = mapped.map((field, index) => {
-      if (field && known[field]) return field;
+      if (field && known[field]) {
+        const label = String(headers[index] || `自定义字段${index + 1}`).trim() || `自定义字段${index + 1}`;
+        const prior = assignedHeaders[field];
+        // Different source labels that converge on one standard field are retained as custom fields;
+        // an exact repeated header remains a structural duplicate and still requires confirmation.
+        if (prior && genericHeaderKey(prior) !== genericHeaderKey(label)) {
+          const base = `custom_${genericHeaderKey(label).replace(/[^\w\u4e00-\u9fff]/g, '').slice(0, 36) || 'field'}_${index + 1}`;
+          customFields[base] = { label, type: 'string', sensitive: /身份证|证件|电话|手机|地址|心理|政治|照片/i.test(label) };
+          return base;
+        }
+        assignedHeaders[field] = label;
+        return field;
+      }
       if (field && opts.customFields && opts.customFields[field]) { customFields[field] = cloneData(opts.customFields[field]); return field; }
       const label = String(headers[index] || `自定义字段${index + 1}`).trim() || `自定义字段${index + 1}`;
       const base = `custom_${genericHeaderKey(label).replace(/[^\w\u4e00-\u9fff]/g, '').slice(0, 36) || 'field'}_${index + 1}`;
@@ -5942,6 +6013,7 @@ function openImportPreview(preview, context) {
     <div class="form-row"><label class="lab">表头所在行</label><input class="inp" type="number" min="1" max="20" value="${preview.source.headerRow || 1}" data-import-header-row></div>
   </div>` : '';
   const body = `<div class="tiny" style="margin-bottom:10px">${esc(preview.source.name || '粘贴内容')} · ${esc(preview.source.sheet || 'CSV')} · ${esc(preview.source.encoding || 'utf-8')} · 表头第 ${preview.source.headerRow || 1} 行${preview.source.mappingPreset ? ` · 已套用“${esc(preview.source.mappingPreset)}”` : ''}</div>
+    <div class="banner banner-info"><strong>表头自适应已开启：</strong>支持 10 列、50 列或更多列；系统先按标准别名匹配，无法识别的列会保留为自定义字段，可在下方逐列调整类型、敏感级别和是否导入。</div>
     ${sourceControls}
     <div class="import-summary">${stat('可提交',preview.summary.ready)}${stat('新增',preview.summary.add)}${stat('更新',preview.summary.update)}${stat('待确认',preview.summary.pending)}${stat('冲突 / 错误',preview.summary.conflict + preview.summary.invalid)}</div>
     <div class="import-progress" style="display:none;margin:12px 0" data-import-progress><div class="tiny" data-import-progress-label>等待导入</div><div class="v4-progress" style="margin-top:6px"><i data-import-progress-bar style="width:0%"></i></div><button class="btn btn-sm btn-danger" type="button" data-import-cancel style="margin-top:8px">取消当前导入</button></div>
@@ -6075,6 +6147,13 @@ function v4PhotoSrc(student) {
   const item = Array.isArray(student.photo_assets) && student.photo_assets[0];
   return item && (item.data_url || item.dataUrl) || '';
 }
+function v4PhotoSlot(student) {
+  const src = v4PhotoSrc(student);
+  const action = src ? 'student-view' : 'v4-photo-single-for-student';
+  const label = src ? `查看${student.full_name || '学生'}照片` : `为${student.full_name || '学生'}上传照片`;
+  const body = src ? `<img src="${esc(src)}" alt="${esc(student.full_name || '学生')}" loading="lazy">` : `<span class="v4-photo-placeholder"><svg class="ic"><use href="#i-up"/></svg><small>暂无照片 · 点击上传</small></span>`;
+  return `<button class="v4-photo" data-act="${action}" data-student-id="${esc(student.id)}" aria-label="${esc(label)}">${body}</button>`;
+}
 async function v4PhotoThumbnail(file) {
   const source = await readFileDataUrl(file);
   if (!source || typeof Image === 'undefined' || !document.createElement('canvas').getContext) return source;
@@ -6128,6 +6207,7 @@ function v4ErrorMessage(error, fallback) {
     ZIP_COMPRESSION_RATIO_LIMIT: '压缩包疑似异常膨胀，照片未导入；请拆分或重新压缩文件。',
     ATTACHMENT_BATCH_LIMIT: '附件超过单批次大小限制，未写入正式数据；请拆分文件后重试。',
     EMPLOYMENT_MANIFEST_SIGNATURE_INVALID: '就业资源签名校验失败，资源未导入；请使用可信来源重新导出清单。',
+    PHOTO_DUPLICATE: '这张照片已经归档过，未重复保存；请检查学生是否已绑定照片。',
   };
   return messages[code] || `${fallback || '操作未完成'}（${code}），当前数据未改变；请检查输入后重试，若仍失败请保留错误码 ${code}。`;
 }
@@ -6147,10 +6227,10 @@ function viewPhotos(options) {
   const list = all.filter(s => !q || [s.full_name,s.student_number,s.class_name,s.dorm,s.dorm_building].join(' ').toLowerCase().includes(q));
   const withPhoto = all.filter(s => v4PhotoSrc(s) || (s.photo_ids || []).length).length;
   const queue = v4PhotoQueue();
-  const cards = list.map(s => { const src = v4PhotoSrc(s); return `<article class="v4-photo-card"><button class="v4-photo" data-act="v4-photo-open" data-student-id="${esc(s.id)}" aria-label="查看${esc(s.full_name || '学生')}原图">${src ? `<img src="${esc(src)}" alt="${esc(s.full_name || '学生')}" loading="lazy">` : esc((s.full_name || '?').slice(0,1))}</button><div class="v4-photo-meta"><strong>${esc(s.full_name || '未命名')}</strong><small>${esc(s.student_number || '无学号')} · ${esc(s.class_name || '未分班')}</small><small>${esc(s.dorm_building || s.dorm || '未登记宿舍')}</small></div></article>`; }).join('');
+  const cards = list.map(s => `<article class="v4-photo-card">${v4PhotoSlot(s)}<div class="v4-photo-meta"><strong>${esc(s.full_name || '未命名')}</strong><small>${esc(s.student_number || '无学号')} · ${esc(s.class_name || '未分班')}</small><small>${esc(s.dorm_building || s.dorm || '未登记宿舍')}</small>${!v4PhotoSrc(s) ? '<small class="tag tag-amber">待补采</small>' : '<small class="tag tag-green">已归档</small>'}</div></article>`).join('');
   const queueHtml = queue.length ? `<div class="card"><div class="card-hd"><h2>待人工确认照片</h2><span class="sp"></span><span class="tag tag-amber">${queue.length} 张</span></div><div class="card-bd"><div class="v4-list">${queue.map((item, index) => `<div class="v4-list-item"><div><strong>${esc(item.name || '未命名照片')}</strong><div class="tiny">${esc(item.reason || '未匹配')} · ${esc((item.candidates || []).join('、') || '请手动选择学生')}</div></div><span class="sp"></span><button class="btn btn-sm" data-act="v4-photo-review" data-index="${index}">人工归档</button></div>`).join('')}</div></div></div>` : '';
   const body = `<div class="v4-stat-row"><div class="v4-stat"><span class="tiny">学生总数</span><b>${all.length}</b></div><div class="v4-stat"><span class="tiny">已归档照片</span><b>${withPhoto}</b></div><div class="v4-stat"><span class="tiny">待补采</span><b>${Math.max(0, all.length - withPhoto)}</b></div><div class="v4-stat"><span class="tiny">待确认照片</span><b>${queue.length}</b></div></div>${queueHtml}<div class="card"><div class="card-bd"><div class="v4-toolbar"><input class="inp" style="max-width:300px" data-v4-photo-search value="${esc(state.photoQ || '')}" placeholder="按姓名、学号、班级或宿舍查找"><span class="sp"></span><button class="btn btn-sm${state.photoView === 'table' ? '' : ' btn-primary'}" data-act="v4-view-cards">照片花名册</button><button class="btn btn-sm${state.photoView === 'table' ? ' btn-primary' : ''}" data-act="v4-view-table">数据表格</button></div>${state.photoView === 'table' ? `<div class="tw"><table><thead><tr><th>姓名</th><th>学号</th><th>班级</th><th>宿舍/楼栋</th><th>照片</th></tr></thead><tbody>${list.map(s => `<tr><td>${esc(s.full_name)}</td><td>${esc(s.student_number)}</td><td>${esc(s.class_name)}</td><td>${esc(s.dorm_building || s.dorm)}</td><td>${v4PhotoSrc(s) ? '<span class="tag tag-green">已归档</span>' : '<span class="tag tag-amber">待补采</span>'}</td></tr>`).join('') || '<tr><td colspan="5">暂无结果</td></tr>'}</tbody></table></div>` : `<div class="v4-photo-grid">${cards || '<div class="empty">暂无匹配学生</div>'}</div>`}</div></div>`;
-  const actions = `<div class="v4-actions embedded-actions"><button class="btn btn-primary" data-act="v4-photo-upload">批量导入照片</button><button class="btn" data-act="v4-photo-single">单人补传</button><button class="btn" data-act="student-new">新增学生</button></div>`;
+  const actions = `<div class="v4-actions embedded-actions"><button class="btn btn-primary" data-act="v4-photo-upload-files">批量导入文件 / ZIP</button><button class="btn" data-act="v4-photo-upload">导入照片文件夹</button><button class="btn" data-act="v4-photo-single">单人补传</button><button class="btn" data-act="student-new">新增学生</button></div><div class="tiny photo-upload-hint">照片文件名建议使用学号或姓名；无法唯一匹配的照片会进入“待人工确认”，不会被静默丢弃。</div>`;
   return embedded ? `${actions}${body}` : v4Page('\u8bc6\u751f\u901f\u67e5', '照片优先的学生速查与花名册管理；本版本不进行人脸相似匹配。', body, actions);
 }
 function viewOrg() {
@@ -6175,21 +6255,28 @@ function viewFiles() {
   const state = app.v4 || (app.v4 = {}); const q = String(state.fileQ || '').toLowerCase(); const category = state.fileCategory || '';
   const filtered = files.filter(file => (!q || [file.title, file.tags, file.source, file.scene, file.content].join(' ').toLowerCase().includes(q)) && (!category || file.category === category));
   const rows = filtered.map(file => { const index = files.indexOf(file); return `<div class="v4-list-item"><label class="chk"><input type="checkbox" data-v4-file-select="${index}" aria-label="选择 ${esc(file.title || '文件')}"><span></span></label><svg class="ic"><use href="#i-copy"></use></svg><div><strong>${esc(file.title)}</strong><div class="tiny">${esc(file.directory || '根目录')} · ${esc(file.category || '未分类')} · ${esc(file.tags || '无标签')} · ${esc(file.scene || '通用')}</div></div><span class="sp"></span><span class="tiny">v${Number(file.version || 1)} · ${esc(file.updated_at || '')}</span><button class="btn btn-sm" data-act="v4-file-version" data-index="${index}">新版本</button>${Array.isArray(file.versions) && file.versions.length > 1 ? `<button class="btn btn-sm" data-act="v4-file-rollback" data-index="${index}">版本回退</button>` : ''}<button class="btn btn-sm" data-act="v4-file-download" data-index="${index}">查看</button><button class="btn btn-sm btn-danger" data-act="v4-file-delete" data-index="${index}">删除</button></div>`; }).join('');
-  const body = `<div class="card"><div class="card-hd"><h2>本地文件与模板</h2><span class="sp"></span><span class="tiny">文件随加密备份迁移 · 支持版本回退</span></div><div class="card-bd"><div class="v4-toolbar"><input class="inp" style="max-width:280px" data-v4-file-search value="${esc(state.fileQ || '')}" placeholder="搜索标题、标签、来源或场景"><select class="inp" data-v4-file-category><option value="">全部分类</option>${[...new Set(files.map(file => file.category).filter(Boolean))].map(value => `<option value="${esc(value)}"${value === category ? ' selected' : ''}>${esc(value)}</option>`).join('')}</select><button class="btn btn-sm" data-act="v4-file-export">导出选中</button><button class="btn btn-sm btn-danger" data-act="v4-file-delete-selected">删除选中</button></div><div class="v4-list">${rows || '<div class="empty">还没有文件条目，可先录入请假、住宿异动或学工通知模板。</div>'}</div></div></div>`;
+  const categories = [...new Set(V4_FILE_CATEGORIES.concat(files.map(file => file.category).filter(Boolean)))];
+  const body = `<div class="banner banner-info"><strong>个人资料平台：</strong>上传表单、政策文件、讲话稿或安全提示后，系统会按文件名自动分类并规范显示名称；原文件和版本会纳入本地附件保险库与备份。</div><div class="card"><div class="card-hd"><h2>本地文件与模板</h2><span class="sp"></span><span class="tiny">表单模板、政策文件和工作资料统一管理 · 支持版本回退</span></div><div class="card-bd"><div class="v4-toolbar"><input class="inp" style="max-width:280px" data-v4-file-search value="${esc(state.fileQ || '')}" placeholder="搜索标题、标签、来源或场景"><select class="inp" data-v4-file-category><option value="">全部分类</option>${categories.map(value => `<option value="${esc(value)}"${value === category ? ' selected' : ''}>${esc(value)}</option>`).join('')}</select><button class="btn btn-sm" data-act="v4-file-export">导出选中</button><button class="btn btn-sm btn-danger" data-act="v4-file-delete-selected">删除选中</button></div><div class="v4-list">${rows || '<div class="empty">还没有文件条目。可以先上传假期去向表、德育考核表、政策文件或讲话稿。</div>'}</div></div></div>`;
   return v4Page('分类文件库', '按场景、标签和关键词管理办公审批表、学生事务模板与通知文件。', body, '<button class="btn" data-act="v4-file-upload">上传文件</button><button class="btn btn-primary" data-act="v4-file-new">新增文件条目</button>');
 }
 function viewEmployment() {
   const resources = v4Collection('v4_employment_resources');
-  if (!resources.length) {
-    resources.push({ id:'career-01', title:'国家大学生就业服务平台', region:'全国', industry:'综合', url:'https://www.ncss.cn/', verified_at:today(), status:'有效' }, { id:'career-02', title:'教育部24365就业服务平台', region:'全国', industry:'综合', url:'https://24365.smartedu.cn/', verified_at:today(), status:'有效' }, { id:'career-03', title:'中国公共招聘网', region:'全国', industry:'综合', url:'https://job.mohrss.gov.cn/', verified_at:today(), status:'有效' });
-    save('custom');
-  }
+  const defaults = [
+    { id:'career-ncss', title:'国家大学生就业服务平台', region:'全国', industry:'综合就业服务', organizer:'教育部', url:'https://www.ncss.cn/', verified_at:today(), status:'有效' },
+    { id:'career-24365', title:'24365校园招聘服务', region:'全国', industry:'校园招聘', organizer:'教育部', url:'https://24365.smartedu.cn/', verified_at:today(), status:'有效' },
+    { id:'career-mohrss', title:'高校毕业生就业服务平台', region:'全国', industry:'公共就业服务', organizer:'人力资源和社会保障部', url:'https://job.mohrss.gov.cn/202008gx/index.jhtml', verified_at:today(), status:'有效' },
+    { id:'career-jobonline', title:'就业在线', region:'全国', industry:'公共就业服务', organizer:'公共就业服务平台', url:'https://www.jobonline.cn/', verified_at:today(), status:'有效' },
+    { id:'career-iguopin', title:'国聘招聘平台', region:'全国', industry:'国企与综合招聘', organizer:'国聘', url:'https://www.iguopin.com/', verified_at:today(), status:'有效' },
+    { id:'career-newjobs', title:'中国国家人才网', region:'全国', industry:'人才服务', organizer:'中国国家人才网', url:'https://www.newjobs.com.cn/', verified_at:today(), status:'有效' },
+  ];
+  const missing = defaults.filter(item => !resources.some(resource => resource.id === item.id));
+  if (missing.length) { resources.push(...missing); save('custom'); }
   const state = app.v4 || (app.v4 = {}); const q = String(state.employmentQ || '').toLowerCase();
   const region = state.employmentRegion || ''; const industry = state.employmentIndustry || '';
   const filtered = resources.filter(r => (!q || [r.title, r.organizer, r.url].join(' ').toLowerCase().includes(q)) && (!region || r.region === region) && (!industry || r.industry === industry));
-  const rows = filtered.map(r => { const index = resources.indexOf(r); return `<div class="v4-list-item"><svg class="ic"><use href="#i-link"></use></svg><div><strong>${esc(r.title)}</strong><div class="tiny">${esc(r.region)} · ${esc(r.industry)} · ${esc(r.organizer || '未记录主办单位')} · 核验于 ${esc(r.verified_at || '未记录')}</div></div><span class="sp"></span><a class="btn btn-sm" href="${esc(r.url)}" target="_blank" rel="noreferrer">打开官网</a><button class="btn btn-sm btn-danger" data-act="v4-employment-delete" data-index="${index}">删除</button></div>`; }).join('');
-  const body = `<div class="banner banner-info">资源目录默认离线可用；动态更新仅接受带签名的资源清单，不会自动上传学生数据或抓取第三方页面。</div><div class="card"><div class="card-bd"><div class="v4-toolbar"><input class="inp" style="max-width:260px" data-v4-employment-search value="${esc(state.employmentQ || '')}" placeholder="搜索资源、主办单位或网址"><select class="inp" data-v4-employment-region><option value="">全部地区</option>${[...new Set(resources.map(r => r.region).filter(Boolean))].map(v => `<option value="${esc(v)}"${v === region ? ' selected' : ''}>${esc(v)}</option>`).join('')}</select><select class="inp" data-v4-employment-industry><option value="">全部行业</option>${[...new Set(resources.map(r => r.industry).filter(Boolean))].map(v => `<option value="${esc(v)}"${v === industry ? ' selected' : ''}>${esc(v)}</option>`).join('')}</select></div><div class="v4-list">${rows || '<div class="empty">暂无匹配资源</div>'}</div></div></div>`;
-  return v4Page('就业资源', '按地区和行业整理官方就业服务入口，供学生自主查询。', body, '<button class="btn" data-act="v4-employment-import">导入签名清单</button><button class="btn" data-act="v4-employment-export">导出签名清单</button><button class="btn btn-primary" data-act="v4-employment-new">新增资源</button>');
+  const rows = filtered.map(r => { const index = resources.indexOf(r); return `<article class="employment-resource-card" data-employment-resource><div class="employment-resource-top"><span class="employment-resource-icon"><svg class="ic"><use href="#i-link"></use></svg></span><span class="tag tag-green">${esc(r.status || '有效')}</span></div><h3>${esc(r.title)}</h3><p>${esc(r.organizer || '未记录主办单位')} · ${esc(r.industry || '综合')}</p><div class="employment-resource-meta"><span>${esc(r.region || '全国')}</span><span>核验 ${esc(r.verified_at || '未记录')}</span></div><div class="employment-resource-actions"><a class="btn btn-sm btn-primary" href="${esc(r.url)}" target="_blank" rel="noreferrer">打开官网</a><button class="btn btn-sm btn-danger" data-act="v4-employment-delete" data-index="${index}">删除</button></div></article>`; }).join('');
+  const body = `<div class="banner banner-info"><strong>离线资源目录：</strong>下面是预置的官方就业服务入口，应用不会自动抓取网页；后续更新请导入带签名的资源清单。</div><div class="v4-stat-row"><div class="v4-stat"><span class="tiny">资源总数</span><b>${resources.length}</b></div><div class="v4-stat"><span class="tiny">当前显示</span><b>${filtered.length}</b></div><div class="v4-stat"><span class="tiny">地区</span><b>${new Set(resources.map(r => r.region).filter(Boolean)).size}</b></div><div class="v4-stat"><span class="tiny">已核验</span><b>${resources.filter(r => r.status === '有效').length}</b></div></div><div class="card employment-resource-shell"><div class="card-bd"><div class="v4-toolbar"><input class="inp" style="max-width:300px" data-v4-employment-search value="${esc(state.employmentQ || '')}" placeholder="搜索平台、主办单位或网址"><select class="inp" data-v4-employment-region><option value="">全部地区</option>${[...new Set(resources.map(r => r.region).filter(Boolean))].map(v => `<option value="${esc(v)}"${v === region ? ' selected' : ''}>${esc(v)}</option>`).join('')}</select><select class="inp" data-v4-employment-industry><option value="">全部方向</option>${[...new Set(resources.map(r => r.industry).filter(Boolean))].map(v => `<option value="${esc(v)}"${v === industry ? ' selected' : ''}>${esc(v)}</option>`).join('')}</select></div><div class="employment-resource-grid">${rows || '<div class="empty">暂无匹配资源</div>'}</div></div></div>`;
+  return v4Page('毕业生就业', '把常用的官方就业入口整理在这里，学生查询时不用再翻收藏夹。', body, '<button class="btn" data-act="v4-employment-import">导入签名清单</button><button class="btn" data-act="v4-employment-export">导出签名清单</button><button class="btn btn-primary" data-act="v4-employment-new">新增资源</button>');
 }
 function viewBackupV4() {
   const schedule = DB.settings.backup_schedule || { frequency:'weekly', enabled:false, folder:'', retain:8, last_run_at:'' };
@@ -6452,6 +6539,41 @@ function openDrawer() {
   $('#scrim').classList.add('open');
 }
 
+async function v4UploadPhotoForStudent(file, student) {
+  if (!file || !student) throw new Error('照片或学生记录不存在');
+  if (!/^image\/(jpeg|png|webp)$/i.test(file.type) || file.size > 10 * 1024 * 1024) throw new Error('照片格式需为 JPG、PNG 或 WebP，且单张不超过 10MB');
+  const contentHash = window.crypto && window.crypto.subtle ? Array.from(new Uint8Array(await window.crypto.subtle.digest('SHA-256', await file.arrayBuffer()))).map(byte => byte.toString(16).padStart(2, '0')).join('') : `${file.name}:${file.size}`;
+  if (DB.students.some(item => (item.photo_assets || []).some(photo => photo.content_hash === contentHash))) throw new Error('PHOTO_DUPLICATE');
+  const dataUrl = await v4PhotoThumbnail(file);
+  const photoId = `photo_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+  const record = window.CWB.attachments && await window.CWB.attachments.add({ id:photoId, student_id:student.id, name:file.name, blob:file, mimeType:file.type });
+  const id = record && record.id || photoId;
+  student.photo_ids = Array.isArray(student.photo_ids) ? student.photo_ids : [];
+  student.photo_assets = Array.isArray(student.photo_assets) ? student.photo_assets : [];
+  student.photo_ids.push(id);
+  student.photo_assets = [{ id, name:file.name, data_url:dataUrl, content_hash:contentHash, mime_type:file.type, size:file.size, created_at:new Date().toISOString() }, ...student.photo_assets].slice(0, 3);
+  if (window.cwbDesktop && window.cwbDesktop.writeAttachment) await window.cwbDesktop.writeAttachment({ id, mimeType:file.type, bytes:new Uint8Array(await file.arrayBuffer()) });
+  if (window.CWB.audit && window.CWB.audit.log) await window.CWB.audit.log('photo_single_upload', { student_id:student.id, attachment_id:id });
+  save('students'); render();
+  return id;
+}
+const V4_FILE_CATEGORIES = Object.freeze(['表单模板', '政策文件', '讲话稿', '学工通知', '工作材料', '其他']);
+function v4ClassifyFile(name, content) {
+  const text = `${name || ''} ${content || ''}`.toLowerCase();
+  if (/请假|请销假|住宿|异动|统计表|登记表|申请表|德育|考核|去向|汇总|模板|表单/.test(text)) return '表单模板';
+  if (/政策|办法|规定|细则|通知|意见|方案|安全提示|防诈|资助政策/.test(text)) return /通知|提示/.test(text) ? '学工通知' : '政策文件';
+  if (/讲话|致辞|开学典礼|发言稿|演讲/.test(text)) return '讲话稿';
+  if (/通知|提醒|公告|通告/.test(text)) return '学工通知';
+  if (/总结|计划|台账|材料|汇报/.test(text)) return '工作材料';
+  return '其他';
+}
+function v4NormalizeFileTitle(name, category) {
+  const raw = String(name || '未命名文件').replace(/[\\/:*?"<>|]+/g, ' ').replace(/\s+/g, ' ').trim();
+  const ext = raw.match(/\.[^.]+$/)?.[0] || '';
+  const base = ext ? raw.slice(0, -ext.length).trim() : raw;
+  return `${category || '其他'} · ${base || '未命名'}${ext}`;
+}
+
 const ACTS = {
   'v4-heat-filter': (id, btn) => { const building = btn.dataset.heatBuilding || ''; const level = btn.dataset.heatLevel || ''; const next = { q:building }; if (level === '重点关注') next.focus = '__any'; if (level === '学业预警') next.focus = '__crisis'; app.filters.students = Object.assign({}, app.filters.students, next); go('students'); ui.toast(`已跳转到${building}学生明细`, 'ok', 1600); },
   'v4-modules-config': () => {
@@ -6461,11 +6583,14 @@ const ACTS = {
     ui.modal({ title:'功能入口个性化', size:'narrow', body:`<p class="muted" style="margin-top:0">勾选后隐藏入口；首页、学生台账、数据中心和设置不可隐藏。功能已按原有板块归位。</p><div class="v4-list">${items.map(item => `<div class="form-row module-config-row"><input type="checkbox" data-module-hide="${esc(item.view)}" ${hidden.has(item.view) ? 'checked' : ''}> <span>${esc(item.label)}</span></div>`).join('')}</div>`, footer:'<button class="btn" data-close>完成</button>', onOpen(mask) { $$('[data-module-hide]', mask).forEach(input => { input.onchange = () => { DB.settings.ui = DB.settings.ui || {}; const next = new Set(DB.settings.ui.hiddenModules || []); if (input.checked) next.add(input.dataset.moduleHide); else next.delete(input.dataset.moduleHide); DB.settings.ui.hiddenModules = [...next]; save('settings'); applyModuleVisibility(); }; }); }});
   },
   'v4-students-more': () => { app.v4 = Object.assign({}, app.v4, { studentLimit:(Number(app.v4 && app.v4.studentLimit) || 300) + 300 }); render(); },
+  'students-clear-field-filter': () => { app.filters.students = Object.assign({}, app.filters.students, { field:'', value:'' }); render(); },
+  'students-sort-dir': () => { app.filters.students = Object.assign({}, app.filters.students, { sortDir:app.filters.students.sortDir === 'desc' ? 'asc' : 'desc' }); render(); },
   'v4-view-cards': () => { app.v4 = Object.assign({}, app.v4, { photoView:'cards' }); render(); },
   'v4-view-table': () => { app.v4 = Object.assign({}, app.v4, { photoView:'table' }); render(); },
   'v4-photo-open': async (id, btn) => { const student = DB.students.find(item => String(item.id) === String(btn.dataset.studentId)); if (!student) return; const photo = student.photo_assets && student.photo_assets[0]; if (!photo) return ui.toast('该学生尚未归档照片','warn'); let src = photo.data_url || ''; let objectUrl = ''; try { const record = window.CWB.attachments && await window.CWB.attachments.get(photo.id); if (record && record.blob) { objectUrl = URL.createObjectURL(record.blob); src = objectUrl; } else if (window.cwbDesktop && window.cwbDesktop.readAttachment) { const bytes = await window.cwbDesktop.readAttachment(photo.id); objectUrl = URL.createObjectURL(new Blob([bytes], { type:photo.mime_type || 'image/jpeg' })); src = objectUrl; } } catch (_) {} ui.modal({ title:`${student.full_name || '学生'} · 原图`, size:'wide', body:`<div style="text-align:center;background:#111;padding:12px;border-radius:10px"><img src="${esc(src)}" alt="${esc(student.full_name || '学生')}" style="max-width:100%;max-height:70vh;object-fit:contain"></div>`, footer:'<button class="btn" data-close>关闭</button>', onOpen(mask, close){ mask.addEventListener('click', event => { if (event.target.matches('[data-close]')) { if (objectUrl) URL.revokeObjectURL(objectUrl); close(); } }); }}); },
-  'v4-photo-upload': () => {
-    const input = document.createElement('input'); input.type = 'file'; input.multiple = true; input.accept = 'image/jpeg,image/png,image/webp,.zip'; input.webkitdirectory = true;
+  'v4-photo-upload-files': (id, btn) => ACTS['v4-photo-upload'](id, { dataset:{ photoDirectory:'false' } }),
+  'v4-photo-upload': (id, btn) => {
+    const input = document.createElement('input'); input.type = 'file'; input.multiple = true; input.accept = 'image/jpeg,image/png,image/webp,.zip'; input.webkitdirectory = !(btn && btn.dataset && btn.dataset.photoDirectory === 'false');
     input.onchange = async () => {
       let files; try { files = await v4ExpandPhotoFiles([...(input.files || [])]); } catch (error) { ui.toast(v4ErrorMessage(error, '照片包无法安全解压'),'err',5200); return; }
       let matched = 0; let skipped = 0; let totalBytes = 0; const seenHashes = new Set();
@@ -6499,6 +6624,13 @@ const ACTS = {
       if (window.CWB.audit && window.CWB.audit.log) await window.CWB.audit.log('photo_batch_import', { total:files.length, matched, skipped });
       save('students'); render(); ui.toast(`照片归档完成：匹配 ${matched} 张${skipped ? `，待人工确认 ${skipped} 张` : ''}`, skipped ? 'warn' : 'ok', 3600);
     };
+      input.click();
+  },
+  'v4-photo-single-for-student': (id, btn) => {
+    const student = DB.students.find(item => String(item.id) === String(btn.dataset.studentId));
+    if (!student) return ui.toast('未找到对应学生', 'warn');
+    const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/jpeg,image/png,image/webp';
+    input.onchange = async () => { const file = input.files && input.files[0]; if (!file) return; try { await v4UploadPhotoForStudent(file, student); ui.toast(`已为 ${student.full_name || '学生'} 归档照片`, 'ok'); } catch (error) { ui.toast(v4ErrorMessage(error, '照片上传失败'), 'err', 4200); } };
     input.click();
   },
   'v4-photo-single': () => {
@@ -6508,14 +6640,7 @@ const ACTS = {
       const choices = DB.students.map(student => ({ v:student.student_number, n:`${student.full_name || '未命名'} · ${student.student_number || '无学号'}` }));
       ui.form({ title:'单人补传照片', data:{ student_number:'' }, fields:[{ key:'student_number', label:'归档学生', type:'select', required:true, options:choices }], onSave: async value => {
         const student = DB.students.find(item => item.student_number === value.student_number); if (!student) return ui.toast('未找到对应学生','warn');
-        const photoId = `photo_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
-        const dataUrl = await v4PhotoThumbnail(file);
-        const record = window.CWB.attachments && await window.CWB.attachments.add({ id:photoId, student_id:student.id, name:file.name, blob:file, mimeType:file.type });
-        student.photo_ids = Array.isArray(student.photo_ids) ? student.photo_ids : []; student.photo_assets = Array.isArray(student.photo_assets) ? student.photo_assets : [];
-        student.photo_ids.push(record && record.id || photoId); student.photo_assets = [{ id:record && record.id || photoId, name:file.name, data_url:dataUrl, content_hash:record && record.content_hash || '', mime_type:file.type, size:file.size, created_at:new Date().toISOString() }, ...student.photo_assets].slice(0, 3);
-        if (window.cwbDesktop && window.cwbDesktop.writeAttachment) await window.cwbDesktop.writeAttachment({ id:record && record.id || photoId, mimeType:file.type, bytes:new Uint8Array(await file.arrayBuffer()) });
-        if (window.CWB.audit && window.CWB.audit.log) await window.CWB.audit.log('photo_single_upload', { student_id:student.id, attachment_id:record && record.id || photoId });
-        save('students'); render(); ui.toast('照片已补传并归档','ok');
+        try { await v4UploadPhotoForStudent(file, student); ui.toast('照片已补传并归档','ok'); } catch (error) { ui.toast(v4ErrorMessage(error, '照片上传失败'), 'err', 4200); }
       } });
     }; input.click();
   },
@@ -6546,7 +6671,7 @@ const ACTS = {
     { key:'rule_version', label:'规则版本', required:true },
   ], onSave(v){ const student = DB.students.find(s => s.student_number === v.student_number); const now = new Date().toISOString(); const item = { id:`party_${Date.now()}`, ...v, student_name:student && student.full_name || '', steps:window.CWB_V4 ? window.CWB_V4.partyChecklist(v.rule_version) : [], materials:{}, audit_log:[{ action:'created', at:now, rule_version:v.rule_version || '2026-05-11' }], created_at:now, updated_at:now, schema_version:7 }; v4Collection('v4_party_cases').push(item); save('custom'); render(); ui.toast('党员发展档案已创建','ok'); }}),
   'v4-party-complete': (id, btn) => { const item = v4Collection('v4_party_cases')[Number(btn.dataset.index)]; if (!item) return; const step = (item.steps || []).find(s => s.status !== 'done'); if (!step) return ui.toast('该档案节点已全部完成','ok'); const now = new Date().toISOString(); const check = window.CWB_V4 && window.CWB_V4.validatePartyTransition ? window.CWB_V4.validatePartyTransition(item, step, now) : { ok:true, errors:[] }; if (!check.ok) return ui.toast(`暂不能办理：${check.errors.join('；')}`, 'warn', 5200); item.audit_log = Array.isArray(item.audit_log) ? item.audit_log : []; item.audit_log.push({ action:'complete_step', step:step.key, at:now, operator:DB.settings.counselor_name || '本机辅导员', rule_version:item.rule_version || '2026-05-11', material_status:step.material_ids && step.material_ids.length ? 'attached' : 'pending_review', return_reason:'' }); step.status = 'done'; step.completed_at = now; item.updated_at = now; if (window.CWB.audit && window.CWB.audit.log) window.CWB.audit.log('party_step_complete', { case_id:item.id, step:step.key, rule_version:item.rule_version || '2026-05-11' }); save('custom'); render(); ui.toast(`已完成：${step.label}`,'ok'); },
-  'v4-file-upload': () => { const input = document.createElement('input'); input.type = 'file'; input.multiple = true; input.accept = '.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt,.png,.jpg,.jpeg'; input.onchange = async () => { let total = 0; let count = 0; for (const file of [...(input.files || [])]) { if (file.size > 50 * 1024 * 1024 || (total += file.size) > 500 * 1024 * 1024) continue; const id = `attachment_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`; if (window.CWB.attachments && window.CWB.attachments.add) await window.CWB.attachments.add({ id, name:file.name, blob:file, mimeType:file.type }); if (window.cwbDesktop && window.cwbDesktop.writeAttachment) await window.cwbDesktop.writeAttachment({ id, mimeType:file.type, bytes:new Uint8Array(await file.arrayBuffer()) }); v4Collection('v4_files').push({ id:`file_${Date.now()}_${count}`, title:file.name, category:'其他', tags:'上传文件', attachment_id:id, size:file.size, mime_type:file.type, updated_at:today(), schema_version:7 }); count++; } save('custom'); render(); ui.toast(`文件上传完成：${count} 个`,'ok'); }; input.click(); },
+  'v4-file-upload': () => { const input = document.createElement('input'); input.type = 'file'; input.multiple = true; input.accept = '.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt,.png,.jpg,.jpeg'; input.onchange = async () => { let total = 0; let count = 0; for (const file of [...(input.files || [])]) { if (file.size > 50 * 1024 * 1024 || (total += file.size) > 500 * 1024 * 1024) continue; const id = `attachment_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`; const category = v4ClassifyFile(file.name); if (window.CWB.attachments && window.CWB.attachments.add) await window.CWB.attachments.add({ id, name:file.name, blob:file, mimeType:file.type }); if (window.cwbDesktop && window.cwbDesktop.writeAttachment) await window.cwbDesktop.writeAttachment({ id, mimeType:file.type, bytes:new Uint8Array(await file.arrayBuffer()) }); v4Collection('v4_files').push({ id:`file_${Date.now()}_${count}`, title:v4NormalizeFileTitle(file.name, category), original_name:file.name, category, tags:'本地上传', source:'本机文件', scene:category === '表单模板' ? '学校统一口径表单' : '个人资料库', attachment_id:id, size:file.size, mime_type:file.type, updated_at:today(), schema_version:7 }); count++; } save('custom'); render(); ui.toast(`文件上传完成：${count} 个，已自动分类命名`,'ok'); }; input.click(); },
   'v4-file-rollback': (id, btn) => { const item = v4Collection('v4_files')[Number(btn.dataset.index)]; if (!item || !Array.isArray(item.versions) || item.versions.length < 2) return; const choices = item.versions.slice().sort((a, b) => Number(b.version || 0) - Number(a.version || 0)).map(version => `<option value="${Number(version.version)}">v${Number(version.version)} · ${esc(version.name || item.title || '文件')} · ${esc(version.at || '')}</option>`).join(''); ui.modal({ title:'选择文件历史版本', size:'narrow', body:`<p class="muted">回退只切换当前引用，不删除历史附件。回退后仍可再次创建新版本。</p><select class="inp" data-v4-file-rollback-select>${choices}</select>`, footer:'<button class="btn" data-close>取消</button><button class="btn btn-primary" data-v4-file-rollback-go>确认回退</button>', onOpen(mask, close){ $('[data-v4-file-rollback-go]', mask).onclick = async () => { const target = item.versions.find(version => Number(version.version) === Number($('[data-v4-file-rollback-select]', mask).value)); if (!target) return; item.version = Number(target.version || 1); item.attachment_id = target.attachment_id || ''; item.title = target.name || item.title; item.updated_at = new Date().toISOString(); if (window.CWB.audit && window.CWB.audit.log) await window.CWB.audit.log('file_rollback', { file_id:item.id, version:item.version }); save('custom'); close(); render(); ui.toast(`已回退到 v${item.version}`,'ok'); }; }}); },
   'v4-file-version': (id, btn) => { const item = v4Collection('v4_files')[Number(btn.dataset.index)]; if (!item) return; const input = document.createElement('input'); input.type = 'file'; input.onchange = async () => { const file = input.files && input.files[0]; if (!file) return; const attachmentId = `attachment_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`; if (window.CWB.attachments && window.CWB.attachments.add) await window.CWB.attachments.add({ id:attachmentId, name:file.name, blob:file, mimeType:file.type }); const now = new Date().toISOString(); item.version = Number(item.version || 1) + 1; item.versions = Array.isArray(item.versions) ? item.versions : []; item.versions.push({ version:item.version, at:now, attachment_id:attachmentId, name:file.name, size:file.size }); item.attachment_id = attachmentId; item.title = file.name; item.updated_at = now; if (window.CWB.audit && window.CWB.audit.log) await window.CWB.audit.log('file_version_create', { file_id:item.id, version:item.version, attachment_id:attachmentId }); save('custom'); render(); ui.toast(`已保存 v${item.version} 版本`,'ok'); }; input.click(); },
   'v4-file-new': () => ui.form({ title:'新增文件条目', data:{ title:'', directory:'根目录', category:'请假审批', tags:'', source:'本校整理', scene:'日常事务', content:'', url:'' }, fields:[

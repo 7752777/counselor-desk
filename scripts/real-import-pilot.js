@@ -77,6 +77,8 @@ function category(header) {
   if (/姓名|name|xm/.test(value)) return 'full_name';
   if (/身份证|证件号|idcard/.test(value)) return 'id_card';
   if (/手机|电话|phone|tel|联系方式/.test(value)) return 'phone';
+  if (/邮箱|电子邮件|email|e-mail|mail/.test(value)) return 'email';
+  if (/学籍状态|在籍|在读状态|status/.test(value)) return 'status';
   if (/性别|gender|sex/.test(value)) return 'gender';
   if (/日期|时间|date|birth|生日/.test(value)) return 'date';
   if (/成绩|分数|score|grade|绩点|gpa/.test(value)) return 'number';
@@ -87,12 +89,16 @@ function syntheticCell(kind, fileHash, rowIndex, columnIndex) {
   const seed = `${fileHash}:${rowIndex}:${columnIndex}`;
   if (kind === 'student_number') return `PILOT-${fileHash.slice(0, 10)}-${String(rowIndex).padStart(5, '0')}`;
   if (kind === 'full_name') return `脱敏学生${rowIndex}`;
-  if (kind === 'id_card') return `1101012000${String((rowIndex % 12) + 1).padStart(2, '0')}${String((rowIndex % 28) + 1).padStart(2, '0')}00${String(rowIndex % 1000).padStart(3, '0')}0`;
+  if (kind === 'id_card') return `11010120000101${String(rowIndex % 1000).padStart(3, '0')}0`;
   if (kind === 'phone') return `138${String((rowIndex * 7919 + columnIndex * 31) % 100000000).padStart(8, '0')}`;
+  if (kind === 'email') return `pilot${rowIndex}@example.com`;
+  if (kind === 'status') return '在读';
   if (kind === 'gender') return rowIndex % 2 ? '女' : '男';
   if (kind === 'date') return `202${rowIndex % 6}-0${(rowIndex % 9) + 1}-0${(rowIndex % 9) + 1}`;
   if (kind === 'number') return String((rowIndex * 17 + columnIndex) % 101);
-  return `脱敏-${digest(seed).slice(0, 12)}`;
+  // Leave unconstrained/custom columns blank so the pilot measures header mapping and
+  // transactional import rather than manufacturing invalid enum, URL, or free-text values.
+  return '';
 }
 
 function buildSample(file) {
