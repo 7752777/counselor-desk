@@ -544,6 +544,8 @@ tbody tr:last-child td{border-bottom:none}
 /* ---------- SVG 图表 ---------- */
 .chart-wrap{width:100%;overflow-x:auto}
 .chart-wrap svg{display:block;max-width:100%;height:auto}
+.chart-wrap-bars{display:flex;justify-content:center;overflow:hidden}
+.chart-wrap-bars svg{max-height:360px}
 .legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:12px;font-size:12.3px;color:var(--ink-3)}
 .legend i{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:6px;vertical-align:-1px}
 .sub-hd{font-size:13px;font-weight:700;color:var(--ink-2);margin-bottom:10px;display:flex;align-items:center;gap:6px}
@@ -766,12 +768,13 @@ tbody tr:last-child td{border-bottom:none}
 .embedded-actions{justify-content:flex-start;margin-bottom:12px}
 .analysis-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}.analysis-kpis>div{padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--card-2)}.analysis-kpis span{display:block;color:var(--ink-3);font-size:12px}.analysis-kpis b{display:block;color:var(--accent);font-size:22px;line-height:1.2;margin-top:4px}.analysis-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.analysis-panel{border:1px solid var(--line);border-radius:10px;padding:14px;background:var(--card-2)}.analysis-panel h3{margin:0 0 10px;font-size:14px}.analysis-bar,.analysis-heat{display:grid;grid-template-columns:minmax(90px,1fr) 2fr auto;align-items:center;gap:9px;width:100%;min-height:34px;padding:5px 7px;border-radius:7px;text-align:left;color:var(--ink-2)}.analysis-heat{grid-template-columns:1fr auto}.analysis-bar:hover,.analysis-heat:hover{background:var(--accent-soft)}.analysis-bar i{height:8px;border-radius:99px;background:var(--signal);min-width:4px}.analysis-bar b,.analysis-heat b{font-size:12px;color:var(--accent)}.module-config-row{display:flex;align-items:center;gap:8px;padding:7px 0}
 .employment-resource-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}.employment-resource-card{padding:15px;border:1px solid var(--line);border-radius:12px;background:var(--card-2);display:flex;flex-direction:column;min-height:190px}.employment-resource-top{display:flex;justify-content:space-between;align-items:center}.employment-resource-icon{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}.employment-resource-card h3{margin:13px 0 6px;font-size:15px;line-height:1.4;color:var(--ink)}.employment-resource-card p{margin:0;color:var(--ink-2);font-size:12px;line-height:1.6}.employment-resource-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;color:var(--ink-3);font-size:11px}.employment-resource-actions{display:flex;gap:7px;margin-top:auto;padding-top:14px}.employment-resource-actions .btn{flex:0 0 auto}
-.chart-panel-body{display:grid;grid-template-columns:1fr;align-items:center;min-height:230px}.chart-panel-body .donut-anim{justify-self:center;justify-content:center;min-height:190px;width:min(100%,520px)}.chart-panel-body .donut-anim svg{width:190px;height:190px}.chart-panel-body .donut-anim .legend{justify-content:flex-start}.report-period-kpi{min-width:0}.report-period-name{font-size:15px;font-weight:700;margin-top:4px;white-space:normal;overflow-wrap:anywhere;line-height:1.35}.learning-kpi-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:16px}.learning-kpi-grid .kpi{min-width:0;display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;align-items:center;gap:5px 12px}.learning-kpi-grid .kpi-l{grid-column:1;white-space:normal;line-height:1.35}.learning-kpi-grid .kpi-v{grid-column:2;grid-row:1 / span 2;margin:0}.learning-kpi-grid .kpi-s{grid-column:1;grid-row:2}.card-hd h2,.v4-list-item strong,.mcard-t{overflow-wrap:anywhere;min-width:0}.v4-list-item{min-width:0}.v4-list-item>div{min-width:0}.policy-resource-card{display:flex;flex-direction:column;gap:8px;padding:15px;border:1px solid var(--line);border-radius:12px;background:var(--card-2)}.policy-resource-card h3{margin:0;font-size:15px;line-height:1.45}.policy-resource-card p{margin:0;color:var(--ink-2);line-height:1.65;font-size:13px}.policy-resource-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:6px}
+.chart-panel-body{display:grid;grid-template-columns:minmax(170px,.78fr) minmax(280px,1.22fr);gap:24px;align-items:center;min-height:248px}.chart-panel-body .donut-anim{justify-self:stretch;justify-content:center;min-height:190px;width:100%}.chart-panel-body .donut-anim svg{width:190px;height:190px}.chart-panel-body .donut-anim .legend{justify-content:flex-start}.chart-panel-copy{min-width:0;padding:8px 0}.chart-panel-copy .sub-hd{margin-bottom:10px}.chart-panel-copy strong{display:block;font-size:34px;line-height:1.05;color:var(--accent);font-variant-numeric:tabular-nums}.chart-panel-copy p{margin:9px 0 14px;color:var(--ink-2);font-size:13px;line-height:1.7;overflow-wrap:anywhere}.chart-panel-copy .mini-stat-list{display:grid;gap:7px}.chart-panel-copy .mini-stat{display:flex;justify-content:space-between;gap:10px;padding:7px 9px;background:var(--card-2);border:1px solid var(--line);border-radius:7px;font-size:12px}.chart-panel-copy .mini-stat b{color:var(--ink)}.report-period-kpi{min-width:0}.report-period-name{font-size:15px;font-weight:700;margin-top:4px;white-space:normal;overflow-wrap:anywhere;line-height:1.35}.graduate-kpis{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 18px 14px}.graduate-kpis .kpi{min-height:92px}.learning-kpi-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:16px}.learning-kpi-grid .kpi{min-width:0;display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;align-items:center;gap:5px 12px;min-height:88px}.learning-kpi-grid .kpi-l{grid-column:1;white-space:normal;line-height:1.35}.learning-kpi-grid .kpi-v{grid-column:2;grid-row:1 / span 2;margin:0}.learning-kpi-grid .kpi-s{grid-column:1;grid-row:2}.card-hd h2,.v4-list-item strong,.mcard-t{overflow-wrap:anywhere;min-width:0}.v4-list-item{min-width:0}.v4-list-item>div{min-width:0}.policy-resource-card{display:flex;flex-direction:column;gap:8px;padding:15px;border:1px solid var(--line);border-radius:12px;background:var(--card-2)}.policy-resource-card h3{margin:0;font-size:15px;line-height:1.45}.policy-resource-card p{margin:0;color:var(--ink-2);line-height:1.65;font-size:13px}.policy-resource-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:6px}.phone-diff-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 14px}.phone-diff-summary>div{padding:11px 10px;border:1px solid var(--line);border-radius:9px;background:var(--card-2);min-width:0}.phone-diff-summary b{display:block;font-size:21px;line-height:1.1}.phone-diff-summary span{display:block;margin-top:5px;color:var(--ink-3);font-size:11.5px;line-height:1.4}.phone-diff-list{border-top:1px solid var(--line);border-bottom:1px solid var(--line);max-height:220px;overflow:auto}.phone-diff-row{display:flex;justify-content:space-between;gap:12px;padding:9px 2px;border-bottom:1px solid var(--line-2);font-size:13px}.phone-diff-row:last-child{border-bottom:0}.phone-diff-row b{margin-left:9px;font-size:12px}.diff-add{color:var(--ok)}.diff-update{color:var(--accent)}.diff-delete{color:var(--danger)}.phone-diff-note{margin:13px 0 0;line-height:1.65;overflow-wrap:anywhere}
 .kpi.brand{display:block}
 .student-dynamic-table{overflow:auto;max-width:100%}.student-dynamic-table table{min-width:max-content}.student-dynamic-table th,.student-dynamic-table td{max-width:260px;white-space:nowrap}.student-dynamic-table td{overflow:hidden;text-overflow:ellipsis}
 .nav-item{font-size:13px;min-height:36px}.nav-group{font-size:11px;line-height:1.3}.nav-item .ic{width:16px;height:16px}.v4-head h1{font-size:20px}.v4-actions,.v4-toolbar{gap:8px}.v4-stat b{font-size:20px}.v4-photo-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}.v4-photo{aspect-ratio:4/3;min-height:0}.v4-toolbar .inp{min-width:0;max-width:100%}
 @media(max-width:760px){.analysis-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.analysis-grid{grid-template-columns:1fr}.v4-actions .btn,.v4-toolbar .btn{flex:0 1 auto}.workspace-tab{padding:0 10px}}
-@media(max-width:760px){.chart-panel-body{grid-template-columns:1fr;min-height:0}.chart-panel-body .donut-anim{justify-content:center}.learning-kpi-grid{grid-template-columns:1fr}.learning-kpi-grid .kpi{grid-template-columns:1fr auto}}
+@media(max-width:760px){.chart-panel-body{grid-template-columns:1fr;min-height:0;gap:8px}.chart-panel-body .donut-anim{justify-content:center}.graduate-kpis{grid-template-columns:repeat(3,minmax(0,1fr));margin-left:12px;margin-right:12px}.learning-kpi-grid{grid-template-columns:1fr}.learning-kpi-grid .kpi{grid-template-columns:1fr auto}}
+@media(max-width:520px){.graduate-kpis{grid-template-columns:1fr}.phone-diff-summary{grid-template-columns:1fr}.phone-diff-summary>div{display:flex;align-items:baseline;gap:8px}.phone-diff-summary span{margin-top:0}.phone-diff-summary b{font-size:18px}.phone-diff-row{align-items:flex-start;flex-wrap:wrap}}
 @media(max-width:760px){.v4-toolbar>.inp{width:100%;flex-basis:100%}}
 @media(max-width:760px){.v4-head{display:block}.v4-actions{justify-content:flex-start;margin-top:12px}.v4-stat-row{grid-template-columns:repeat(2,minmax(0,1fr))}.v4-photo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
@@ -1621,8 +1624,8 @@ function normalizeStudentLevel(value) {
   const text = String(value == null ? '' : value).trim().toLowerCase();
   if (!text) return '';
   if (/博士|ph\.?d|doctoral/.test(text)) return 'doctoral';
-  if (/研究生|硕士|master|graduate|研/.test(text)) return 'graduate';
   if (/本科|学士|undergraduate|bachelor/.test(text)) return 'undergraduate';
+  if (/研究生|硕士|master|graduate|研/.test(text)) return 'graduate';
   return text;
 }
 function studentLevelLabel(value) {
@@ -1967,6 +1970,7 @@ function normPolicy(x) {
     summary: x.summary || '',
     url: x.url || '',
     attachment_id: x.attachment_id || '',
+    attachment_name: x.attachment_name || '',
     mime_type: x.mime_type || '',
     starred: !!x.starred,
     note: x.note || '',
@@ -2566,7 +2570,8 @@ const app = {
 /* ---------- 11.1 内联 SVG 图表 ---------- */
 function hBarChart(items, opt) {
   opt = opt || {};
-  const W = 680, rowH = 30, padL = opt.padL || 92, padR = 54, top = 6;
+  const W = 680, rowH = 30, longestLabel = Math.max(0, ...items.map(item => String(item.label || '').length));
+  const padL = opt.padL || Math.min(210, Math.max(92, longestLabel * 13 + 8)), padR = 54, top = 6;
   const H = top * 2 + Math.max(1, items.length) * rowH;
   const max = Math.max(1, ...items.map(i => i.value));
   const bw = W - padL - padR;
@@ -2578,7 +2583,7 @@ function hBarChart(items, opt) {
       <rect class="bar-val" x="${padL}" y="${y + 7}" width="${len.toFixed(1)}" height="15" rx="4" fill="${it.color || '#4f46e5'}"><title>${esc(it.label)}：${it.value}</title></rect>
       <text x="${padL + len + 8}" y="${y + 19}" font-size="12" font-weight="700" fill="${it.value ? '#0f172a' : '#cbd5e1'}">${it.value}</text>`;
   });
-  return `<div class="chart-wrap"><svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="分类统计柱状图">${g}</svg></div>`;
+  return `<div class="chart-wrap chart-wrap-bars"><svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="分类统计柱状图">${g}</svg></div>`;
 }
 function donutChart(items, centerTop, centerSub) {
   const total = items.reduce((a, b) => a + b.value, 0);
@@ -3767,7 +3772,7 @@ function viewWarn() {
       <div class="kpi brand"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-book"/></svg>黄色未解除</div><div class="kpi-v" data-num="${yellow}">0</div></div>
     </div>
     <div class="warn-donut-wrap chart-panel-body" style="padding:14px 0 4px">
-      <div class="sub-hd"><svg class="ic ic-sm" style="color:var(--accent)"><use href="#i-chart"/></svg>预警等级分布（未解除）</div>
+      <div class="chart-panel-copy"><div class="sub-hd"><svg class="ic ic-sm" style="color:var(--accent)"><use href="#i-chart"/></svg>预警等级分布（未解除）</div><strong>${red + orange + yellow}</strong><p>当前仍需跟进的学业预警，按风险等级拆分显示。</p><div class="mini-stat-list"><div class="mini-stat"><span>红色</span><b>${red} 人</b></div><div class="mini-stat"><span>橙色</span><b>${orange} 人</b></div><div class="mini-stat"><span>黄色</span><b>${yellow} 人</b></div></div></div>
       ${warnDonut()}
     </div>
     <div class="toolbar">
@@ -4185,7 +4190,7 @@ function viewPolicy() {
           ${s.keywords ? `<div class="mcard-tags">${s.keywords.split(/[,，\s]+/).filter(Boolean).map(k => `<span class="tag tag-line">${esc(k)}</span>`).join('')}</div>` : ''}
           <div class="policy-resource-actions">
             ${s.url ? `<a class="btn btn-sm" data-policy-open href="${esc(s.url)}" target="_blank" rel="noopener">打开官方网址</a>` : ''}
-            ${s.attachment_id ? `<button class="btn btn-sm" data-act="policy-open-local" data-id="${s.id}">查看本地文件</button>` : ''}
+            ${s.attachment_id ? `<button class="btn btn-sm" data-act="policy-open-local" data-id="${s.id}">查看本地文件</button>` : `<button class="btn btn-sm" data-act="policy-attach" data-id="${s.id}">上传本地文件</button>`}
             <button class="btn btn-sm" data-act="policy-star" data-id="${s.id}">${s.starred ? '取消收藏' : '收藏'}</button>
             <button class="btn btn-sm" data-act="policy-edit" data-id="${s.id}">编辑</button>
             <button class="btn btn-sm btn-danger" data-act="policy-del" data-id="${s.id}">删除</button>
@@ -4419,7 +4424,7 @@ function viewReport() {
 
   <div class="card">
     <div class="card-hd"><h2>谈话方式构成</h2></div>
-    <div class="card-bd chart-panel-body">${donutChart(wayItems, String(talks.length), '次谈话')}</div>
+    <div class="card-bd chart-panel-body"><div class="chart-panel-copy"><div class="sub-hd"><svg class="ic ic-sm" style="color:var(--accent)"><use href="#i-talk"/></svg>谈话方式构成</div><strong>${talks.length}</strong><p>本区间已记录的谈心谈话，右侧查看不同方式的占比。</p><div class="mini-stat-list">${wayItems.filter(item => item.value).slice(0, 4).map(item => `<div class="mini-stat"><span>${esc(item.label)}</span><b>${item.value} 次</b></div>`).join('') || '<div class="mini-stat"><span>暂无记录</span><b>0 次</b></div>'}</div></div>${donutChart(wayItems, String(talks.length), '次谈话')}</div>
   </div>
 
   <div class="card">
@@ -7005,6 +7010,7 @@ const ACTS = {
   'policy-edit': id => policyForm(DB.policy.find(s => s.id === id)),
   'policy-del': id => ui.confirm('删除条目', '确定删除这条政策条目吗？', () => { DB.policy = DB.policy.filter(s => s.id !== id); save('policy'); render(); ui.toast('已删除','ok'); }, true),
   'policy-star': id => { const s = DB.policy.find(x => x.id === id); if (!s) return; s.starred = !s.starred; save('policy'); render(); ui.toast(s.starred ? '已收藏' : '已取消收藏','ok'); },
+  'policy-attach': id => { const item = DB.policy.find(x => x.id === id); if (!item) return; const input = document.createElement('input'); input.type = 'file'; input.accept = '.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt,.png,.jpg,.jpeg'; input.onchange = async () => { const file = input.files && input.files[0]; if (!file) return; if (file.size > 50 * 1024 * 1024) return ui.toast('本地政策文件不能超过 50 MB','warn'); const attachmentId = `policy_attachment_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`; try { if (window.CWB.attachments && window.CWB.attachments.add) await window.CWB.attachments.add({ id:attachmentId, name:file.name, blob:file, mimeType:file.type }); if (window.cwbDesktop && window.cwbDesktop.writeAttachment) await window.cwbDesktop.writeAttachment({ id:attachmentId, mimeType:file.type, bytes:new Uint8Array(await file.arrayBuffer()) }); item.attachment_id = attachmentId; item.attachment_name = file.name; item.mime_type = file.type || 'application/octet-stream'; item.updated_at = new Date().toISOString(); save('policy'); render(); ui.toast('本地政策文件已归档','ok'); } catch (error) { ui.toast(`本地文件归档失败：${error.message || '请重试'}`,'err'); } }; input.click(); },
   'policy-open-local': async id => { const item = DB.policy.find(x => x.id === id); if (!item || !item.attachment_id) return ui.toast('该政策没有本地文件','warn'); try { const record = window.CWB.attachments && await window.CWB.attachments.get(item.attachment_id); let blob = record && record.blob; if (!blob && window.cwbDesktop && window.cwbDesktop.readAttachment) blob = new Blob([await window.cwbDesktop.readAttachment(item.attachment_id)], { type:item.mime_type || 'application/octet-stream' }); if (!blob) throw new Error('本地附件不可用'); const url = URL.createObjectURL(blob); window.open(url, '_blank', 'noopener'); setTimeout(() => URL.revokeObjectURL(url), 60000); } catch (error) { ui.toast(`本地文件打开失败：${error.message || '附件不存在'}`,'err'); } },
   'policy-export': () => {
     const rows = [['标题','分类','发布单位','发布日期','文号','关键词','摘要','链接','收藏','备注']]
@@ -7093,7 +7099,7 @@ const ACTS = {
   'import-json': () => $('#file-json').click(),
   'pkg-export': exportPackage,
   'v4-phone-export': async () => { try { const pkg = await sync.createPhonePackage(); download(`手机工作包-v7-${today()}.json`, JSON.stringify(pkg, null, 2), 'application/json'); ui.toast('手机工作包已导出；请在手机网页端导入并修改后再导出回传包','ok',4200); } catch (error) { ui.toast(`手机工作包导出失败：${error.message || '请重试'}`,'err',4200); } },
-  'v4-phone-import': () => { const input = document.createElement('input'); input.type='file'; input.accept='.json,application/json'; input.onchange = () => { const file = input.files && input.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = () => { let pkg; try { pkg = JSON.parse(String(reader.result || '')); } catch (_) { return ui.toast('回传包不是有效 JSON 文件','err'); } ui.modal({ title:'导入手机回传包', size:'narrow', body:'<p class="muted">请选择处理方式。合并会保留本机其他记录；覆盖会先替换当前工作区。建议先导出当前备份。</p>', footer:'<button class="btn" data-close>取消</button><button class="btn btn-danger" data-phone-mode="replace">覆盖</button><button class="btn btn-primary" data-phone-mode="merge">合并</button>', onOpen(mask, close){ $$('[data-phone-mode]', mask).forEach(button => button.onclick = async () => { try { await sync.applyPhonePackage(pkg, button.dataset.phoneMode); close(); ui.toast('手机回传包已应用','ok'); } catch (error) { ui.toast(`回传包导入失败：${error.message || '格式或版本不兼容'}`,'err',4200); } }); } }); }; reader.readAsText(file, 'utf-8'); }; input.click(); },
+  'v4-phone-import': () => { const input = document.createElement('input'); input.type='file'; input.accept='.json,application/json'; input.onchange = () => { const file = input.files && input.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = () => { let pkg; let diff; try { pkg = JSON.parse(String(reader.result || '')); diff = sync.previewPhonePackage(pkg); } catch (error) { return ui.toast(`回传包无法读取：${error.message || '格式不正确'}`,'err',4200); } const studentDiff = diff.collections.students || { added:0, updated:0, deleted:0, unchanged:0 }; const changedCollections = Object.entries(diff.collections).filter(([, value]) => value.added || value.updated || value.deleted); const lines = changedCollections.slice(0, 8).map(([key, value]) => `<div class="phone-diff-row"><span>${esc(COLL_LABEL[key] || key)}</span><span><b class="diff-add">+${value.added}</b><b class="diff-update">↻${value.updated}</b><b class="diff-delete">−${value.deleted}</b></span></div>`).join(''); ui.modal({ title:'检查手机回传变化', size:'narrow', body:`<div class="phone-diff-summary"><div><b>${studentDiff.added + studentDiff.updated}</b><span>学生新增 / 更新</span></div><div><b>${studentDiff.deleted}</b><span>手机端删除</span></div><div><b>${changedCollections.length}</b><span>有变化的集合</span></div></div><div class="phone-diff-list">${lines || '<div class="empty">这份回传包与桌面端没有可识别变化。</div>'}</div><p class="muted phone-diff-note">合并：只写入手机端新增和修改，桌面端其他记录保留。覆盖：以手机端完整数据为准，手机端删除的记录也会从桌面端移除。两种方式都会先保存自动回退快照。</p>`, footer:'<button class="btn" data-close>取消</button><button class="btn btn-danger" data-phone-mode="replace">覆盖并同步</button><button class="btn btn-primary" data-phone-mode="merge">合并并同步</button>', onOpen(mask, close){ $$('[data-phone-mode]', mask).forEach(button => button.onclick = async () => { try { const result = await sync.applyPhonePackage(pkg, button.dataset.phoneMode); close(); ui.toast(`手机回传已应用：新增 ${result.diff.collections.students.added}，更新 ${result.diff.collections.students.updated}，删除 ${button.dataset.phoneMode === 'replace' ? result.diff.collections.students.deleted : 0}`, 'ok', 4600); } catch (error) { ui.toast(`回传包导入失败：${error.message || '格式或版本不兼容'}`,'err',4200); } }); } }); }; reader.readAsText(file, 'utf-8'); }; input.click(); },
   'v4-snapshot-create': async () => { const name = window.prompt('给当前测试数据快照起个名字，例如：样例 A 原始状态', `样例快照 ${today()}`); if (!name) return; try { const record = await testData.createSnapshot(name); render(); await refreshSnapshotSelector(); ui.toast(`已保存快照：${record.name}`,'ok'); } catch (error) { ui.toast(`快照保存失败：${error.message || '请重试'}`,'err'); } },
   'v4-snapshot-clear': () => ui.confirm('清空当前工作区', '这会清空学生、业务台账、文件目录和附件，但不会删除已保存的测试快照。建议先导出当前备份。确定继续吗？', async () => { try { await testData.clearWorkspace({ includeSettings:false }); render(); await refreshSnapshotSelector(); ui.toast('当前工作区已清空，可导入样例 B','ok'); } catch (error) { ui.toast(`清空失败：${error.message || '请重试'}`,'err'); } }, true),
   'v4-snapshot-restore': async () => { const id = $('[data-v4-snapshot-select]') && $('[data-v4-snapshot-select]').value; if (!id) return ui.toast('请先选择一个快照','warn'); ui.confirm('恢复测试快照', '恢复会覆盖当前工作区；如需保留现在的数据，请先导出备份。确定恢复吗？', async () => { try { await testData.restoreSnapshot(id); render(); await refreshSnapshotSelector(); ui.toast('测试快照已恢复','ok'); } catch (error) { ui.toast(`快照恢复失败：${error.message || '请重试'}`,'err'); } }, true); },
@@ -7477,6 +7483,19 @@ async function restoreAttachmentPayload(rows) {
   }
   return restored;
 }
+async function removeAttachmentsAbsentFromPayload(rows) {
+  if (!Array.isArray(rows) || !window.CWB || !window.CWB.attachments || typeof window.CWB.attachments.list !== 'function') return 0;
+  const incoming = new Set(rows.filter(item => item && item.id).map(item => String(item.id)));
+  const existing = await window.CWB.attachments.list();
+  let removed = 0;
+  for (const item of existing) {
+    if (!item || !item.id || incoming.has(String(item.id))) continue;
+    if (window.CWB.attachments.delete) await window.CWB.attachments.delete(item.id);
+    if (window.cwbDesktop && window.cwbDesktop.deleteAttachment) await window.cwbDesktop.deleteAttachment(item.id).catch(() => {});
+    removed++;
+  }
+  return removed;
+}
 const WORKSPACE_COLLECTION_KEYS = ['students','tasks','talks','stay','leave','honor','pleave','attend','node','warn','help','grant','focus','psych','graduate','policy','material','comp','tpl','learning_materials','learning_notes','learning_sessions'];
 async function testSnapshotList() {
   const repo = window.CWB && window.CWB.repositories && window.CWB.repositories.testSnapshots;
@@ -7521,6 +7540,7 @@ const testData = {
     const record = snapshots.find(item => String(item.id) === String(id));
     if (!record || !record.payload) throw new Error('TEST_SNAPSHOT_NOT_FOUND');
     bridge.applyPackage(record.payload, 'replace');
+    await removeAttachmentsAbsentFromPayload(record.attachments || []);
     await restoreAttachmentPayload(record.attachments || []);
     if (typeof window.CWB_V4_SYNC === 'function') { window.CWB_V4_SYNC(); window.CWB_V4_SYNC('custom'); }
     if (window.CWB && window.CWB.audit && window.CWB.audit.log) await window.CWB.audit.log('test_snapshot_restore', { id:record.id, name:record.name });
@@ -7533,7 +7553,47 @@ const testData = {
     DB.custom = DB.custom || {}; DB.custom.v4_test_snapshots = (DB.custom.v4_test_snapshots || []).filter(item => String(item.id) !== String(id)); if (!window.CWB_V4_IDB_ACTIVE) save('custom'); return true;
   },
 };
+const PHONE_SYNC_COLLECTION_KEYS = ['students','tasks','talks','stay','leave','honor','pleave','attend','node','warn','help','grant','focus','psych','graduate','policy','material','comp','tpl','learning_materials','learning_notes','learning_sessions'];
+const PHONE_SYNC_CUSTOM_KEYS = ['v4_positions','v4_party_cases','v4_files','v4_employment_resources'];
+function stablePhoneJson(value) {
+  if (Array.isArray(value)) return `[${value.map(stablePhoneJson).join(',')}]`;
+  if (value && typeof value === 'object') return `{${Object.keys(value).sort().map(key => `${JSON.stringify(key)}:${stablePhoneJson(value[key])}`).join(',')}}`;
+  return JSON.stringify(value);
+}
+function phoneRecordKey(collection, value) {
+  const item = value || {};
+  if (collection === 'students') return studentIdentityKey(item) || String(item.id || stablePhoneJson(item));
+  return String(item.id || stablePhoneJson(item));
+}
+function phoneSourceCollection(source, collection) {
+  if (PHONE_SYNC_CUSTOM_KEYS.includes(collection)) return source && source.custom && Array.isArray(source.custom[collection]) ? source.custom[collection] : [];
+  return source && Array.isArray(source[collection]) ? source[collection] : [];
+}
+function phoneDiffForCollection(collection, current, incoming) {
+  const currentMap = new Map(current.map(item => [phoneRecordKey(collection, item), item]));
+  const incomingMap = new Map(incoming.map(item => [phoneRecordKey(collection, item), item]));
+  let added = 0; let updated = 0; let unchanged = 0;
+  incomingMap.forEach((item, key) => {
+    if (!currentMap.has(key)) added++;
+    else if (stablePhoneJson(currentMap.get(key)) === stablePhoneJson(item)) unchanged++;
+    else updated++;
+  });
+  let deleted = 0;
+  currentMap.forEach((_, key) => { if (!incomingMap.has(key)) deleted++; });
+  return { added, updated, deleted, unchanged };
+}
 const sync = {
+  previewPhonePackage(pkg) {
+    if (!pkg || (pkg.type !== 'phone_exchange' && pkg.package !== 'counselor-desk')) throw new Error('PHONE_PACKAGE_INVALID');
+    const incomingVersion = Number(pkg.package_version || 1);
+    if (!Number.isFinite(incomingVersion) || incomingVersion > bridge.PACKAGE_VERSION) throw new Error(`交换包版本 ${incomingVersion || '未知'} 高于当前支持的 v${bridge.PACKAGE_VERSION}`);
+    const source = pkg.package === 'counselor-desk' ? pkg : (pkg.data || pkg);
+    const collections = {};
+    PHONE_SYNC_COLLECTION_KEYS.forEach(collection => { collections[collection] = phoneDiffForCollection(collection, DB[collection] || [], phoneSourceCollection(source, collection)); });
+    PHONE_SYNC_CUSTOM_KEYS.forEach(collection => { collections[collection] = phoneDiffForCollection(collection, v4Collection(collection), phoneSourceCollection(source, collection)); });
+    const total = Object.values(collections).reduce((sum, value) => Object.keys(value).reduce((n, key) => n + value[key], sum), 0);
+    return { package_version:incomingVersion, collections, total, attachment_count:Array.isArray(pkg.attachments) ? pkg.attachments.length : 0 };
+  },
   async createPhonePackage() {
     const pkg = bridge.buildPackage();
     pkg.type = 'phone_exchange'; pkg.sync_mode = 'manual_file_exchange'; pkg.sync_note = '手机端与桌面端通过文件交换，不是实时云同步；导回前请先备份并选择合并或覆盖。';
@@ -7542,13 +7602,15 @@ const sync = {
   },
   async applyPhonePackage(pkg, mode) {
     if (!pkg || (pkg.type !== 'phone_exchange' && pkg.package !== 'counselor-desk')) throw new Error('PHONE_PACKAGE_INVALID');
+    const diff = this.previewPhonePackage(pkg);
     const rollback = await testData.createSnapshot(`手机回传前自动备份 ${new Date().toLocaleString('zh-CN')}`);
     const applied = bridge.applyPackage(pkg, mode || 'merge');
+    if ((mode || 'merge') === 'replace' && Array.isArray(pkg.attachments)) await removeAttachmentsAbsentFromPayload(pkg.attachments);
     await restoreAttachmentPayload(pkg.attachments || []);
     if (typeof window.CWB_V4_SYNC === 'function') { window.CWB_V4_SYNC(); window.CWB_V4_SYNC('custom'); }
     if (window.CWB && window.CWB.audit && window.CWB.audit.log) await window.CWB.audit.log('phone_package_apply', { mode:mode || 'merge' });
     render();
-    return Object.assign({}, applied, { rollback_snapshot_id:rollback.id });
+    return Object.assign({}, applied, { rollback_snapshot_id:rollback.id, diff });
   },
 };
 async function refreshSnapshotSelector() {

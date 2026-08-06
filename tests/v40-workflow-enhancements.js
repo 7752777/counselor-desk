@@ -17,9 +17,27 @@ virtualConsole.on('jsdomError', error => { if (!/window\.scrollTo|Could not load
   assert.equal(typeof CWB.testData.clearWorkspace, 'function');
   assert.ok(CWB.sync && typeof CWB.sync.createPhonePackage === 'function', 'phone exchange API should be explicit');
   assert.ok(CWB.sync && typeof CWB.sync.applyPhonePackage === 'function');
+  assert.ok(CWB.sync && typeof CWB.sync.previewPhonePackage === 'function', 'phone return should expose a diff preview');
+  CWB.db.students = [
+    CWB.norm.student({ id:'undergraduate-2024', student_number:'2024-001', full_name:'本科生甲', grade:'2024级', student_level:'undergraduate' }),
+    CWB.norm.student({ id:'graduate-2024', student_number:'2024-001', full_name:'研究生甲', grade:'2024级', student_level:'graduate' }),
+  ];
   const phonePackage = await CWB.sync.createPhonePackage();
   assert.equal(phonePackage.type, 'phone_exchange');
   assert.equal(phonePackage.sync_mode, 'manual_file_exchange');
+  phonePackage.students = [
+    CWB.norm.student({ id:'undergraduate-2024', student_number:'2024-001', full_name:'本科生甲（手机更新）', grade:'2024级', student_level:'undergraduate' }),
+    CWB.norm.student({ id:'new-phone-student', student_number:'2024-002', full_name:'手机新增学生', grade:'2024级', student_level:'graduate' }),
+  ];
+  const phoneDiff = CWB.sync.previewPhonePackage(phonePackage);
+  assert.equal(phoneDiff.collections.students.added, 1);
+  assert.equal(phoneDiff.collections.students.updated, 1);
+  assert.equal(phoneDiff.collections.students.deleted, 1);
+  assert.equal(phoneDiff.collections.students.unchanged, 0);
+  await CWB.sync.applyPhonePackage(phonePackage, 'merge');
+  assert.equal(CWB.db.students.find(item => item.id === 'undergraduate-2024').full_name, '本科生甲（手机更新）');
+  assert.ok(CWB.db.students.some(item => item.id === 'graduate-2024'), 'merge should keep records absent from a phone package');
+  assert.ok(CWB.db.students.some(item => item.id === 'new-phone-student'), 'merge should add phone-created records');
 
   const preview = CWB.importer.previewCSV('学号,姓名,培养层次,年级\nG-001,研究生甲,研究生,2024级', 'students');
   assert.equal(preview.rows[0].value.student_level, 'graduate');
@@ -70,6 +88,7 @@ virtualConsole.on('jsdomError', error => { if (!/window\.scrollTo|Could not load
   CWB.go('policy');
   await new Promise(resolve => setTimeout(resolve, 40));
   assert.ok(document.querySelector('[data-policy-open]') || document.querySelector('.policy-resource-card'), 'policy resources should expose open actions');
+  assert.ok(document.querySelector('[data-act="policy-attach"]'), 'policy resources should expose local attachment action');
   CWB.go('learning');
   await new Promise(resolve => setTimeout(resolve, 40));
   assert.ok(document.querySelector('.learning-kpi-grid'), 'learning KPIs should share one layout');
