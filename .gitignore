@@ -25,3 +25,19 @@ backups/
 .workbuddy/
 out/
 artifacts/
+
+# v4 生成包、截图、临时报告和本地保险库（不进入源码仓库）
+output/
+tmp/
+.v4-generated-archive/
+.v4-generated-archive-final/
+*.cwbk
+*.asar
+*.nsis.7z
+*.exe
+*.blockmap
+*.dmg
+*.AppImage
+test-results/
+playwright-report/
+screenshots/
