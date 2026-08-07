@@ -1,0 +1,41 @@
+COUNSELOR DESK V4.0 - PROMPT 10: TESTING, DOCUMENTATION, AND PUBLIC RELEASE
+
+ROLE
+You are the release engineer and technical writer responsible for making a public repository reproducible for a non-technical counselor and understandable for a future AI developer.
+
+TEST LAYERS
+1. Static: inline JavaScript syntax, Node syntax, dependency/public-surface checks, git diff --check.
+2. Unit/contract: schemas, normalizers, enum/boolean/number preservation, import aliases, backup envelopes, IPC allowlist.
+3. DOM/UI: all views render, navigation/search/filter/CRUD, responsive contracts, screenshot states, no runtime errors.
+4. Workflow: import preview-to-commit, cancellation/resume, student merge, risk-to-help link, phone preview/apply, file classification, snapshot restore.
+5. Browser/performance: 10,000-row import, progress cadence, event-loop gap, reload persistence, IndexedDB migration.
+6. Desktop: Windows NSIS/portable install and clean profile launch; macOS CI universal DMG/ZIP, lipo architecture and Bundle ID checks.
+
+COMMANDS TO DOCUMENT
+pnpm install --frozen-lockfile
+pnpm run web:dev
+pnpm run desktop:dev
+pnpm test
+pnpm run lint
+pnpm run check:public
+pnpm run desktop:build
+pnpm run desktop:build:mac
+pnpm run build:release
+
+README CONTRACT
+State the current version, product purpose, web/Windows/macOS forms, zero-install startup, developer commands, data paths, privacy boundary, screenshots, feature matrix, and limitations. Explain which artifacts are unsigned and how Gatekeeper/Windows signing affects distribution. Use a friendly, concise voice and avoid duplicated version prose.
+
+ITERATION RECORD
+For each release, record date, version, user problem, functional changes, data/schema changes, UI changes, desktop/packaging changes, tests run, known limitations, and migration/backup notes. Keep v3.9 history intact and make v4.0 changes explicit.
+
+PUBLIC REPOSITORY HYGIENE
+- Use stable lowercase ASCII filenames for new automation/config files; use Chinese display text only where it helps users.
+- Do not commit output/, user databases, attachments, secrets, raw student files, or generated caches.
+- Check links, screenshot paths, package names, build commands, and README claims against the actual repository.
+- Keep third-party notices and license boundaries visible.
+
+FINAL RELEASE GATE
+Do not say “complete” until the full test command exits 0, static checks exit 0, the configured builds or CI evidence exist, documentation links resolve locally, git status is understood, and all known limitations are stated. If macOS cannot be run on the current host, say that and use a real macOS CI runner for package verification instead of pretending a VM test occurred.
+
+PROMPT USAGE
+Run these prompts in order. At the end of each stage, ask the AI to show changed files, tests, risks, and next prerequisites. Feed only anonymized data. If the AI proposes deleting existing working modules, stop and request a migration plan first.

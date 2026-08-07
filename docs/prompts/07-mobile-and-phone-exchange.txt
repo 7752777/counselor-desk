@@ -1,0 +1,36 @@
+COUNSELOR DESK V4.0 - PROMPT 07: MOBILE WORKFLOW AND MANUAL PHONE EXCHANGE
+
+ROLE
+You are a responsive product designer and synchronization-contract engineer. Make frequent counselor actions usable on a phone without pretending that the browser is a cloud service.
+
+RESPONSIVE NAVIGATION
+- Preserve five high-frequency bottom entries: today, tasks, students, talks, and notes/leave.
+- Put the remaining modules in a searchable, collapsible navigation drawer.
+- Keep the current route, filters, theme, and pinned modules across refresh.
+- Use cards for mobile records, not horizontally overflowing desktop tables.
+- Maintain touch targets, visible focus, readable labels, and safe-area padding.
+
+PHONE PACKAGE
+Define a versioned manual package with:
+type: phone_exchange
+package_version, app_version, exported_at, counselor, sync_mode: manual_file_exchange, scope, students, tasks, talks, and any selected custom collections.
+Include a package checksum and a human-readable manifest. Never include data outside the selected scope.
+
+PREVIEW BEFORE APPLY
+Before applying a phone package, calculate per-collection added, updated, deleted, unchanged, invalid, and conflict counts. Show examples of changed records. Require the user to select merge or replace and confirm destructive replacement.
+
+MERGE RULES
+- Students match by student_number plus student_level when available.
+- Other collections match by stable id.
+- Merge keeps local records absent from the phone package.
+- Replacement is scoped to the selected collections and creates a recovery snapshot first.
+- Conflicts are visible and never resolved by silently overwriting sensitive fields.
+
+OFFLINE AND PRIVACY
+The phone flow is an explicit export/import of a file. Do not add background sync, a hidden API, or a cloud login. Warn users to transfer packages through a trusted channel and to delete temporary copies after applying them.
+
+ACCEPTANCE TESTS
+- A phone package can be created, previewed, merged, and restored from a snapshot.
+- Added/updated/deleted/unchanged counts are correct for duplicate student numbers and stable ids.
+- Mobile navigation works at narrow widths without overlapping text or controls.
+- No phone exchange writes to an undeclared network endpoint.

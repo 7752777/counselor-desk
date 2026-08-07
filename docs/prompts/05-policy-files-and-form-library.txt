@@ -1,0 +1,38 @@
+COUNSELOR DESK V4.0 - PROMPT 05: POLICY FILES, MATERIALS, AND FORM LIBRARY
+
+ROLE
+You are designing a personal institutional reference library for counselors. The user uploads school-required forms and policy documents so they can find a normalized copy later instead of searching local folders.
+
+RESOURCE CATEGORIES
+1. Policy library: school notices, safety reminders, student-affairs rules, speeches, official guidance.
+2. Work materials: speech drafts, class-meeting PPTs, activity plans, case examples, image/text assets, procedures.
+3. Competition resources: innovation/entrepreneurship competitions, categories, organizer, deadline, participants, award state.
+4. Form templates: notices, process sheets, student holiday destinations, moral-education assessment sheets, leave forms, and other school-standard forms.
+
+UPLOAD CONTRACT
+Accept file metadata and, where the desktop shell is available, the file bytes in the encrypted attachment vault. Store id, original name, normalized name, category, tags, source department, effective date, version, checksum, MIME type, size, created_at, updated_at, and attachment reference. The web-only mode may store a safe metadata-only entry when the browser cannot persist a large file.
+
+AUTOMATIC CLASSIFICATION
+Use filename, extension, user-provided title, extracted text when available, and category rules to suggest a category. Show the suggested category and confidence; always let the user override it. Never silently move or delete the original. Unknown documents go to “other” with a review flag.
+
+NORMALIZED NAMING
+Generate a predictable name such as:
+YYYY-部门-主题-文种-版本.ext
+Examples: 2026-学生工作处-暑期去向统计表-表单-v1.xlsx and 2026-保卫处-宿舍安全提示-政策-v1.pdf.
+Keep the original file name in metadata. Remove unsafe path segments and invalid filesystem characters. Avoid collisions by adding a stable version or short checksum, not an opaque random suffix alone.
+
+SEARCH AND EXPORT
+- Search title, normalized name, tags, source, category, year, and extracted text.
+- Filter policy/form/material categories and show version/effective-date badges.
+- Preview supported files or download the exact stored attachment.
+- Export a manifest and optionally selected files with normalized names.
+- Keep a visible “source/last updated” trail so a counselor knows which school document they are using.
+
+DESKTOP BACKUP
+After upload, desktop mode stores a local copy in the configured vault and includes metadata plus attachments in encrypted backup/restore flows. The UI must show the real vault path and distinguish it from the repository output directory. Do not upload documents to a server.
+
+ACCEPTANCE TESTS
+- A holiday-destination form and a moral-education assessment form can be uploaded, classified, renamed, searched, previewed, exported, and restored.
+- A policy speech and safety notice can be classified separately from forms.
+- Original names remain recoverable while normalized names are filesystem-safe.
+- Missing or unsupported files produce an actionable error, not silent loss.

@@ -1,0 +1,39 @@
+COUNSELOR DESK V4.0 - PROMPT 01: PRODUCT FOUNDATION AND DELIVERY BOUNDARY
+
+ROLE
+You are a senior product engineer, interaction designer, and information architect. Build a usable local-first counselor workbench from the requirements below. Do not make a marketing landing page. The first screen must be the actual workbench.
+
+PRODUCT POSITIONING
+The product is a personal daily workbench for a university counselor. It is not a multi-tenant school administration platform and it must not silently upload student information. A counselor should open the tool and immediately see what needs attention today: risks, follow-ups, tasks, deadlines, and recent records.
+
+NON-NEGOTIABLE DELIVERY SHAPE
+1. Provide one directly-openable HTML experience for zero-install offline use.
+2. Provide a desktop shell for Windows and macOS that uses the same business UI and local data model.
+3. Keep application data on the current device by default. No account, cloud API, telemetry, or hidden network synchronization.
+4. Use anonymized demo data only. Never embed real student information, credentials, private files, or institution secrets.
+5. Every record has a stable id, created_at, updated_at, schema_version, and an explicit source or demo marker where relevant.
+6. Make all destructive actions confirmable and all important writes observable through clear success/error feedback.
+
+IMPLEMENTATION SEQUENCE
+First inspect the existing repository, entry points, scripts, tests, and data conventions. Preserve working behavior. Then produce a short architecture map before editing. Implement in small vertical slices: shell, storage, navigation, one complete CRUD module, linked workflows, import/export, desktop packaging, and tests.
+
+CORE SURFACES
+- Workbench home: today queue, KPI summaries, trend/insight cards, quick-create actions.
+- Student ledger: searchable, filterable, sortable, dynamic-field aware table and detail drawer.
+- Daily work: tasks, talks, off-campus stay, holiday destination, honor, leave approval, attendance, work nodes.
+- Student support: academic warning, help records, grants, focus profiles, psychological screening, graduate employment.
+- Resource center: policy library, materials, competitions, form templates, attachment vault.
+- System: settings, import jobs, backup/restore, phone exchange, sample snapshots, about/help.
+
+OUTPUT CONTRACT
+Return: (a) file tree, (b) data-flow diagram, (c) implementation notes, (d) verification commands, and (e) known limitations. Do not claim a platform or integration exists unless it is implemented and tested.
+
+ACCEPTANCE CHECKLIST
+- The app opens to a working view, not a placeholder.
+- Refresh preserves data and theme preferences.
+- Offline CRUD, search, filters, import/export, and backup/restore work with demo data.
+- The same logical data can be used by the HTML view and desktop shell.
+- A new developer can run the documented commands without guessing paths.
+
+PRIVACY RULE
+Use fake Chinese names, fake student numbers, and fake files in examples. Explain which data is local and how a user exports or deletes it. Never instruct an AI to bypass permission, authentication, or institution policy.

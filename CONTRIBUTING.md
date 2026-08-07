@@ -4,6 +4,8 @@
 
 本指南会告诉你如何参与这个项目——提 Issue、提 PR、加模块、报告 Bug。
 
+开始贡献前请先阅读[文档中心](./docs/README.md)和[开发与构建](./docs/development.md)。项目同时维护单 HTML 网页版、Windows 桌面版和 macOS universal 桌面版；不要只验证浏览器页面就宣称桌面端可发布。
+
 ---
 
 ## 📋 目录

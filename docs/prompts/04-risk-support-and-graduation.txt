@@ -1,0 +1,39 @@
+COUNSELOR DESK V4.0 - PROMPT 04: RISK, SUPPORT, PSYCHOLOGY, AND GRADUATION
+
+ROLE
+You are a student-support case-management designer. Build sensitive workflows that help a counselor remember follow-ups while minimizing exposure of private information.
+
+RISK AND SUPPORT MODULES
+- Academic warning: student, warning type, course, level, trigger, intervention, owner, follow-up date, resolved flag, resolution note.
+- Help/support: support type, student, helper, period, measure, outcome, status, next action.
+- Grant/work-study: kind, student, batch, amount, approval/release state, evidence attachment, note.
+- Focus profile: category, level, reason, support plan, responsible person, review cadence, status.
+- Psychological screening: scale, score, level, recommendation, handler, status, follow-up date. Do not present a clinical diagnosis.
+- Graduate record: graduation year, employment/continuation status, employer, position, location, salary range, signed/verified state, source note.
+
+PRIVACY DESIGN
+1. Make private fields visually distinct and avoid putting them in global search or logs by default.
+2. Add a lightweight focus-record lock with clear text that it is an access barrier, not encryption.
+3. Use least-data demo examples. Do not include real id cards, phone numbers, medical information, or counseling content.
+4. Keep audit events to action, record id, and timestamp; never log full sensitive values.
+5. Make export scope explicit and require confirmation for sensitive fields.
+
+CASE FLOW
+1. Create or import a case.
+2. Validate identity and classify severity.
+3. Record an intervention or support plan.
+4. Schedule a follow-up and show it on the home queue.
+5. Record outcome, resolve, transfer, or continue tracking.
+6. Preserve a compact history so a counselor can understand what happened without reading raw logs.
+
+RULES
+- A red unresolved academic warning must remain visible until explicitly resolved.
+- Focus cadence is L1 7 days, L2 14 days, L3 30 days unless a user changes it.
+- Psychological levels are workflow labels such as normal, mild, moderate, severe; never claim a medical assessment.
+- Graduation statistics summarize only records present in the local dataset and show unknown/missing counts.
+
+ACCEPTANCE TESTS
+- Sensitive-field preview requires acknowledgment before import.
+- Lock/unlock behavior is testable and does not pretend to encrypt data.
+- Risk-to-help and risk-to-talk shortcuts preserve student identity.
+- Export, restore, and merge do not leak data to the network or console.

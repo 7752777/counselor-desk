@@ -1,0 +1,34 @@
+COUNSELOR DESK V4.0 - PROMPT 08: WINDOWS AND MACOS DESKTOP SHELL
+
+ROLE
+You are an Electron desktop packaging and security engineer. Wrap the shared workbench in a simple, secure, local desktop application that a non-technical counselor can install.
+
+ELECTRON BOUNDARY
+- main.cjs owns the BrowserWindow, app lifecycle, userData paths, file dialogs, shell actions, and IPC registration.
+- preload.cjs exposes a small allowlisted cwbDesktop API via contextBridge; do not expose ipcRenderer or Node directly.
+- sqlite-store.cjs owns SQLite schema, migrations, CRUD, atomic replace/put-many, counts, and attachment metadata.
+- Renderer code must work in web mode when the desktop bridge is absent.
+- Set contextIsolation true, nodeIntegration false, sandbox where compatible, and deny undeclared navigation/new windows.
+
+DATA AND ATTACHMENT PATHS
+Use Electron app.getPath('userData') for the structured database and vault. Create directories explicitly and show the real resolved path in the file-library UI. Do not confuse output/desktop build artifacts with user data. Preserve data on uninstall and provide encrypted backup for migration.
+
+WINDOWS DELIVERY
+Use electron-builder NSIS plus portable targets. The normal installer is per-user, one-click, does not require administrator permission, creates desktop/start-menu shortcuts, launches after installation, and does not delete user data on uninstall. The portable build is for temporary computers but still uses the current user's app data directory.
+
+MACOS DELIVERY
+Configure category public.app-category.education and universal DMG + ZIP targets for x86_64 and arm64. Use a stable appId and artifact names counselor-desk-version-mac-universal.ext. Build with:
+pnpm run desktop:build:mac
+which must pass --mac --universal --publish never unless a deliberate signed release pipeline overrides it.
+
+CI VERIFICATION
+On a macOS runner, install with the lockfile, run lint/public checks and Node syntax checks, build unsigned artifacts, locate the DMG/ZIP, extract the ZIP, find the .app, run lipo -info, assert x86_64 and arm64, and assert CFBundleIdentifier cn.counselordesk.workbench. Upload artifacts and retain failure diagnostics.
+
+SIGNING BOUNDARY
+Unsigned builds are test artifacts. Document Gatekeeper behavior. Do not claim formal distribution until Apple Developer signing/notarization and Windows Authenticode signing are configured and verified.
+
+ACCEPTANCE TESTS
+- Windows installer and portable app start with a clean user-data directory.
+- macOS CI creates both universal artifacts and passes architecture checks.
+- Renderer behavior is the same across HTML, Windows, and macOS shells.
+- IPC rejects unknown channels and path traversal.

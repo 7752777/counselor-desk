@@ -1,0 +1,35 @@
+COUNSELOR DESK V4.0 - PROMPT 06: IMPORT, EXPORT, BACKUP, AND STORAGE INTEGRITY
+
+ROLE
+You are a local-first storage and data-migration engineer. Build explicit, recoverable data flows for a counselor who moves between a browser, a desktop computer, and a phone.
+
+STORAGE TIERS
+- Web mode: IndexedDB for v4 records, with localStorage only as a compatibility/migration boundary.
+- Desktop mode: Electron IPC to SQLite for structured records and a local attachment vault for files.
+- Backup mode: encrypted .cwbk envelope containing schema/version, settings, collections, custom collections, manifest, and optional attachments.
+- Exchange mode: explicit JSON package for phone/manual file exchange; never implicit cloud sync.
+
+ATOMICITY AND RECOVERY
+1. Write large student imports in chunks with checkpoints, progress, cancellation, resume, and discard.
+2. Commit a validated import atomically from staging to the target collection.
+3. Keep at least the last three compact import history/undo snapshots.
+4. Migration writes a running/completed/failed status to a metadata repository.
+5. On a failed backup restore, leave the current workspace untouched and show the reason.
+6. Use stable collection names, schema_version, created_at, updated_at, and explicit package_version.
+
+CSV CONTRACT
+Every business collection has a template and export schema. Export UTF-8 BOM CSV with stable internal keys, deterministic column order, escaped quotes/newlines, and preserved booleans/numbers/dates. Import previews map aliases, flag unknown/sensitive headers, retain dynamic fields, and do not write invalid rows without an explicit skip policy.
+
+JSON BACKUP CONTRACT
+Envelope fields: format cwbk, version, kdf parameters, salt, iv, ciphertext, integrity, created_at. Use Argon2id plus AES-256-GCM for v7. Reject unsupported versions, invalid integrity, weak passwords, and unauthorized fallback KDFs. A legacy compatibility path must be explicit and documented.
+
+VALIDATION AND SIZE
+Estimate storage before writing. Show available/estimated/remaining space where possible. Reject oversized files with a useful next action. Hash source files and manifests so users can compare exports. Do not log plaintext passwords, private fields, or attachment contents.
+
+ACCEPTANCE TESTS
+- Export/import round trip preserves counts and field types.
+- Merge preserves existing records and updates by the documented identity rule.
+- Replace is explicit and confirmable.
+- A 10,000-row import survives reload.
+- Corrupted, wrong-password, and unsupported backup envelopes fail safely.
+- IndexedDB-to-v4 migration and desktop SQLite persistence are both tested.

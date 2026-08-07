@@ -23,7 +23,7 @@
 
 <br />
 
-[在线体验网页版](https://7752777.github.io/counselor-desk/) · [仓库入口](./index.html) · [启动与使用手册](./docs/辅导员工作台使用手册.md) · [迁移与备份](./docs/v4-migration-and-backup.md) · [提交建议](https://github.com/7752777/counselor-desk/issues) · [给项目点 Star](https://github.com/7752777/counselor-desk)
+[在线体验网页版](https://7752777.github.io/counselor-desk/) · [仓库入口](./index.html) · [文档中心](./docs/README.md) · [开始使用](./docs/getting-started.md) · [启动与使用手册](./docs/user-guide.md) · [迁移与备份](./docs/v4-migration-and-backup.md) · [提交建议](https://github.com/7752777/counselor-desk/issues) · [给项目点 Star](https://github.com/7752777/counselor-desk)
 
 </div>
 
@@ -40,6 +40,7 @@
 | 你要做什么 | 怎么启动 | 适合场景 |
 | --- | --- | --- |
 | 使用网页版 | 双击发布包里的 `辅导员工作台.html`；仓库内直接打开 [`index.html`](./index.html) | 零安装、离线使用、手机临时查看或录入 |
+| 使用 Windows 桌面版 | Release 下载 `counselor-desk-4.0.0-x64.exe` 后双击安装；临时电脑可用 `counselor-desk-4.0.0-portable.exe` | 日常主工作区、SQLite、本地照片和附件保险库 |
 | 使用 macOS 桌面版 | 从 GitHub Release 或 [macOS workflow artifact](https://github.com/7752777/counselor-desk/actions/runs/31145152289) 下载 `counselor-desk-4.0.0-mac-universal.dmg`，拖入“应用程序”；也可解压同名 ZIP | Intel 与 Apple Silicon 通用包，日常主工作区 |
 | 开发预览网页版 | `pnpm install --frozen-lockfile` 后运行 `pnpm run web:dev`，打开 `http://127.0.0.1:4173` | 调试网页、检查静态资源和浏览器行为 |
 | 开发预览桌面版 | `pnpm install --frozen-lockfile` 后运行 `pnpm run desktop:dev` | Windows/macOS 本地数据库、附件保险库和桌面 IPC 联调 |
@@ -47,7 +48,20 @@
 | 构建 macOS 通用包 | 在 macOS runner 上运行 `pnpm run desktop:build:mac` | 生成 `dmg` + `zip`，文件位于 `output/desktop/` |
 | 构建完整网页发布包 | 运行 `pnpm run build:release` | 生成内嵌运行时的 `output/辅导员工作台.html` |
 
-普通用户不需要安装 Node.js、pnpm 或 Electron；下载发布包后，按第一行双击 HTML，或运行 Windows 安装包即可。开发者命令和测试入口见[贡献指南](./CONTRIBUTING.md)。
+普通用户不需要安装 Node.js、pnpm 或 Electron；下载发布包后，按第一行双击 HTML，或运行对应的 Windows/macOS 桌面包即可。开发者命令和测试入口见[贡献指南](./CONTRIBUTING.md)。
+
+## 🧭 仓库与文档地图
+
+| 你要查什么 | 入口 | 说明 |
+| --- | --- | --- |
+| 第一次使用 | [开始使用](./docs/getting-started.md) | Web、Windows、macOS 下载和启动 |
+| 业务操作 | [用户指南](./docs/user-guide.md) | 学生、任务、谈话、风险和资料库 |
+| 开发构建 | [开发与构建](./docs/development.md) | pnpm、测试、网页发布、Windows/macOS 打包 |
+| 数据规则 | [数据与迁移参考](./docs/data-contract.md) | 字段、CSV/JSON、备份、手机交换 |
+| AI 复现项目 | [提示词归档](./docs/prompt-archive.md) | 10 份按顺序执行的纯文本提示词 |
+| 发布验收 | [验收报告](./docs/v4-acceptance-report.md) | 已验证项、限制、签名和公证边界 |
+
+代码、桌面壳、运行时、样例和测试目录保持原有路径；新文档统一从 [`docs/README.md`](./docs/README.md) 进入。`output/`、`tmp/`、安装包、数据库和附件均为忽略的生成物或用户数据，不应提交。
 
 ### 📦 普通用户：推荐安装版
 
@@ -121,7 +135,7 @@ macOS 用户从 GitHub Release 附件或 macOS workflow artifact 下载 `counsel
 ## ⭐ 现在最值得用的功能
 
 - **动态字段**：标准字段、学校自定义字段和未知字段都会进入档案，表格列按实际数据生成。
-- **数据可带走**：网页版使用浏览器本地存储；Windows 桌面版可把数据库、文件目录和附件一起备份。
+- **数据可带走**：网页版使用浏览器本地存储；Windows/macOS 桌面版可把数据库、文件目录和附件一起备份。
 - **照片只做归档**：按学号或唯一姓名匹配，不采集人脸特征，不生成生物特征向量。
 - **手机回传可审阅**：先看差异再写入，合并保留桌面端其他记录，覆盖才会镜像手机端删除。
 - **工作数据有退路**：清空、恢复、覆盖和迁移前都可以生成快照，便于反复试验。

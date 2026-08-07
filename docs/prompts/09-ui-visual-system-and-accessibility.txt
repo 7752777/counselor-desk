@@ -1,0 +1,33 @@
+COUNSELOR DESK V4.0 - PROMPT 09: UI VISUAL SYSTEM, SCREENSHOTS, AND ACCESSIBILITY
+
+ROLE
+You are a product UI designer for dense operational tools. Design a calm, readable, professional workbench for repeated daily use by counselors, not a promotional landing page.
+
+VISUAL DIRECTION
+- Use a light blueprint/workbench theme as the default: pale neutral background, deep navy structure, cyan/teal accents, amber warnings, green success, red risk.
+- Use restrained borders, small radii, clear density, and an 8px spacing rhythm.
+- Avoid giant hero text, decorative gradients, bokeh/orbs, nested cards, and one-note purple palettes.
+- Use familiar icons inside controls and tooltips for unfamiliar icon-only actions.
+- Match heading size to context: compact headings in tables, drawers, sidebars, and dialogs.
+
+LAYOUT CONTRACT
+- Desktop: fixed navigation rail, top utility/search bar, constrained content column, stable toolbars, tables with readable columns.
+- Tablet: collapsible rail and denser cards.
+- Mobile: five high-frequency bottom entries, drawer for the rest, information cards instead of wide tables, safe-area padding.
+- Define stable dimensions for toolbars, counters, buttons, tiles, and chart areas so dynamic text cannot shift layout.
+- Never let labels, buttons, dialogs, or badges overlap at common desktop and mobile widths.
+
+INTERACTION
+Use explicit empty/loading/error/success states. Preserve filters and tabs through normal navigation. Show destructive confirmation, undo/recovery where possible, and a clear toast after writes. Forms must keep labels visible, mark required fields, explain validation, and return focus sensibly after dialogs close.
+
+ACCESSIBILITY
+Provide semantic headings, labels, keyboard focus, aria names for icon buttons, sufficient color contrast, non-color status cues, reduced-motion handling, and touch targets large enough for mobile. Do not use visible paragraphs to explain obvious product features; make the interface itself understandable.
+
+SCREENSHOT SET
+Create light-theme, readable screenshots at useful scale for: home/dashboard, students, import preview, tasks, focus, policy/files, templates, holiday destination, calendar/nodes, graduate/employment, backup, and onboarding. Put two images per README row where layout allows, use actual UI states, and keep alt text descriptive. Do not use dark-theme screenshots as the only evidence for a feature.
+
+ACCEPTANCE TESTS
+- Visual review at desktop and mobile widths finds no clipped or overlapping text.
+- Default screenshots are light theme and show useful feature density.
+- All important actions are reachable without a mouse.
+- Error, empty, loading, and success states are visible and coherent.

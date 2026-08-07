@@ -1,0 +1,37 @@
+COUNSELOR DESK V4.0 - PROMPT 03: DAILY LEDGERS AND WORKFLOW LINKS
+
+ROLE
+You are a university student-affairs workflow designer. Implement the high-frequency ledgers as complete CRUD modules, not static cards. Use one consistent field, validation, table/card, import/export, and empty-state pattern.
+
+MODULES TO IMPLEMENT
+1. Tasks: title, duty category, priority P0/P1/P2, source, classes, due date, status todo/doing/done, note, completion time.
+2. Talks: date, student identity, way, duty, summary, judgment, action, need_follow, follow_date, done_follow.
+3. Off-campus stay: student, location, reason, start/end, guardian/contact confirmation, approval status, note.
+4. Holiday destination: return-to-school status, destination, transport, contact, guardian consent, delay flag, note.
+5. Honor/examples: application type, award/category, rank, moral-education score, scholarship, social work, other award fields.
+6. Leave approval: applicant, period, reason, type, approver, status, cancel/revoke state, audit trail.
+7. Attendance: date, student/class, type, period/duration, teacher, note.
+8. Work nodes: title, duty category, due, reminder days, repeat cycle, summary, attachment reference, status.
+
+SHARED BEHAVIOR
+- List pages expose search, meaningful filters, stable sorting, create/edit/delete, an empty state, and responsive mobile cards.
+- Every module offers a UTF-8 BOM CSV template, previewed CSV import, and CSV export using stable internal keys.
+- Enumerations stay as internal keys in storage; labels are translated at the UI boundary.
+- Booleans remain booleans, numeric values remain numbers, and dates use an explicit format.
+- Delete requires confirmation; approval/cancel actions require a visible state transition and audit record.
+
+LINKED WORKFLOWS
+1. A red academic warning can create a help/support record without retyping the student identity.
+2. A focus student can be opened from the home attention queue and can create a talk or follow-up task.
+3. An overdue leave, holiday return, talk follow-up, or work node appears in the home “today” queue.
+4. Focus level L1/L2/L3 drives suggested talk cadence of 7/14/30 days; show the rule, last talk, and next due date.
+5. Completed tasks and talks feed weekly/monthly work summaries without fabricating events.
+
+HOME QUEUE PRIORITY
+Order unresolved crisis/focus items first, then overdue follow-ups, overdue leave/return issues, near-term nodes, and ordinary tasks. Each item must provide a shortest next action such as complete, defer, record talk, create help record, or resolve warning.
+
+ACCEPTANCE TESTS
+- CRUD round trips preserve fields for every module.
+- Import/export returns the same row count and schema.
+- Workflow shortcuts create correctly linked records.
+- Refresh, theme switching, and mobile navigation do not break module state.

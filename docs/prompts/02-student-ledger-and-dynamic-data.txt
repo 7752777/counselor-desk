@@ -1,0 +1,39 @@
+COUNSELOR DESK V4.0 - PROMPT 02: STUDENT LEDGER, IMPORT MAPPING, AND DYNAMIC FIELDS
+
+ROLE
+You are a data-modeling engineer and front-end workflow designer. Implement the student ledger as a reliable daily tool for counselors who receive spreadsheets with inconsistent Chinese headers.
+
+STUDENT RECORD CONTRACT
+Normalize every student record into a stable object containing at minimum:
+id, student_number, full_name, gender, class_name, major_name, grade, student_level, college_name, counselor_name, enrollment_status, politics, phone, dorm, birthday, hometown, origin, home_addr, parent_name, parent_phone, edu_years, nation, id_card, email, qq, academic_score, credits, class_rank, enrollment_date, graduation_date, emergency_contact, emergency_phone, photo_ids, custom_fields, custom_field_meta, note, created_at, updated_at, schema_version.
+
+IDENTITY AND MERGE RULES
+1. Use student_number plus normalized student_level as the preferred identity key.
+2. If a source row has no identity, show it as invalid or pending instead of silently inventing a merge.
+3. Importing an existing identity updates only non-empty incoming fields unless the user explicitly chooses replacement.
+4. Keep the record id stable during updates. Preserve created_at and update updated_at.
+5. Keep duplicate/conflict rows visible in the preview and require a conflict policy before commit.
+
+IMPORT EXPERIENCE
+Build a preview before writing. It must show source file name/hash, detected sheet/header row, mapped columns, unknown columns, sensitive columns, ready/invalid/pending/conflict counts, and representative errors. Support CSV, UTF-8 BOM CSV, XLS, and XLSX through a safe parser boundary. Provide common Chinese synonyms such as 学号/姓名/性别/班级/专业/年级/学院/辅导员/手机号码/身份证号.
+
+DYNAMIC COLUMNS
+Unknown headers become custom_fields, not discarded data. Store custom_field_meta with type, display label, source header, and sensitivity flag. Render dynamic columns without breaking table layout. Let users filter and sort by arbitrary fields, and make long values inspectable in a drawer or tooltip.
+
+STUDENT UI
+- Table view with search, class/grade/level filters, sort direction, pagination or stable virtualization for large sets.
+- Detail drawer with identity, contact, study, family, risk, photo, and custom-field sections.
+- New/edit form with field validation, required markers, safe text rendering, and save feedback.
+- Photo upload slot with deterministic matching by student number/name and explicit unmatched/ambiguous states.
+- Mobile layout switches to readable information cards; do not force a wide table onto a phone.
+
+SAFETY AND PERFORMANCE
+Do not expose id card/phone values in logs. Use chunked, resumable imports, progress callbacks, cancellation, checkpoint recovery, and an atomic commit for student writes. Avoid blocking the main thread while parsing or normalizing large files. Test 10,000+ rows and at least 50 custom columns.
+
+ACCEPTANCE TESTS
+- Common Chinese headers map correctly.
+- Unknown columns survive round-trip export/import.
+- Blank incoming cells do not erase existing values in merge mode.
+- Duplicate student numbers require a visible policy.
+- A cancelled import can be discarded or resumed.
+- 10,000 rows complete without a long event-loop stall and persist after reload.
