@@ -10,6 +10,7 @@
 - 党建、班团、文件库、就业签名清单、ECharts 图表、三视图、首页任务入口、Electron IPC 白名单和 SQLite 加密仓储均通过对应测试。
 - 就业资源清单仅接受 ECDSA-P256-SHA256 签名；纯摘要算法会被拒绝，避免把可重算摘要误当作来源认证。
 - 静态检查、公开 API 检查、29 视图回归、依赖生产审计均通过。
+- macOS 通用桌面包已由 [GitHub Actions run #6](https://github.com/7752777/counselor-desk/actions/runs/31145152289) 在 `macos-15-intel` 上构建成功；DMG/ZIP 架构校验、Bundle ID 校验均通过，并上传 artifact `counselor-desk-36f9ebe22d7718beb232e89bffcd3171f3e0bb36-mac-universal`（artifact digest：`sha256:b933739ed26904629eb746195099d78e1999c1f87c8173d4bfffbd14dde6a6c9`）。
 - 本轮桌面构建使用仓库相对产物目录 `output/desktop/`；为避开构建机 C 盘空间限制，验证时将该被忽略目录临时映射到另一块本地磁盘，绝对路径不属于公开配置。当前安装包 `counselor-desk-4.0.0-x64.exe` SHA-256 为 `CD0C74309C5CDA033237379299F9FD972582CDC8CD0A06740F3E97E7E48269A5`，便携包 `counselor-desk-4.0.0-portable.exe` SHA-256 为 `4FA51F5EF2A3B68CD8E4E35F834E7332A899362AB734B4BDBC1EC6229DE92DDF`。
 - NSIS 安装包在临时目录静默安装返回 `ExitCode=0`，安装目录包含 77 个文件；安装后的主程序和便携版均以全新用户数据目录启动成功，标题、首次使用引导、示例数据和资料库模块均可加载。分类文件库显示的保险库路径与启动时指定的用户数据目录一致。
 
@@ -21,7 +22,7 @@
 
 - 当前工作区没有组织代码签名证书。Windows 安装包和便携包虽已构建并启动冒烟通过，但 `Get-AuthenticodeSignature` 状态为 `NotSigned`；`scripts/check-release-signing.js` 会刻意阻断正式发布。
 - 本次验证机器为 Windows 10 Home，`HyperVisorPresent=False`，且未检测到可用的 Hyper-V、VirtualBox、QEMU 或 WSL；因此本记录包含宿主机干净用户数据测试，不声称已经完成虚拟机测试。
-- macOS universal 构建由 `.github/workflows/desktop-macos.yml` 在 `macos-15-intel` runner 执行；本地 Windows 环境不能直接生成或启动 `.dmg`，以 workflow 的 DMG/ZIP 架构检查作为 macOS 构建证据。
+- 本地 Windows 环境不能直接生成或启动 `.dmg`；macOS 包的真实构建与架构校验由上面的 macOS workflow 完成，公开包仍为 unsigned，正式分发前需要 Apple Developer 签名与公证。
 - 99.7% 导入成功率仍是运营指标，不在脱敏样本不少于 100 份、覆盖不少于 20 种格式并保存追溯报告前对外宣称。
 - 已提供 `scripts/import-operations-report.js`：它对脱敏样本清单计算样本数、格式数、成功率和源清单 SHA-256；条件不足时以非零状态退出，测试夹具不作为真实运营证据。
 - 发布文档已补齐：[迁移与备份说明](v4-migration-and-backup.md)、[隐私说明](v4-privacy.md)、[党建规则版本说明](v4-party-rules.md) 和 [签名发布流程](v4-release-signing.md)。

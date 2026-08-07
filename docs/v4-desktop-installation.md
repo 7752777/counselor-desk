@@ -4,7 +4,7 @@
 
 ## 下载哪个文件
 
-在 GitHub Release 的附件中选择一个文件：
+正式发布版从 GitHub Release 附件中选择一个文件；当前公开库也会在 [macOS workflow run #6](https://github.com/7752777/counselor-desk/actions/runs/31145152289) 中上传未签名验证 artifact：
 
 | 文件 | 推荐对象 | 使用方式 |
 | --- | --- | --- |
@@ -28,7 +28,7 @@
 
 1. 打开 `counselor-desk-4.0.0-mac-universal.dmg`，把“辅导员工作台”拖到“应用程序”。
 2. 从“应用程序”或 Launchpad 打开工作台；首次进入选择“体验示例”“正式初始化”或“从备份恢复”。
-3. 如果 macOS 提示“无法验证开发者”，请确认安装包来自项目 Release，并在“系统设置 → 隐私与安全性”中允许本次打开。当前公开构建未配置 Apple Developer 签名和公证，不要把未知来源的副本加入信任。
+3. 如果 macOS 提示“无法验证开发者”，请确认安装包来自项目 Release 或官方 Actions artifact，并在“系统设置 → 隐私与安全性”中允许本次打开。当前公开构建未配置 Apple Developer 签名和公证，不要把未知来源的副本加入信任。
 4. Intel 和 Apple Silicon 使用同一个 universal 包，不需要另外判断芯片架构。
 
 ## 文件资料库与保险库路径
@@ -50,8 +50,8 @@
 
 ## 无法打开时
 
-- Windows 弹出“未知发布者”：当前公开构建没有组织代码签名证书，请只从项目 Release 下载，并核对 Release 页面提供的 SHA-256。
-- macOS 弹出“无法验证开发者”：当前公开构建没有 Apple Developer 签名与公证，请核对 Release 页面提供的 SHA-256，再按上面的“隐私与安全性”步骤一次性允许打开。
+- Windows 弹出“未知发布者”：当前公开构建没有组织代码签名证书，请只从项目 Release 下载，并核对发布页提供的 SHA-256。
+- macOS 弹出“无法验证开发者”：当前公开构建没有 Apple Developer 签名与公证，请核对发布页或 Actions artifact 的 SHA-256，再按上面的“隐私与安全性”步骤一次性允许打开。
 - 双击没有窗口：先检查任务管理器中是否已有“辅导员工作台”进程，再重新打开；仍失败时使用便携版复现，并附上 Windows 版本和错误截图。
 - 数据看起来为空：确认打开的是同一个 Windows 用户和同一个备份恢复后的工作台，不要把仓库里的 `index.html` 与桌面版数据库混为一处。
 

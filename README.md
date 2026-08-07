@@ -40,7 +40,7 @@
 | 你要做什么 | 怎么启动 | 适合场景 |
 | --- | --- | --- |
 | 使用网页版 | 双击发布包里的 `辅导员工作台.html`；仓库内直接打开 [`index.html`](./index.html) | 零安装、离线使用、手机临时查看或录入 |
-| 使用 macOS 桌面版 | Release 下载 `counselor-desk-4.0.0-mac-universal.dmg`，拖入“应用程序”；也可解压同名 ZIP | Intel 与 Apple Silicon 通用包，日常主工作区 |
+| 使用 macOS 桌面版 | 从 GitHub Release 或 [macOS workflow artifact](https://github.com/7752777/counselor-desk/actions/runs/31145152289) 下载 `counselor-desk-4.0.0-mac-universal.dmg`，拖入“应用程序”；也可解压同名 ZIP | Intel 与 Apple Silicon 通用包，日常主工作区 |
 | 开发预览网页版 | `pnpm install --frozen-lockfile` 后运行 `pnpm run web:dev`，打开 `http://127.0.0.1:4173` | 调试网页、检查静态资源和浏览器行为 |
 | 开发预览桌面版 | `pnpm install --frozen-lockfile` 后运行 `pnpm run desktop:dev` | Windows/macOS 本地数据库、附件保险库和桌面 IPC 联调 |
 | 构建 Windows 安装包 | 运行 `pnpm run desktop:build` | 生成安装版和便携版，文件位于 `output/desktop/` |
@@ -55,7 +55,7 @@
 
 不想安装时下载 `counselor-desk-4.0.0-portable.exe`，双击即可运行。便携版适合临时电脑，但数据仍保存在当前 Windows 用户的应用数据目录；换电脑前请在工作台内生成 `.cwbk` 加密备份，不要只复制 EXE。
 
-macOS 用户下载 `counselor-desk-4.0.0-mac-universal.dmg`，打开后将“辅导员工作台”拖入“应用程序”。该包同时支持 Intel 和 Apple Silicon；当前公开构建未配置 Apple Developer 签名与公证，首次打开若被 Gatekeeper 拦截，请在“系统设置 → 隐私与安全性”中确认后再启动。完整步骤见[桌面版安装与数据路径](./docs/v4-desktop-installation.md)。
+macOS 用户从 GitHub Release 附件或 macOS workflow artifact 下载 `counselor-desk-4.0.0-mac-universal.dmg`，打开后将“辅导员工作台”拖入“应用程序”。该包同时支持 Intel 和 Apple Silicon；当前公开构建未配置 Apple Developer 签名与公证，首次打开若被 Gatekeeper 拦截，请在“系统设置 → 隐私与安全性”中确认后再启动。当前仓库已验证并上传 Actions artifact，正式签名包需由维护者另行发布。完整步骤见[桌面版安装与数据路径](./docs/v4-desktop-installation.md)。
 
 桌面版的真实附件保险库路径请在“模板库 → 分类文件库”页面查看“桌面版已启用加密附件保险库”提示。仓库的 `output/desktop/` 只是开发者构建产物目录，不是用户数据目录。完整步骤见[桌面版安装与数据路径](./docs/v4-desktop-installation.md)。
 
