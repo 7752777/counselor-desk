@@ -40,6 +40,9 @@ walk(root);
 if (found.length) throw new Error(`Sensitive backup-like files found: ${found.join(', ')}`);
 
 const readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8');
+const appHtml = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+if (!appHtml.includes('加载更多（已显示')) throw new Error('Student list pagination label is missing');
+if (appHtml.includes('鍔犺浇') || appHtml.includes('鏇村')) throw new Error('index.html contains mojibake pagination text');
 const localLinkPattern = /!?\[[^\]]*\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
 const missingLinks = [];
 for (const match of readme.matchAll(localLinkPattern)) {

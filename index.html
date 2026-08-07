@@ -3223,7 +3223,7 @@ function viewStudents() {
     <div class="v4-photo-grid" data-v4-virtual-list data-student-layout="photo" style="${studentMode === 'photo' ? '' : 'display:none'}">${renderList.map(s => `<article class="v4-photo-card">${v4PhotoSlot(s)}<div class="v4-photo-meta"><strong>${esc(s.full_name)}</strong><small>${esc(s.student_number)} · ${esc(s.class_name)}</small>${!v4PhotoSrc(s) ? '<small class="tag tag-amber">待补采</small>' : '<small class="tag tag-green">已归档</small>'}</div></article>`).join('') || '<div class="empty">暂无学生</div>'}</div>`
     : emptyBox('还没有学生数据', `<button class="btn btn-primary btn-sm" data-act="student-import">从 CSV 导入</button>
         <button class="btn btn-sm" data-act="student-new" style="margin-left:8px">手动新增</button>`)}
-    ${list.length > renderList.length ? `<div style="text-align:center;margin:16px 0"><button class="btn" data-act="v4-students-more">鍔犺浇鏇村锛堝凡鏄剧ず ${renderList.length}/${list.length}锛�</button></div>` : ''}
+    ${list.length > renderList.length ? `<div style="text-align:center;margin:16px 0"><button class="btn" data-act="v4-students-more">加载更多（已显示 ${renderList.length}/${list.length}）</button></div>` : ''}
   </div>
   <div class="banner banner-info"><svg class="ic ic-sm"><use href="#i-link"/></svg>
     <span class="sp">CSV 表头与服务端「辅导员工作平台」字段一致（student_number / full_name / class_name …），
