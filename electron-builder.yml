@@ -2,7 +2,7 @@ appId: cn.counselordesk.workbench
 productName: 辅导员工作台
 executableName: counselor-desk
 artifactName: counselor-desk-${version}-${arch}.${ext}
-icon: assets/app-icon.svg
+icon: assets/app-icon.ico
 directories:
   output: output/desktop
   buildResources: assets

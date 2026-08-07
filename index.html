@@ -98,6 +98,13 @@
 
   /* ===== 蓝图网格（装饰用） ===== */
   --grid-color: rgba(11, 58, 130, 0.04);
+  --chart-label: #64748b;
+  --chart-track: #e0f2fe;
+  --chart-value: #0f172a;
+  --chart-muted: #cbd5e1;
+  --chart-grid: #eef2f7;
+  --chart-sub: #94a3b8;
+  --chart-point: #ffffff;
 
   /* ===== 圆角（更圆润友好） ===== */
   --r-lg: 18px;
@@ -139,61 +146,63 @@
   --navy-border: var(--chrome-border);
 }
 
-/* ===== 深色模式：深空蓝调（v3.9 工程蓝图暗色版） ===== */
+/* ===== 深色模式：低刺激炭灰（长期桌面工作） ===== */
 [data-theme="dark"]{
-  --bg: #0c1322;
-  --bg-sunken: #080d18;
-  --card: #131c2e;
-  --card-2: #18223a;
-  --line: #25324a;
-  --line-2: #1c2640;
-  --line-strong: #34446a;
-  --ink: #eaf0fa;
-  --ink-2: #b6c2d6;
-  --ink-3: #8090a8;
-  --ink-4: #5a6883;
-  /* 深空航蓝提亮 → 蓝白（仍可读，仍有"航"感） */
-  --accent: #4d7fd6;
-  --accent-hover: #6a96e8;
-  --accent-active: #3d6fc8;
-  --accent-soft: rgba(77,127,214,.16);
-  --accent-line: rgba(77,127,214,.36);
-  --accent-dark: #4d7fd6;
-  --accent-contrast: #0c1322;
-  /* 信号青提亮 */
-  --signal: #2dd0e0;
-  --signal-hover: #4ddcec;
-  --signal-soft: rgba(45,208,224,.14);
-  --signal-line: rgba(45,208,224,.32);
-  /* 琥珀提亮 */
-  --amber: #f0b840;
-  --amber-soft: rgba(240,184,64,.14);
-  --amber-line: rgba(240,184,64,.32);
-  --emerald: #3fd6a4;
+  --bg: #191b1f;
+  --bg-sunken: #131518;
+  --card: #202329;
+  --card-2: #282c32;
+  --line: #393f48;
+  --line-2: #30353d;
+  --line-strong: #4a525e;
+  --ink: #f0f2f4;
+  --ink-2: #c5cbd2;
+  --ink-3: #98a1ab;
+  --ink-4: #737d89;
+  --accent: #82a9d8;
+  --accent-hover: #9abce5;
+  --accent-active: #6d95c6;
+  --accent-soft: rgba(130,169,216,.16);
+  --accent-line: rgba(130,169,216,.34);
+  --accent-dark: #82a9d8;
+  --accent-contrast: #17202a;
+  --signal: #79b8af;
+  --signal-hover: #94cbc4;
+  --signal-soft: rgba(121,184,175,.14);
+  --signal-line: rgba(121,184,175,.30);
+  --amber: #d8ae73;
+  --amber-soft: rgba(216,174,115,.14);
+  --amber-line: rgba(216,174,115,.30);
+  --emerald: #78b99d;
 
-  --danger: #ff807a; --danger-soft: rgba(255,128,122,.14); --danger-line: rgba(255,128,122,.32);
-  --warn: #f0b840;   --warn-soft: rgba(240,184,64,.14);   --warn-line: rgba(240,184,64,.32);
-  --ok: #3fd6a4;     --ok-soft: rgba(63,214,164,.14);     --ok-line: rgba(63,214,164,.32);
-  --info: #4d7fd6;
-  /* 浅色外壳在暗色下变为柔和炭蓝（工程蓝图暗色版） */
-  --chrome-bg: #131c2e;
-  --chrome-bg-2: #18223a;
-  --chrome-border: #25324a;
-  --chrome-ink: #eaf0fa;
-  --chrome-ink-2: #b6c2d6;
-  --chrome-ink-3: #8090a8;
-  --chrome-hover: #1c2640;
-  --chrome-sub: #1a2238;
-  /* 蓝图网格（暗色更弱） */
-  --grid-color: rgba(120, 160, 220, 0.05);
+  --danger: #df908b; --danger-soft: rgba(223,144,139,.14); --danger-line: rgba(223,144,139,.30);
+  --warn: #d8ae73;   --warn-soft: rgba(216,174,115,.14);   --warn-line: rgba(216,174,115,.30);
+  --ok: #78b99d;     --ok-soft: rgba(120,185,157,.14);     --ok-line: rgba(120,185,157,.30);
+  --info: #82a9d8;
+  --chrome-bg: #1d2025;
+  --chrome-bg-2: #25292f;
+  --chrome-border: #383e47;
+  --chrome-ink: #f0f2f4;
+  --chrome-ink-2: #c5cbd2;
+  --chrome-ink-3: #98a1ab;
+  --chrome-hover: #2c3138;
+  --chrome-sub: #24282e;
+  --grid-color: rgba(255,255,255,.018);
+  --chart-label: #adb6c0;
+  --chart-track: #343a42;
+  --chart-value: #eef1f3;
+  --chart-muted: #77818d;
+  --chart-grid: #343941;
+  --chart-sub: #99a2ad;
+  --chart-point: #202329;
   --sh-xs: 0 1px 2px rgba(0,0,0,.35);
   --sh-sm: 0 1px 2px rgba(0,0,0,.35), 0 3px 10px rgba(0,0,0,.40);
   --sh-md: 0 8px 18px -4px rgba(0,0,0,.50), 0 16px 36px -10px rgba(0,0,0,.55);
   --sh-lg: 0 22px 54px -14px rgba(0,0,0,.60);
   --sh-kpi: 0 1px 3px rgba(0,0,0,.35), 0 10px 26px -10px rgba(0,0,0,.45);
-  --sh-focus: 0 0 0 3px rgba(77,127,214,.40);
-  --grad: linear-gradient(135deg,#3d6fc8,#4d7fd6);
-  --grad-signal: linear-gradient(135deg,#2dd0e0,#4d7fd6);
+  --sh-focus: 0 0 0 3px rgba(130,169,216,.32);
+  --grad: linear-gradient(135deg,#6d95c6,#82a9d8);
+  --grad-signal: linear-gradient(135deg,#79b8af,#82a9d8);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0;overflow-x:hidden}
@@ -229,6 +238,7 @@ a{color:var(--accent);text-decoration:none}
   display:flex;align-items:center;gap:12px;padding:0 24px;height:60px;
   position:sticky;
 }
+#btn-menu{display:none}
 .topbar::after{
   content:'';position:absolute;left:0;right:0;bottom:-2px;height:2px;
   background:linear-gradient(90deg, var(--accent) 0%, var(--signal) 100%);
@@ -479,12 +489,19 @@ tbody tr:last-child td{border-bottom:none}
 
 /* ---------- KPI（v3.9 工程感：左 3px 侧条 + 顶发丝线 + 标签字号放大） ---------- */
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
+.card > .kpis{margin:16px 18px 14px}
 .kpi{
   background:var(--card);border:1px solid var(--line);
   border-top:1px solid var(--accent-line);
   border-radius:var(--r);padding:18px 20px 16px 22px;box-shadow:var(--sh-kpi);
   position:relative;overflow:hidden;transition:box-shadow .2s ease,transform .2s ease;
 }
+.kpi-filter{width:100%;text-align:left;color:inherit;cursor:pointer;font:inherit}
+.kpi-filter:hover{border-color:var(--accent-line);background:var(--accent-soft)}
+.kpi-filter.is-filtered{box-shadow:var(--sh-focus),var(--sh-kpi);border-color:var(--accent);background:var(--accent-soft)}
+.task-completion-toggle{min-width:88px;min-height:30px;padding:0 9px;border:1px solid var(--ok-line);border-radius:8px;background:var(--ok-soft);color:var(--ok);font-size:12px;font-weight:700;white-space:nowrap}
+.task-completion-toggle:hover{filter:brightness(.97);border-color:var(--ok)}
+.task-completion-toggle.done{border-color:var(--line);background:var(--card-2);color:var(--ink-3)}
 .kpi:hover{box-shadow:0 6px 22px rgba(0,0,0,.06);transform:translateY(-1px)}
 .kpi::after{content:'';position:absolute;left:0;top:14%;bottom:14%;width:3px;border-radius:0 3px 3px 0;background:var(--accent)}
 .kpi.l::after{background:var(--ok)}
@@ -549,7 +566,7 @@ tbody tr:last-child td{border-bottom:none}
 .legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:12px;font-size:12.3px;color:var(--ink-3)}
 .legend i{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:6px;vertical-align:-1px}
 .sub-hd{font-size:13px;font-weight:700;color:var(--ink-2);margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.warn-donut-wrap{border-top:1px solid var(--line);margin-top:14px}
+.warn-donut-wrap{border-top:1px solid var(--line);margin:14px 18px;padding-left:0 !important;padding-right:0 !important}
 .insight{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fff}
 .insight-danger{border-color:#fecaca;background:#fef2f2}
 .insight-warn{border-color:#fde68a;background:#fffbeb}
@@ -585,6 +602,7 @@ tbody tr:last-child td{border-bottom:none}
 /* ---------- 移动端适配 ---------- */
 @media (max-width:900px){
   :root{--nav-w:0px}
+  #btn-menu{display:inline-flex}
   .sidenav{position:fixed;top:0;left:0;bottom:0;z-index:66;width:276px;flex:none;
     background:var(--chrome-bg);box-shadow:8px 0 30px rgba(0,0,0,.2);transform:translateX(-104%);transition:transform .25s ease;height:100%;border-right:none}
   .sidenav.open{transform:none}
@@ -727,10 +745,14 @@ tbody tr:last-child td{border-bottom:none}
 [data-theme="dark"] .card:hover{box-shadow:var(--sh-md), inset 0 1px 0 rgba(255,255,255,.04)}
 [data-theme="dark"] .inp, [data-theme="dark"] select.inp, [data-theme="dark"] textarea.inp{background:var(--card-2);border-color:var(--line-strong)}
 [data-theme="dark"] .chip{background:var(--card-2);color:var(--ink-3);border-color:var(--line)}
+[data-theme="dark"] .modal,[data-theme="dark"] .btn,[data-theme="dark"] .insight{background:var(--card);color:var(--ink);border-color:var(--line)}
+[data-theme="dark"] .topbar .btn{background:var(--chrome-bg-2);border-color:var(--chrome-border);color:var(--chrome-ink-2)}
+[data-theme="dark"] .modal-hd,[data-theme="dark"] .modal-ft,[data-theme="dark"] .toolbar{background:var(--card-2)}
+[data-theme="dark"] .banner-info{color:var(--ink-2)}
 [data-theme="dark"] .nav-item:hover{background:var(--chrome-hover)}
 [data-theme="dark"] .btn-danger{background:var(--card-2);border-color:var(--danger-line);color:var(--danger)}
-[data-theme="dark"] .btn-ok{color:#04231a}
-[data-theme="dark"] .btn-primary{color:var(--accent-contrast)}
+[data-theme="dark"] .btn-ok{background:var(--ok);border-color:var(--ok);color:#10231d}
+[data-theme="dark"] .btn-primary{background:var(--accent);border-color:var(--accent);color:var(--accent-contrast)}
 
 /* 尊重 reduce-motion */
 @media (prefers-reduced-motion: reduce){
@@ -2553,10 +2575,10 @@ const app = {
     stay:{ q:'', approval:'' },
     leave:{ q:'', delayed:'' },
     honor:{ q:'', type:'' },
-    pleave:{ q:'', status:'' },
+    pleave:{ q:'', status:'', scope:'' },
     attend:{ q:'', cls:'', type:'' },
-    node:{ q:'', status:'' },
-    warn:{ q:'', level:'' },
+    node:{ q:'', status:'', scope:'' },
+    warn:{ q:'', level:'', scope:'' },
     help:{ q:'', type:'' },
     grant:{ q:'', kind:'' },
     policy:{ q:'', cat:'' }, material:{ q:'', cat:'' }, comp:{ q:'', cat:'' }, tpl:{ q:'', type:'' },
@@ -2578,10 +2600,10 @@ function hBarChart(items, opt) {
   let g = '';
   items.forEach((it, i) => {
     const y = top + i * rowH, len = Math.max(it.value > 0 ? 3 : 0, (it.value / max) * bw);
-    g += `<text x="${padL - 8}" y="${y + 19}" text-anchor="end" font-size="12" fill="#64748b">${esc(it.label)}</text>
-      <rect x="${padL}" y="${y + 7}" width="${bw}" height="15" rx="4" fill="#e0f2fe"/>
+    g += `<text x="${padL - 8}" y="${y + 19}" text-anchor="end" font-size="12" fill="var(--chart-label)">${esc(it.label)}</text>
+      <rect x="${padL}" y="${y + 7}" width="${bw}" height="15" rx="4" fill="var(--chart-track)"/>
       <rect class="bar-val" x="${padL}" y="${y + 7}" width="${len.toFixed(1)}" height="15" rx="4" fill="${it.color || '#4f46e5'}"><title>${esc(it.label)}：${it.value}</title></rect>
-      <text x="${padL + len + 8}" y="${y + 19}" font-size="12" font-weight="700" fill="${it.value ? '#0f172a' : '#cbd5e1'}">${it.value}</text>`;
+      <text x="${padL + len + 8}" y="${y + 19}" font-size="12" font-weight="700" fill="${it.value ? 'var(--chart-value)' : 'var(--chart-muted)'}">${it.value}</text>`;
   });
   return `<div class="chart-wrap chart-wrap-bars"><svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="分类统计柱状图">${g}</svg></div>`;
 }
@@ -2599,13 +2621,13 @@ function donutChart(items, centerTop, centerSub) {
       off += len;
     });
   } else {
-    ring = `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="#e0f2fe" stroke-width="20"/>`;
+    ring = `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="var(--chart-track)" stroke-width="20"/>`;
   }
   return `<div class="donut-anim" style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
     <svg viewBox="0 0 140 140" width="140" height="140" role="img" aria-label="占比环形图">
       ${ring}
-      <text x="70" y="66" text-anchor="middle" font-size="24" font-weight="700" fill="#0f172a">${esc(centerTop)}</text>
-      <text x="70" y="86" text-anchor="middle" font-size="11" fill="#94a3b8">${esc(centerSub || '')}</text>
+      <text x="70" y="66" text-anchor="middle" font-size="24" font-weight="700" fill="var(--chart-value)">${esc(centerTop)}</text>
+      <text x="70" y="86" text-anchor="middle" font-size="11" fill="var(--chart-sub)">${esc(centerSub || '')}</text>
     </svg>
     <div class="legend" style="flex-direction:column;gap:7px;margin:0">
       ${items.map(i => `<span><i style="background:${i.color}"></i>${esc(i.label)} <b style="color:var(--ink)">${i.value}</b></span>`).join('')}
@@ -2627,17 +2649,17 @@ function lineChart(series, opt) {
   const rows = 4;
   for (let r = 0; r <= rows; r++) {
     const gy = padT + (r / rows) * innerH;
-    g += `<line x1="${padL}" y1="${gy}" x2="${W - padR}" y2="${gy}" stroke="#eef2f7" stroke-width="1"/>`;
-    g += `<text x="${padL - 6}" y="${gy + 3}" text-anchor="end" font-size="10" fill="#94a3b8">${Math.round(max * (1 - r / rows))}</text>`;
+    g += `<line x1="${padL}" y1="${gy}" x2="${W - padR}" y2="${gy}" stroke="var(--chart-grid)" stroke-width="1"/>`;
+    g += `<text x="${padL - 6}" y="${gy + 3}" text-anchor="end" font-size="10" fill="var(--chart-sub)">${Math.round(max * (1 - r / rows))}</text>`;
   }
-  labels.forEach((lb, i) => { g += `<text x="${x(i)}" y="${H - 8}" text-anchor="middle" font-size="10" fill="#94a3b8">${esc(lb)}</text>`; });
+  labels.forEach((lb, i) => { g += `<text x="${x(i)}" y="${H - 8}" text-anchor="middle" font-size="10" fill="var(--chart-sub)">${esc(lb)}</text>`; });
   series.forEach(s => {
     const pts = s.data.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
     const base = (padT + innerH).toFixed(1);
     const area = `M${x(0).toFixed(1)},${base} ` + s.data.map((v, i) => `L${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ') + ` L${x(s.data.length - 1).toFixed(1)},${base} Z`;
     g += `<path d="${area}" fill="${s.color}" opacity="0.07"/>`;
     g += `<polyline points="${pts}" fill="none" stroke="${s.color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
-    s.data.forEach((v, i) => { g += `<circle cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="3" fill="#fff" stroke="${s.color}" stroke-width="2"><title>${esc(s.name)} · ${esc(labels[i])}：${v}</title></circle>`; });
+    s.data.forEach((v, i) => { g += `<circle cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="3" fill="var(--chart-point)" stroke="${s.color}" stroke-width="2"><title>${esc(s.name)} · ${esc(labels[i])}：${v}</title></circle>`; });
   });
   return `<div class="chart-wrap"><svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="趋势折线图">${g}</svg></div>`;
 }
@@ -2990,6 +3012,7 @@ function viewTasks() {
       </select>
       ${app.bulk.on ? `
       <div class="bulk-bar"><span class="tiny">已选 <b id="bulk-count">${app.bulk.sel.size}</b> 项</span><span class="sp"></span>
+        <button class="btn btn-sm" data-act="bulk-select-all">${list.length && list.every(t => app.bulk.sel.has(t.id)) ? '取消全选' : `全选当前 ${list.length} 项`}</button>
         <button class="btn btn-sm btn-ok" data-act="bulk-done"><svg class="ic ic-sm"><use href="#i-check"/></svg>批量完成</button>
         <button class="btn btn-sm btn-danger" data-act="bulk-del">批量删除</button>
         <button class="btn btn-sm btn-ghost" data-act="bulk-exit">退出</button></div>` : `
@@ -2998,11 +3021,13 @@ function viewTasks() {
     </div>
     ${list.length ? `
     <div class="tw"><table>
-      <thead><tr><th style="width:34px"></th><th>任务名称</th><th>职责分类</th><th>来源</th><th>涉及班级</th><th>截止</th><th>优先级</th><th class="td-acts">操作</th></tr></thead>
+      <thead><tr><th style="width:${app.bulk.on ? '40px' : '102px'}">${app.bulk.on ? '选择' : '完成确认'}</th><th>任务名称</th><th>职责分类</th><th>来源</th><th>涉及班级</th><th>截止</th><th>优先级</th><th class="td-acts">操作</th></tr></thead>
       <tbody>${list.map(t => { const r = dueText(t.due), P = PRIO_MAP[t.priority] || PRIOS[1];
         const late = t.status !== 'done' && daysFromToday(t.due) !== null && daysFromToday(t.due) < 0; return `
         <tr${late ? ' class="row-danger"' : ''}>
-          <td><input type="checkbox" style="width:17px;height:17px;accent-color:var(--ok);cursor:pointer" data-act="${app.bulk.on ? 'bulk-sel' : 'task-toggle'}" data-id="${t.id}"${(app.bulk.on ? app.bulk.sel.has(t.id) : t.status === 'done') ? ' checked' : ''}></td>
+          <td>${app.bulk.on
+            ? `<input type="checkbox" style="width:17px;height:17px;accent-color:var(--ok);cursor:pointer" aria-label="选择任务：${esc(t.title)}" data-act="bulk-sel" data-id="${t.id}"${app.bulk.sel.has(t.id) ? ' checked' : ''}>`
+            : `<button type="button" class="task-completion-toggle${t.status === 'done' ? ' done' : ''}" data-act="task-toggle" data-id="${t.id}" title="${t.status === 'done' ? '恢复为未完成' : '确认将此任务标记为已完成'}">${t.status === 'done' ? '已完成（撤销）' : '确认完成'}</button>`}</td>
           <td><div style="font-weight:600;${t.status === 'done' ? 'text-decoration:line-through;color:var(--ink-4)' : ''}">${esc(t.title)}</div>
               ${t.note ? `<div class="tiny" style="margin-top:2px">${esc(t.note.slice(0, 50))}</div>` : ''}
               ${t.platform_ref ? `<span class="tag tag-purple" style="margin-top:3px"><svg class="ic ic-sm"><use href="#i-link"/></svg>平台 #${esc(t.platform_ref)}</span>` : ''}</td>
@@ -3019,7 +3044,9 @@ function viewTasks() {
       const late = t.status !== 'done' && daysFromToday(t.due) !== null && daysFromToday(t.due) < 0; return `
       <div class="mcard"${late ? ' style="background:var(--danger-soft)"' : ''}>
         <div class="mcard-hd">
-          <input type="checkbox" style="width:20px;height:20px;accent-color:var(--ok);cursor:pointer" data-act="${app.bulk.on ? 'bulk-sel' : 'task-toggle'}" data-id="${t.id}"${(app.bulk.on ? app.bulk.sel.has(t.id) : t.status === 'done') ? ' checked' : ''}>
+          ${app.bulk.on
+            ? `<input type="checkbox" style="width:20px;height:20px;accent-color:var(--ok);cursor:pointer" aria-label="选择任务：${esc(t.title)}" data-act="bulk-sel" data-id="${t.id}"${app.bulk.sel.has(t.id) ? ' checked' : ''}>`
+            : `<button type="button" class="task-completion-toggle${t.status === 'done' ? ' done' : ''}" data-act="task-toggle" data-id="${t.id}">${t.status === 'done' ? '已完成（撤销）' : '确认完成'}</button>`}
           <div class="mcard-t"${t.status === 'done' ? ' style="text-decoration:line-through;color:var(--ink-4)"' : ''}>${esc(t.title)}</div>
         </div>
         <div class="mcard-meta">
@@ -3283,7 +3310,7 @@ function viewTalks() {
               : t.done_follow ? '<span class="tag tag-green">已回访</span>'
               : `<span class="tag ${late ? 'tag-red' : 'tag-amber'}">${late ? `逾期 ${-fd} 天` : cnDate(t.follow_date) + ' 回访'}</span>`}</td>
           <td class="td-acts">
-            <button class="link-btn" data-act="talk-view" data-id="${t.id}">详情</button>
+            <button class="link-btn" type="button" data-act="talk-view" data-id="${t.id}" aria-haspopup="dialog" title="查看完整谈话记录">详情</button>
             <button class="link-btn" data-act="talk-edit" data-id="${t.id}" style="margin-left:8px">编辑</button>
             <button class="link-btn danger" data-act="talk-del" data-id="${t.id}" style="margin-left:8px">删除</button></td>
         </tr>`; }).join('')}</tbody></table></div>
@@ -3297,7 +3324,7 @@ function viewTalks() {
             : `<span class="tag ${late ? 'tag-red' : 'tag-amber'}">${late ? `回访逾期 ${-fd} 天` : cnDate(t.follow_date) + ' 回访'}</span>`}</div>
         <div style="font-size:13px;color:var(--ink-2);line-height:1.65;margin-bottom:9px">${esc(t.summary.slice(0, 80))}${t.summary.length > 80 ? '…' : ''}</div>
         <div class="mcard-acts">
-          <button class="btn btn-sm" data-act="talk-view" data-id="${t.id}">详情</button>
+          <button class="btn btn-sm" type="button" data-act="talk-view" data-id="${t.id}" aria-haspopup="dialog" title="查看完整谈话记录">详情</button>
           <button class="btn btn-sm" data-act="talk-edit" data-id="${t.id}">编辑</button>
         </div></div>`; }).join('')}</div>`
     : emptyBox('还没有谈话记录', `<button class="btn btn-primary btn-sm" data-act="talk-new">新增第一条</button>`)}
@@ -3345,6 +3372,7 @@ function viewStay() {
       <tbody>${list.map(s => `
         <tr>
           <td><div style="font-weight:600">${esc(s.student_name)}</div><div class="tiny">${esc(s.student_number || '')}</div></td>
+          <td class="muted">${esc(s.student_number || '—')}</td>
           <td class="muted">${esc(s.grade_major || '—')}</td>
           <td class="muted">${esc(s.stu_type || '—')}</td>
           <td class="muted">${s.start ? `${cnDate(s.start)} ~ ${cnDate(s.end)}` : '—'}</td>
@@ -3517,19 +3545,26 @@ function statusTag(st) {
 const PLEAVE_TYPES = ['事假','病假','公假','其他'];
 const ATTEND_TYPES = ['旷课','迟到','早退','请假','病假'];
 const NODE_REPEAT = { none:'不重复', week:'每周', month:'每月', term:'每学期', year:'每年' };
+function pleaveScope(s) {
+  if (s.status === '待审批') return 'pending';
+  if (s.status !== '已通过' || s.cancel) return '';
+  const remaining = daysFromToday(s.end);
+  return remaining !== null && remaining < 0 ? 'overdue' : 'active';
+}
 function filterPleave() {
   const f = app.filters.pleave;
   return DB.pleave.filter(s => {
     if (f.status && s.status !== f.status) return false;
+    if (f.scope && pleaveScope(s) !== f.scope) return false;
     if (f.q) { const t = (s.name+s.student_number+s.class_name+s.reason+s.approver).toLowerCase(); if (!t.includes(f.q.toLowerCase())) return false; }
     return true;
   }).sort((a,b)=> (b.start||'') < (a.start||'') ? -1 : 1);
 }
 function viewPleave() {
   const f = app.filters.pleave, list = filterPleave();
-  const pending = list.filter(s=>s.status==='待审批').length;
-  const active = list.filter(s=>s.status==='已通过' && !s.cancel && daysFromToday(s.end)>=0).length;
-  const overdue = list.filter(s=>s.status==='已通过' && !s.cancel && daysFromToday(s.end)<0).length;
+  const pending = DB.pleave.filter(s => pleaveScope(s) === 'pending').length;
+  const active = DB.pleave.filter(s => pleaveScope(s) === 'active').length;
+  const overdue = DB.pleave.filter(s => pleaveScope(s) === 'overdue').length;
   return `
   <div class="card">
     <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-clock"/></svg>请销假管理</h2>
@@ -3540,9 +3575,9 @@ function viewPleave() {
       <button class="btn btn-primary btn-sm" data-act="pleave-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>登记请假</button>
     </div>
     <div class="kpis">
-      <div class="kpi brand"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-alert"/></svg>待审批</div><div class="kpi-v" data-num="${pending}">0</div></div>
-      <div class="kpi ok"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-check"/></svg>在假中</div><div class="kpi-v" data-num="${active}">0</div></div>
-      <div class="kpi warn"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-clock"/></svg>逾期未销假</div><div class="kpi-v" data-num="${overdue}">0</div></div>
+      <button type="button" class="kpi kpi-filter brand${f.scope === 'pending' ? ' is-filtered' : ''}" data-act="filter-shortcut" data-filter-group="pleave" data-filter-scope="pending" aria-pressed="${f.scope === 'pending'}"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-alert"/></svg>待审批</div><div class="kpi-v" data-num="${pending}">0</div></button>
+      <button type="button" class="kpi kpi-filter ok${f.scope === 'active' ? ' is-filtered' : ''}" data-act="filter-shortcut" data-filter-group="pleave" data-filter-scope="active" aria-pressed="${f.scope === 'active'}"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-check"/></svg>在假中</div><div class="kpi-v" data-num="${active}">0</div></button>
+      <button type="button" class="kpi kpi-filter warn${f.scope === 'overdue' ? ' is-filtered' : ''}" data-act="filter-shortcut" data-filter-group="pleave" data-filter-scope="overdue" aria-pressed="${f.scope === 'overdue'}"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-clock"/></svg>逾期未销假</div><div class="kpi-v" data-num="${overdue}">0</div></button>
     </div>
     <div class="toolbar">
       <div class="search"><svg class="ic ic-sm"><use href="#i-search"/></svg>
@@ -3553,6 +3588,7 @@ function viewPleave() {
         <option value="已通过"${f.status==='已通过'?' selected':''}>已通过</option>
         <option value="已驳回"${f.status==='已驳回'?' selected':''}>已驳回</option>
       </select>
+      ${f.scope ? '<button class="btn btn-sm" data-act="filter-clear" data-filter-group="pleave" data-filter-keys="scope">清除统计筛选</button>' : ''}
     </div>
     ${list.length ? `
     <div class="tw"><table>
@@ -3598,8 +3634,8 @@ function filterAttend() {
 }
 function viewAttend() {
   const f = app.filters.attend, list = filterAttend();
-  const kuang = list.filter(s=>s.type==='旷课').length;
-  const late = list.filter(s=>s.type==='迟到').length;
+  const kuang = DB.attend.filter(s=>s.type==='旷课').length;
+  const late = DB.attend.filter(s=>s.type==='迟到').length;
   const clsMap = {}; list.forEach(s=>{ if(s.class_name) clsMap[s.class_name]=(clsMap[s.class_name]||0)+1; });
   const clsItems = Object.keys(clsMap).map(c=>({label:c,value:clsMap[c],color:'#0ea5e9'}));
   const clsSet = [...new Set(DB.students.map(s=>s.class_name).filter(Boolean))];
@@ -3614,9 +3650,9 @@ function viewAttend() {
       <button class="btn btn-primary btn-sm" data-act="attend-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>登记考勤</button>
     </div>
     <div class="kpis">
-      <div class="kpi danger"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-alert"/></svg>旷课人次</div><div class="kpi-v" data-num="${kuang}">0</div></div>
-      <div class="kpi warn"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-clock"/></svg>迟到人次</div><div class="kpi-v" data-num="${late}">0</div></div>
-      <div class="kpi brand"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-users"/></svg>记录总数</div><div class="kpi-v" data-num="${list.length}">0</div></div>
+      <button type="button" class="kpi kpi-filter danger${f.type === '旷课' ? ' is-filtered' : ''}" data-act="filter-shortcut" data-filter-group="attend" data-filter-type="旷课" aria-pressed="${f.type === '旷课'}"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-alert"/></svg>旷课人次</div><div class="kpi-v" data-num="${kuang}">0</div></button>
+      <button type="button" class="kpi kpi-filter warn${f.type === '迟到' ? ' is-filtered' : ''}" data-act="filter-shortcut" data-filter-group="attend" data-filter-type="迟到" aria-pressed="${f.type === '迟到'}"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-clock"/></svg>迟到人次</div><div class="kpi-v" data-num="${late}">0</div></button>
+      <button type="button" class="kpi kpi-filter brand${!f.type ? ' is-filtered' : ''}" data-act="filter-shortcut" data-filter-group="attend" data-filter-type="" aria-pressed="${!f.type}"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-users"/></svg>记录总数</div><div class="kpi-v" data-num="${DB.attend.length}">0</div></button>
     </div>
     ${clsItems.length?`<div class="card-bd" style="padding:6px 18px 0">${hBarChart(clsItems)}</div>`:''}
     <div class="toolbar">
@@ -3652,18 +3688,26 @@ function viewAttend() {
 }
 
 /* ---------- 11.9.3 工作日历与节点 ---------- */
+function nodeScope(s) {
+  if (s.status === 'done' || !s.due) return '';
+  const remaining = daysFromToday(s.due);
+  if (remaining === null) return '';
+  if (remaining < 0) return 'overdue';
+  return remaining <= (Number(s.remind_days) || 3) ? 'soon' : '';
+}
 function filterNode() {
   const f = app.filters.node;
   return DB.node.filter(s=>{
     if (f.status && s.status!==f.status) return false;
+    if (f.scope && nodeScope(s) !== f.scope) return false;
     if (f.q) { const t=(s.title+s.summary+(DUTY_MAP[s.category]?DUTY_MAP[s.category].n:'')).toLowerCase(); if (!t.includes(f.q.toLowerCase())) return false; }
     return true;
   }).sort((a,b)=> (a.due||'9999') < (b.due||'9999') ? -1 : 1);
 }
 function viewNode() {
   const f = app.filters.node, list = filterNode();
-  const soon = list.filter(s=>s.status!=='done' && s.due && daysFromToday(s.due)!==null && daysFromToday(s.due)<= (s.remind_days||3) && daysFromToday(s.due)>=0).length;
-  const overdue = list.filter(s=>s.status!=='done' && s.due && daysFromToday(s.due)<0).length;
+  const soon = DB.node.filter(s => nodeScope(s) === 'soon').length;
+  const overdue = DB.node.filter(s => nodeScope(s) === 'overdue').length;
   return `
   <div class="card">
     <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-flag"/></svg>工作日历与节点</h2>
@@ -3674,9 +3718,9 @@ function viewNode() {
       <button class="btn btn-primary btn-sm" data-act="node-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增节点</button>
     </div>
     <div class="kpis">
-      <div class="kpi danger"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-alert"/></svg>已逾期</div><div class="kpi-v" data-num="${overdue}">0</div></div>
-      <div class="kpi warn"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-clock"/></svg>临近提醒</div><div class="kpi-v" data-num="${soon}">0</div></div>
-      <div class="kpi brand"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-flag"/></svg>节点总数</div><div class="kpi-v" data-num="${list.length}">0</div></div>
+      <button type="button" class="kpi kpi-filter danger${f.scope === 'overdue' ? ' is-filtered' : ''}" data-act="filter-shortcut" data-filter-group="node" data-filter-scope="overdue" aria-pressed="${f.scope === 'overdue'}"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-alert"/></svg>已逾期</div><div class="kpi-v" data-num="${overdue}">0</div></button>
+      <button type="button" class="kpi kpi-filter warn${f.scope === 'soon' ? ' is-filtered' : ''}" data-act="filter-shortcut" data-filter-group="node" data-filter-scope="soon" aria-pressed="${f.scope === 'soon'}"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-clock"/></svg>临近提醒</div><div class="kpi-v" data-num="${soon}">0</div></button>
+      <button type="button" class="kpi kpi-filter brand${!f.scope ? ' is-filtered' : ''}" data-act="filter-shortcut" data-filter-group="node" data-filter-scope="" aria-pressed="${!f.scope}"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-flag"/></svg>节点总数</div><div class="kpi-v" data-num="${DB.node.length}">0</div></button>
     </div>
     <div class="toolbar">
       <div class="search"><svg class="ic ic-sm"><use href="#i-search"/></svg>
@@ -3687,6 +3731,7 @@ function viewNode() {
         <option value="doing"${f.status==='doing'?' selected':''}>进行中</option>
         <option value="done"${f.status==='done'?' selected':''}>已完成</option>
       </select>
+      ${f.scope ? '<button class="btn btn-sm" data-act="filter-clear" data-filter-group="node" data-filter-keys="scope">清除统计筛选</button>' : ''}
     </div>
     ${list.length?`
     <div class="tw"><table>
@@ -3743,6 +3788,8 @@ function filterWarn() {
   const f = app.filters.warn;
   return DB.warn.filter(s => {
     if (f.level && s.level !== f.level) return false;
+    if (f.scope === 'open' && s.resolved) return false;
+    if (f.scope === 'resolved' && !s.resolved) return false;
     if (f.q) { const t = (s.name+s.student_number+s.class_name+s.type+s.course+s.note).toLowerCase(); if (!t.includes(f.q.toLowerCase())) return false; }
     return true;
   }).sort((a,b)=> ((a.level==='红'?0:a.level==='橙'?1:2) - (b.level==='红'?0:b.level==='橙'?1:2)));
@@ -3754,9 +3801,9 @@ function warnLevelTag(l) {
 }
 function viewWarn() {
   const f = app.filters.warn, list = filterWarn();
-  const red = list.filter(s=>s.level==='红'&&!s.resolved).length;
-  const orange = list.filter(s=>s.level==='橙'&&!s.resolved).length;
-  const yellow = list.filter(s=>s.level==='黄'&&!s.resolved).length;
+  const red = DB.warn.filter(s=>s.level==='红'&&!s.resolved).length;
+  const orange = DB.warn.filter(s=>s.level==='橙'&&!s.resolved).length;
+  const yellow = DB.warn.filter(s=>s.level==='黄'&&!s.resolved).length;
   return `
   <div class="card">
     <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-alert"/></svg>学业预警台账</h2>
@@ -3767,9 +3814,9 @@ function viewWarn() {
       <button class="btn btn-primary btn-sm" data-act="warn-new"><svg class="ic ic-sm"><use href="#i-plus"/></svg>新增预警</button>
     </div>
     <div class="kpis">
-      <div class="kpi danger"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-alert"/></svg>红色未解除</div><div class="kpi-v" data-num="${red}">0</div></div>
-      <div class="kpi warn"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-clock"/></svg>橙色未解除</div><div class="kpi-v" data-num="${orange}">0</div></div>
-      <div class="kpi brand"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-book"/></svg>黄色未解除</div><div class="kpi-v" data-num="${yellow}">0</div></div>
+      <button type="button" class="kpi kpi-filter danger${f.scope === 'open' && f.level === '红' ? ' is-filtered' : ''}" data-act="filter-shortcut" data-filter-group="warn" data-filter-scope="open" data-filter-level="红" aria-pressed="${f.scope === 'open' && f.level === '红'}"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-alert"/></svg>红色未解除</div><div class="kpi-v" data-num="${red}">0</div></button>
+      <button type="button" class="kpi kpi-filter warn${f.scope === 'open' && f.level === '橙' ? ' is-filtered' : ''}" data-act="filter-shortcut" data-filter-group="warn" data-filter-scope="open" data-filter-level="橙" aria-pressed="${f.scope === 'open' && f.level === '橙'}"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-clock"/></svg>橙色未解除</div><div class="kpi-v" data-num="${orange}">0</div></button>
+      <button type="button" class="kpi kpi-filter brand${f.scope === 'open' && f.level === '黄' ? ' is-filtered' : ''}" data-act="filter-shortcut" data-filter-group="warn" data-filter-scope="open" data-filter-level="黄" aria-pressed="${f.scope === 'open' && f.level === '黄'}"><div class="kpi-l"><svg class="ic ic-sm"><use href="#i-book"/></svg>黄色未解除</div><div class="kpi-v" data-num="${yellow}">0</div></button>
     </div>
     <div class="warn-donut-wrap chart-panel-body" style="padding:14px 0 4px">
       <div class="chart-panel-copy"><div class="sub-hd"><svg class="ic ic-sm" style="color:var(--accent)"><use href="#i-chart"/></svg>预警等级分布（未解除）</div><strong>${red + orange + yellow}</strong><p>当前仍需跟进的学业预警，按风险等级拆分显示。</p><div class="mini-stat-list"><div class="mini-stat"><span>红色</span><b>${red} 人</b></div><div class="mini-stat"><span>橙色</span><b>${orange} 人</b></div><div class="mini-stat"><span>黄色</span><b>${yellow} 人</b></div></div></div>
@@ -3780,6 +3827,7 @@ function viewWarn() {
         <input class="inp" placeholder="搜索姓名、学号、班级、课程" data-filter="warn.q" value="${esc(f.q)}"></div>
       <select class="inp" style="width:auto;min-width:110px" data-filter="warn.level">
         <option value="">全部等级</option>${WARN_LEVELS.map(l=>`<option value="${l}"${f.level===l?' selected':''}>${l}色</option>`).join('')}</select>
+      ${(f.level || f.scope) ? '<button class="btn btn-sm" data-act="filter-clear" data-filter-group="warn" data-filter-keys="level,scope">清除统计筛选</button>' : ''}
     </div>
     ${list.length?`
     <div class="tw"><table>
@@ -4430,15 +4478,18 @@ function viewReport() {
   <div class="card">
     <div class="card-hd"><h2><svg class="ic" style="color:var(--accent)"><use href="#i-book"/></svg>一键生成工作小结</h2>
       <span class="sp"></span>
-      <button class="btn btn-sm" data-act="sum-week">本周小结</button>
-      <button class="btn btn-sm" data-act="sum-month">本月小结</button>
+      <button class="btn btn-sm" data-act="open-local-data" title="桌面版打开本机数据目录">打开本地数据目录</button>
+      <button class="btn btn-sm" data-act="ai-summary-roadmap">AI 写作（筹备中）</button>
+      <button class="btn btn-sm" data-act="sum-week">下载本周小结</button>
+      <button class="btn btn-sm" data-act="sum-month">下载本月小结</button>
       <button class="btn btn-sm" data-act="sum-copy"><svg class="ic ic-sm"><use href="#i-copy"/></svg>复制全文</button>
       <button class="btn btn-sm" data-act="sum-download">下载 TXT</button>
       <button class="btn btn-sm" data-act="print">打印 / 存 PDF</button>
     </div>
     <div class="card-bd">
+      <div class="banner banner-info"><strong>当前生成方式：</strong>按统计区间内的本机任务、谈话和重点关注记录自动整理，不调用 AI，不会补写未录入的事实。</div>
       <textarea class="inp" id="sum-text" rows="16" style="font-size:13.5px;line-height:1.85">${esc(buildSummary(R))}</textarea>
-      <div class="hint">文本可直接编辑后复制到学院要求的模板里；数据来源为本机记录，未上传任何服务器。</div>
+      <div class="hint">文本可直接编辑后复制到学院要求的模板里；数据来源为本机记录，未上传任何服务器。DeepSeek 等兼容大模型的个人密钥接入与辅助撰写，计划在后续版本提供。</div>
     </div>
   </div>`;
 }
@@ -6082,7 +6133,14 @@ function openImportPreview(preview, context) {
     onOpen(mask, mClose) {
       const confirm = $('[data-import-confirm]', mask);
       const sensitiveCheck = $('[data-sensitive-confirm]', mask);
-      if (sensitiveCheck) { confirm.disabled = true; sensitiveCheck.onchange = () => { confirm.disabled = !sensitiveCheck.checked; }; }
+      if (sensitiveCheck) {
+        confirm.setAttribute('aria-disabled', 'true');
+        confirm.title = '请先确认敏感信息保存提示';
+        sensitiveCheck.onchange = () => {
+          confirm.setAttribute('aria-disabled', sensitiveCheck.checked ? 'false' : 'true');
+          confirm.title = sensitiveCheck.checked ? '' : '请先确认敏感信息保存提示';
+        };
+      }
       $$('[data-import-use]', mask).forEach(button => { button.onclick = () => { importer.resolveRow(preview.id, button.dataset.importUse, 'use'); mClose(); openImportPreview(preview, ctx); }; });
       $$('[data-import-decision]', mask).forEach(button => { button.onclick = () => { importer.resolveRow(preview.id, button.dataset.row, button.dataset.importDecision); mClose(); openImportPreview(preview, ctx); }; });
       $('[data-import-report]', mask).onclick = () => download(`导入检查报告_${today()}.csv`, importer.reportCSV(preview), 'text/csv');
@@ -6107,6 +6165,13 @@ function openImportPreview(preview, context) {
        const cancelButton = $('[data-import-cancel]', mask);
        if (cancelButton) cancelButton.onclick = () => { if (!activeRunId || !importer.cancel(activeRunId)) return ui.toast('当前没有可取消的导入任务', 'warn'); cancelButton.disabled = true; confirm.disabled = true; ui.toast('已请求取消，正在保存断点…', 'warn', 2600); };
        confirm.onclick = async () => {
+        if (sensitiveCheck && !sensitiveCheck.checked) {
+          ui.toast('请先勾选“我已确认有必要在本机保存这些信息”后再导入', 'warn', 3600);
+          sensitiveCheck.focus();
+          const acknowledgement = sensitiveCheck.parentElement;
+          if (acknowledgement && typeof acknowledgement.scrollIntoView === 'function') acknowledgement.scrollIntoView({ block:'center', behavior:'smooth' });
+          return;
+        }
         const commit = importer.commitPreviewAsync;
         if (typeof commit !== 'function') return ui.toast('分段导入引擎尚未就绪，请刷新页面后重试', 'err', 4200);
         confirm.disabled = true;
@@ -6336,7 +6401,7 @@ function viewFiles() {
   const categories = [...new Set(V4_FILE_CATEGORIES.concat(files.map(file => file.category).filter(Boolean)))];
   const body = `<div class="banner banner-info"><strong>个人资料平台：</strong>上传假期去向表、德育考核表、政策文件、讲话稿或安全提示后，系统会按文件名自动分类、规范命名并保留原文件；桌面版会同步写入加密附件保险库，纳入整机迁移和备份。<div data-v4-vault-root class="tiny vault-status">正在检查本地归档位置…</div></div><div class="card"><div class="card-hd"><h2>本地文件与模板</h2><span class="sp"></span><span class="tiny">表单模板、政策文件和工作资料统一管理 · 支持搜索、下载、新版本和版本回退</span></div><div class="card-bd"><div class="v4-toolbar"><input class="inp" style="max-width:280px" data-v4-file-search value="${esc(state.fileQ || '')}" placeholder="搜索标题、标签、来源或场景"><select class="inp" data-v4-file-category><option value="">全部分类</option>${categories.map(value => `<option value="${esc(value)}"${value === category ? ' selected' : ''}>${esc(value)}</option>`).join('')}</select><button class="btn btn-sm" data-act="v4-file-export">导出选中</button><button class="btn btn-sm btn-danger" data-act="v4-file-delete-selected">删除选中</button></div><div class="v4-list">${rows || '<div class="empty">还没有文件条目。可以先上传假期去向表、德育考核表、政策文件或讲话稿。</div>'}</div></div></div>`;
   setTimeout(refreshFileVaultStatus, 0);
-  return v4Page('分类文件库', '按场景、标签和关键词管理办公审批表、学生事务模板与通知文件。', body, '<button class="btn" data-act="v4-file-upload">上传表单或资料</button><button class="btn btn-primary" data-act="v4-file-new">新建文件条目</button>');
+  return v4Page('分类文件库', '按场景、标签和关键词管理办公审批表、学生事务模板与通知文件。', body, '<button class="btn" data-act="open-local-data">打开本地数据目录</button><button class="btn" data-act="v4-file-upload">上传表单或资料</button><button class="btn btn-primary" data-act="v4-file-new">新建文件条目</button>');
 }
 function viewEmployment() {
   const resources = v4Collection('v4_employment_resources');
@@ -6365,7 +6430,7 @@ function viewBackupV4() {
   <div class="card"><div class="card-hd"><h2>手机与换机协同</h2></div><div class="card-bd"><div class="banner banner-info">当前版本不连接云端，也没有账号服务。手机与桌面端通过工作包手动往返：桌面导出 → 手机网页导入并修改 → 手机导出 → 桌面选择合并或覆盖。覆盖前会自动保存一份本机回退快照。</div><div class="v4-toolbar"><button class="btn btn-primary" data-act="v4-phone-export">一键导出换机包</button><button class="btn" data-act="v4-phone-import">一键导入换机包</button></div></div></div>
   <div class="card"><div class="card-hd"><h2>测试数据快照</h2><span class="sp"></span><span class="tiny">先保存样例 A，再清空并测试样例 B；恢复不会依赖原始 Excel 文件。</span></div><div class="card-bd"><div class="v4-toolbar"><button class="btn btn-primary" data-act="v4-snapshot-create">保存当前为快照</button><button class="btn btn-danger" data-act="v4-snapshot-clear">清空当前工作区</button><select class="inp" data-v4-snapshot-select><option value="">选择要恢复的快照</option></select><button class="btn" data-act="v4-snapshot-restore">恢复选中快照</button></div><div class="tiny" data-v4-snapshot-status>快照列表加载中…</div></div></div>`;
   setTimeout(refreshSnapshotSelector, 0);
-  return v4Page('备份与迁移', '所有数据、照片和文件统一通过版本化交换包迁移；自动备份在下次启动时补执行。', body, '<button class="btn" data-act="pkg-export">导出交换包</button>');
+  return v4Page('备份与迁移', '所有数据、照片和文件统一通过版本化交换包迁移；自动备份在下次启动时补执行。', body, '<button class="btn" data-act="open-local-data">打开本地数据目录</button><button class="btn" data-act="pkg-export">导出交换包</button>');
 }
 
 const VIEWS = {
@@ -6459,8 +6524,16 @@ function paintWho() {
 }
 function applyTheme(t, persist) {
   const root = document.documentElement;
-  if (t === 'dark') root.setAttribute('data-theme', 'dark');
-  else root.removeAttribute('data-theme');
+  if (t === 'dark') {
+    root.setAttribute('data-theme', 'dark');
+    ['--accent', '--signal', '--bg'].forEach(name => root.style.removeProperty(name));
+  } else {
+    root.removeAttribute('data-theme');
+    const preset = THEME_PRESETS[DB.settings.ui && DB.settings.ui.preset] || THEME_PRESETS.blueprint;
+    root.style.setProperty('--accent', preset.accent);
+    root.style.setProperty('--signal', preset.signal);
+    root.style.setProperty('--bg', preset.bg);
+  }
   const btn = $('#btn-theme');
   if (btn) { const u = btn.querySelector('use'); if (u) u.setAttribute('href', t === 'dark' ? '#i-sun' : '#i-moon'); }
   DB.settings.theme = t;
@@ -6472,7 +6545,7 @@ const THEME_PRESETS = {
   ocean: { label:'海洋青', theme:'light', accent:'#075985', signal:'#0891b2', bg:'#edf7fa' },
   forest: { label:'森林绿', theme:'light', accent:'#166534', signal:'#0f766e', bg:'#eef7f0' },
   sand: { label:'暖沙', theme:'light', accent:'#92400e', signal:'#b45309', bg:'#faf5ed' },
-  midnight: { label:'深色蓝图', theme:'dark', accent:'#4d7fd6', signal:'#2dd0e0', bg:'#0c1322' },
+  midnight: { label:'低刺激深色', theme:'dark', accent:'#82a9d8', signal:'#79b8af', bg:'#191b1f' },
 };
 function ensureV39Settings() {
   DB.settings = DB.settings || {};
@@ -6542,10 +6615,8 @@ const theme = {
   applyPreset(name, persist) {
     ensureV39Settings();
     const p = THEME_PRESETS[name] || THEME_PRESETS.blueprint;
-    const root = document.documentElement;
-    root.style.setProperty('--accent', p.accent); root.style.setProperty('--signal', p.signal); root.style.setProperty('--bg', p.bg);
-    applyTheme(p.theme, false);
     DB.settings.ui.preset = Object.keys(THEME_PRESETS).includes(name) ? name : 'blueprint';
+    applyTheme(p.theme, false);
     if (persist !== false) save('settings');
     this.applyBackground(DB.settings.ui.background, false);
   },
@@ -6657,6 +6728,25 @@ function v4NormalizeFileTitle(name, category) {
 }
 
 const ACTS = {
+  'filter-shortcut': (id, btn) => {
+    const group = btn && btn.dataset && btn.dataset.filterGroup;
+    const target = group && app.filters[group];
+    if (!target) return;
+    const values = Object.entries(btn.dataset)
+      .filter(([key]) => key.startsWith('filter') && key !== 'filterGroup')
+      .map(([key, value]) => [key.slice(6, 7).toLowerCase() + key.slice(7), value]);
+    const active = values.length > 0 && values.every(([key, value]) => String(target[key] || '') === value);
+    if ((group === 'pleave' || group === 'node') && values.some(([key]) => key === 'scope')) target.status = '';
+    values.forEach(([key, value]) => { target[key] = active ? '' : value; });
+    render();
+    ui.toast(active ? '已清除统计筛选' : '已按统计卡筛选当前记录', 'ok', 1600);
+  },
+  'filter-clear': (id, btn) => {
+    const target = btn && app.filters[btn.dataset.filterGroup];
+    if (!target) return;
+    String(btn.dataset.filterKeys || '').split(',').filter(Boolean).forEach(key => { target[key] = ''; });
+    render();
+  },
   'v4-heat-filter': (id, btn) => { const building = btn.dataset.heatBuilding || ''; const level = btn.dataset.heatLevel || ''; const next = { q:building }; if (level === '重点关注') next.focus = '__any'; if (level === '学业预警') next.focus = '__crisis'; app.filters.students = Object.assign({}, app.filters.students, next); go('students'); ui.toast(`已跳转到${building}学生明细`, 'ok', 1600); },
   'v4-modules-config': () => {
     const protectedViews = new Set(['home', 'students', 'bridge']);
@@ -6810,7 +6900,7 @@ const ACTS = {
     const t = DB.tasks.find(x => x.id === id); if (!t) return;
     t.status = t.status === 'done' ? 'todo' : 'done';
     t.done_at = t.status === 'done' ? today() : '';
-    save('tasks'); render();
+    save('tasks'); render(); ui.toast(t.status === 'done' ? '任务已标记为完成' : '任务已恢复为未完成', 'ok');
   },
   'task-done': id => {
     const t = DB.tasks.find(x => x.id === id); if (!t) return;
@@ -6824,6 +6914,13 @@ const ACTS = {
     app.bulk = app.bulk || { on: false, sel: new Set() };
     if (app.bulk.sel.has(id)) app.bulk.sel.delete(id); else app.bulk.sel.add(id);
     const c = $('#bulk-count'); if (c) c.textContent = app.bulk.sel.size;
+  },
+  'bulk-select-all': () => {
+    app.bulk = app.bulk || { on: true, sel: new Set() };
+    const visibleIds = filterTasks().map(task => task.id);
+    const selected = visibleIds.length > 0 && visibleIds.every(taskId => app.bulk.sel.has(taskId));
+    visibleIds.forEach(taskId => { if (selected) app.bulk.sel.delete(taskId); else app.bulk.sel.add(taskId); });
+    render();
   },
   'bulk-done': () => {
     if (!app.bulk || !app.bulk.sel.size) return;
@@ -6883,6 +6980,7 @@ const ACTS = {
   },
   'talk-view': id => {
     const t = DB.talks.find(x => x.id === id); if (!t) return;
+    const labels = { summary:'谈话内容', judge:'问题研判', action:'处理措施' };
     ui.modal({
       title:`谈话记录 · ${t.student_name}`,
       body:`<div class="grid3" style="gap:9px;margin-bottom:14px">
@@ -6890,7 +6988,7 @@ const ACTS = {
           <div><div class="tiny">方式</div><div>${esc(t.way)}</div></div>
           <div><div class="tiny">主题</div><div>${dutyTag(t.duty)}</div></div></div>
         ${['summary','judge','action'].map(k => t[k] ? `<div style="margin-bottom:12px">
-          <div class="lab" style="margin-bottom:4px">${esc(schema.talk[k] ? schema.talk[k].label : k)}</div>
+          <div class="lab" style="margin-bottom:4px">${esc(labels[k] || k)}</div>
           <div style="background:var(--line-2);padding:10px 12px;border-radius:8px;font-size:13.3px;line-height:1.75;white-space:pre-wrap">${esc(t[k])}</div></div>` : '').join('')}
         ${t.need_follow ? `<div class="banner ${t.done_follow ? 'banner-info' : 'banner-warn'}" style="margin:0">
           <svg class="ic ic-sm"><use href="#i-clock"/></svg>
@@ -7148,6 +7246,23 @@ const ACTS = {
       }, true);
   },
   'clear-all': clearAll,
+  'open-local-data': async () => {
+    if (!window.cwbDesktop || typeof window.cwbDesktop.openDataFolder !== 'function') {
+      ui.toast('当前为网页离线版，本地数据由浏览器保管；桌面版可直接打开数据目录', 'warn', 3600);
+      return;
+    }
+    try {
+      await window.cwbDesktop.openDataFolder();
+      ui.toast('已打开本地数据目录', 'ok');
+    } catch (error) {
+      ui.toast(error && error.message ? error.message : '打开本地数据目录失败', 'err', 3600);
+    }
+  },
+  'ai-summary-roadmap': () => ui.modal({
+    title:'AI 辅助写作（筹备中）',
+    body:'<p style="margin-top:0;line-height:1.8">当前工作小结只会汇总本机已记录的任务、谈话和关注事项，不调用 AI，也不会生成未经记录的内容。</p><p style="line-height:1.8">后续版本计划支持接入 DeepSeek 及其他兼容接口：由使用者自行填写个人密钥，先选择可参与整理的本地记录，再生成可编辑的周报、月报或专题小结。接入前会单独说明数据范围与发送确认，默认不上传任何记录。</p>',
+    footer:'<button class="btn btn-primary" data-close>我知道了</button>',
+  }),
   'sum-copy': () => {
     const el = $('#sum-text'); el.select(); el.setSelectionRange(0, 99999);
     navigator.clipboard ? navigator.clipboard.writeText(el.value).then(() => ui.toast('已复制到剪贴板', 'ok'))

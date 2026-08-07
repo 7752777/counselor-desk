@@ -41,9 +41,13 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
   await sleep(20);
   const sensitiveModal = d.querySelector('#modal-root .modal');
   const confirm = sensitiveModal.querySelector('[data-import-confirm]');
-  assert.equal(confirm.disabled, true, 'sensitive preview must start with commit disabled');
+  assert.equal(confirm.disabled, false, 'sensitive preview keeps confirm clickable so the user can receive guidance');
+  assert.equal(confirm.getAttribute('aria-disabled'), 'true', 'sensitive preview must visually communicate the acknowledgement requirement');
+  confirm.click();
+  await sleep(20);
+  assert.match(d.querySelector('#toast-root').textContent, /先勾选.*确认/, 'confirming without acknowledgement must explain the next step');
   sensitiveModal.querySelector('[data-sensitive-confirm]').click();
-  assert.equal(confirm.disabled, false, 'explicit sensitive acknowledgement enables commit');
+  assert.equal(confirm.getAttribute('aria-disabled'), 'false', 'explicit sensitive acknowledgement clears the warning state');
 
   assert.deepEqual(errors, []);
   dom.window.close();

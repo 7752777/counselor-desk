@@ -4,6 +4,7 @@ contextBridge.exposeInMainWorld('cwbDesktop', Object.freeze({
   chooseBackupFolder: () => ipcRenderer.invoke('desktop:choose-backup-folder'),
   saveBackup: (envelope, folder) => ipcRenderer.invoke('desktop:save-backup', envelope, folder),
   openBackup: () => ipcRenderer.invoke('desktop:open-backup'),
+  openDataFolder: () => ipcRenderer.invoke('desktop:open-data-folder'),
   getVaultStatus: () => ipcRenderer.invoke('desktop:get-vault-status'),
   setBackupSecret: (secret) => ipcRenderer.invoke('desktop:set-backup-secret', secret),
   getBackupSecret: () => ipcRenderer.invoke('desktop:get-backup-secret'),

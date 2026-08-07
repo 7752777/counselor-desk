@@ -152,6 +152,13 @@ ipcMain.handle('desktop:open-backup', async () => {
   try { return JSON.parse(text); } catch (_) { throw new Error('BACKUP_FILE_INVALID'); }
 });
 
+ipcMain.handle('desktop:open-data-folder', async () => {
+  const folder = await ensureDir(app.getPath('userData'));
+  const error = await shell.openPath(folder);
+  if (error) throw new Error('DATA_FOLDER_OPEN_FAILED');
+  return { path: folder };
+});
+
 ipcMain.handle('desktop:get-vault-status', async () => ({ available: safeStorage.isEncryptionAvailable(), root: userDataPath('vault') }));
 ipcMain.handle('desktop:set-backup-secret', async (_event, secret) => {
   if (!secret || String(secret).length < 8 || !safeStorage.isEncryptionAvailable()) return false;
