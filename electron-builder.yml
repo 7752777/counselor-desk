@@ -20,8 +20,15 @@ win:
     - portable
   requestedExecutionLevel: asInvoker
 nsis:
-  oneClick: false
-  allowToChangeInstallationDirectory: true
+  oneClick: true
+  perMachine: false
+  allowToChangeInstallationDirectory: false
   createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: 辅导员工作台
+  runAfterFinish: true
+  deleteAppDataOnUninstall: false
+  installerLanguages:
+    - zh_CN
 portable:
   artifactName: counselor-desk-${version}-portable.${ext}

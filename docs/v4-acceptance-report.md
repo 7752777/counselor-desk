@@ -10,8 +10,8 @@
 - 党建、班团、文件库、就业签名清单、ECharts 图表、三视图、首页任务入口、Electron IPC 白名单和 SQLite 加密仓储均通过对应测试。
 - 就业资源清单仅接受 ECDSA-P256-SHA256 签名；纯摘要算法会被拒绝，避免把可重算摘要误当作来源认证。
 - 静态检查、公开 API 检查、29 视图回归、依赖生产审计均通过。
-- 桌面版已重新构建并完成便携包 5 秒启动冒烟；最新内部验证产物为安装包 `D:\counselor-desk-v4-release-final17`（SHA-256 `B1FA9561D9D4BFAF4F65B9623905F5E4E858280ACFD75A08A7FF664FEB9FD4B`）和便携包 `D:\counselor-desk-v4-release-final18`（SHA-256 `D4D588B418FF336A51953B55C680DF1001F49ACB39EFA85E9DB9C056A08F7A57`）。
-- 单文件网页版已重新生成至 `D:\counselor-desk-v4-web-final6\辅导员工作台.html`，SHA-256 为 `A98FDEBBDA667EB6020D843DE67AE83D45BAD03EE2D003A949153A8F7BB1F82D`。
+- 本轮桌面构建使用仓库相对产物目录 `output/desktop/`；为避开构建机 C 盘空间限制，验证时将该被忽略目录临时映射到另一块本地磁盘，绝对路径不属于公开配置。当前安装包 `counselor-desk-4.0.0-x64.exe` SHA-256 为 `CD0C74309C5CDA033237379299F9FD972582CDC8CD0A06740F3E97E7E48269A5`，便携包 `counselor-desk-4.0.0-portable.exe` SHA-256 为 `4FA51F5EF2A3B68CD8E4E35F834E7332A899362AB734B4BDBC1EC6229DE92DDF`。
+- NSIS 安装包在临时目录静默安装返回 `ExitCode=0`，安装目录包含 77 个文件；安装后的主程序和便携版均以全新用户数据目录启动成功，标题、首次使用引导、示例数据和资料库模块均可加载。分类文件库显示的保险库路径与启动时指定的用户数据目录一致。
 
 ## 未满足正式公开发布门禁
 
@@ -20,6 +20,7 @@
 - 针对用户提供的 `学生基本信息大表.xls`：原始预览识别为 99 行、100 列，自动映射发现重复性别列、学籍状态枚举不在当前标准值、身份证号校验失败，因此 99 行均被拦截；按导入向导将冲突/不兼容列转为自定义字段后，99/99 行预览通过并完成分段提交，未把原始文件写入仓库。
 
 - 当前工作区没有组织代码签名证书。Windows 安装包和便携包虽已构建并启动冒烟通过，但 `Get-AuthenticodeSignature` 状态为 `NotSigned`；`scripts/check-release-signing.js` 会刻意阻断正式发布。
+- 本次验证机器为 Windows 10 Home，`HyperVisorPresent=False`，且未检测到可用的 Hyper-V、VirtualBox、QEMU 或 WSL；因此本记录包含宿主机干净用户数据测试，不声称已经完成虚拟机测试。
 - 99.7% 导入成功率仍是运营指标，不在脱敏样本不少于 100 份、覆盖不少于 20 种格式并保存追溯报告前对外宣称。
 - 已提供 `scripts/import-operations-report.js`：它对脱敏样本清单计算样本数、格式数、成功率和源清单 SHA-256；条件不足时以非零状态退出，测试夹具不作为真实运营证据。
 - 发布文档已补齐：[迁移与备份说明](v4-migration-and-backup.md)、[隐私说明](v4-privacy.md)、[党建规则版本说明](v4-party-rules.md) 和 [签名发布流程](v4-release-signing.md)。
@@ -40,6 +41,13 @@ node scripts/real-import-pilot.js --root <脱敏文件目录> --output <试跑�
 ```
 
 签名证书配置和发布流程见 [v4-release-signing.md](v4-release-signing.md)。
+
+## 2026-08-07 桌面安装链路复验
+
+- 安装配置：NSIS `oneClick=true`、`perMachine=false`、`runAfterFinish=true`，创建桌面和开始菜单快捷方式，卸载时保留用户数据。
+- 安装验证：`counselor-desk-4.0.0-x64.exe /S /D=<临时目录>` 返回 `0`；安装后的 `辅导员工作台.exe` 通过 Chrome DevTools 协议加载页面。
+- 便携验证：`counselor-desk-4.0.0-portable.exe` 在全新 `--user-data-dir=<临时目录>` 下加载页面，页面标题为“辅导员工作台”，首页包含首次引导、示例数据、政策智库和模板库入口。
+- 路径验证：进入“模板库 → 分类文件库”后，界面显示“桌面版已启用加密附件保险库”及实际保险库路径；文档不再写死旧构建机的 `...final*` 临时目录。
 # v4.0 归位与桌面链路复验补充
 
 ## 2026-08-06 本轮复验

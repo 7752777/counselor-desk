@@ -64,13 +64,7 @@
 
 - [ ] **Step 2: 让四套测试从项目依赖加载 jsdom**
 
-在四个测试文件中把机器专属的：
-
-```js
-const { JSDOM, VirtualConsole } = require('C:/Users/wby/.workbuddy/binaries/node/workspace/node_modules/jsdom');
-```
-
-改成：
+在四个测试文件中移除机器专属路径，统一使用项目依赖：
 
 ```js
 const { JSDOM, VirtualConsole } = require('jsdom');
