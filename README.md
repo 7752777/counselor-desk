@@ -69,7 +69,7 @@
 
 不想安装时下载 `辅导员工作台-v4.0.0-网页离线版.html`，双击即可离线使用。网页版本的数据保存在当前浏览器中；换电脑前请在工作台内导出备份或手机工作包，不要只复制 HTML 文件。
 
-macOS 用户从 GitHub 体验版附件下载 `辅导员工作台-v4.0.0-macOS-安装版.dmg`，打开后将“辅导员工作台”拖入“应用程序”。该包同时支持 Intel 和 Apple Silicon；当前公开构建未配置 Apple Developer 签名与公证，首次打开若被 Gatekeeper 拦截，请在“系统设置 → 隐私与安全性”中确认后再启动。Release 中提供 `SHA256校验和.txt` 供下载后核对；正式签名包需由维护者另行发布。完整步骤见[桌面版安装与数据路径](./docs/v4-desktop-installation.md)。
+macOS 用户从 GitHub 体验版附件下载 `辅导员工作台-v4.0.0-macOS-安装版.dmg`，打开后将“辅导员工作台”拖入“应用程序”。该包同时支持 Intel 和 Apple Silicon；当前公开构建未配置 Apple Developer 签名与公证，首次打开若被 Gatekeeper 拦截，请在“系统设置 → 隐私与安全性”中确认后再启动。Release 分别提供 `Windows-SHA256校验和.txt` 与 `macOS-SHA256校验和.txt` 供下载后核对；正式签名包需由维护者另行发布。完整步骤见[桌面版安装与数据路径](./docs/v4-desktop-installation.md)。
 
 桌面版的真实附件保险库路径请在“模板库 → 分类文件库”页面查看“桌面版已启用加密附件保险库”提示。仓库的 `output/desktop/` 只是开发者构建产物目录，不是用户数据目录。完整步骤见[桌面版安装与数据路径](./docs/v4-desktop-installation.md)。
 
