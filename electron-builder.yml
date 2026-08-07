@@ -5,6 +5,7 @@ icon: assets/app-icon.svg
 directories:
   output: output/desktop
   buildResources: assets
+npmRebuild: false
 files:
   - desktop/**
   - index.html

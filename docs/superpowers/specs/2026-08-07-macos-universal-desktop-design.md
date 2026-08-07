@@ -30,7 +30,7 @@ electron-builder 配置增加：
 - 通用架构由 `pnpm run desktop:build:mac` 传入 `--mac --universal`，避免 Windows 构建机误报 macOS 包已完成；
 - 代码签名自动发现默认关闭，只有 CI 明确注入证书变量时才进入签名/公证流程。
 
-GitHub Actions 使用 `macos-14` runner，同时下载 x64 与 arm64 Electron 运行时并生成 universal 包。每次推送到 `master` 或手动触发时上传构建 artifact；标签发布仍由维护者在签名门禁通过后选择是否发布到 Release。
+GitHub Actions 使用 `macos-15-intel` runner，同时下载 x64 与 arm64 Electron 运行时并生成 universal 包。每次推送到 `master` 或手动触发时上传构建 artifact；标签发布仍由维护者在签名门禁通过后选择是否发布到 Release。
 
 ## 数据与安全
 
