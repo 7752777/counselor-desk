@@ -1,5 +1,6 @@
 appId: cn.counselordesk.workbench
 productName: 辅导员工作台
+executableName: counselor-desk
 artifactName: counselor-desk-${version}-${arch}.${ext}
 icon: assets/app-icon.svg
 directories:
@@ -18,22 +19,15 @@ files:
   - THIRD-PARTY-NOTICES.md
 win:
   target:
-    - nsis
-    - portable
+    - msi
   requestedExecutionLevel: asInvoker
-nsis:
+msi:
   oneClick: true
   perMachine: false
-  allowToChangeInstallationDirectory: false
   createDesktopShortcut: true
   createStartMenuShortcut: true
   shortcutName: 辅导员工作台
   runAfterFinish: true
-  deleteAppDataOnUninstall: false
-  installerLanguages:
-    - zh_CN
-portable:
-  artifactName: counselor-desk-${version}-portable.${ext}
 mac:
   category: public.app-category.education
   target:

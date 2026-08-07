@@ -11,8 +11,8 @@
 - 就业资源清单仅接受 ECDSA-P256-SHA256 签名；纯摘要算法会被拒绝，避免把可重算摘要误当作来源认证。
 - 静态检查、公开 API 检查、29 视图回归、依赖生产审计均通过。
 - macOS 通用桌面包已由 [GitHub Actions run #6](https://github.com/7752777/counselor-desk/actions/runs/31145152289) 在 `macos-15-intel` 上构建成功；DMG/ZIP 架构校验、Bundle ID 校验均通过，并上传 artifact `counselor-desk-36f9ebe22d7718beb232e89bffcd3171f3e0bb36-mac-universal`（artifact digest：`sha256:b933739ed26904629eb746195099d78e1999c1f87c8173d4bfffbd14dde6a6c9`）。
-- 本轮桌面构建使用仓库相对产物目录 `output/desktop/`；为避开构建机 C 盘空间限制，验证时将该被忽略目录临时映射到另一块本地磁盘，绝对路径不属于公开配置。当前安装包 `counselor-desk-4.0.0-x64.exe` SHA-256 为 `CD0C74309C5CDA033237379299F9FD972582CDC8CD0A06740F3E97E7E48269A5`，便携包 `counselor-desk-4.0.0-portable.exe` SHA-256 为 `4FA51F5EF2A3B68CD8E4E35F834E7332A899362AB734B4BDBC1EC6229DE92DDF`。
-- NSIS 安装包在临时目录静默安装返回 `ExitCode=0`，安装目录包含 77 个文件；安装后的主程序和便携版均以全新用户数据目录启动成功，标题、首次使用引导、示例数据和资料库模块均可加载。分类文件库显示的保险库路径与启动时指定的用户数据目录一致。
+- 本轮桌面构建使用仓库相对产物目录 `output/desktop/`；为避开构建机 C 盘空间限制，验证时将该被忽略目录临时映射到另一块本地磁盘，绝对路径不属于公开配置。当前 Windows MSI 安装包 `counselor-desk-4.0.0-x64.msi` SHA-256 为 `CAF1EE81B46411D3B50B21EDB116EC369CD430D034638784C0ABB0E5A31E3E07`。
+- MSI 安装包在当前用户目录修复安装返回 `ExitCode=0`；安装后的 `counselor-desk.exe` 为完整 210,149,888 字节主程序，并以全新用户数据目录启动成功，页面标题为“辅导员工作台”。分类文件库显示的保险库路径与启动时指定的用户数据目录一致。
 
 ## 未满足正式公开发布门禁
 
@@ -46,9 +46,9 @@ node scripts/real-import-pilot.js --root <脱敏文件目录> --output <试跑�
 
 ## 2026-08-07 桌面安装链路复验
 
-- 安装配置：NSIS `oneClick=true`、`perMachine=false`、`runAfterFinish=true`，创建桌面和开始菜单快捷方式，卸载时保留用户数据。
-- 安装验证：`counselor-desk-4.0.0-x64.exe /S /D=<临时目录>` 返回 `0`；安装后的 `辅导员工作台.exe` 通过 Chrome DevTools 协议加载页面。
-- 便携验证：`counselor-desk-4.0.0-portable.exe` 在全新 `--user-data-dir=<临时目录>` 下加载页面，页面标题为“辅导员工作台”，首页包含首次引导、示例数据、政策智库和模板库入口。
+- 安装配置：MSI `oneClick=true`、`perMachine=false`、`runAfterFinish=true`，创建桌面和开始菜单快捷方式，卸载时保留用户数据。
+- Windows 发行格式：NSIS 安装版和便携版在本机构建后未通过解包启动验收，因此不作为体验发布附件；当前使用 MSI 作为 Windows 安装包，零安装场景使用网页离线版。
+- MSI 安装验证：`msiexec /i counselor-desk-4.0.0-x64.msi /qn REINSTALL=ALL REINSTALLMODE=vomus` 返回 `0`；安装后的 `counselor-desk.exe` 通过 Chrome DevTools 协议加载页面，标题为“辅导员工作台”。
 - 路径验证：进入“模板库 → 分类文件库”后，界面显示“桌面版已启用加密附件保险库”及实际保险库路径；文档不再写死旧构建机的 `...final*` 临时目录。
 # v4.0 归位与桌面链路复验补充
 

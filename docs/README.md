@@ -28,6 +28,7 @@
 - [隐私说明](./v4-privacy.md)
 - [党建规则版本说明](./v4-party-rules.md)
 - [桌面版发布签名流程](./v4-release-signing.md)
+- [桌面体验版下载与安装](./v4-desktop-installation.md)
 - [v4.0 验收报告](./v4-acceptance-report.md)
 
 ### 开发与贡献

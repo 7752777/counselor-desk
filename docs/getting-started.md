@@ -7,21 +7,21 @@
 | 形态 | 下载/入口 | 适合场景 | 数据位置 |
 | --- | --- | --- | --- |
 | 单 HTML 网页版 | 直接打开发布包中的 `辅导员工作台.html`，或仓库内的 `index.html` | 零安装、离线查看、临时手机录入 | 浏览器 IndexedDB |
-| Windows 桌面版 | `counselor-desk-4.0.0-x64.exe` 或 `counselor-desk-4.0.0-portable.exe` | 日常固定办公、SQLite 与附件保险库 | 当前 Windows 用户的 Electron 数据目录 |
-| macOS 桌面版 | `counselor-desk-4.0.0-mac-universal.dmg` 或同名 ZIP | Intel 与 Apple Silicon Mac | 当前 macOS 用户的 Electron 数据目录 |
+| Windows 桌面版 | [体验版下载页](https://github.com/7752777/counselor-desk/releases)中的 `辅导员工作台-v4.0.0-Windows-安装版.msi` | 日常固定办公、SQLite 与附件保险库 | 当前 Windows 用户的 Electron 数据目录 |
+| macOS 桌面版 | [体验版下载页](https://github.com/7752777/counselor-desk/releases)中的 `辅导员工作台-v4.0.0-macOS-安装版.dmg` 或“macOS-压缩包” | Intel 与 Apple Silicon Mac | 当前 macOS 用户的 Electron 数据目录 |
 
 ## Windows
 
-1. 从 GitHub Release 下载 `counselor-desk-4.0.0-x64.exe`。
+1. 从 [GitHub 体验版下载页](https://github.com/7752777/counselor-desk/releases)下载 `辅导员工作台-v4.0.0-Windows-安装版.msi`。
 2. 双击安装。安装器按当前用户安装，不要求管理员权限，会创建桌面/开始菜单入口并在结束后启动。
-3. 不想安装时使用 `counselor-desk-4.0.0-portable.exe`；便携版不会把数据库放进 EXE 文件旁边。
+3. 不想安装时使用 `辅导员工作台-v4.0.0-网页离线版.html`；网页版本的数据保存在当前浏览器，不会写入 MSI 安装目录。
 4. 首次启动选择“体验示例”“正式初始化”或“从备份恢复”。
 
 完整安装、卸载和数据路径说明见[桌面版安装与数据路径](./v4-desktop-installation.md)。当前公开 Windows 包未配置组织代码签名，正式发布前应核对 SHA-256 并完成签名。
 
 ## macOS
 
-1. 从 GitHub Release 或[macOS workflow artifact](https://github.com/7752777/counselor-desk/actions/runs/31145152289) 下载 `counselor-desk-4.0.0-mac-universal.dmg`。
+1. 从 [GitHub 体验版下载页](https://github.com/7752777/counselor-desk/releases) 下载 `辅导员工作台-v4.0.0-macOS-安装版.dmg`。
 2. 打开 DMG，将“辅导员工作台”拖到“应用程序”。ZIP 版本解压后执行相同操作。
 3. Intel 和 Apple Silicon 共用一个 universal 包，不需要选择架构。
 4. 当前公开包未签名/公证。若 Gatekeeper 阻止首次打开，请确认来源后在“系统设置 → 隐私与安全性”中允许本次启动。

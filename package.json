@@ -25,7 +25,7 @@
     "test:import-scale": "node tests/import-scale.js",
     "test:import-operations-report": "node tests/import-operations-report.js",
     "test:v40": "node tests/v40-core.js && node tests/v40-runtime.js && node tests/electron-surface.js && node scripts/build-release.js output/v4-preview.html && node tests/v40-ui.js && node tests/v40-import-pipeline.js && node tests/v40-import-acceptance.js && node tests/v40-performance-browser.js && node tests/v40-backup-schedule.js && node tests/v40-migration-custom.js && node tests/v40-party-rules.js && node tests/v40-employment-manifest.js && node tests/v40-backup-attachments.js && node tests/v40-portable-attachments.js && node tests/v40-files.js && node tests/v40-idb-migration-browser.js && node tests/v40-browser-storage.js",
-    "test:release": "node tests/release-checks.js",
+    "test:release": "node tests/release-checks.js && node tests/release-workflow.js && node tests/electron-package-config.js",
     "test:signing": "node scripts/check-release-signing.js output/desktop",
     "build:release": "node scripts/build-release.js",
     "build:package": "node scripts/build-package.js",

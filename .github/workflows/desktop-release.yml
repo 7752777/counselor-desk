@@ -1,0 +1,169 @@
+name: 发布桌面端体验包
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: desktop-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  windows:
+    name: 构建 Windows 安装包
+    runs-on: windows-latest
+    timeout-minutes: 25
+    env:
+      CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+
+    steps:
+      - name: 检出源码
+        uses: actions/checkout@v4
+
+      - name: 设置 pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.9.0
+
+      - name: 设置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+
+      - name: 验证发布面
+        run: |
+          pnpm run lint
+          pnpm run check:public
+          pnpm run test:release
+          node --check desktop/main.cjs
+          node --check desktop/preload.cjs
+          node --check desktop/sqlite-store.cjs
+
+      - name: 构建 Windows 与网页包
+        run: |
+          pnpm run desktop:build:win
+          pnpm run build:release
+
+      - name: 整理中文发布文件名
+        shell: pwsh
+        run: |
+          $buildDir = 'output/desktop'
+          $releaseDir = 'release-assets'
+          $version = node -p "require('./package.json').version"
+          New-Item -ItemType Directory -Path $releaseDir -Force | Out-Null
+          $installer = @(Get-ChildItem -LiteralPath $buildDir -File -Filter 'counselor-desk-*-x64.msi')
+          if ($installer.Count -ne 1) { throw "Expected one installer, found $($installer.Count)" }
+          Copy-Item -LiteralPath $installer[0].FullName -Destination (Join-Path $releaseDir "辅导员工作台-v$version-Windows-安装版.msi")
+          Copy-Item -LiteralPath 'output/辅导员工作台.html' -Destination (Join-Path $releaseDir "辅导员工作台-v$version-网页离线版.html")
+
+      - name: 上传 Windows 发布文件
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-windows
+          if-no-files-found: error
+          path: release-assets/*
+
+  macos:
+    name: 构建 macOS 通用包
+    runs-on: macos-15-intel
+    timeout-minutes: 30
+    env:
+      CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+
+    steps:
+      - name: 检出源码
+        uses: actions/checkout@v4
+
+      - name: 设置 pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.9.0
+
+      - name: 设置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+
+      - name: 验证并构建 macOS 通用包
+        run: |
+          pnpm run lint
+          pnpm run check:public
+          pnpm run test:release
+          pnpm run desktop:build:mac
+
+      - name: 整理中文发布文件名
+        shell: bash
+        run: |
+          set -euo pipefail
+          release_dir='release-assets'
+          version="$(node -p "require('./package.json').version")"
+          mkdir -p "$release_dir"
+          dmg="$(find output/desktop -maxdepth 1 -type f -name 'counselor-desk-*-mac-universal.dmg' -print -quit)"
+          zip="$(find output/desktop -maxdepth 1 -type f -name 'counselor-desk-*-mac-universal.zip' -print -quit)"
+          test -n "$dmg"
+          test -n "$zip"
+          cp "$dmg" "$release_dir/辅导员工作台-v${version}-macOS-安装版.dmg"
+          cp "$zip" "$release_dir/辅导员工作台-v${version}-macOS-压缩包.zip"
+
+      - name: 上传 macOS 发布文件
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-macos
+          if-no-files-found: error
+          path: release-assets/*
+
+  release:
+    name: 创建 GitHub 体验发布
+    needs: [windows, macos]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: 检出版本信息
+        uses: actions/checkout@v4
+
+      - name: 汇总跨平台文件
+        uses: actions/download-artifact@v4
+        with:
+          pattern: release-*
+          merge-multiple: true
+          path: release-assets
+
+      - name: 生成校验和
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd release-assets
+          sha256sum -- * > 'SHA256校验和.txt'
+
+      - name: 创建未签名体验版 Release
+        shell: bash
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          cat > release-notes.md <<'EOF'
+          这是辅导员工作台的未签名体验发布。
+
+          - Windows 用户下载“Windows-安装版.msi”后双击安装；不想安装时可使用“网页离线版.html”。
+          - macOS 用户下载“macOS-安装版.dmg”；Intel 与 Apple Silicon 共用同一个文件。
+          - 每个文件的 SHA-256 位于“SHA256校验和.txt”。
+          - Windows SmartScreen 或 macOS Gatekeeper 可能提示未知发布者，因为当前发布未配置组织代码签名或 Apple 公证。请仅从本 Release 下载，并在导入真实学生数据前先使用示例数据验证。
+          - 安装包与源码分开发布；不要将真实学生数据、备份或附件上传到仓库。
+          EOF
+          gh release create "$GITHUB_REF_NAME" \
+            --prerelease \
+            --title "辅导员工作台 v${version} 未签名体验版" \
+            --notes-file release-notes.md \
+            release-assets/*
