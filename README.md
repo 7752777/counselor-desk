@@ -6,6 +6,8 @@
 
 ### 给高校辅导员的一张本地数字工作桌
 
+**v4.0.0 · Windows 桌面版 + 单 HTML 网页版**
+
 把学生台账、谈心谈话、重点关注、工作留痕、资料库、就业资源和备份迁移，收进一个打开就能继续工作的地方。
 
 [![Version](https://img.shields.io/badge/version-4.0.0-0b3a82?style=for-the-badge)](./CHANGELOG.md)
@@ -18,7 +20,7 @@
 
 <br />
 
-[立即体验网页版](./index.html) · [Windows 使用指南](./docs/v4-migration-and-backup.md) · [使用手册](./使用说明.md) · [提交建议](https://github.com/7752777/counselor-desk/issues) · [给项目点 Star](https://github.com/7752777/counselor-desk)
+[立即体验网页版](./index.html) · [启动与使用手册](./docs/辅导员工作台使用手册.md) · [迁移与备份](./docs/v4-migration-and-backup.md) · [提交建议](https://github.com/7752777/counselor-desk/issues) · [给项目点 Star](https://github.com/7752777/counselor-desk)
 
 </div>
 
@@ -27,6 +29,20 @@
 </p>
 
 > 这不是要替代学校正式业务系统的“大平台”。它更像辅导员自己的工作桌：今天要回访谁、哪张表要交、哪条记录还没补、下次换电脑如何带走数据，都能在一个本地窗口里找到答案。
+
+## 启动方式
+
+当前公开版本是 **v4.0.0**，同时提供 Windows 桌面版和单 HTML 网页版。两端共用业务数据结构，但数据默认留在当前设备，不需要账号或云服务。
+
+| 你要做什么 | 怎么启动 | 适合场景 |
+| --- | --- | --- |
+| 使用网页版 | 双击发布包里的 `辅导员工作台.html`；仓库内直接打开 [`index.html`](./index.html) | 零安装、离线使用、手机临时查看或录入 |
+| 开发预览网页版 | `pnpm install --frozen-lockfile` 后运行 `pnpm run web:dev`，打开 `http://127.0.0.1:4173` | 调试网页、检查静态资源和浏览器行为 |
+| 开发预览桌面版 | `pnpm install --frozen-lockfile` 后运行 `pnpm run desktop:dev` | Windows 本地数据库、附件保险库和桌面 IPC 联调 |
+| 构建 Windows 安装包 | 运行 `pnpm run desktop:build` | 生成安装版和便携版，文件位于 `output/desktop/` |
+| 构建完整网页发布包 | 运行 `pnpm run build:release` | 生成内嵌运行时的 `output/辅导员工作台.html` |
+
+普通用户不需要安装 Node.js、pnpm 或 Electron；下载发布包后，按第一行双击 HTML，或运行 Windows 安装包即可。开发者命令和测试入口见[贡献指南](./CONTRIBUTING.md)。
 
 ## 先解决每天最烦的四件事
 
@@ -128,7 +144,7 @@
 | **v3.8** | 强化大表导入、字段匹配、缺失值处理和回归测试。 |
 | **v4.0** | 双形态运行、动态字段、文件资料库、就业资源、手机文件交换和样例快照。 |
 
-## 30 秒开始使用
+## 第一次使用
 
 1. 直接打开仓库里的 [`index.html`](./index.html)。
 2. 首次启动选择“体验示例”或“正式初始化”。
@@ -140,10 +156,14 @@
 
 ```powershell
 pnpm install --frozen-lockfile
+pnpm run web:dev       # http://127.0.0.1:4173
+pnpm run desktop:dev   # Electron 桌面开发模式
 pnpm test
 pnpm run lint
 pnpm run check:public
 ```
+
+发布前可运行 `pnpm run build:release` 生成单文件网页包，运行 `pnpm run desktop:build` 生成 Windows 安装包；两者产物分别位于 `output/` 和 `output/desktop/`。
 
 更多数据字段、扩展模块和测试约定见[二次开发指南](./docs/二次开发指南.md)、[数据格式与联动约定](./docs/数据格式与联动约定.md)和[贡献指南](./CONTRIBUTING.md)。
 
