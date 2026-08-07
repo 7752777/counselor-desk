@@ -60,6 +60,17 @@ jobs:
           if-no-files-found: warn
           path: ${{ runner.temp }}/desktop-build.log
 
+      - name: Summarize build failure
+        if: failure()
+        shell: bash
+        run: |
+          {
+            echo '## macOS build failure (last 120 log lines)'
+            echo '```text'
+            tail -n 120 "${RUNNER_TEMP}/desktop-build.log" || true
+            echo '```'
+          } >> "${GITHUB_STEP_SUMMARY}"
+
       - name: Verify package names and architectures
         shell: bash
         run: |
