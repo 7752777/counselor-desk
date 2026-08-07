@@ -37,7 +37,7 @@
     "web:dev": "node scripts/serve-web.js",
     "desktop:dev": "electron desktop/main.cjs",
     "desktop:build": "electron-builder --config electron-builder.yml",
-    "desktop:build:mac": "electron-builder --config electron-builder.yml --mac --universal",
+    "desktop:build:mac": "electron-builder --config electron-builder.yml --mac --universal --publish never",
     "desktop:build:win": "electron-builder --config electron-builder.yml --win",
     "build:v4": "node scripts/build-package.js output/counselor-desk-v4.0.0"
   },
