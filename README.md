@@ -20,7 +20,7 @@
 
 <br />
 
-[立即体验网页版](./index.html) · [启动与使用手册](./docs/辅导员工作台使用手册.md) · [迁移与备份](./docs/v4-migration-and-backup.md) · [提交建议](https://github.com/7752777/counselor-desk/issues) · [给项目点 Star](https://github.com/7752777/counselor-desk)
+[在线体验网页版](https://7752777.github.io/counselor-desk/) · [仓库入口](./index.html) · [启动与使用手册](./docs/辅导员工作台使用手册.md) · [迁移与备份](./docs/v4-migration-and-backup.md) · [提交建议](https://github.com/7752777/counselor-desk/issues) · [给项目点 Star](https://github.com/7752777/counselor-desk)
 
 </div>
 
