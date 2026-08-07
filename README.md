@@ -6,7 +6,7 @@
 
 ### 给高校辅导员的一张本地数字工作桌
 
-**v4.0.0 · Windows 桌面版 + 单 HTML 网页版**
+**v4.0.0 · Windows/macOS 桌面版 + 单 HTML 网页版**
 
 每天要跟进的学生、要提交的表、要补录的谈话和要找的政策文件，不必再分散在 Excel、群文件和聊天记录里来回翻。打开辅导员工作台，就能从今天最急的事情继续做下去。
 
@@ -14,6 +14,7 @@
 
 [![Version](https://img.shields.io/badge/version-4.0.0-0b3a82?style=for-the-badge)](./CHANGELOG.md)
 [![Windows](https://img.shields.io/badge/Windows-10%2F11-2563eb?style=for-the-badge&logo=windows)](./docs/v4-migration-and-backup.md)
+[![macOS](https://img.shields.io/badge/macOS-Universal-111827?style=for-the-badge&logo=apple&logoColor=white)](./docs/v4-desktop-installation.md)
 [![Web](https://img.shields.io/badge/Web-Single%20HTML-0ea5e9?style=for-the-badge&logo=html5&logoColor=white)](./index.html)
 [![Mobile exchange](https://img.shields.io/badge/Mobile-File%20Exchange-0891b2?style=for-the-badge&logo=android&logoColor=white)](./docs/v4-migration-and-backup.md)
 [![Local first](https://img.shields.io/badge/Local--first-Data%20stays%20with%20you-0f766e?style=for-the-badge)](./docs/v4-privacy.md)
@@ -34,14 +35,16 @@
 
 ## 🚀 启动方式
 
-当前公开版本是 **v4.0.0**，同时提供 Windows 桌面版和单 HTML 网页版。两端共用业务数据结构，但数据默认留在当前设备，不需要账号或云服务。
+当前公开版本是 **v4.0.0**，同时提供 Windows/macOS 桌面版和单 HTML 网页版。三种形态共用业务数据结构，但数据默认留在当前设备，不需要账号或云服务。
 
 | 你要做什么 | 怎么启动 | 适合场景 |
 | --- | --- | --- |
 | 使用网页版 | 双击发布包里的 `辅导员工作台.html`；仓库内直接打开 [`index.html`](./index.html) | 零安装、离线使用、手机临时查看或录入 |
+| 使用 macOS 桌面版 | Release 下载 `counselor-desk-4.0.0-mac-universal.dmg`，拖入“应用程序”；也可解压同名 ZIP | Intel 与 Apple Silicon 通用包，日常主工作区 |
 | 开发预览网页版 | `pnpm install --frozen-lockfile` 后运行 `pnpm run web:dev`，打开 `http://127.0.0.1:4173` | 调试网页、检查静态资源和浏览器行为 |
-| 开发预览桌面版 | `pnpm install --frozen-lockfile` 后运行 `pnpm run desktop:dev` | Windows 本地数据库、附件保险库和桌面 IPC 联调 |
+| 开发预览桌面版 | `pnpm install --frozen-lockfile` 后运行 `pnpm run desktop:dev` | Windows/macOS 本地数据库、附件保险库和桌面 IPC 联调 |
 | 构建 Windows 安装包 | 运行 `pnpm run desktop:build` | 生成安装版和便携版，文件位于 `output/desktop/` |
+| 构建 macOS 通用包 | 在 macOS runner 上运行 `pnpm run desktop:build:mac` | 生成 `dmg` + `zip`，文件位于 `output/desktop/` |
 | 构建完整网页发布包 | 运行 `pnpm run build:release` | 生成内嵌运行时的 `output/辅导员工作台.html` |
 
 普通用户不需要安装 Node.js、pnpm 或 Electron；下载发布包后，按第一行双击 HTML，或运行 Windows 安装包即可。开发者命令和测试入口见[贡献指南](./CONTRIBUTING.md)。
@@ -52,7 +55,9 @@
 
 不想安装时下载 `counselor-desk-4.0.0-portable.exe`，双击即可运行。便携版适合临时电脑，但数据仍保存在当前 Windows 用户的应用数据目录；换电脑前请在工作台内生成 `.cwbk` 加密备份，不要只复制 EXE。
 
-桌面版的真实附件保险库路径请在“模板库 → 分类文件库”页面查看“桌面版已启用加密附件保险库”提示。仓库的 `output/desktop/` 只是开发者构建产物目录，不是用户数据目录。完整步骤见[Windows 桌面版安装与数据路径](./docs/v4-desktop-installation.md)。
+macOS 用户下载 `counselor-desk-4.0.0-mac-universal.dmg`，打开后将“辅导员工作台”拖入“应用程序”。该包同时支持 Intel 和 Apple Silicon；当前公开构建未配置 Apple Developer 签名与公证，首次打开若被 Gatekeeper 拦截，请在“系统设置 → 隐私与安全性”中确认后再启动。完整步骤见[桌面版安装与数据路径](./docs/v4-desktop-installation.md)。
+
+桌面版的真实附件保险库路径请在“模板库 → 分类文件库”页面查看“桌面版已启用加密附件保险库”提示。仓库的 `output/desktop/` 只是开发者构建产物目录，不是用户数据目录。完整步骤见[桌面版安装与数据路径](./docs/v4-desktop-installation.md)。
 
 ## 🧩 先把每天最费时间的事理顺
 
@@ -170,6 +175,7 @@
 | 版本 | 适合场景 | 数据方式 |
 | --- | --- | --- |
 | **Windows 桌面版** | 日常主工作区、照片和本地附件、完整备份迁移 | Electron + SQLite + 本地附件保险库 |
+| **macOS 桌面版** | Intel / Apple Silicon 通用桌面工作区、照片和本地附件 | Electron + SQLite + 本地附件保险库 |
 | **单 HTML 网页版** | 双击即用、手机临时查看和录入、轻量离线场景 | 浏览器 IndexedDB + 文件交换包 |
 
 两端复用同一套业务数据结构。当前版本不包含账号体系、云端实时同步、远程审批或自动抓取第三方就业内容；这些边界是为了让数据去向清楚、部署成本可控。
@@ -185,7 +191,7 @@
 
 ## 🧭 迭代记录
 
-这里按公开版本记录每一轮变化，方便快速了解工作台是怎样从一张本地工作表，逐步发展成现在的双端工作台。
+这里按公开版本记录每一轮变化，方便快速了解工作台是怎样从一张本地工作表，逐步发展成现在的多端工作台。
 
 | 版本 | 日期 | 这一版解决了什么 |
 | --- | --- | --- |
@@ -202,7 +208,7 @@
 | ☀️ **v3.7** | 2026-08-03 | 完成日间界面升级：浅色通透外壳、晴空蓝、字号放大、柔和暗色模式和更轻的阴影，长时间使用更舒服。 |
 | 📥 **v3.8** | 2026-08-04 | 学生大表支持 `.xls` / `.xlsx` 直传、23 类常见表头匹配、缺值保护、学号去重和导入报告；同时强化工程化视觉和第 4 套测试。 |
 | 🛡️ **v3.9** | 2026-08-05 | 增加首次引导、个性化外观、登录锁、学习助手、导入预览、快照撤销和 v6 交换包；继续保持单 HTML、本地优先和离线可用。 |
-| 🖥️ **v4.0** | 2026-08-07 | 进入双端阶段：Windows 桌面版使用 SQLite 和附件保险库，网页版继续双击即用；新增动态字段、分类文件资料库、就业资源、手机差异交换、备份迁移和样例 A/B 快照。 |
+| 🖥️ **v4.0** | 2026-08-07 | 进入桌面双平台阶段：Windows 与 macOS 桌面版使用 SQLite 和附件保险库，网页版继续双击即用；新增动态字段、分类文件资料库、就业资源、手机差异交换、备份迁移和样例 A/B 快照。 |
 
 ## ✅ 第一次使用
 
@@ -218,12 +224,13 @@
 pnpm install --frozen-lockfile
 pnpm run web:dev       # http://127.0.0.1:4173
 pnpm run desktop:dev   # Electron 桌面开发模式
+pnpm run desktop:build:mac  # macOS universal DMG + ZIP（需在 macOS runner 执行）
 pnpm test
 pnpm run lint
 pnpm run check:public
 ```
 
-发布前可运行 `pnpm run build:release` 生成单文件网页包，运行 `pnpm run desktop:build` 生成 Windows 安装包；两者产物分别位于 `output/` 和 `output/desktop/`。
+发布前可运行 `pnpm run build:release` 生成单文件网页包，运行 `pnpm run desktop:build` 生成 Windows 安装包，运行 `pnpm run desktop:build:mac` 生成 macOS 通用包；产物分别位于 `output/` 和 `output/desktop/`。macOS 构建也会由 [.github/workflows/desktop-macos.yml](./.github/workflows/desktop-macos.yml) 在 macOS runner 上验证。
 
 更多数据字段、扩展模块和测试约定见[二次开发指南](./docs/二次开发指南.md)、[数据格式与联动约定](./docs/数据格式与联动约定.md)和[贡献指南](./CONTRIBUTING.md)。
 

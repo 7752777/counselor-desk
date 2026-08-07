@@ -4,7 +4,7 @@
   "version": "4.0.0",
   "private": true,
   "main": "main.cjs",
-  "description": "Windows offline counselor workbench",
+  "description": "Offline counselor workbench for Windows and macOS",
   "author": "Counselor Desk contributors",
   "license": "MIT"
 }

@@ -1,4 +1,4 @@
-# Windows 桌面版安装与数据路径
+# Windows / macOS 桌面版安装与数据路径
 
 适用版本：`v4.0.0`。这份说明只面向普通使用者，开发命令请看 [贡献指南](../CONTRIBUTING.md)。
 
@@ -10,6 +10,8 @@
 | --- | --- | --- |
 | `counselor-desk-4.0.0-x64.exe` | 需要日常固定使用的 Windows 电脑 | 双击后自动安装，并创建桌面和开始菜单入口 |
 | `counselor-desk-4.0.0-portable.exe` | 临时电脑、U 盘或不想安装的场景 | 双击即可运行，不写入系统安装目录 |
+| `counselor-desk-4.0.0-mac-universal.dmg` | Intel 与 Apple Silicon Mac | 打开后将应用拖入“应用程序” |
+| `counselor-desk-4.0.0-mac-universal.zip` | 不方便使用 DMG 的 Mac | 解压后将应用拖入“应用程序” |
 
 普通用户不需要安装 Node.js、pnpm、Electron，也不需要打开 PowerShell。安装版采用当前用户安装，不要求管理员权限；首次启动后会自动打开工作台。
 
@@ -21,6 +23,13 @@
 4. 确认“学生台账”和“备份与迁移”可以打开后，再导入真实学生数据。
 
 安装版和便携版共用同一套业务界面。桌面版的数据默认只保存在本机，不需要账号，也不会自动上传到项目服务器。
+
+## macOS 第一次启动
+
+1. 打开 `counselor-desk-4.0.0-mac-universal.dmg`，把“辅导员工作台”拖到“应用程序”。
+2. 从“应用程序”或 Launchpad 打开工作台；首次进入选择“体验示例”“正式初始化”或“从备份恢复”。
+3. 如果 macOS 提示“无法验证开发者”，请确认安装包来自项目 Release，并在“系统设置 → 隐私与安全性”中允许本次打开。当前公开构建未配置 Apple Developer 签名和公证，不要把未知来源的副本加入信任。
+4. Intel 和 Apple Silicon 使用同一个 universal 包，不需要另外判断芯片架构。
 
 ## 文件资料库与保险库路径
 
@@ -37,11 +46,12 @@
 
 ## 便携版注意事项
 
-便携版适合临时使用，但仍会在当前 Windows 用户的应用数据目录保存数据库和附件。不要只复制一个 EXE 就认为数据已随文件移动；换电脑前请使用工作台内的加密备份或换机包。
+便携版适合临时使用，但仍会在当前 Windows 用户的应用数据目录保存数据库和附件。macOS 的 DMG/ZIP 只是分发方式，应用运行后同样会在当前用户的应用数据目录保存数据库和附件。不要只复制一个 EXE 或 `.app` 就认为数据已随文件移动；换电脑前请使用工作台内的加密备份或换机包。
 
 ## 无法打开时
 
 - Windows 弹出“未知发布者”：当前公开构建没有组织代码签名证书，请只从项目 Release 下载，并核对 Release 页面提供的 SHA-256。
+- macOS 弹出“无法验证开发者”：当前公开构建没有 Apple Developer 签名与公证，请核对 Release 页面提供的 SHA-256，再按上面的“隐私与安全性”步骤一次性允许打开。
 - 双击没有窗口：先检查任务管理器中是否已有“辅导员工作台”进程，再重新打开；仍失败时使用便携版复现，并附上 Windows 版本和错误截图。
 - 数据看起来为空：确认打开的是同一个 Windows 用户和同一个备份恢复后的工作台，不要把仓库里的 `index.html` 与桌面版数据库混为一处。
 
@@ -54,4 +64,4 @@ pnpm install --frozen-lockfile
 pnpm run desktop:build
 ```
 
-构建产物固定写入仓库相对路径 `output/desktop/`。该目录被 `.gitignore` 忽略，不应提交到公开库；发布时将其中的安装版和便携版上传到 GitHub Release。
+构建 Windows 产物使用 `pnpm run desktop:build`；macOS 通用产物必须在 macOS runner 使用 `pnpm run desktop:build:mac`。两者都写入仓库相对路径 `output/desktop/`。该目录被 `.gitignore` 忽略，不应提交到公开库；发布时将对应安装包上传到 GitHub Release。

@@ -21,6 +21,7 @@
 
 - 当前工作区没有组织代码签名证书。Windows 安装包和便携包虽已构建并启动冒烟通过，但 `Get-AuthenticodeSignature` 状态为 `NotSigned`；`scripts/check-release-signing.js` 会刻意阻断正式发布。
 - 本次验证机器为 Windows 10 Home，`HyperVisorPresent=False`，且未检测到可用的 Hyper-V、VirtualBox、QEMU 或 WSL；因此本记录包含宿主机干净用户数据测试，不声称已经完成虚拟机测试。
+- macOS universal 构建由 `.github/workflows/desktop-macos.yml` 在 `macos-14` runner 执行；本地 Windows 环境不能直接生成或启动 `.dmg`，以 workflow 的 DMG/ZIP 架构检查作为 macOS 构建证据。
 - 99.7% 导入成功率仍是运营指标，不在脱敏样本不少于 100 份、覆盖不少于 20 种格式并保存追溯报告前对外宣称。
 - 已提供 `scripts/import-operations-report.js`：它对脱敏样本清单计算样本数、格式数、成功率和源清单 SHA-256；条件不足时以非零状态退出，测试夹具不作为真实运营证据。
 - 发布文档已补齐：[迁移与备份说明](v4-migration-and-backup.md)、[隐私说明](v4-privacy.md)、[党建规则版本说明](v4-party-rules.md) 和 [签名发布流程](v4-release-signing.md)。

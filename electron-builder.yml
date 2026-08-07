@@ -1,6 +1,7 @@
 appId: cn.counselordesk.workbench
 productName: 辅导员工作台
 artifactName: counselor-desk-${version}-${arch}.${ext}
+icon: assets/app-icon.svg
 directories:
   output: output/desktop
   buildResources: assets
@@ -32,3 +33,9 @@ nsis:
     - zh_CN
 portable:
   artifactName: counselor-desk-${version}-portable.${ext}
+mac:
+  category: public.app-category.education
+  target:
+    - dmg
+    - zip
+  artifactName: counselor-desk-${version}-mac-${arch}.${ext}
