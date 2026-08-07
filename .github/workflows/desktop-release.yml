@@ -99,14 +99,21 @@ jobs:
           New-Item -ItemType Directory -Path $releaseDir -Force | Out-Null
           $installer = @(Get-ChildItem -LiteralPath $buildDir -File -Filter 'counselor-desk-*-x64.msi')
           if ($installer.Count -ne 1) { throw "Expected one installer, found $($installer.Count)" }
-          Copy-Item -LiteralPath $installer[0].FullName -Destination (Join-Path $releaseDir "辅导员工作台-v$version-Windows-安装版.msi")
-          Copy-Item -LiteralPath 'output/辅导员工作台.html' -Destination (Join-Path $releaseDir "辅导员工作台-v$version-网页离线版.html")
-          $checksums = Get-ChildItem -LiteralPath $releaseDir -File | ForEach-Object {
-            $hash = Get-FileHash -Algorithm SHA256 -LiteralPath $_.FullName
-            "$($hash.Hash) *$($_.Name)"
+          $installerAsset = Join-Path $releaseDir "CounselorDesk-v$version-Windows-Installer.msi"
+          $offlineAsset = Join-Path $releaseDir "CounselorDesk-v$version-Offline.html"
+          $checksumAsset = Join-Path $releaseDir 'Windows-SHA256.txt'
+          Copy-Item -LiteralPath $installer[0].FullName -Destination $installerAsset
+          Copy-Item -LiteralPath 'output/辅导员工作台.html' -Destination $offlineAsset
+          $checksums = @($installerAsset, $offlineAsset) | ForEach-Object {
+            $hash = Get-FileHash -Algorithm SHA256 -LiteralPath $_
+            "$($hash.Hash) *$(Split-Path $_ -Leaf)"
           }
-          Set-Content -LiteralPath (Join-Path $releaseDir 'Windows-SHA256校验和.txt') -Value $checksums -Encoding utf8
-          $assets = @(Get-ChildItem -LiteralPath $releaseDir -File | ForEach-Object FullName)
+          Set-Content -LiteralPath $checksumAsset -Value $checksums -Encoding utf8
+          $assets = @(
+            "$installerAsset#辅导员工作台-v$version-Windows-安装版.msi",
+            "$offlineAsset#辅导员工作台-v$version-网页离线版.html",
+            "$checksumAsset#Windows-SHA256校验和.txt"
+          )
           & gh release upload $env:GITHUB_REF_NAME $assets --clobber
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
@@ -155,8 +162,15 @@ jobs:
           zip="$(find output/desktop -maxdepth 1 -type f -name 'counselor-desk-*-mac-universal.zip' -print -quit)"
           test -n "$dmg"
           test -n "$zip"
-          cp "$dmg" "$release_dir/辅导员工作台-v${version}-macOS-安装版.dmg"
-          cp "$zip" "$release_dir/辅导员工作台-v${version}-macOS-压缩包.zip"
+          dmg_asset="CounselorDesk-v${version}-macOS-Installer.dmg"
+          zip_asset="CounselorDesk-v${version}-macOS-Archive.zip"
+          checksum_asset='macOS-SHA256.txt'
+          cp "$dmg" "$release_dir/$dmg_asset"
+          cp "$zip" "$release_dir/$zip_asset"
           cd release-assets
-          shasum -a 256 -- * > 'macOS-SHA256校验和.txt'
-          gh release upload "$GITHUB_REF_NAME" * --clobber
+          shasum -a 256 -- "$dmg_asset" "$zip_asset" > "$checksum_asset"
+          gh release upload "$GITHUB_REF_NAME" \
+            "$dmg_asset#辅导员工作台-v${version}-macOS-安装版.dmg" \
+            "$zip_asset#辅导员工作台-v${version}-macOS-压缩包.zip" \
+            "$checksum_asset#macOS-SHA256校验和.txt" \
+            --clobber
