@@ -23,7 +23,7 @@
 
 <br />
 
-[在线体验网页版](https://7752777.github.io/counselor-desk/) · [仓库入口](./index.html) · [文档中心](./docs/README.md) · [开始使用](./docs/getting-started.md) · [启动与使用手册](./docs/user-guide.md) · [迁移与备份](./docs/v4-migration-and-backup.md) · [提交建议](https://github.com/7752777/counselor-desk/issues) · [给项目点 Star](https://github.com/7752777/counselor-desk)
+[在线体验网页版](https://7752777.github.io/counselor-desk/) · [仓库入口](./index.html) · [文档中心](./docs/README.md) · [三分钟上手](./docs/quick-start.md) · [开始使用](./docs/getting-started.md) · [启动与使用手册](./docs/user-guide.md) · [迁移与备份](./docs/v4-migration-and-backup.md) · [提交建议](https://github.com/7752777/counselor-desk/issues) · [给项目点 Star](https://github.com/7752777/counselor-desk)
 
 </div>
 
