@@ -47,7 +47,18 @@ jobs:
           node --check desktop/sqlite-store.cjs
 
       - name: Build unsigned universal DMG and ZIP
-        run: pnpm run desktop:build:mac
+        shell: bash
+        run: |
+          set -o pipefail
+          pnpm run desktop:build:mac 2>&1 | tee "${RUNNER_TEMP}/desktop-build.log"
+
+      - name: Upload build log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: counselor-desk-${{ github.sha }}-mac-build-log
+          if-no-files-found: warn
+          path: ${{ runner.temp }}/desktop-build.log
 
       - name: Verify package names and architectures
         shell: bash

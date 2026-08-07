@@ -36,6 +36,8 @@ portable:
 mac:
   category: public.app-category.education
   target:
-    - dmg
-    - zip
+    - target: dmg
+      arch: universal
+    - target: zip
+      arch: universal
   artifactName: counselor-desk-${version}-mac-${arch}.${ext}
