@@ -115,7 +115,7 @@
 
 ## 📸 功能界面一览
 
-下面的截图统一使用日间主题，主要界面按两列大图展示，重点档案单独保留，方便直接看清表格、提醒、导入预览和备份操作。截图均使用示例或脱敏数据，不包含真实学生信息。
+下面的截图统一使用日间主题，按两列大图展示完整工作流：从首次进入、学生台账，到任务、谈话、假期去向、政策资料、模板库和分类文件库。截图均使用示例或脱敏数据，不包含真实学生信息。
 
 <p align="center">
   <img src="./assets/screenshots/onboarding.png" width="49%" alt="首次使用引导与首页待办" />
@@ -128,11 +128,32 @@
 </p>
 
 <p align="center">
-  <img src="./assets/screenshots/import-preview.png" width="49%" alt="学生大表导入预览与字段识别" />
-  <img src="./assets/screenshots/data-center.png" width="49%" alt="数据存储、备份与迁移" />
+  <img src="./assets/screenshots/tasks.png" width="49%" alt="工作任务清单、分类与截止提醒" />
+  <img src="./assets/screenshots/talks.png" width="49%" alt="谈心谈话记录与回访提醒" />
 </p>
 
 <p align="center">
+  <img src="./assets/screenshots/leave.png" width="49%" alt="学生假期去向和离返校管理" />
+  <img src="./assets/screenshots/policy.png" width="49%" alt="政策智库与学校政策文件管理" />
+</p>
+
+<p align="center">
+  <img src="./assets/screenshots/material.png" width="49%" alt="讲话稿、班会素材与工作资料收藏" />
+  <img src="./assets/screenshots/graduate.png" width="49%" alt="毕业生就业台账与去向统计" />
+</p>
+
+<p align="center">
+  <img src="./assets/screenshots/node.png" width="49%" alt="工作日历、节点和提前提醒" />
+  <img src="./assets/screenshots/templates.png" width="49%" alt="通知、流程和表单模板库" />
+</p>
+
+<p align="center">
+  <img src="./assets/screenshots/files.png" width="49%" alt="分类文件库与本地资料上传入口" />
+  <img src="./assets/screenshots/import-preview.png" width="49%" alt="学生大表导入预览与字段识别" />
+</p>
+
+<p align="center">
+  <img src="./assets/screenshots/data-center.png" width="49%" alt="数据存储、备份与迁移" />
   <img src="./assets/screenshots/focus.png" width="49%" alt="重点学生档案与隐私保护锁" />
 </p>
 
