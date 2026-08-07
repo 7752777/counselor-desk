@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: read
+  checks: write
 
 concurrency:
   group: macos-desktop-${{ github.ref }}
@@ -70,6 +71,30 @@ jobs:
             tail -n 120 "${RUNNER_TEMP}/desktop-build.log" || true
             echo '```'
           } >> "${GITHUB_STEP_SUMMARY}"
+      - name: Publish build diagnostics
+        if: failure()
+        uses: actions/github-script@v7
+        env:
+          BUILD_LOG_PATH: ${{ runner.temp }}/desktop-build.log
+        with:
+          script: |
+            const fs = require('node:fs')
+            const logPath = process.env.BUILD_LOG_PATH
+            const log = fs.existsSync(logPath)
+              ? fs.readFileSync(logPath, 'utf8').slice(-6000)
+              : 'Build log was not created.'
+            await github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: 'macOS build diagnostics',
+              head_sha: context.sha,
+              status: 'completed',
+              conclusion: 'failure',
+              output: {
+                title: 'macOS universal packaging failure',
+                summary: 'The builder log tail follows:\n\n' + log
+              }
+            })
 
       - name: Verify package names and architectures
         shell: bash
